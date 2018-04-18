@@ -1,13 +1,13 @@
-package it.polimi.ingsw;
-
-import static org.junit.Assert.assertTrue;
+package it.polimi.ingsw.view;
 
 import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Unit test for simple App.
  */
-public class AppTest 
+public class AppTestView
 {
     /**
      * Rigorous Test :-)
