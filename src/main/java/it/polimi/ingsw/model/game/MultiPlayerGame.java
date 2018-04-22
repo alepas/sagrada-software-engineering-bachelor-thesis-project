@@ -1,6 +1,4 @@
 package it.polimi.ingsw.model.game;
-
-import it.polimi.ingsw.model.usersdb.PlayerInGame;
 import it.polimi.ingsw.model.usersdb.User;
 
 public class MultiPlayerGame extends AbstractGame {
@@ -11,6 +9,9 @@ public class MultiPlayerGame extends AbstractGame {
     //Coperto dai test
     public MultiPlayerGame(User user, int numPlayers) {
         super(user, numPlayers);
+        turnPlayer = 0;
+        roundPlayer = 0;
+        currentTurn = 0;
     }
 
     public int getTurnPlayer() {

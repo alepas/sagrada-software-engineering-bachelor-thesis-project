@@ -2,7 +2,7 @@ package it.polimi.ingsw.model.game;
 
 import it.polimi.ingsw.model.Dice;
 import it.polimi.ingsw.model.RoundTrack;
-import it.polimi.ingsw.model.cards.ObjectiveCard;
+import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 import it.polimi.ingsw.model.usersdb.User;
@@ -12,23 +12,23 @@ import java.util.UUID;
 
 public abstract class AbstractGame {
     protected ArrayList<ToolCard> toolCards;
-    protected ArrayList<ObjectiveCard> objectiveCards;
+    protected ArrayList<PublicObjectiveCard> publicObjectiveCards;
     protected String gameID;
     protected int numPlayers;
     protected RoundTrack roundTrack;
     protected ArrayList<Dice> extractedDices;  // annotazione ale: un set non può avere elementi uguali ma è possibile che escano due o più dadi uguali
-    protected ArrayList<PlayerInGame> users;
+    protected ArrayList<PlayerInGame> players;
 
     protected AbstractGame(User user, int numPlayers) {
         toolCards = new ArrayList<>();
-        objectiveCards = new ArrayList<>();
+        publicObjectiveCards = new ArrayList<>();
         gameID = UUID.randomUUID().toString();
         this.numPlayers = numPlayers;
         roundTrack = new RoundTrack();
         extractedDices = new ArrayList<>();
-        users = new ArrayList<>();
+        players = new ArrayList<>();
         PlayerInGame player = new PlayerInGame(user);
-        users.add(player);
+        players.add(player);
     }
 
     abstract void startGame();
@@ -43,8 +43,8 @@ public abstract class AbstractGame {
         return toolCards;
     }
 
-    public ArrayList<ObjectiveCard> getObjectiveCards() {
-        return objectiveCards;
+    public ArrayList<PublicObjectiveCard> getPublicObjectiveCards() {
+        return publicObjectiveCards;
     }
 
     public String getGameID() {
@@ -59,8 +59,8 @@ public abstract class AbstractGame {
         return extractedDices;
     }
 
-    public ArrayList<PlayerInGame> getUsers() {
-        return users;
+    public ArrayList<PlayerInGame> getPlayers() {
+        return players;
     }
 
     public void removeExtractedDice(Dice dice){

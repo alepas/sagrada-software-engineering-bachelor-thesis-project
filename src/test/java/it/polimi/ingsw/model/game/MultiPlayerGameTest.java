@@ -1,13 +1,23 @@
 package it.polimi.ingsw.model.game;
 
+import it.polimi.ingsw.model.Colour;
+import it.polimi.ingsw.model.WPC;
+import it.polimi.ingsw.model.cards.PublicObjectiveCard;
+import it.polimi.ingsw.model.cards.ToolCard;
+import it.polimi.ingsw.model.exceptions.notEnoughPlayersException;
 import it.polimi.ingsw.model.exceptions.userAlreadyInThisGameException;
 import it.polimi.ingsw.model.exceptions.userNotInThisGameException;
+import it.polimi.ingsw.model.usersdb.PlayerInGame;
 import it.polimi.ingsw.model.usersdb.User;
 import it.polimi.ingsw.model.exceptions.maxPlayersExceededException;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -32,46 +42,89 @@ public class MultiPlayerGameTest {
     }
 
     @Test
-    public void checkMultiplayerGameConstructor(){
+    public void checkMultiPlayerGameConstructor(){
         Assert.assertNotEquals(null, game.getGameID());
-        Assert.assertEquals(1, game.getUsers().size());
+        Assert.assertEquals(1, game.getPlayers().size());
         Assert.assertEquals(0, game.getToolCards().size());
-        Assert.assertEquals(0, game.getObjectiveCards().size());
+        Assert.assertEquals(0, game.getPublicObjectiveCards().size());
         Assert.assertEquals(0, game.getExtractedDices().size());
-        Assert.assertEquals(user1, game.getUsers().iterator().next().getUser());
+        Assert.assertEquals(user1, game.getPlayers().iterator().next().getUser());
         Assert.assertTrue(game.getNumPlayers() >= 2 && game.getNumPlayers() <= 4);
     }
 
     @Test
     public void addingAndRemovingPlayersTest() {
-        Assert.assertEquals(1, game.getUsers().size());
+        Assert.assertEquals(1, game.getPlayers().size());
         game.addPlayer(user2);
-        Assert.assertEquals(2, game.getUsers().size());
+        Assert.assertEquals(2, game.getPlayers().size());
         game.addPlayer(user3);
-        Assert.assertEquals(3, game.getUsers().size());
+        Assert.assertEquals(3, game.getPlayers().size());
 
         game.removePlayer(user2);
-        Assert.assertEquals(2, game.getUsers().size());
+        Assert.assertEquals(2, game.getPlayers().size());
         game.removePlayer(user1);
-        Assert.assertEquals(1, game.getUsers().size());
+        Assert.assertEquals(1, game.getPlayers().size());
         game.removePlayer(user3);
-        Assert.assertEquals(0, game.getUsers().size());
+        Assert.assertEquals(0, game.getPlayers().size());
     }
 
     @Test(expected = maxPlayersExceededException.class)
-    public void addingPlayersIllegalTest1() {
+    public void addPlayersIllegalTest1() {
         game.addPlayer(user2);
         game.addPlayer(user3);
         game.addPlayer(user4);
     }
 
     @Test(expected = userAlreadyInThisGameException.class)
-    public void addingPlayersIllegalTest2() {
+    public void addPlayersIllegalTest2() {
         game.addPlayer(user1);
     }
 
     @Test(expected = userNotInThisGameException.class)
     public void removePlayerIllegalTest() {
         game.removePlayer(user2);
+    }
+
+    //è giusto utilizzare qui PlayerInGame e Colour?
+    @Test
+    public void startGameTest() {
+        game.addPlayer(user2);
+        game.addPlayer(user3);
+        game.startGame();
+
+        ArrayList<PlayerInGame> players = game.getPlayers();
+        ArrayList<Colour> colorExtracted = new ArrayList<>();
+        ArrayList<WPC> wpcExtracted = new ArrayList<>();
+
+        //Verifica che i giocatori non abbiano privateObject o WPC uguali
+        for (PlayerInGame player: players){
+            Colour playerColor = player.getPrivateObjective1();
+            Assert.assertFalse(colorExtracted.contains(playerColor));
+            colorExtracted.add(playerColor);
+
+            WPC playerWPC = player.getWpc();
+            Assert.assertNotEquals(null, playerWPC);
+            Assert.assertFalse(wpcExtracted.contains(playerWPC));
+            wpcExtracted.add(playerWPC);
+        }
+
+        //Verifica che siano state estratte 3 toolCard
+        ArrayList<ToolCard> toolCards = game.getToolCards();
+        Assert.assertEquals(3, toolCards.size());
+        //E che non ci siano carte uguali
+        Set<ToolCard> set = new HashSet<ToolCard>(toolCards);
+        Assert.assertFalse(set.size() < toolCards.size());
+
+        //Verifica che siano state estratte 3 publicObjectiveCards
+        ArrayList<PublicObjectiveCard> publicObjectiveCards = game.getPublicObjectiveCards();
+        Assert.assertEquals(3, publicObjectiveCards.size());
+        //E che non ci siano carte uguali
+        Set<PublicObjectiveCard> set2 = new HashSet<PublicObjectiveCard>(publicObjectiveCards);
+        Assert.assertFalse(set2.size() < publicObjectiveCards.size());
+    }
+
+    @Test(expected = notEnoughPlayersException.class)
+    public void starGameIllegalTest() {
+        game.startGame();
     }
 }
