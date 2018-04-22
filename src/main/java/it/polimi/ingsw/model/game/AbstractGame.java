@@ -11,15 +11,15 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 public abstract class AbstractGame {
-    protected ArrayList<ToolCard> toolCards;
-    protected ArrayList<PublicObjectiveCard> publicObjectiveCards;
-    protected String gameID;
-    protected int numPlayers;
-    protected RoundTrack roundTrack;
-    protected ArrayList<Dice> extractedDices;  // annotazione ale: un set non può avere elementi uguali ma è possibile che escano due o più dadi uguali
-    protected ArrayList<PlayerInGame> players;
+    private ArrayList<ToolCard> toolCards;
+    private ArrayList<PublicObjectiveCard> publicObjectiveCards;
+    private String gameID;
+    private int numPlayers;
+    private RoundTrack roundTrack;
+    private ArrayList<Dice> extractedDices;
+    private ArrayList<PlayerInGame> players;
 
-    protected AbstractGame(User user, int numPlayers) {
+    AbstractGame(User user, int numPlayers) {
         toolCards = new ArrayList<>();
         publicObjectiveCards = new ArrayList<>();
         gameID = UUID.randomUUID().toString();

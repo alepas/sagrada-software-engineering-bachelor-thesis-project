@@ -26,6 +26,7 @@ public class MultiPlayerGame extends AbstractGame {
         return currentTurn;
     }
 
+    //Testato
     @Override
     public void startGame() {
 
