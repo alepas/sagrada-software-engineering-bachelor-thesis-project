@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.game;
 
+import it.polimi.ingsw.model.usersdb.PlayerInGame;
 import it.polimi.ingsw.model.usersdb.User;
 
 public class MultiPlayerGame extends AbstractGame {
@@ -11,38 +12,58 @@ public class MultiPlayerGame extends AbstractGame {
         super(user, numPlayers);
     }
 
+    public int getTurnPlayer() {
+        return turnPlayer;
+    }
+
+    public int getRoundPlayer() {
+        return roundPlayer;
+    }
+
+    public int getCurrentTurn() {
+        return currentTurn;
+    }
+
     @Override
-    void startGame() {
+    public void startGame() {
 
     }
 
     @Override
-    void endGame() {
+    public void endGame() {
 
     }
 
     @Override
-    void nextRound() {
+    public void nextRound() {
 
     }
 
     @Override
-    void nextTurn() {
+    public void nextTurn() {
 
     }
 
     @Override
-    void extractWPC() {
+    public void extractWPC() {
 
     }
 
     @Override
-    void calculateScore() {
+    public void calculateScore() {
 
     }
 
     @Override
-    void saveScore() {
+    public void saveScore() {
+
+    }
+
+    public boolean addPlayer(User user){
+        return false;
+    }
+
+    public void removePlayer(User user){
 
     }
 }

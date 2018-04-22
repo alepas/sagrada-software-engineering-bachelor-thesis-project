@@ -8,18 +8,19 @@ import it.polimi.ingsw.model.usersdb.PlayerInGame;
 import it.polimi.ingsw.model.usersdb.User;
 
 import java.util.Set;
+import java.util.UUID;
 
 public abstract class AbstractGame {
     Set<ToolCard> toolCards;
     Set<ObjectiveCard> objectiveCards;
-    int gameID;
+    String gameID;
     int numPlayers;
     RoundTrack roundTrack;
     Set<Dice> extractedDices;
     Set<PlayerInGame> users;
 
-    public AbstractGame(User user, int numPlayers) {
-        gameID = 0;
+    protected AbstractGame(User user, int numPlayers) {
+        gameID = UUID.randomUUID().toString();
         this.numPlayers = numPlayers;
         roundTrack = new RoundTrack();
         PlayerInGame player = new PlayerInGame(user);
@@ -42,7 +43,7 @@ public abstract class AbstractGame {
         return objectiveCards;
     }
 
-    public int getGameID() {
+    public String getGameID() {
         return gameID;
     }
 
