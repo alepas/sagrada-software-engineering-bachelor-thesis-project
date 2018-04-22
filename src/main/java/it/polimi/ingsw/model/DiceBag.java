@@ -37,7 +37,7 @@ public class DiceBag {
         violetDices = initialDiceNum;
         Dice[] extractedDices = new Dice[4];
     }
-    //non sono sicura del suo funzionamento
+
     public void DicesExtraction(int numPlayers){
         if( numPlayers == 1) {
             for(int i=0; i < extractedDices.length; i++)
