@@ -16,7 +16,7 @@ public abstract class AbstractGame {
     String gameID;
     int numPlayers;
     RoundTrack roundTrack;
-    Set<Dice> extractedDices;
+    Set<Dice> extractedDices;  // annotazione ale: un set non può avere elementi uguali ma è possibile che escano due o più dadi uguali
     Set<PlayerInGame> users;
 
     protected AbstractGame(User user, int numPlayers) {

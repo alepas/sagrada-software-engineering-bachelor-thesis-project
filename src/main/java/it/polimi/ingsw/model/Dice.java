@@ -5,12 +5,14 @@ public class Dice {
     private Colour colour;
     private int num;
 
-    private void Dice( Colour col){
-        colour = col;
+    public Dice(Colour color) {
+        colour = color;
         num = rollDice();
     }
 
-    //quando sposto un dado
+
+    //metodo invocato sia dal costruttore per assegnare un numero tra 1 e 6
+    // ma anche nel caso in cui possa ritirare il dado
     public int rollDice( ){
         Random random = new Random();
         num = random.nextInt(5) + 1;
