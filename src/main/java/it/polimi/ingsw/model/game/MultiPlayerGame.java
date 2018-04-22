@@ -4,10 +4,11 @@ import it.polimi.ingsw.model.usersdb.PlayerInGame;
 import it.polimi.ingsw.model.usersdb.User;
 
 public class MultiPlayerGame extends AbstractGame {
-    int turnPlayer;
-    int roundPlayer;
-    int currentTurn;
+    private int turnPlayer;
+    private int roundPlayer;
+    private int currentTurn;
 
+    //Coperto dai test
     public MultiPlayerGame(User user, int numPlayers) {
         super(user, numPlayers);
     }
@@ -59,10 +60,12 @@ public class MultiPlayerGame extends AbstractGame {
 
     }
 
+    //Coperto dai test
     public boolean addPlayer(User user){
         return false;
     }
 
+    //Coperto dai test
     public void removePlayer(User user){
 
     }

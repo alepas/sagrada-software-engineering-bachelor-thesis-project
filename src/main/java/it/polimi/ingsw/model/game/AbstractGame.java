@@ -7,22 +7,26 @@ import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 import it.polimi.ingsw.model.usersdb.User;
 
-import java.util.Set;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public abstract class AbstractGame {
-    Set<ToolCard> toolCards;
-    Set<ObjectiveCard> objectiveCards;
-    String gameID;
-    int numPlayers;
-    RoundTrack roundTrack;
-    Set<Dice> extractedDices;  // annotazione ale: un set non può avere elementi uguali ma è possibile che escano due o più dadi uguali
-    Set<PlayerInGame> users;
+    protected ArrayList<ToolCard> toolCards;
+    protected ArrayList<ObjectiveCard> objectiveCards;
+    protected String gameID;
+    protected int numPlayers;
+    protected RoundTrack roundTrack;
+    protected ArrayList<Dice> extractedDices;  // annotazione ale: un set non può avere elementi uguali ma è possibile che escano due o più dadi uguali
+    protected ArrayList<PlayerInGame> users;
 
     protected AbstractGame(User user, int numPlayers) {
+        toolCards = new ArrayList<>();
+        objectiveCards = new ArrayList<>();
         gameID = UUID.randomUUID().toString();
         this.numPlayers = numPlayers;
         roundTrack = new RoundTrack();
+        extractedDices = new ArrayList<>();
+        users = new ArrayList<>();
         PlayerInGame player = new PlayerInGame(user);
         users.add(player);
     }
@@ -35,11 +39,11 @@ public abstract class AbstractGame {
     abstract void calculateScore();
     abstract void saveScore();
 
-    public Set<ToolCard> getToolCards() {
+    public ArrayList<ToolCard> getToolCards() {
         return toolCards;
     }
 
-    public Set<ObjectiveCard> getObjectiveCards() {
+    public ArrayList<ObjectiveCard> getObjectiveCards() {
         return objectiveCards;
     }
 
@@ -51,11 +55,11 @@ public abstract class AbstractGame {
         return numPlayers;
     }
 
-    public Set<Dice> getExtractedDices() {
+    public ArrayList<Dice> getExtractedDices() {
         return extractedDices;
     }
 
-    public Set<PlayerInGame> getUsers() {
+    public ArrayList<PlayerInGame> getUsers() {
         return users;
     }
 
