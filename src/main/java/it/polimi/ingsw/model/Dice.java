@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 import java.util.Random;
+import it.polimi.ingsw.model.RoundTrack;
+import it.polimi.ingsw.model.DiceBag;
 
 public class Dice {
     private Colour colour;
@@ -8,6 +10,11 @@ public class Dice {
     public Dice(Colour color) {
         colour = color;
         num = rollDice();
+    }
+
+    public Dice( Colour color, int number) {
+        colour = color;
+        num = number;
     }
 
 
