@@ -15,7 +15,7 @@ public abstract class AbstractGame {
     int gameID;
     int numPlayers;
     RoundTrack roundTrack;
-    Set<Dice> extractedDices;
+    Set<Dice> extractedDices;  // annotazione ale: un set non può avere elementi uguali ma è possibile che escano due o più dadi uguali
     Set<PlayerInGame> users;
 
     public AbstractGame(User user, int numPlayers) {

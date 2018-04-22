@@ -1,15 +1,19 @@
 package it.polimi.ingsw.model;
+import java.io.*;
+import java.lang.reflect.Array;
+import java.util.*;
+import it.polimi.ingsw.model.Dice;
 
 public class RoundTrack {
     private int currentRound;
-    private Dice[][] dicesNotUsed;
+    private Dice[] dicesNotUsed;
 
+    //array di arraylist in questo modo posso aggiungere tutti i dadi che voglio in modo dinamico
     private void RoundTrack( ){
         currentRound = 0;
-        for(int rows = 0; rows < 3; rows++){
-            for( int columns = 0; columns < 10; columns++ )
-                dicesNotUsed[rows][columns]= null;
-        }
+        ArrayList<Dice> dicesNotUsed[] = new ArrayList[10];
+        for(int i = 0; i< dicesNotUsed.length; i++)
+            dicesNotUsed[i] = new ArrayList<Dice>();
     }
 
     private void nextRound( ){
@@ -17,21 +21,10 @@ public class RoundTrack {
     }
 
     public void addDice( Dice dice){
-        int row = 0;
-        int col = currentRound --;
-        if( dicesNotUsed[row][col] == null)
-            dicesNotUsed[row][col] = dice;
-        else{
-            row ++;
-            while ( row <= 2) {
-                if (dicesNotUsed[row][col] != null)
-                    row++;
-                else
-                    dicesNotUsed[row][col] = dice;
-            }
-        }
+            int i = currentRound --;
+            //dicesNotUsed[i].add(dice);
     }
-
+/*
     public void swapDice (Dice addedDice, Dice removedDice, int round){
         int col = round--;
         int row = 0;
@@ -41,7 +34,7 @@ public class RoundTrack {
             else
                 dicesNotUsed[row][col] = addedDice;
         }
-    }
+    }*/
 
     //private void removeDice --> è davvero necessario ??
     //public void getRoundDices ( int round){}

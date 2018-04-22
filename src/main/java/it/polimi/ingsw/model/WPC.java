@@ -6,7 +6,6 @@ public class WPC {
     private Cell[][] schema;
     /*public static void readFile() {
 
-        String path = "C:/html.txt";
         char[] in = new char[50];
         int size = 0;
         try {
