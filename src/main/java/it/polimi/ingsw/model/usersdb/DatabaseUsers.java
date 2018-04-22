@@ -7,68 +7,38 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class DatabaseUsers {
 
 
 
-   // private static DatabaseUsers instance=null ;
+    private static DatabaseUsers instance ;
 
-    private static ConcurrentHashMap<String, UserInDB> userDataTable;
+    private HashMap<String, UserInDB> userDataTable;
 
-    private static ConcurrentHashMap<String, String> tokenbyUsername;
-    private static ConcurrentHashMap<String, UserInDB> usersbyToken;
-
-
-    private static final DatabaseUsers instance = new DatabaseUsers();
-
-    protected DatabaseUsers(){
-
-        try {
-            userDataTable = (ConcurrentHashMap<String, UserInDB>) UserLoadingFromFile.fromFile("src/main/resources/database/store.db");
-
-        }catch (FileNotFoundException i){
-            File f = new File("src/main/resources/database/store.db");
-            userDataTable=new ConcurrentHashMap<String, UserInDB>();
+    private HashMap<String, String> tokenbyUsername;
+    private HashMap<String, UserInDB> usersbyToken;
 
 
-        }
-        tokenbyUsername= new ConcurrentHashMap<String, String>();
-        usersbyToken=  new ConcurrentHashMap<String, UserInDB>();
-        System.out.println("usersbyToken "+usersbyToken);
-
-    }
-
-    public static DatabaseUsers getInstance() {
-        return instance;
-    }
-
-   /* public synchronized static DatabaseUsers getInstance(){
+    public synchronized static DatabaseUsers getInstance(){
         if (instance==null) {
-            System.out.println("not found instance "+instance);
-
             instance = new DatabaseUsers();
             try {
-                userDataTable = (ConcurrentHashMap<String, UserInDB>) UserLoadingFromFile.fromFile("src/main/resources/database/store.db");
+                instance.userDataTable = (HashMap<String, UserInDB>) UserLoadingFromFile.fromFile("src/main/resources/database/store.db");
 
             }catch (FileNotFoundException i){
                 File f = new File("src/main/resources/database/store.db");
-                userDataTable=new ConcurrentHashMap<String, UserInDB>();
-
-
+                instance.userDataTable=new HashMap<String, UserInDB>();
             }
-            tokenbyUsername= new ConcurrentHashMap<String, String>();
-            usersbyToken=  new ConcurrentHashMap<String, UserInDB>();
-            System.out.println("usersbyToken "+usersbyToken);
+            instance.tokenbyUsername=new HashMap<String, String>();
+            instance.usersbyToken=new HashMap<String, UserInDB>();
         }
         return instance;
     }
-*/
-    // This class is a singleton. Call getInstance() instead.
-    // private DatabaseUsers(){}
+
+    private DatabaseUsers(){}
 
     private synchronized boolean isUsernameTaken(String username){
         return userDataTable.containsKey(username);
@@ -82,7 +52,7 @@ public class DatabaseUsers {
         else {
             System.out.println("creonuovoutente");
             byte[] salt = getSalt();
-            String passwordHash = SHAFunction.getShaPwd(password, salt);
+            String passwordHash = SHAFunction.getShaPwd(password,salt);
             UserInDB newuser= new UserInDB();
             newuser.password=passwordHash;
             newuser.salt=salt;
@@ -90,15 +60,6 @@ public class DatabaseUsers {
             newuser.lostGames=0;
             newuser.abandonedGames=0;
             newuser.ranking=0;
-
-/*            byte[] userserial=null;
-            try {
-                userserial=BytesUtil.toByteArray(newuser);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            */
             userDataTable.put(username,newuser);
             updateFileDB();
             String newtoken = UUID.randomUUID().toString();
@@ -117,13 +78,7 @@ public class DatabaseUsers {
             return null;
         }
         UserInDB foundUser=null;
-      //  try {
-
-            foundUser= userDataTable.get(username);
-
- /*       } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }*/
+        foundUser=userDataTable.get(username);
         byte[] salt=foundUser.salt;
 
         String passwordHash = SHAFunction.getShaPwd(password, salt);
@@ -133,14 +88,8 @@ public class DatabaseUsers {
             if (tokenbyUsername.containsKey(username))
             {
                 String oldtoken=tokenbyUsername.get(username);
-              //  UserInDB loggedUser=usersbyToken.get(oldtoken);
-
                 usersbyToken.remove(oldtoken);
-
-
             }
-            else { }
-
 
             usersbyToken.put(newtoken,foundUser);
             tokenbyUsername.put(username,newtoken);
@@ -165,26 +114,26 @@ public class DatabaseUsers {
             }
         }
     }
+
     public synchronized int getWonGames(String token){
         if(token==null){
             System.out.println("no token : null");
-        return 0;}
+            return 0;}
 
         UserInDB us=usersbyToken.get(token);
-       return us.wonGames;
+        return us.wonGames;
     }
 
-    static synchronized byte[] getSalt() throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    static byte[] getSalt() throws NoSuchAlgorithmException, UnsupportedEncodingException {
         SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
         byte[] salt = new byte[16];
         sr.nextBytes(salt);
         return salt;
     }
 
-    private synchronized void updateFileDB(){
+    private void updateFileDB(){
         UserLoadingFromFile.toFile(userDataTable, "src/main/resources/database/store.db");
     }
-
 
 
 }

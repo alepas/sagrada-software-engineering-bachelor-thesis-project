@@ -3,7 +3,8 @@ package it.polimi.ingsw.model.usersdb;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class SHAFunction {
+class SHAFunction {
+    private SHAFunction(){}
 
     static String getShaPwd(String passwordToHash, byte[] salt) throws NoSuchAlgorithmException
     {
@@ -11,7 +12,7 @@ public class SHAFunction {
         String generatedPassword = null;
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-512");
-           md.update(salt);
+            md.update(salt);
 
             byte[] bytes = md.digest(pepperedPassword.getBytes());
             StringBuilder sb = new StringBuilder();
