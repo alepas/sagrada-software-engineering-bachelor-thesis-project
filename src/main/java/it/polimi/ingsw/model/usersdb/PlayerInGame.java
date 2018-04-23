@@ -72,7 +72,11 @@ public class PlayerInGame {
         db.addAbandonedGamesFromUsername(username);
     }
 
-    public void getWPC(WPC[] arrayWPC){
+    public WPC getWPC() {
+        return wpc;
+    }
+
+    public void setWPC(WPC[] arrayWPC){
         //scelta della carta
         // Cell[][]
         // wpc=WPC(Cell[][] schema);
@@ -81,6 +85,8 @@ public class PlayerInGame {
     public int getFavours(){
         return favours;
     }
+
+
 
     public Color getPrivateObjective1() {
         return privateObjective1;
@@ -102,7 +108,13 @@ public class PlayerInGame {
         this.favours=favours;
     }
 
+    public void setPrivateObjective1(Color color) {
 
+    }
+
+    public void setPrivateObjective2(Color color) {
+
+    }
 
     //isInGame() capire come implementarla
 

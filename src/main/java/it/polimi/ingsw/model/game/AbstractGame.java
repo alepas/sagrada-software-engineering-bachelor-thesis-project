@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.game;
 
 import it.polimi.ingsw.model.Dice;
+import it.polimi.ingsw.model.DiceBag;
 import it.polimi.ingsw.model.RoundTrack;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;
@@ -17,6 +18,7 @@ public abstract class AbstractGame {
     RoundTrack roundTrack;
     ArrayList<Dice> extractedDices;
     ArrayList<PlayerInGame> players;
+    DiceBag diceBag;
 
 
     AbstractGame(String user, int numPlayers) {
@@ -29,6 +31,7 @@ public abstract class AbstractGame {
         players = new ArrayList<>();
         PlayerInGame player = new PlayerInGame(user);
         players.add(player);
+        diceBag = new DiceBag();
     }
 
 
