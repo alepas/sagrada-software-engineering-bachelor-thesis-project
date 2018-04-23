@@ -101,6 +101,10 @@ public class DatabaseUsers {
         }
     }
 
+    public synchronized String getTokoen(String user){
+        return tokenbyUsername.get(user);
+    }
+
     public synchronized void addWonGames(String token){
         if(token==null)
             System.out.println("no token : null");
@@ -123,6 +127,74 @@ public class DatabaseUsers {
         UserInDB us=usersbyToken.get(token);
         return us.wonGames;
     }
+
+
+    synchronized void addWonGamesFromUsername(String user){
+
+            UserInDB us = userDataTable.get(user);
+            if (us == null) {
+                System.out.println("no user baby");
+            } else {
+                us.wonGames++;
+                updateFileDB();
+            }
+
+    }
+
+    synchronized int getWonGamesFromUsername(String user){
+        UserInDB us=userDataTable.get(user);
+        return us.wonGames;
+    }
+
+    synchronized void addLostGamesFromUsername(String user){
+
+        UserInDB us = userDataTable.get(user);
+        if (us == null) {
+            System.out.println("no user baby");
+        } else {
+            us.lostGames++;
+            updateFileDB();
+        }
+
+    }
+    synchronized int getLostGamesFromUsername(String user){
+        UserInDB us=userDataTable.get(user);
+        return us.lostGames;
+    }
+
+    synchronized void addAbandonedGamesFromUsername(String user){
+
+        UserInDB us = userDataTable.get(user);
+        if (us == null) {
+            System.out.println("no user baby");
+        } else {
+            us.abandonedGames++;
+            updateFileDB();
+        }
+
+    }
+
+    synchronized int getAbandonedGamesFromUsername(String user){
+        UserInDB us=userDataTable.get(user);
+        return us.abandonedGames;
+    }
+
+    synchronized void modifyRankingFromUsername(int pointsToAdd, String user){
+
+        UserInDB us = userDataTable.get(user);
+        if (us == null) {
+            System.out.println("no user baby");
+        } else {
+            us.ranking+=pointsToAdd;
+            updateFileDB();
+        }
+
+    }
+    synchronized int getRankingFromUsername(String user){
+        UserInDB us=userDataTable.get(user);
+        return us.ranking;
+    }
+
 
     static byte[] getSalt() throws NoSuchAlgorithmException, UnsupportedEncodingException {
         SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");

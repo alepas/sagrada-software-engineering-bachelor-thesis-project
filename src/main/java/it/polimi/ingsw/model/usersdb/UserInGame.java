@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model.usersdb;
 
-import it.polimi.ingsw.model.usersdb.UserInDB;
+import it.polimi.ingsw.model.*;
+
+
 
 import java.security.NoSuchAlgorithmException;
 import java.io.BufferedReader;
@@ -9,25 +11,26 @@ import java.io.InputStreamReader;
 
 
 public class UserInGame {
-    private UserInDB databaselinkedUser;
+    private DatabaseUsers db;
     private String username;
-    private int wonGames;
-    private int lostGames;
-    private int abandonedGames;
-    private int ranking;
+    private Colour privateObjectOne;
+    private Colour getPrivateObjectTwo;
+    private int favours;
+    private boolean active;
+    private WPC wpc;
+
+
+
 /*
     private Controller online;
     private Game activegame;
 */
 
 
-    UserInGame(String user, UserInDB data){
-        databaselinkedUser=data;
+    UserInGame(String user){
+        db=DatabaseUsers.getInstance();
         username=user;
-        wonGames=data.wonGames;
-        lostGames=data.lostGames;
-        abandonedGames=data.abandonedGames;
-        ranking=data.ranking;
+
         /*
         la funzione deve inizializzare il valore di username e deve andare a chiamare la corrispettiva
         funzione per la crittografia della password e quindi salvare la password con relativo salt se presente.
@@ -41,55 +44,61 @@ public class UserInGame {
     }
 
     public int getWonGames(){
-        return wonGames;
+        return db.getWonGamesFromUsername(username);
     }
 
     public int getLostGames(){
-        return lostGames;
+
+        return db.getLostGamesFromUsername(username);
     }
 
     public int getAbandonedGames(){
-        return abandonedGames;
+
+        return db.getAbandonedGamesFromUsername(username);
     }
 
     public int getRanking() {
-        return ranking;
+
+        return db.getRankingFromUsername(username);
     }
 
+    public void modifyRanking(int pointsToAdd){
+        db.modifyRankingFromUsername(pointsToAdd,username);
+    }
     public void addWonGame() {
+        db.addWonGamesFromUsername(username);
         /*verificare che per ognuno di questi la chiamata produca un aumento efffettivo dei giochi*/
-        this.wonGames ++;
     }
     public void addLostGame() {
-        this.lostGames ++;
+        db.addLostGamesFromUsername(username);
 
     }
     public void addAbandonedGame() {
-        this.abandonedGames ++;
+
+        db.addAbandonedGamesFromUsername(username);
     }
 
-    public boolean login(String username, String pwd){
-        /*
-        devo andare a fare lookup nel database degli utenti per vedere se ci sono
-        corrispondenze di username
-        chiamare la funzione di crittografia della password appena inserita
-        fare la verifica se la password crittografata corrisponde a quella salvata
-        nell database
-        in tal caso deve settare logged al Controller corrente
-
-        TEST:
-        verificare che dopo il login il Controller sia inserito in logged
-         */
-        return true;
+    public void getWPC(WPC[] arrayWPC){
+        //scelta della carta
+       // Cell[][]
+       // wpc=WPC(Cell[][] schema);
     }
 
-    public boolean logout(){
-        /*
-        va a rimuovere il corrente Controller dal logged
-        TEST:
-         */
-        return true;
+    public int getFavours(){
+        return favours;
     }
+    public boolean removeFavours(int favoursToRemove){
+        if (favours<favoursToRemove)
+            return false;
+        favours-=favoursToRemove;
+        return true:
+    }
+
+    private void setFavours(int favours){
+        this.favours=favours;
+    }
+
+
 
     //isInGame() capire come implementarla
 
