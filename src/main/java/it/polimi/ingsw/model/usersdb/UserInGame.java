@@ -91,7 +91,7 @@ public class UserInGame {
         if (favours<favoursToRemove)
             return false;
         favours-=favoursToRemove;
-        return true:
+        return true;
     }
 
     private void setFavours(int favours){

@@ -1,14 +1,17 @@
 package it.polimi.ingsw.model.usersdb;
 
+import it.polimi.ingsw.model.exceptions.passwordParsingException;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 class SHAFunction {
     private SHAFunction(){}
+    private static final String pepper="�`�y�3��G�u0019��ļ�hfb8673552f4fc89b53d6a7cf9cb1c6eb�w�1U�b�Uc78ab44a9177����x�.32";
 
-    static String getShaPwd(String passwordToHash, byte[] salt) throws NoSuchAlgorithmException
+    static String getShaPwd(String passwordToHash, byte[] salt) throws passwordParsingException
     {
-        String pepperedPassword = passwordToHash +getPepper();
+        String pepperedPassword = passwordToHash +pepper;
         String generatedPassword = null;
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-512");
@@ -24,17 +27,12 @@ class SHAFunction {
         }
         catch (NoSuchAlgorithmException e)
         {
-            e.printStackTrace();
+            throw new passwordParsingException();
         }
         return generatedPassword;
     }
 
 
 
-
-    private static String getPepper(){
-
-        return "�`�y�3��G�u0019��ļ�hfb8673552f4fc89b53d6a7cf9cb1c6eb�w�1U�b�Uc78ab44a9177����x�.32";
-    }
 
 }
