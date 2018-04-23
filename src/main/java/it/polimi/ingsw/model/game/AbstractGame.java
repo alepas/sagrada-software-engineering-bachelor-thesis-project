@@ -19,6 +19,7 @@ public abstract class AbstractGame {
     ArrayList<Dice> extractedDices;
     ArrayList<PlayerInGame> players;
 
+
     AbstractGame(User user, int numPlayers) {
         toolCards = new ArrayList<>();
         publicObjectiveCards = new ArrayList<>();
