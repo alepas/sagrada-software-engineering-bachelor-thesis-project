@@ -5,7 +5,6 @@ import it.polimi.ingsw.model.RoundTrack;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
-import it.polimi.ingsw.model.usersdb.User;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -20,7 +19,7 @@ public abstract class AbstractGame {
     ArrayList<PlayerInGame> players;
 
 
-    AbstractGame(User user, int numPlayers) {
+    AbstractGame(String user, int numPlayers) {
         toolCards = new ArrayList<>();
         publicObjectiveCards = new ArrayList<>();
         gameID = UUID.randomUUID().toString();

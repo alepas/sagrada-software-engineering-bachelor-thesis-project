@@ -21,7 +21,7 @@ public class PlayerInGame {
 */
 
 
-    PlayerInGame(String user){
+    public PlayerInGame(String user){
         db=DatabaseUsers.getInstance();
         username=user;
 

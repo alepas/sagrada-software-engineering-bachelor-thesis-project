@@ -1,5 +1,4 @@
 package it.polimi.ingsw.model.game;
-import it.polimi.ingsw.model.usersdb.User;
 
 import java.util.Collections;
 
@@ -9,7 +8,7 @@ public class MultiPlayerGame extends AbstractGame {
     private int currentTurn;
 
     //Coperto dai test
-    public MultiPlayerGame(User user, int numPlayers) {
+    public MultiPlayerGame(String user, int numPlayers) {
         super(user, numPlayers);
         turnPlayer = 0;
         roundPlayer = 0;
@@ -94,12 +93,12 @@ public class MultiPlayerGame extends AbstractGame {
     }
 
     //Coperto dai test
-    public void addPlayer(User user){
+    public void addPlayer(String user){
 
     }
 
     //Coperto dai test
-    public void removePlayer(User user){
+    public void removePlayer(String user){
 
     }
 }

@@ -1,14 +1,12 @@
 package it.polimi.ingsw.model.game;
 
 import it.polimi.ingsw.model.Colour;
-import it.polimi.ingsw.model.WPC.WPC;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.exceptions.notEnoughPlayersException;
 import it.polimi.ingsw.model.exceptions.userAlreadyInThisGameException;
 import it.polimi.ingsw.model.exceptions.userNotInThisGameException;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
-import it.polimi.ingsw.model.usersdb.User;
 import it.polimi.ingsw.model.exceptions.maxPlayersExceededException;
 
 import org.junit.Assert;
@@ -24,21 +22,11 @@ import static org.mockito.Mockito.when;
 
 public class MultiPlayerGameTest {
     private MultiPlayerGame game;
-    private User user1, user2, user3, user4;
+    private String username1 = "John", username2 = "Alice", username3 = "Bob", username4 = "Eva";
 
     @Before
     public void before() {
-        user1 = mock(User.class);
-        user2 = mock(User.class);
-        user3 = mock(User.class);
-        user4 = mock(User.class);
-
-        when(user1.getUsername()).thenReturn("John");
-        when(user2.getUsername()).thenReturn("Alice");
-        when(user3.getUsername()).thenReturn("Bob");
-        when(user4.getUsername()).thenReturn("Eva");
-
-        game = new MultiPlayerGame(user1, 3);
+        game = new MultiPlayerGame(username1, 3);
     }
 
     @Test
@@ -51,54 +39,54 @@ public class MultiPlayerGameTest {
         Assert.assertEquals(0, game.getTurnPlayer());
         Assert.assertEquals(0, game.getRoundPlayer());
         Assert.assertEquals(1, game.getCurrentTurn());
-        Assert.assertEquals(user1, game.getPlayers().iterator().next().getUser());
+        Assert.assertEquals(username1, game.getPlayers().iterator().next().getUser());
         Assert.assertTrue(game.getNumPlayers() >= 2 && game.getNumPlayers() <= 4);
     }
 
     @Test
     public void addingAndRemovingPlayersTest() {
         Assert.assertEquals(1, game.getPlayers().size());
-        game.addPlayer(user2);
+        game.addPlayer(username2);
         Assert.assertEquals(2, game.getPlayers().size());
-        game.addPlayer(user3);
+        game.addPlayer(username3);
         Assert.assertEquals(3, game.getPlayers().size());
 
-        game.removePlayer(user2);
+        game.removePlayer(username2);
         Assert.assertEquals(2, game.getPlayers().size());
-        game.addPlayer(user2);
+        game.addPlayer(username2);
         Assert.assertEquals(3, game.getPlayers().size());
 
-        game.removePlayer(user1);
+        game.removePlayer(username1);
         Assert.assertEquals(2, game.getPlayers().size());
-        game.removePlayer(user2);
+        game.removePlayer(username2);
         Assert.assertEquals(1, game.getPlayers().size());
-        game.removePlayer(user3);
+        game.removePlayer(username3);
         Assert.assertEquals(0, game.getPlayers().size());
     }
 
     @Test(expected = maxPlayersExceededException.class)
     public void addPlayersIllegalTest1() {
-        game.addPlayer(user2);
-        game.addPlayer(user3);
-        game.addPlayer(user4);
+        game.addPlayer(username2);
+        game.addPlayer(username3);
+        game.addPlayer(username4);
     }
 
     @Test(expected = userAlreadyInThisGameException.class)
-    public void addPlayersIllegalTest2() { game.addPlayer(user1); }
+    public void addPlayersIllegalTest2() { game.addPlayer(username1); }
 
     @Test(expected = userNotInThisGameException.class)
-    public void removePlayerIllegalTest() { game.removePlayer(user2); }
+    public void removePlayerIllegalTest() { game.removePlayer(username2); }
 
     //è giusto utilizzare qui PlayerInGame e Colour?
     @Test
     public void startGameTest() {
-        game.addPlayer(user2);
-        game.addPlayer(user3);
+        game.addPlayer(username2);
+        game.addPlayer(username3);
         game.startGame();
 
         ArrayList<PlayerInGame> players = game.getPlayers();
         ArrayList<Colour> colorExtracted = new ArrayList<>();
-        ArrayList<WPC> wpcExtracted = new ArrayList<>();
+//        ArrayList<WPC> wpcExtracted = new ArrayList<>();
 
         //Verifica che i giocatori non abbiano privateObject o WPC uguali
         for (PlayerInGame player: players){
@@ -108,10 +96,10 @@ public class MultiPlayerGameTest {
 
             Assert.assertNull(player.getPrivateObjective2());
 
-            WPC playerWPC = player.getWpc();
-            Assert.assertNotNull(playerWPC);
-            Assert.assertFalse(wpcExtracted.contains(playerWPC));
-            wpcExtracted.add(playerWPC);
+//            WPC playerWPC = player.getWpc();
+//            Assert.assertNotNull(playerWPC);
+//            Assert.assertFalse(wpcExtracted.contains(playerWPC));
+//            wpcExtracted.add(playerWPC);
         }
 
         //Verifica che siano state estratte 3 toolCard
@@ -137,8 +125,8 @@ public class MultiPlayerGameTest {
     //è giusto testarli assieme?
     @Test
     public void nextTurnAndNextRoundTest(){
-        game.addPlayer(user2);
-        game.addPlayer(user3);
+        game.addPlayer(username2);
+        game.addPlayer(username3);
         Assert.assertEquals(0, game.getRoundPlayer());
 
         Assert.assertEquals(0, game.getTurnPlayer());
@@ -173,8 +161,8 @@ public class MultiPlayerGameTest {
     public void nextRoundTest(){
         //mancano da testare i dati avanzati
 
-        game.addPlayer(user2);
-        game.addPlayer(user3);
+        game.addPlayer(username2);
+        game.addPlayer(username3);
 
         Assert.assertEquals(0, game.getRoundPlayer());
         Assert.assertEquals(1, game.roundTrack.getCurrentRound());
