@@ -4,17 +4,11 @@ import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.WPC.WPC;
 
 
-import java.security.NoSuchAlgorithmException;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
-
 public class PlayerInGame {
     private DatabaseUsers db;
     private String username;
-    private Colour privateObject1;
-    private Colour getPrivateObject2;
+    private Colour privateObjective1;
+    private Colour getPrivateObjective2;
     private int favours;
     private boolean active;
     private WPC wpc;
@@ -88,12 +82,12 @@ public class PlayerInGame {
         return favours;
     }
 
-    public Colour getPrivateObject1() {
-        return privateObject1;
+    public Colour getPrivateObjective1() {
+        return privateObjective1;
     }
 
-    public Colour getGetPrivateObject2() {
-        return getPrivateObject2;
+    public Colour getGetPrivateObjective2() {
+        return getPrivateObjective2;
     }
 
 
