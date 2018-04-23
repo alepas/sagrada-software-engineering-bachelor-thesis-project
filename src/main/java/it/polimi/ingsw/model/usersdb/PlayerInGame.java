@@ -8,7 +8,7 @@ public class PlayerInGame {
     private DatabaseUsers db;
     private String username;
     private Colour privateObjective1;
-    private Colour getPrivateObjective2;
+    private Colour privateObjective2;
     private int favours;
     private boolean active;
     private WPC wpc;
@@ -86,8 +86,8 @@ public class PlayerInGame {
         return privateObjective1;
     }
 
-    public Colour getGetPrivateObjective2() {
-        return getPrivateObjective2;
+    public Colour getPrivateObjective2() {
+        return privateObjective2;
     }
 
 
