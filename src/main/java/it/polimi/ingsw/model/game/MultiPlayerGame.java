@@ -8,7 +8,8 @@ import it.polimi.ingsw.model.usersdb.PlayerInGame;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class MultiPlayerGame extends AbstractGame {
+public class MultiPlayerGame extends AbstractGame implements Runnable {
+    private Thread t;
     private int turnPlayer;
     private int roundPlayer;
     private int currentTurn;
@@ -19,6 +20,18 @@ public class MultiPlayerGame extends AbstractGame {
         turnPlayer = 0;
         roundPlayer = 0;
         currentTurn = 1;
+    }
+
+    public void start(){
+        if (t == null){
+            t = new Thread(this);
+            t.start();
+        }
+    }
+
+    @Override
+    public void run() {
+        //Codice che regola il funzionamento della partita
     }
 
     //Non da testare
@@ -70,12 +83,36 @@ public class MultiPlayerGame extends AbstractGame {
     void extractWPC() {
         ArrayList<String> ids = WPC.getWPCids();
         Collections.shuffle(ids);
+        ChooseWPCThread[] chooseThreads = new ChooseWPCThread[numPlayers];
+
         int i = 0;
 
         for(PlayerInGame player : players){
-            player.chooseWPC(ids.subList(4*i, 4*i+3));
+            ChooseWPCThread chooseThread = new ChooseWPCThread(player, (ArrayList<String>) ids.subList(4*i, 4*i+3));
+            chooseThreads[i] = chooseThread;
+            chooseThread.start();
             i++;
         }
+
+        try {
+            int chooseWpcWaitingTime = 60;
+            System.out.println("Waiting for threads to finish.");
+            for (ChooseWPCThread chooseThread : chooseThreads ){
+                chooseThread.join(chooseWpcWaitingTime * 1000);
+            }
+        } catch (InterruptedException e) {
+            System.out.println("Main thread Interrupted");
+        }
+
+        for (i = 0; i < chooseThreads.length; i++){
+            if (chooseThreads[i].isInterrupted()){
+                disconnectPlayer(players.get(i));
+            }
+        }
+    }
+
+    private void disconnectPlayer(PlayerInGame playerInGame) {
+
     }
 
 
