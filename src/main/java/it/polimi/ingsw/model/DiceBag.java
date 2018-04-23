@@ -1,4 +1,5 @@
 package it.polimi.ingsw.model;
+import it.polimi.ingsw.model.Colour;
 
 public class DiceBag {
     private int yellowDices;
@@ -6,7 +7,6 @@ public class DiceBag {
     private int blueDices;
     private int greenDices;
     private int violetDices;
-    private Dice[] extractedDices;
     private final int initialDiceNum = 18;
 
     /*annotazione importante: DicesExtraction deve essere un metodo del game, in questo modo elimino i due costruttori
@@ -17,26 +17,21 @@ public class DiceBag {
 
     //quando costruisco il sacco nella partita multiplayer passerò al costruttore
     // l'int numDices =2*numplayers +1
-    private void DiceBag(int numDices){
-        yellowDices = initialDiceNum;
-        redDices = initialDiceNum;
-        blueDices = initialDiceNum;
-        greenDices = initialDiceNum;
-        violetDices = initialDiceNum;
-        Dice[] extractedDices = new Dice[numDices];
-    }
-
-    //costruttore soloPlayer: senza parametri
     private void DiceBag( ){
         yellowDices = initialDiceNum;
         redDices = initialDiceNum;
         blueDices = initialDiceNum;
         greenDices = initialDiceNum;
         violetDices = initialDiceNum;
-        Dice[] extractedDices = new Dice[4];
     }
 
-    public void DicesExtraction(int numPlayers){
+    public Dice[] DicesExtraction(int numPlayers){
+        int numOfDices;
+        if(numPlayers == 1)
+            numOfDices = 4;
+        else
+            numOfDices = numPlayers*2 +1;
+        Dice[] extractedDices = new Dice[numOfDices];
         if( numPlayers == 1) {
             for(int i=0; i < extractedDices.length; i++)
                 extractedDices[i]= pickDice();
@@ -53,6 +48,7 @@ public class DiceBag {
             for (int i = 0; i < extractedDices.length; i++)
                 extractedDices[i] = pickDice();
         }
+        return extractedDices;
     }
 
     public Dice pickDice(){
@@ -72,7 +68,7 @@ public class DiceBag {
     //nell enum ogni val è associato ad un valore numerico tramite colour.ordinal() recupero tale valore
     //utile per fare il check
     private boolean checkColour(Colour colour){
-        if (colour == colour.VIOLET){
+        if (colour == Colour.VIOLET){
             if (violetDices > 0){
                 violetDices --;
                 return true;
@@ -80,7 +76,7 @@ public class DiceBag {
             else
                 return  false;
         }
-        else if (colour.ordinal() == 1){
+        else if (colour == Colour.BLUE){
             if (blueDices > 0){
                 blueDices --;
                 return true;
@@ -88,7 +84,7 @@ public class DiceBag {
             else
                 return false;
         }
-        else if (colour.ordinal() == 2){
+        else if (colour == Colour.RED){
             if (redDices > 0){
                 redDices --;
                 return true;
@@ -96,7 +92,7 @@ public class DiceBag {
             else
                 return false;
         }
-        else if (colour.ordinal() == 3){
+        else if (colour == Colour.YELLOW){
             if (yellowDices > 0){
                 yellowDices --;
                 return true;
@@ -104,7 +100,7 @@ public class DiceBag {
             else
                 return false;
         }
-        else if (colour.ordinal() == 4){
+        else if (colour == Colour.GREEN){
             if (greenDices > 0){
                 greenDices --;
                 return true;
