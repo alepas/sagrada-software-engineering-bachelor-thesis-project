@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model.usersdb;
 
 import java.io.*;
-import java.util.Hashtable;
 
 
 public class UserLoadingFromFile {

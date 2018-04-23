@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model.game;
 import it.polimi.ingsw.model.usersdb.User;
 
+import java.util.Collections;
+
 public class MultiPlayerGame extends AbstractGame {
     private int turnPlayer;
     private int roundPlayer;
@@ -11,24 +13,46 @@ public class MultiPlayerGame extends AbstractGame {
         super(user, numPlayers);
         turnPlayer = 0;
         roundPlayer = 0;
-        currentTurn = 0;
+        currentTurn = 1;
     }
 
+    //Non da testare
     public int getTurnPlayer() {
         return turnPlayer;
     }
 
+    //Non da testare
     public int getRoundPlayer() {
         return roundPlayer;
     }
 
+    //Non da testare
     public int getCurrentTurn() {
         return currentTurn;
     }
 
-    //Testato
+//    // Metodo utilizzato solo per testing
+//    public void simulateRound(int roundPlayer) {
+//        this.roundPlayer = roundPlayer;
+//        this.turnPlayer = roundPlayer;
+//        this.currentTurn = 1;
+//    }
+
+    //Coperto dai test
     @Override
     public void startGame() {
+        shufflePlayers();
+        extractWPC();
+    }
+
+    //Non da testare
+    private void shufflePlayers(){
+        Collections.shuffle(players);
+    }
+
+    //Non da testare
+    @Override
+    void extractWPC() {
 
     }
 
@@ -37,19 +61,26 @@ public class MultiPlayerGame extends AbstractGame {
 
     }
 
+    //Coperto dai test
     @Override
     public void nextRound() {
 
     }
 
+    //Coperto dai test
     @Override
     public void nextTurn() {
-
+        if (currentTurn < 2*getNumPlayers()) {
+            turnPlayer = nextPlayer();
+            currentTurn++;
+        } else {
+//            nextRound();
+        }
     }
 
-    @Override
-    public void extractWPC() {
-
+    //Non da testare
+    private int nextPlayer(){
+        return 0;
     }
 
     @Override
@@ -63,8 +94,8 @@ public class MultiPlayerGame extends AbstractGame {
     }
 
     //Coperto dai test
-    public boolean addPlayer(User user){
-        return false;
+    public void addPlayer(User user){
+
     }
 
     //Coperto dai test

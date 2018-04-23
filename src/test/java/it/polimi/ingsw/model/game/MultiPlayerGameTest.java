@@ -43,11 +43,14 @@ public class MultiPlayerGameTest {
 
     @Test
     public void checkMultiPlayerGameConstructor(){
-        Assert.assertNotEquals(null, game.getGameID());
+        Assert.assertNotNull(game.getGameID());
         Assert.assertEquals(1, game.getPlayers().size());
         Assert.assertEquals(0, game.getToolCards().size());
         Assert.assertEquals(0, game.getPublicObjectiveCards().size());
         Assert.assertEquals(0, game.getExtractedDices().size());
+        Assert.assertEquals(0, game.getTurnPlayer());
+        Assert.assertEquals(0, game.getRoundPlayer());
+        Assert.assertEquals(1, game.getCurrentTurn());
         Assert.assertEquals(user1, game.getPlayers().iterator().next().getUser());
         Assert.assertTrue(game.getNumPlayers() >= 2 && game.getNumPlayers() <= 4);
     }
@@ -62,7 +65,12 @@ public class MultiPlayerGameTest {
 
         game.removePlayer(user2);
         Assert.assertEquals(2, game.getPlayers().size());
+        game.addPlayer(user2);
+        Assert.assertEquals(3, game.getPlayers().size());
+
         game.removePlayer(user1);
+        Assert.assertEquals(2, game.getPlayers().size());
+        game.removePlayer(user2);
         Assert.assertEquals(1, game.getPlayers().size());
         game.removePlayer(user3);
         Assert.assertEquals(0, game.getPlayers().size());
@@ -76,14 +84,10 @@ public class MultiPlayerGameTest {
     }
 
     @Test(expected = userAlreadyInThisGameException.class)
-    public void addPlayersIllegalTest2() {
-        game.addPlayer(user1);
-    }
+    public void addPlayersIllegalTest2() { game.addPlayer(user1); }
 
     @Test(expected = userNotInThisGameException.class)
-    public void removePlayerIllegalTest() {
-        game.removePlayer(user2);
-    }
+    public void removePlayerIllegalTest() { game.removePlayer(user2); }
 
     //è giusto utilizzare qui PlayerInGame e Colour?
     @Test
@@ -102,8 +106,10 @@ public class MultiPlayerGameTest {
             Assert.assertFalse(colorExtracted.contains(playerColor));
             colorExtracted.add(playerColor);
 
+            Assert.assertNull(player.getPrivateObjective2());
+
             WPC playerWPC = player.getWpc();
-            Assert.assertNotEquals(null, playerWPC);
+            Assert.assertNotNull(playerWPC);
             Assert.assertFalse(wpcExtracted.contains(playerWPC));
             wpcExtracted.add(playerWPC);
         }
@@ -112,14 +118,14 @@ public class MultiPlayerGameTest {
         ArrayList<ToolCard> toolCards = game.getToolCards();
         Assert.assertEquals(3, toolCards.size());
         //E che non ci siano carte uguali
-        Set<ToolCard> set = new HashSet<ToolCard>(toolCards);
+        Set<ToolCard> set = new HashSet<>(toolCards);
         Assert.assertFalse(set.size() < toolCards.size());
 
         //Verifica che siano state estratte 3 publicObjectiveCards
         ArrayList<PublicObjectiveCard> publicObjectiveCards = game.getPublicObjectiveCards();
         Assert.assertEquals(3, publicObjectiveCards.size());
         //E che non ci siano carte uguali
-        Set<PublicObjectiveCard> set2 = new HashSet<PublicObjectiveCard>(publicObjectiveCards);
+        Set<PublicObjectiveCard> set2 = new HashSet<>(publicObjectiveCards);
         Assert.assertFalse(set2.size() < publicObjectiveCards.size());
     }
 
@@ -127,4 +133,89 @@ public class MultiPlayerGameTest {
     public void starGameIllegalTest() {
         game.startGame();
     }
+
+    //è giusto testarli assieme?
+    @Test
+    public void nextTurnAndNextRoundTest(){
+        game.addPlayer(user2);
+        game.addPlayer(user3);
+        Assert.assertEquals(0, game.getRoundPlayer());
+
+        Assert.assertEquals(0, game.getTurnPlayer());
+        game.nextTurn();
+        Assert.assertEquals(1, game.getTurnPlayer());
+        game.nextTurn();
+        Assert.assertEquals(2, game.getTurnPlayer());
+        game.nextTurn();
+        Assert.assertEquals(2, game.getTurnPlayer());
+        game.nextTurn();
+        Assert.assertEquals(1, game.getTurnPlayer());
+        game.nextTurn();
+        Assert.assertEquals(0, game.getTurnPlayer());
+
+        game.nextTurn();
+        Assert.assertEquals(1, game.getRoundPlayer());
+
+        Assert.assertEquals(1, game.getTurnPlayer());
+        game.nextTurn();
+        Assert.assertEquals(2, game.getTurnPlayer());
+        game.nextTurn();
+        Assert.assertEquals(0, game.getTurnPlayer());
+        game.nextTurn();
+        Assert.assertEquals(0, game.getTurnPlayer());
+        game.nextTurn();
+        Assert.assertEquals(2, game.getTurnPlayer());
+        game.nextTurn();
+        Assert.assertEquals(1, game.getTurnPlayer());
+    }
+
+    @Test
+    public void nextRoundTest(){
+        //mancano da testare i dati avanzati
+
+        game.addPlayer(user2);
+        game.addPlayer(user3);
+
+        Assert.assertEquals(0, game.getRoundPlayer());
+        Assert.assertEquals(1, game.roundTrack.getCurrentRound());
+
+        game.nextRound();
+        Assert.assertEquals(1, game.getRoundPlayer());
+        Assert.assertEquals(2, game.roundTrack.getCurrentRound());
+
+        game.nextRound();
+        Assert.assertEquals(2, game.getRoundPlayer());
+        Assert.assertEquals(3, game.roundTrack.getCurrentRound());
+
+        game.nextRound();
+        Assert.assertEquals(0, game.getRoundPlayer());
+        Assert.assertEquals(4, game.roundTrack.getCurrentRound());
+
+        game.nextRound();
+        Assert.assertEquals(1, game.getRoundPlayer());
+        Assert.assertEquals(5, game.roundTrack.getCurrentRound());
+
+        game.nextRound();
+        Assert.assertEquals(2, game.getRoundPlayer());
+        Assert.assertEquals(6, game.roundTrack.getCurrentRound());
+
+        game.nextRound();
+        Assert.assertEquals(0, game.getRoundPlayer());
+        Assert.assertEquals(7, game.roundTrack.getCurrentRound());
+
+        game.nextRound();
+        Assert.assertEquals(1, game.getRoundPlayer());
+        Assert.assertEquals(8, game.roundTrack.getCurrentRound());
+
+        game.nextRound();
+        Assert.assertEquals(2, game.getRoundPlayer());
+        Assert.assertEquals(9, game.roundTrack.getCurrentRound());
+
+        game.nextRound();
+        Assert.assertEquals(0, game.getRoundPlayer());
+        Assert.assertEquals(10, game.roundTrack.getCurrentRound());
+
+        game.nextRound();   //Non deve generare problemi
+    }
+
 }

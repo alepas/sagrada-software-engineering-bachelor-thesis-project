@@ -15,6 +15,14 @@ public class RoundTrack {
         }
     }
 
+    public int getCurrentRound() {
+        return currentRound;
+    }
+
+    public ArrayList<Dice>[] getDicesNotUsed() {
+        return dicesNotUsed;
+    }
+
     private void nextRound( ){
         currentRound = currentRound ++;
     }

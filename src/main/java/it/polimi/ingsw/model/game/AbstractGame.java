@@ -11,13 +11,13 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 public abstract class AbstractGame {
-    private ArrayList<ToolCard> toolCards;
-    private ArrayList<PublicObjectiveCard> publicObjectiveCards;
-    private String gameID;
-    private int numPlayers;
-    private RoundTrack roundTrack;
-    private ArrayList<Dice> extractedDices;
-    private ArrayList<PlayerInGame> players;
+    ArrayList<ToolCard> toolCards;
+    ArrayList<PublicObjectiveCard> publicObjectiveCards;
+    String gameID;
+    int numPlayers;
+    RoundTrack roundTrack;
+    ArrayList<Dice> extractedDices;
+    ArrayList<PlayerInGame> players;
 
     AbstractGame(User user, int numPlayers) {
         toolCards = new ArrayList<>();
@@ -30,6 +30,8 @@ public abstract class AbstractGame {
         PlayerInGame player = new PlayerInGame(user);
         players.add(player);
     }
+
+
 
     abstract void startGame();
     abstract void endGame();
