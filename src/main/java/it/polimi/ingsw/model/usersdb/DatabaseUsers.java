@@ -50,7 +50,7 @@ public class DatabaseUsers {
             return null;
         }
         else {
-            System.out.println("creonuovoutente");
+            System.out.println("creo nuovo utente");
             byte[] salt = getSalt();
             String passwordHash = SHAFunction.getShaPwd(password,salt);
             UserInDB newuser= new UserInDB();

@@ -6,17 +6,15 @@ import it.polimi.ingsw.model.usersdb.User;
 public class maxPlayersExceededException extends RuntimeException {
     private final User user;
     private final AbstractGame game;
-    private final int maxPlayers;
 
-    public maxPlayersExceededException(User user, AbstractGame game, int maxPlayers) {
+    public maxPlayersExceededException(User user, AbstractGame game) {
         this.user = user;
         this.game = game;
-        this.maxPlayers = maxPlayers;
     }
 
     @Override
     public String getMessage() {
         return "Cannot add " + user.getUsername() + " to game: " + game.getGameID() + ". "
-                + "This game has already reached the maximum number of players: " + maxPlayers;
+                + "This game has already reached the maximum number of players: " + game.getPlayers();
     }
 }

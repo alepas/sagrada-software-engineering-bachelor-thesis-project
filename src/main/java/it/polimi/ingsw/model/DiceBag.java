@@ -75,7 +75,7 @@ public class DiceBag {
     //nell enum ogni val è associato ad un valore numerico tramite colour.ordinal() recupero tale valore
     //utile per fare il check
     private boolean checkColour(Colour colour){
-        if (colour.ordinal() == 0){
+        if (colour == colour.VIOLET){
             if (violetDices > 0){
                 violetDices --;
                 return true;
