@@ -4,6 +4,8 @@ import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.WPC.WPC;
 
 
+
+
 public class PlayerInGame {
     private DatabaseUsers db;
     private String username;
@@ -34,10 +36,12 @@ public class PlayerInGame {
 
 
     public String getUser(){
+
         return username;
     }
 
     public int getWonGames(){
+
         return db.getWonGamesFromUsername(username);
     }
 
@@ -57,6 +61,7 @@ public class PlayerInGame {
     }
 
     public void modifyRanking(int pointsToAdd){
+
         db.modifyRankingFromUsername(pointsToAdd,username);
     }
     public void addWonGame() {
@@ -83,6 +88,7 @@ public class PlayerInGame {
     }
 
     public int getFavours(){
+
         return favours;
     }
 
@@ -109,10 +115,12 @@ public class PlayerInGame {
     }
 
     public void setPrivateObjective1(Color color) {
+        this.privateObjective1=color;
 
     }
 
     public void setPrivateObjective2(Color color) {
+        this.privateObjective2=color;
 
     }
 
