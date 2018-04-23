@@ -18,6 +18,14 @@ public class RoundTrack {
             dicesNotUsed[0].add(null);
     }
 
+    public int getCurrentRound() {
+        return currentRound;
+    }
+
+    public ArrayList<Dice>[] getDicesNotUsed() {
+        return dicesNotUsed;
+    }
+
     private void nextRound( ){
         currentRound = currentRound ++;
     }

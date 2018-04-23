@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.WPC;
 public class PlayerInGame {
     private User user;
     private Colour privateObjective1;
+    private Colour privateObjective2;
     private WPC wpc;
 
     public PlayerInGame(User user) {
@@ -19,7 +20,13 @@ public class PlayerInGame {
         return privateObjective1;
     }
 
+    public Colour getPrivateObjective2() {
+        return privateObjective2;
+    }
+
     public WPC getWpc() {
         return wpc;
     }
+
+
 }
