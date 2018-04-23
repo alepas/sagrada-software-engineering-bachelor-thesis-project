@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.game;
 
+import it.polimi.ingsw.model.exceptions.NotEnoughPlayersException;
+
 import java.util.Collections;
 
 public class MultiPlayerGame extends AbstractGame {
@@ -39,8 +41,12 @@ public class MultiPlayerGame extends AbstractGame {
 
     //Coperto dai test
     @Override
-    public void startGame() {
+    public void startGame() throws NotEnoughPlayersException {
+        if (players.size() < numPlayers){
+            throw new NotEnoughPlayersException(this);
+        }
         shufflePlayers();
+
         extractWPC();
     }
 

@@ -3,11 +3,11 @@ package it.polimi.ingsw.model.game;
 import it.polimi.ingsw.model.Color;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;
-import it.polimi.ingsw.model.exceptions.notEnoughPlayersException;
-import it.polimi.ingsw.model.exceptions.userAlreadyInThisGameException;
-import it.polimi.ingsw.model.exceptions.userNotInThisGameException;
+import it.polimi.ingsw.model.exceptions.NotEnoughPlayersException;
+import it.polimi.ingsw.model.exceptions.UserAlreadyInThisGameException;
+import it.polimi.ingsw.model.exceptions.UserNotInThisGameException;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
-import it.polimi.ingsw.model.exceptions.maxPlayersExceededException;
+import it.polimi.ingsw.model.exceptions.MaxPlayersExceededException;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -63,17 +63,17 @@ public class MultiPlayerGameTest {
         Assert.assertEquals(0, game.getPlayers().size());
     }
 
-    @Test(expected = maxPlayersExceededException.class)
+    @Test(expected = MaxPlayersExceededException.class)
     public void addPlayersIllegalTest1() {
         game.addPlayer(username2);
         game.addPlayer(username3);
         game.addPlayer(username4);
     }
 
-    @Test(expected = userAlreadyInThisGameException.class)
+    @Test(expected = UserAlreadyInThisGameException.class)
     public void addPlayersIllegalTest2() { game.addPlayer(username1); }
 
-    @Test(expected = userNotInThisGameException.class)
+    @Test(expected = UserNotInThisGameException.class)
     public void removePlayerIllegalTest() { game.removePlayer(username2); }
 
     //è giusto utilizzare qui PlayerInGame e Color?
@@ -116,7 +116,7 @@ public class MultiPlayerGameTest {
         Assert.assertFalse(set2.size() < publicObjectiveCards.size());
     }
 
-    @Test(expected = notEnoughPlayersException.class)
+    @Test(expected = NotEnoughPlayersException.class)
     public void starGameIllegalTest() {
         game.startGame();
     }
