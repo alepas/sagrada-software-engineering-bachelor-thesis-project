@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.game;
 
 import it.polimi.ingsw.model.Colour;
-import it.polimi.ingsw.model.WPC;
+import it.polimi.ingsw.model.WPC.WPC;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.exceptions.notEnoughPlayersException;

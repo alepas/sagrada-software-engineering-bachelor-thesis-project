@@ -1,5 +1,7 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.model.WPC;
+import it.polimi.ingsw.model.Colour;
 import it.polimi.ingsw.model.Dice;
+import it.polimi.ingsw.model.WPC.Position;
 
 public class Cell {
     private Dice cellDice;
@@ -7,7 +9,7 @@ public class Cell {
     private int cellNum;
     private Position position;
 
-    private  void Cell( Colour color, Position pos){
+    private void Cell( Colour color, Position pos){
         cellDice = null;
         cellColour = color;
         cellNum = 0;
@@ -51,7 +53,7 @@ public class Cell {
     //metodo chiamato nel momento in cui voglio spostare un dado dalla sua cella
     //usato sia quando voglio spostare dado da una cella all'altra sia quando
     //voglio sostiurlo a uno nal roundtrack
-    public Dice removeDice ( ){  //sbagliato mi ritorna null
+    public Dice removeDice ( ){
         Colour color = cellDice.getDiceColour();
         int num = cellDice.getDiceNumber();
         Dice removedDice = new Dice(color, num);

@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model;
 import java.util.Random;
-import it.polimi.ingsw.model.RoundTrack;
-import it.polimi.ingsw.model.DiceBag;
 
 public class Dice {
     private Colour colour;
@@ -16,7 +14,6 @@ public class Dice {
         colour = color;
         num = number;
     }
-
 
     //metodo invocato sia dal costruttore per assegnare un numero tra 1 e 6
     // ma anche nel caso in cui possa ritirare il dado

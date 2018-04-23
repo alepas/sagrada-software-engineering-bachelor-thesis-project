@@ -1,7 +1,4 @@
 package it.polimi.ingsw.model;
-import java.lang.reflect.Array;
-import java.util.*;
-import it.polimi.ingsw.model.Dice;
 
 public class DiceBag {
     private int yellowDices;
@@ -17,6 +14,7 @@ public class DiceBag {
      in un set non possono essereci due o più lementi uguali tra di loro mentre nel nostro gioco tale evento è possibile)
      io l'avevo pensato come un array: dobbiamo scegliere quale via seguire
      */
+
     //quando costruisco il sacco nella partita multiplayer passerò al costruttore
     // l'int numDices =2*numplayers +1
     private void DiceBag(int numDices){
@@ -59,8 +57,7 @@ public class DiceBag {
 
     public Dice pickDice(){
         Colour color = selectedColour();
-        Dice dice = new Dice(color);
-        return dice;
+        return new Dice(color);
     }
 
     //seleziono in modo randomico il colore e controllo che siano ancora dispoibili dei dadi di quel colore
