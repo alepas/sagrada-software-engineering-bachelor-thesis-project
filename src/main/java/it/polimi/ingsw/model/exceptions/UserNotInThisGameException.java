@@ -1,11 +1,11 @@
 package it.polimi.ingsw.model.exceptions;
 import it.polimi.ingsw.model.game.AbstractGame;
 
-public class userNotInThisGameException extends RuntimeException {
+public class UserNotInThisGameException extends RuntimeException {
     private final String username;
     private final AbstractGame game;
 
-    public userNotInThisGameException(String username, AbstractGame game) {
+    public UserNotInThisGameException(String username, AbstractGame game) {
         this.username = username;
         this.game = game;
     }
