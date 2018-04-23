@@ -3,7 +3,7 @@ package it.polimi.ingsw.model.usersdb;
 import java.io.*;
 
 
-public class UserLoadingFromFile {
+public class LoadingFromFile {
 
     public static Object fromFile(String name) throws FileNotFoundException {
         Object output = null;

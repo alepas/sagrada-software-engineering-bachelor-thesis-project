@@ -16,24 +16,24 @@ public class DatabaseUsers {
 
     private static DatabaseUsers instance ;
 
-    private HashMap<String, UserInDB> userDataTable;
+    private HashMap<String, User> userDataTable;
 
     private HashMap<String, String> tokenbyUsername;
-    private HashMap<String, UserInDB> usersbyToken;
+    private HashMap<String, User> usersbyToken;
 
 
     public synchronized static DatabaseUsers getInstance(){
         if (instance==null) {
             instance = new DatabaseUsers();
             try {
-                instance.userDataTable = (HashMap<String, UserInDB>) UserLoadingFromFile.fromFile("src/main/resources/database/store.db");
+                instance.userDataTable = (HashMap<String, User>) LoadingFromFile.fromFile("src/main/resources/database/store.db");
 
             }catch (FileNotFoundException i){
                 File f = new File("src/main/resources/database/store.db");
-                instance.userDataTable=new HashMap<String, UserInDB>();
+                instance.userDataTable=new HashMap<String, User>();
             }
             instance.tokenbyUsername=new HashMap<String, String>();
-            instance.usersbyToken=new HashMap<String, UserInDB>();
+            instance.usersbyToken=new HashMap<String, User>();
         }
         return instance;
     }
@@ -53,7 +53,7 @@ public class DatabaseUsers {
             System.out.println("creo nuovo utente");
             byte[] salt = getSalt();
             String passwordHash = SHAFunction.getShaPwd(password,salt);
-            UserInDB newuser= new UserInDB();
+            User newuser= new User();
             newuser.password=passwordHash;
             newuser.salt=salt;
             newuser.wonGames=0;
@@ -77,7 +77,7 @@ public class DatabaseUsers {
             System.out.println("login scorretto");
             return null;
         }
-        UserInDB foundUser=null;
+        User foundUser=null;
         foundUser=userDataTable.get(username);
         byte[] salt=foundUser.salt;
 
@@ -109,7 +109,7 @@ public class DatabaseUsers {
         if(token==null)
             System.out.println("no token : null");
         else {
-            UserInDB us = usersbyToken.get(token);
+            User us = usersbyToken.get(token);
             if (us == null) {
                 System.out.println("no user baby");
             } else {
@@ -124,14 +124,14 @@ public class DatabaseUsers {
             System.out.println("no token : null");
             return 0;}
 
-        UserInDB us=usersbyToken.get(token);
+        User us=usersbyToken.get(token);
         return us.wonGames;
     }
 
 
     synchronized void addWonGamesFromUsername(String user){
 
-            UserInDB us = userDataTable.get(user);
+            User us = userDataTable.get(user);
             if (us == null) {
                 System.out.println("no user baby");
             } else {
@@ -142,13 +142,13 @@ public class DatabaseUsers {
     }
 
     synchronized int getWonGamesFromUsername(String user){
-        UserInDB us=userDataTable.get(user);
+        User us=userDataTable.get(user);
         return us.wonGames;
     }
 
     synchronized void addLostGamesFromUsername(String user){
 
-        UserInDB us = userDataTable.get(user);
+        User us = userDataTable.get(user);
         if (us == null) {
             System.out.println("no user baby");
         } else {
@@ -158,13 +158,13 @@ public class DatabaseUsers {
 
     }
     synchronized int getLostGamesFromUsername(String user){
-        UserInDB us=userDataTable.get(user);
+        User us=userDataTable.get(user);
         return us.lostGames;
     }
 
     synchronized void addAbandonedGamesFromUsername(String user){
 
-        UserInDB us = userDataTable.get(user);
+        User us = userDataTable.get(user);
         if (us == null) {
             System.out.println("no user baby");
         } else {
@@ -175,13 +175,13 @@ public class DatabaseUsers {
     }
 
     synchronized int getAbandonedGamesFromUsername(String user){
-        UserInDB us=userDataTable.get(user);
+        User us=userDataTable.get(user);
         return us.abandonedGames;
     }
 
     synchronized void modifyRankingFromUsername(int pointsToAdd, String user){
 
-        UserInDB us = userDataTable.get(user);
+        User us = userDataTable.get(user);
         if (us == null) {
             System.out.println("no user baby");
         } else {
@@ -191,7 +191,7 @@ public class DatabaseUsers {
 
     }
     synchronized int getRankingFromUsername(String user){
-        UserInDB us=userDataTable.get(user);
+        User us=userDataTable.get(user);
         return us.ranking;
     }
 
@@ -204,7 +204,7 @@ public class DatabaseUsers {
     }
 
     private void updateFileDB(){
-        UserLoadingFromFile.toFile(userDataTable, "src/main/resources/database/store.db");
+        LoadingFromFile.toFile(userDataTable, "src/main/resources/database/store.db");
     }
 
 
