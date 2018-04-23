@@ -1,9 +1,5 @@
 package it.polimi.ingsw.model;
-import java.io.*;
-import java.lang.reflect.Array;
 import java.util.*;
-import it.polimi.ingsw.model.Dice;
-import it.polimi.ingsw.model.game.AbstractGame;
 
 public class RoundTrack {
     private int currentRound;
@@ -13,9 +9,10 @@ public class RoundTrack {
     private void RoundTrack( ){
         currentRound = 0;
         dicesNotUsed = new ArrayList[10];
-        for(int i = 0; i< dicesNotUsed.length; i++)
+        for(int i = 0; i< dicesNotUsed.length; i++) {
             dicesNotUsed[i] = new ArrayList<Dice>();
             dicesNotUsed[0].add(null);
+        }
     }
 
     private void nextRound( ){
@@ -23,7 +20,7 @@ public class RoundTrack {
     }
 
     public void addDice( Dice dice){
-            int i = currentRound --;
+            int i = currentRound - 1;
             if(dicesNotUsed[i].get(0) == null)
                 dicesNotUsed[i].add(0, dice);
             else
@@ -35,7 +32,7 @@ public class RoundTrack {
     //comunque rapida anche in questo modo
     public Dice swapDice (Dice addedDice, int indexRemovedDice, int round){
         Dice removedDice;
-        int index = round --;
+        int index = round - 1;
         Colour color = dicesNotUsed[index].get(indexRemovedDice).getDiceColour();
         int num = dicesNotUsed[index].get(indexRemovedDice).getDiceNumber();
         removedDice = new Dice(color, num);
@@ -44,7 +41,7 @@ public class RoundTrack {
     }
 
     public void getRoundDices ( int round){
-        int index = round--;
+        int index = round - 1;
         dicesNotUsed[index].toArray();
     }
 

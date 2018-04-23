@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.usersdb;
 import it.polimi.ingsw.model.Colour;
-import it.polimi.ingsw.model.WPC;
+import it.polimi.ingsw.model.WPC.WPC;
 
 public class PlayerInGame {
     private User user;
