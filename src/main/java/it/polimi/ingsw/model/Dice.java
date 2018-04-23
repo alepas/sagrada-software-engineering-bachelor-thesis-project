@@ -2,16 +2,16 @@ package it.polimi.ingsw.model;
 import java.util.Random;
 
 public class Dice {
-    private Colour colour;
+    private Color color;
     private int num;
 
-    public Dice(Colour color) {
-        colour = color;
+    public Dice(Color color) {
+        this.color = color;
         num = rollDice();
     }
 
-    public Dice( Colour color, int number) {
-        colour = color;
+    public Dice(Color color, int number) {
+        this.color = color;
         num = number;
     }
 
@@ -23,8 +23,8 @@ public class Dice {
         return num;
     }
 
-    public Colour getDiceColour( ){
-        return colour;
+    public Color getDiceColour( ){
+        return color;
     }
 
     public int getDiceNumber( ){

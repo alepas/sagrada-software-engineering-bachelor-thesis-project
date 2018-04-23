@@ -7,8 +7,8 @@ import it.polimi.ingsw.model.WPC.WPC;
 public class PlayerInGame {
     private DatabaseUsers db;
     private String username;
-    private Colour privateObjective1;
-    private Colour privateObjective2;
+    private Color privateObjective1;
+    private Color privateObjective2;
     private int favours;
     private boolean active;
     private WPC wpc;
@@ -82,11 +82,11 @@ public class PlayerInGame {
         return favours;
     }
 
-    public Colour getPrivateObjective1() {
+    public Color getPrivateObjective1() {
         return privateObjective1;
     }
 
-    public Colour getPrivateObjective2() {
+    public Color getPrivateObjective2() {
         return privateObjective2;
     }
 

@@ -41,7 +41,7 @@ public class RoundTrack {
     public Dice swapDice (Dice addedDice, int indexRemovedDice, int round){
         Dice removedDice;
         int index = round - 1;
-        Colour color = dicesNotUsed[index].get(indexRemovedDice).getDiceColour();
+        Color color = dicesNotUsed[index].get(indexRemovedDice).getDiceColour();
         int num = dicesNotUsed[index].get(indexRemovedDice).getDiceNumber();
         removedDice = new Dice(color, num);
         dicesNotUsed[index].set(indexRemovedDice, addedDice);

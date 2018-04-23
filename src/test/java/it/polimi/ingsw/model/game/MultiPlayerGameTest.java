@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.game;
 
-import it.polimi.ingsw.model.Colour;
+import it.polimi.ingsw.model.Color;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.exceptions.notEnoughPlayersException;
@@ -18,7 +18,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class MultiPlayerGameTest {
     private MultiPlayerGame game;
@@ -77,7 +76,7 @@ public class MultiPlayerGameTest {
     @Test(expected = userNotInThisGameException.class)
     public void removePlayerIllegalTest() { game.removePlayer(username2); }
 
-    //è giusto utilizzare qui PlayerInGame e Colour?
+    //è giusto utilizzare qui PlayerInGame e Color?
     @Test
     public void startGameTest() {
         game.addPlayer(username2);
@@ -85,12 +84,12 @@ public class MultiPlayerGameTest {
         game.startGame();
 
         ArrayList<PlayerInGame> players = game.getPlayers();
-        ArrayList<Colour> colorExtracted = new ArrayList<>();
+        ArrayList<Color> colorExtracted = new ArrayList<>();
 //        ArrayList<WPC> wpcExtracted = new ArrayList<>();
 
         //Verifica che i giocatori non abbiano privateObject o WPC uguali
         for (PlayerInGame player: players){
-            Colour playerColor = player.getPrivateObjective1();
+            Color playerColor = player.getPrivateObjective1();
             Assert.assertFalse(colorExtracted.contains(playerColor));
             colorExtracted.add(playerColor);
 

@@ -1,5 +1,4 @@
 package it.polimi.ingsw.model;
-import it.polimi.ingsw.model.Colour;
 
 public class DiceBag {
     private int yellowDices;
@@ -52,23 +51,23 @@ public class DiceBag {
     }
 
     public Dice pickDice(){
-        Colour color = selectedColour();
+        Color color = selectedColour();
         return new Dice(color);
     }
 
     //seleziono in modo randomico il colore e controllo che siano ancora dispoibili dei dadi di quel colore
-    private Colour selectedColour(){
-        Colour colour =  Colour.randomColour();
-        if(checkColour(colour))
-            return colour;
+    private Color selectedColour(){
+        Color color =  Color.randomColour();
+        if(checkColour(color))
+            return color;
         else
             return selectedColour();
     }
 
-    //nell enum ogni val è associato ad un valore numerico tramite colour.ordinal() recupero tale valore
+    //nell enum ogni val è associato ad un valore numerico tramite color.ordinal() recupero tale valore
     //utile per fare il check
-    private boolean checkColour(Colour colour){
-        if (colour == Colour.VIOLET){
+    private boolean checkColour(Color color){
+        if (color == Color.VIOLET){
             if (violetDices > 0){
                 violetDices --;
                 return true;
@@ -76,7 +75,7 @@ public class DiceBag {
             else
                 return  false;
         }
-        else if (colour == Colour.BLUE){
+        else if (color == Color.BLUE){
             if (blueDices > 0){
                 blueDices --;
                 return true;
@@ -84,7 +83,7 @@ public class DiceBag {
             else
                 return false;
         }
-        else if (colour == Colour.RED){
+        else if (color == Color.RED){
             if (redDices > 0){
                 redDices --;
                 return true;
@@ -92,7 +91,7 @@ public class DiceBag {
             else
                 return false;
         }
-        else if (colour == Colour.YELLOW){
+        else if (color == Color.YELLOW){
             if (yellowDices > 0){
                 yellowDices --;
                 return true;
@@ -100,7 +99,7 @@ public class DiceBag {
             else
                 return false;
         }
-        else if (colour == Colour.GREEN){
+        else if (color == Color.GREEN){
             if (greenDices > 0){
                 greenDices --;
                 return true;

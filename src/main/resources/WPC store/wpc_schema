@@ -14,7 +14,7 @@
                 <number>5</number>
             </column>
             <column y="4">
-                <colour>GREEN</colour>
+                <color>GREEN</color>
             </column>
         </row>
         <row x="1">
@@ -24,7 +24,7 @@
                 <number>6</number>
             </column>
             <column y="3">
-                <colour>GREEN</colour>
+                <color>GREEN</color>
             </column>
             <column y="4">
                 <number>2</number>
@@ -36,7 +36,7 @@
                 <number>3</number>
             </column>
             <column y="2">
-                <colour>GREEN</colour>
+                <color>GREEN</color>
             </column>
             <column y="3">
                 <number>4</number>
@@ -48,7 +48,7 @@
                 <number>5</number>
             </column>
             <column y="1">
-                <colour>GREEN</colour>
+                <color>GREEN</color>
             </column>
             <column y="2">
                 <number>1</number>
