@@ -42,7 +42,7 @@ public class DiceBag {
     private Dice pickDice() {
         Color color;
         do {
-            color = Color.randomColour();
+            color = Color.randomColor();
         } while(!checkColor(color));
         switch (color){
             case RED: redDices--;
@@ -56,7 +56,7 @@ public class DiceBag {
 
     //nell enum ogni val è associato ad un valore numerico tramite color.ordinal() recupero tale valore
     //utile per fare il check
-    private boolean checkColor(Color color){
+    private boolean checkColor(Color color) throws EnumConstantNotPresentException{
         if (color == Color.VIOLET)
             return (violetDices > 0);
         else if (color == Color.BLUE)
@@ -65,10 +65,8 @@ public class DiceBag {
             return (redDices > 0);
         else if (color == Color.YELLOW)
             return (yellowDices > 0);
-        else if (color == Color.GREEN)
-            return (greenDices > 0);
         else
-            return false;
+            return (greenDices > 0);
     }
 
      public int getYellowDices(){return yellowDices;}

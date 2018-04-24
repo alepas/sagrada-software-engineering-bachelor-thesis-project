@@ -7,7 +7,7 @@ public class Dice {
     private Color color;
     private int num;
 
-    Dice(Color color) {
+    public Dice(Color color) {
         this.color = color;
         num = rollDice();
     }

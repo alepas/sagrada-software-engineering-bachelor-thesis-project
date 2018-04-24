@@ -8,25 +8,25 @@ public class Cell {
     private int cellNum;
     private Position position;
 
-    private Cell(Color color, Position pos){
+    Cell(Color color, Position position){
         cellDice = null;
         cellColor = color;
         cellNum = 0;
-        position = pos;
+        this.position = position;
     }
 
-    private Cell( int n, Position pos){
+    Cell( int n, Position position){
         cellDice = null;
         cellColor = null;
         cellNum = n;
-        position = pos;
+        this.position = position;
     }
 
-    private Cell(Position pos){
+    Cell(Position position){
         cellDice = null;
         cellColor = null;
         cellNum = 0;
-        position = pos;
+        this.position = position;
     }
 
     public Color getCellColor( ){
@@ -37,7 +37,7 @@ public class Cell {
         return cellNum;
     }
 
-    public Dice getDice( ){
+    public Dice getCellDice( ){
         return cellDice;
     }
 
@@ -53,9 +53,7 @@ public class Cell {
     //usato sia quando voglio spostare dado da una cella all'altra sia quando
     //voglio sostiurlo a uno nal roundtrack
     public Dice removeDice ( ){
-        Color color = cellDice.getDiceColour();
-        int num = cellDice.getDiceNumber();
-        Dice removedDice = new Dice(color, num);
+        Dice removedDice = getCellDice();
         cellDice = null;
         return removedDice;
     }

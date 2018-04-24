@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.model.wpctest;
 
 import it.polimi.ingsw.model.WPC.Position;
 import org.junit.Assert;
