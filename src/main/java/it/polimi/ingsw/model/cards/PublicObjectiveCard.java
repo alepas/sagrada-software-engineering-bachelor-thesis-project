@@ -1,8 +1,11 @@
 package it.polimi.ingsw.model.cards;
 
+import it.polimi.ingsw.model.WPC.WPC;
+
 import java.util.ArrayList;
 
 public abstract class PublicObjectiveCard {
+    String id;
 
     //Deve restitituire un ArrayList di Stringhe contententi tutti gli ID delle PublicObjectiveCards
     //L'ordine non è importante
@@ -15,4 +18,10 @@ public abstract class PublicObjectiveCard {
     public static PublicObjectiveCard getCardByID(String id){
         return null;
     }
+
+    public String getID(){
+        return id;
+    }
+
+    public abstract int calculateScore(WPC wpc);
 }

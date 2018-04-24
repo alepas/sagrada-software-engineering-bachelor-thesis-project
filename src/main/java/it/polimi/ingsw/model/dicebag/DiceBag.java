@@ -1,9 +1,6 @@
 package it.polimi.ingsw.model.dicebag;
 
-import it.polimi.ingsw.model.dicebag.Color;
-import it.polimi.ingsw.model.dicebag.Dice;
-
-import static it.polimi.ingsw.model.costants.DiceBagCostants.INITIAL_DICE_NUMBER;
+import static it.polimi.ingsw.model.constants.DiceBagCostants.INITIAL_DICE_NUMBER;
 
 public class DiceBag {
     private int yellowDices;

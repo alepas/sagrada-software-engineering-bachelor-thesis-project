@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.game;
 
+import it.polimi.ingsw.model.WPC.WPC;
+import it.polimi.ingsw.model.constants.GameCostants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;
@@ -14,8 +16,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.mockito.Mockito.mock;
 
@@ -76,44 +76,108 @@ public class MultiPlayerGameTest {
     @Test(expected = UserNotInThisGameException.class)
     public void removePlayerIllegalTest() { game.removePlayer(username2); }
 
-    //è giusto utilizzare qui PlayerInGame e Color?
+    @Test
+    public void extractPrivateObjectivesTest(){
+        game.addPlayer(username2);
+        game.addPlayer(username3);
+        game.extractPrivateObjectives();
+
+        ArrayList<Color> colors = new ArrayList<>();
+
+        for (PlayerInGame player : game.getPlayers()){
+            Color p1 = player.getPrivateObjective1();
+            Color p2 = player.getPrivateObjective2();
+
+            if(GameCostants.NUM_PRIVATE_OBJ_FOR_PLAYER_IN_MULTIPLAYER_GAME == 1){
+                Assert.assertNotNull(p1);
+                Assert.assertNull(p2);
+
+                for (Color color : colors){
+                    Assert.assertFalse(colors.contains(p1));
+                }
+
+                colors.add(p1);
+            } else {
+                Assert.assertNotNull(p1);
+                Assert.assertNotNull(p2);
+                Assert.assertNotEquals(p1, p2);
+
+                for (Color color : colors){
+                    Assert.assertFalse(colors.contains(p1));
+                    Assert.assertFalse(colors.contains(p2));
+                }
+
+                colors.add(p1);
+                colors.add(p2);
+            }
+        }
+    }
+
+    @Test
+    public void extractWpcTest(){
+        game.addPlayer(username2);
+        game.addPlayer(username3);
+        game.extractWPCs();
+
+        ArrayList<WPC> wpcExtracted = new ArrayList<>();
+
+        for (PlayerInGame player : game.getPlayers()){
+            WPC playerWPC = player.getWPC();
+            Assert.assertNotNull(playerWPC);
+
+            for (WPC wpc : wpcExtracted){
+                Assert.assertNotEquals(playerWPC.getWpcID(), wpc.getWpcID());
+            }
+
+            wpcExtracted.add(playerWPC);
+        }
+    }
+
+    @Test
+    public void extractToolCardsTest(){
+        game.extractToolCards();
+
+        Assert.assertEquals(GameCostants.NUM_TOOL_CARDS_IN_MULTIPLAYER_GAME, game.getToolCards().size());
+
+        ArrayList<ToolCard> cardsExtracted = new ArrayList<>();
+
+        for (ToolCard gameCard : game.getToolCards()){
+            Assert.assertNotNull(gameCard);
+
+            for (ToolCard card : cardsExtracted){
+                Assert.assertNotEquals(card.getID(), gameCard.getID());
+            }
+
+            cardsExtracted.add(gameCard);
+        }
+    }
+
+    @Test
+    public void extractPublicObjectivesTest(){
+        game.extractPublicObjectives();
+
+        Assert.assertEquals(GameCostants.NUM_PUBLIC_OBJ_IN_MULTIPLAYER_GAME, game.getPublicObjectiveCards().size());
+
+        ArrayList<PublicObjectiveCard> cardsExtracted = new ArrayList<>();
+
+        for (PublicObjectiveCard gameCard : game.getPublicObjectiveCards()){
+            Assert.assertNotNull(gameCard);
+
+            for (PublicObjectiveCard card : cardsExtracted){
+                Assert.assertNotEquals(card.getID(), gameCard.getID());
+            }
+
+            cardsExtracted.add(gameCard);
+        }
+    }
+
     @Test
     public void startGameTest() {
         game.addPlayer(username2);
         game.addPlayer(username3);
         game.startGame();
 
-        ArrayList<PlayerInGame> players = game.getPlayers();
-        ArrayList<Color> colorExtracted = new ArrayList<>();
-//        ArrayList<WPC> wpcExtracted = new ArrayList<>();
-
-        //Verifica che i giocatori non abbiano privateObject o WPC uguali
-        for (PlayerInGame player: players){
-            Color playerColor = player.getPrivateObjective1();
-            Assert.assertFalse(colorExtracted.contains(playerColor));
-            colorExtracted.add(playerColor);
-
-            Assert.assertNull(player.getPrivateObjective2());
-
-//            WPC playerWPC = player.getWpc();
-//            Assert.assertNotNull(playerWPC);
-//            Assert.assertFalse(wpcExtracted.contains(playerWPC));
-//            wpcExtracted.add(playerWPC);
-        }
-
-        //Verifica che siano state estratte 3 toolCard
-        ArrayList<ToolCard> toolCards = game.getToolCards();
-        Assert.assertEquals(3, toolCards.size());
-        //E che non ci siano carte uguali
-        Set<ToolCard> set = new HashSet<>(toolCards);
-        Assert.assertFalse(set.size() < toolCards.size());
-
-        //Verifica che siano state estratte 3 publicObjectiveCards
-        ArrayList<PublicObjectiveCard> publicObjectiveCards = game.getPublicObjectiveCards();
-        Assert.assertEquals(3, publicObjectiveCards.size());
-        //E che non ci siano carte uguali
-        Set<PublicObjectiveCard> set2 = new HashSet<>(publicObjectiveCards);
-        Assert.assertFalse(set2.size() < publicObjectiveCards.size());
+        Assert.assertEquals(3, game.getPlayers().size());
     }
 
     @Test(expected = NotEnoughPlayersException.class)
@@ -121,7 +185,6 @@ public class MultiPlayerGameTest {
         game.startGame();
     }
 
-    //è giusto testarli assieme?
     @Test
     public void nextTurnAndNextRoundTest(){
         game.addPlayer(username2);
