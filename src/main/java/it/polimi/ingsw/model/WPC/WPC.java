@@ -1,15 +1,18 @@
 package it.polimi.ingsw.model.WPC;
 
 
+import java.util.ArrayList;
+
 public class WPC {
     private int wpcId;
-    private int favour;
+    private int favours;
     private Cell[][] schema;
 
-    public void WPC( String id) {
+
+    public WPC( String id) {
         //var Parser = new DomParser(id)
         wpcId = Integer.parseInt(id);
-        favour = 1;
+        favours = 1;
         schema = new Cell[4][5];
         for(int i= 0; i<4; i++) {
             for(int j=0; j<5; j++)
@@ -17,6 +20,10 @@ public class WPC {
         }
     }
 
+    public int getFavours(){ return favours;};
+    public static ArrayList<String> getWPCid(){
+        return null;
+    }
     private void checkCellRestriction(){}
     private void checkAdjacentRestriction(){}
 }

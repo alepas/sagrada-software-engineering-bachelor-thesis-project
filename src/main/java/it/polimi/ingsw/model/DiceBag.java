@@ -1,12 +1,14 @@
 package it.polimi.ingsw.model;
 
+import java.util.Random;
+
 public class DiceBag {
     private int yellowDices;
     private int redDices;
     private int blueDices;
     private int greenDices;
     private int violetDices;
-    private final int initialDiceNum = 18;
+    private final int initialDiceNum = 18; //costante da inserire in class costante
 
     /*annotazione importante: DicesExtraction deve essere un metodo del game, in questo modo elimino i due costruttori
      e anche l'array extracedDices; davide nella classe game inserisce un set (credo non sia la scelta migliore in quanto
@@ -16,7 +18,7 @@ public class DiceBag {
 
     //quando costruisco il sacco nella partita multiplayer passerò al costruttore
     // l'int numDices =2*numplayers +1
-    private void DiceBag( ){
+    private DiceBag( ){
         yellowDices = initialDiceNum;
         redDices = initialDiceNum;
         blueDices = initialDiceNum;
@@ -27,88 +29,51 @@ public class DiceBag {
     public Dice[] DicesExtraction(int numPlayers){
         int numOfDices;
         if(numPlayers == 1)
-            numOfDices = 4;
+            numOfDices = 4; //costante da inserire in class costante
         else
             numOfDices = numPlayers*2 +1;
         Dice[] extractedDices = new Dice[numOfDices];
-        if( numPlayers == 1) {
-            for(int i=0; i < extractedDices.length; i++)
-                extractedDices[i]= pickDice();
-        }
-        else if (numPlayers == 2){
-            for(int i=0; i < extractedDices.length; i++)
-                extractedDices[i]= pickDice();
-        }
-        else if (numPlayers == 3){
-            for(int i=0; i < extractedDices.length; i++)
-                extractedDices[i]= pickDice();
-        }
-        else {
-            for (int i = 0; i < extractedDices.length; i++)
-                extractedDices[i] = pickDice();
-        }
+        for (int i = 0; i < extractedDices.length; i++)
+            extractedDices[i] = pickDice();
         return extractedDices;
     }
 
-    public Dice pickDice(){
-        Color color = selectedColour();
+    private Dice pickDice() {
+        Color color;
+        do {
+            color = Color.randomColour();
+        } while(!checkColor(color));
+        switch (color){
+            case RED: redDices--;
+            case BLUE: blueDices--;
+            case GREEN: greenDices--;
+            case VIOLET: violetDices--;
+            case YELLOW: yellowDices--;
+        }
         return new Dice(color);
-    }
-
-    //seleziono in modo randomico il colore e controllo che siano ancora dispoibili dei dadi di quel colore
-    private Color selectedColour(){
-        Color color =  Color.randomColour();
-        if(checkColour(color))
-            return color;
-        else
-            return selectedColour();
     }
 
     //nell enum ogni val è associato ad un valore numerico tramite color.ordinal() recupero tale valore
     //utile per fare il check
-    private boolean checkColour(Color color){
-        if (color == Color.VIOLET){
-            if (violetDices > 0){
-                violetDices --;
-                return true;
-            }
-            else
-                return  false;
-        }
-        else if (color == Color.BLUE){
-            if (blueDices > 0){
-                blueDices --;
-                return true;
-            }
-            else
-                return false;
-        }
-        else if (color == Color.RED){
-            if (redDices > 0){
-                redDices --;
-                return true;
-            }
-            else
-                return false;
-        }
-        else if (color == Color.YELLOW){
-            if (yellowDices > 0){
-                yellowDices --;
-                return true;
-            }
-            else
-                return false;
-        }
-        else if (color == Color.GREEN){
-            if (greenDices > 0){
-                greenDices --;
-                return true;
-            }
-            else
-                return false;
-        }
+    private boolean checkColor(Color color){
+        if (color == Color.VIOLET)
+            return (violetDices > 0);
+        else if (color == Color.BLUE)
+            return (blueDices > 0);
+        else if (color == Color.RED)
+            return (redDices > 0);
+        else if (color == Color.YELLOW)
+            return (yellowDices > 0);
+        else if (color == Color.GREEN)
+            return (greenDices > 0);
         else
             return false;
     }
+
+     int getYellowDices(){return yellowDices;}
+     int getRedDices(){return redDices;}
+     int getGreenDices(){return greenDices;}
+     int getBlueDices(){return blueDices;}
+     int getVioletDices(){return violetDices;}
 }
 

@@ -3,15 +3,14 @@ import java.util.*;
 
 public class RoundTrack {
     private int currentRound;
-    private ArrayList<Dice>[] dicesNotUsed;
+    private ArrayList[] dicesNotUsed;
 
     //array di arraylist in questo modo posso aggiungere tutti i dadi che voglio in modo dinamico
-    private void RoundTrack( ){
+    private RoundTrack( ){
         currentRound = 0;
         dicesNotUsed = new ArrayList[10];
         for(int i = 0; i< dicesNotUsed.length; i++) {
             dicesNotUsed[i] = new ArrayList<Dice>();
-            dicesNotUsed[0].add(null);
         }
     }
 
@@ -19,7 +18,7 @@ public class RoundTrack {
         return currentRound;
     }
 
-    public ArrayList<Dice>[] getDicesNotUsed() {
+    public ArrayList[] getDicesNotUsed() {
         return dicesNotUsed;
     }
 
@@ -29,10 +28,7 @@ public class RoundTrack {
 
     public void addDice( Dice dice){
             int i = currentRound - 1;
-            if(dicesNotUsed[i].get(0) == null)
-                dicesNotUsed[i].add(0, dice);
-            else
-                dicesNotUsed[i].add(dice);
+            dicesNotUsed[i].add(dice);
     }
 
     //genero e ritorno il dado che intendo rimuovere, con la set posiziono il dado che voglio aggiungere
@@ -41,9 +37,7 @@ public class RoundTrack {
     public Dice swapDice (Dice addedDice, int indexRemovedDice, int round){
         Dice removedDice;
         int index = round - 1;
-        Color color = dicesNotUsed[index].get(indexRemovedDice).getDiceColour();
-        int num = dicesNotUsed[index].get(indexRemovedDice).getDiceNumber();
-        removedDice = new Dice(color, num);
+        removedDice = (Dice) dicesNotUsed[index].get(indexRemovedDice); //sto dicendo io che sta prendendo un dado
         dicesNotUsed[index].set(indexRemovedDice, addedDice);
         return removedDice;
     }
