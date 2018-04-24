@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.game;
 
-import it.polimi.ingsw.model.costants.GameCostants;
+import it.polimi.ingsw.model.constants.GameCostants;
 import it.polimi.ingsw.model.exceptions.gameExceptions.*;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 
@@ -50,11 +50,6 @@ public class MultiPlayerGame extends AbstractGame implements Runnable {
         extractToolCards();
         extractPublicObjectives();
         shufflePlayers();
-    }
-
-    @Override
-    protected void disconnectPlayer(PlayerInGame playerInGame) {
-
     }
 
     private void shufflePlayers(){ Collections.shuffle(players); }

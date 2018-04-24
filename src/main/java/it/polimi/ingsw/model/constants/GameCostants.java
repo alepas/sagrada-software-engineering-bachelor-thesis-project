@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.costants;
+package it.polimi.ingsw.model.constants;
 
 public class GameCostants {
     //General

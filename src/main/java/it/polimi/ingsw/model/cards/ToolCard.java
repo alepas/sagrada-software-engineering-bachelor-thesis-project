@@ -17,7 +17,7 @@ public abstract class ToolCard {
         return null;
     }
 
-    String getID(){
+    public String getID(){
         return id;
     }
 }

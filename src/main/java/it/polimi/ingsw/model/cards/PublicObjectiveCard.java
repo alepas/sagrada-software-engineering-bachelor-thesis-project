@@ -17,7 +17,7 @@ public abstract class PublicObjectiveCard {
         return null;
     }
 
-    String getID(){
+    public String getID(){
         return id;
     }
 }

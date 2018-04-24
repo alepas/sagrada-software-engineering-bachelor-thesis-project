@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.game;
 
-import it.polimi.ingsw.model.costants.GameCostants;
+import it.polimi.ingsw.model.constants.GameCostants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.dicebag.DiceBag;
@@ -51,6 +51,26 @@ public abstract class AbstractGame {
     abstract void calculateScore();
     abstract void saveScore();
 
+    void extractPrivateObjectives() {
+        ArrayList<Color> colorsExtracted = new ArrayList<>();
+        Color color;
+
+        for (PlayerInGame player : players){
+            for (int i = 0; i < numOfPrivateObjectivesForPlayer; i++) {
+                do {
+                    color = Color.randomColor();
+                } while (colorsExtracted.contains(color));
+
+                colorsExtracted.add(color);
+                if (i == 0) {
+                    player.setPrivateObjective1(color);
+                } else {
+                    player.setPrivateObjective2(color);
+                }
+            }
+        }
+    }
+
     void extractWPCs(){
         ArrayList<String> ids = WPC.getWpcIDs();
         Collections.shuffle(ids);
@@ -86,26 +106,6 @@ public abstract class AbstractGame {
         }
     }
 
-    void extractPrivateObjectives() {
-        ArrayList<Color> colorsExtracted = new ArrayList<>();
-        Color color;
-
-        for (PlayerInGame player : players){
-            for (int i = 0; i < numOfPrivateObjectivesForPlayer; i++) {
-                do {
-                    color = Color.randomColor();
-                } while (colorsExtracted.contains(color));
-
-                colorsExtracted.add(color);
-                if (i == 0) {
-                    player.setPrivateObjective1(color);
-                } else {
-                    player.setPrivateObjective2(color);
-                }
-            }
-        }
-    }
-
     void extractToolCards() {
         ArrayList<String> ids = ToolCard.getCardsIDs();
         Collections.shuffle(ids);
@@ -123,8 +123,6 @@ public abstract class AbstractGame {
             publicObjectiveCards.add(PublicObjectiveCard.getCardByID(id));
         }
     }
-
-    protected abstract void disconnectPlayer(PlayerInGame playerInGame);
 
 
     public ArrayList<ToolCard> getToolCards() {
