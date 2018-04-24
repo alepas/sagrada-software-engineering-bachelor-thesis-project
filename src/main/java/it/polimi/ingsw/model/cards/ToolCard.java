@@ -16,4 +16,8 @@ public abstract class ToolCard {
     public static ToolCard getCardByID(String id){
         return null;
     }
+
+    String getID(){
+        return id;
+    }
 }

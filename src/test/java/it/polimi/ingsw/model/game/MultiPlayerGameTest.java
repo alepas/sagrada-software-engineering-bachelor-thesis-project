@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.game;
 
+import it.polimi.ingsw.model.WPC.WPC;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;
@@ -76,7 +77,26 @@ public class MultiPlayerGameTest {
     @Test(expected = UserNotInThisGameException.class)
     public void removePlayerIllegalTest() { game.removePlayer(username2); }
 
-    //è giusto utilizzare qui PlayerInGame e Color?
+    @Test
+    public void extractWpcTest(){
+        game.addPlayer(username2);
+        game.addPlayer(username3);
+        game.extractWPCs();
+
+        ArrayList<WPC> wpcExtracted = new ArrayList<>();
+
+        for (PlayerInGame player : game.getPlayers()){
+            WPC playerWPC = player.getWPC();
+            Assert.assertNotNull(playerWPC);
+
+            for (WPC wpc : wpcExtracted){
+                Assert.assertNotEquals(playerWPC.getWpcID(), wpc.getWpcID());
+            }
+
+            wpcExtracted.add(playerWPC);
+        }
+    }
+
     @Test
     public void startGameTest() {
         game.addPlayer(username2);
@@ -85,7 +105,7 @@ public class MultiPlayerGameTest {
 
         ArrayList<PlayerInGame> players = game.getPlayers();
         ArrayList<Color> colorExtracted = new ArrayList<>();
-//        ArrayList<WPC> wpcExtracted = new ArrayList<>();
+        ArrayList<WPC> wpcExtracted = new ArrayList<>();
 
         //Verifica che i giocatori non abbiano privateObject o WPC uguali
         for (PlayerInGame player: players){
@@ -95,10 +115,10 @@ public class MultiPlayerGameTest {
 
             Assert.assertNull(player.getPrivateObjective2());
 
-//            WPC playerWPC = player.getWpc();
-//            Assert.assertNotNull(playerWPC);
-//            Assert.assertFalse(wpcExtracted.contains(playerWPC));
-//            wpcExtracted.add(playerWPC);
+            WPC playerWPC = player.getWPC();
+            Assert.assertNotNull(playerWPC);
+            Assert.assertFalse(wpcExtracted.contains(playerWPC));
+            wpcExtracted.add(playerWPC);
         }
 
         //Verifica che siano state estratte 3 toolCard
@@ -121,7 +141,6 @@ public class MultiPlayerGameTest {
         game.startGame();
     }
 
-    //è giusto testarli assieme?
     @Test
     public void nextTurnAndNextRoundTest(){
         game.addPlayer(username2);

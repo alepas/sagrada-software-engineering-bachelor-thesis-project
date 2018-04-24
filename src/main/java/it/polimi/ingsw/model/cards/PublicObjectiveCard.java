@@ -3,6 +3,7 @@ package it.polimi.ingsw.model.cards;
 import java.util.ArrayList;
 
 public abstract class PublicObjectiveCard {
+    String id;
 
     //Deve restitituire un ArrayList di Stringhe contententi tutti gli ID delle PublicObjectiveCards
     //L'ordine non è importante
@@ -14,5 +15,9 @@ public abstract class PublicObjectiveCard {
     //Passandogli l'id deve restituire l'oggetto PublicObjectiveCard corrispondente all'id passato
     public static PublicObjectiveCard getCardByID(String id){
         return null;
+    }
+
+    String getID(){
+        return id;
     }
 }

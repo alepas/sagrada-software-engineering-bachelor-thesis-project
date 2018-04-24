@@ -40,13 +40,6 @@ public class MultiPlayerGame extends AbstractGame implements Runnable {
 
     public int getCurrentTurn() { return currentTurn; }
 
-//    // Metodo utilizzato solo per testing
-//    public void simulateRound(int roundPlayer) {
-//        this.roundPlayer = roundPlayer;
-//        this.turnPlayer = roundPlayer;
-//        this.currentTurn = 1;
-//    }
-
     @Override
     public void startGame() throws NotEnoughPlayersException {
         if (players.size() < numPlayers){

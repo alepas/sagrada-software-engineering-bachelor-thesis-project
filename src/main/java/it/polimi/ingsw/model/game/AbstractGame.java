@@ -14,14 +14,15 @@ import java.util.Collections;
 import java.util.UUID;
 
 public abstract class AbstractGame {
-    ArrayList<ToolCard> toolCards;
-    ArrayList<PublicObjectiveCard> publicObjectiveCards;
-    String gameID;
+    private ArrayList<ToolCard> toolCards;
+    private ArrayList<PublicObjectiveCard> publicObjectiveCards;
+    private String gameID;
+    private ArrayList<Dice> extractedDices;
+    private DiceBag diceBag;
+
     int numPlayers;
     RoundTrack roundTrack;
-    ArrayList<Dice> extractedDices;
     ArrayList<PlayerInGame> players;
-    DiceBag diceBag;
 
     int numOfPrivateObjectivesForPlayer;
     int numOfToolCards;
@@ -43,8 +44,6 @@ public abstract class AbstractGame {
         //Nota: settare il numero di public objectives nel costruttore della classe concreta
     }
 
-
-
     abstract void startGame();
     abstract void endGame();
     abstract void nextRound();
@@ -52,8 +51,8 @@ public abstract class AbstractGame {
     abstract void calculateScore();
     abstract void saveScore();
 
-    protected void extractWPCs(){
-        ArrayList<String> ids = WPC.getWpcIDs();
+    void extractWPCs(){
+        ArrayList<String> ids = WPC.getWpcIDS();
         Collections.shuffle(ids);
         ChooseWPCThread[] chooseThreads = new ChooseWPCThread[numPlayers];
 
@@ -80,12 +79,14 @@ public abstract class AbstractGame {
 
         for (i = 0; i < chooseThreads.length; i++){
             if (chooseThreads[i].isInterrupted()){
-                disconnectPlayer(players.get(i));
+                players.get(i).setWPC(ids.subList(GameCostants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER*i,
+                        GameCostants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER*i
+                                +GameCostants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER-1).get(0));
             }
         }
     }
 
-    protected void extractPrivateObjectives() {
+    void extractPrivateObjectives() {
         ArrayList<Color> colorsExtracted = new ArrayList<>();
         Color color;
 
@@ -105,7 +106,7 @@ public abstract class AbstractGame {
         }
     }
 
-    protected void extractToolCards() {
+    void extractToolCards() {
         ArrayList<String> ids = ToolCard.getCardsIDs();
         Collections.shuffle(ids);
         ArrayList<String> toolCardsExtracted = (ArrayList<String>) ids.subList(0, numOfToolCards-1);
@@ -114,7 +115,7 @@ public abstract class AbstractGame {
         }
     }
 
-    protected void extractPublicObjectives(){
+    void extractPublicObjectives(){
         ArrayList<String> ids = PublicObjectiveCard.getCardsIDs();
         Collections.shuffle(ids);
         ArrayList<String> publicCardsExtracted = (ArrayList<String>) ids.subList(0, numOfPublicObjectiveCards-1);
