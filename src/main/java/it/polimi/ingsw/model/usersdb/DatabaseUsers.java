@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class DatabaseUsers {
-
+    private static final String PATHFILE="store.db";
 
 
     private static DatabaseUsers instance ;
@@ -29,10 +29,10 @@ public class DatabaseUsers {
         if (instance==null) {
             instance = new DatabaseUsers();
             try {
-                instance.userDataTable = (HashMap<String, User>) LoadingFromFile.fromFile("src/main/resources/database/store.db");
+                instance.userDataTable = (HashMap<String, User>) LoadingFromFile.fromFile(PATHFILE);
 
             }catch (FileNotFoundException i){
-                File f = new File("src/main/resources/database/store.db");
+                File f = new File(PATHFILE);
                 instance.userDataTable=new HashMap<String, User>();
             }
             instance.tokenbyUsername=new HashMap<String, String>();
@@ -51,19 +51,16 @@ public class DatabaseUsers {
     public synchronized String registerUser(String username, String password) throws CannotRegisterUserException{
         byte[] salt;
         String passwordHash;
+        String newtoken=null;
 
         if (isUsernameTaken(username)){
             throw new CannotRegisterUserException(username,2);
 
         }
         System.out.println("creo nuovo utente");
-            try {
-                salt = getSalt();
-                passwordHash = SHAFunction.getShaPwd(password, salt);
-            }
-            catch (PasswordParsingException e){
-            throw new CannotRegisterUserException(username,1);
-            }
+        try {
+            salt = getSalt();
+            passwordHash = SHAFunction.getShaPwd(password, salt);
             User newuser= new User();
             newuser.password=passwordHash;
             newuser.salt=salt;
@@ -73,10 +70,15 @@ public class DatabaseUsers {
             newuser.ranking=0;
             userDataTable.put(username,newuser);
             updateFileDB();
-            String newtoken = UUID.randomUUID().toString();
+            newtoken = UUID.randomUUID().toString();
             usersbyToken.put(newtoken,newuser);
             tokenbyUsername.put(username,newtoken);
-            return newtoken;
+
+        }
+        catch (PasswordParsingException e){
+            throw new CannotRegisterUserException(username,1);
+        }
+        return newtoken;
 
 
     }
@@ -84,14 +86,15 @@ public class DatabaseUsers {
     public synchronized String login(String username, String password) throws  CannotLoginUserException {
         String passwordHash;
         String storedPasswordHash;
+        String newtoken=null;
         // username isn't registered
         if(!userDataTable.containsKey(username) ){
-            throw new CannotLoginUserException(username,3);
+            throw new CannotLoginUserException(username,2);
         }
         User foundUser=null;
         foundUser=userDataTable.get(username);
         try {
-        byte[] salt=foundUser.salt;
+            byte[] salt=foundUser.salt;
 
 
             passwordHash = SHAFunction.getShaPwd(password, salt);
@@ -100,7 +103,7 @@ public class DatabaseUsers {
         }
         storedPasswordHash = foundUser.password;
         if (passwordHash.equals(storedPasswordHash)){
-            String newtoken = UUID.randomUUID().toString();
+            newtoken = UUID.randomUUID().toString();
             if (tokenbyUsername.containsKey(username))
             {
                 String oldtoken=tokenbyUsername.get(username);
@@ -147,13 +150,13 @@ public class DatabaseUsers {
 
     synchronized void addWonGamesFromUsername(String user){
 
-            User us = userDataTable.get(user);
-            if (us == null) {
-                System.out.println("no user baby");
-            } else {
-                us.wonGames++;
-                updateFileDB();
-            }
+        User us = userDataTable.get(user);
+        if (us == null) {
+            System.out.println("no user baby");
+        } else {
+            us.wonGames++;
+            updateFileDB();
+        }
 
     }
 
@@ -220,14 +223,16 @@ public class DatabaseUsers {
         catch(NoSuchAlgorithmException e) {
             throw new PasswordParsingException();
         }
-                    byte[] salt = new byte[16];
-            sr.nextBytes(salt);
+        byte[] salt = new byte[16];
+        sr.nextBytes(salt);
 
         return salt;
     }
 
     private void updateFileDB(){
-        LoadingFromFile.toFile(userDataTable, "src/main/resources/database/store.db");
+        //LoadingFromFile.toFile(userDataTable, "src/main/resources/database/store.db");
+        LoadingFromFile.toFile(userDataTable, PATHFILE);
+
     }
 
 

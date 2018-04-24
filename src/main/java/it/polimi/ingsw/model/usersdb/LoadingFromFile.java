@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.usersdb;
 
 import java.io.*;
+import java.util.HashMap;
 
 
 class LoadingFromFile {
@@ -8,46 +9,37 @@ class LoadingFromFile {
     private LoadingFromFile() {
     }
 
-    static Object fromFile(String name) throws FileNotFoundException{
+    static Object fromFile(String name) throws FileNotFoundException {
         Object output = null;
         FileInputStream fis = null;
         ObjectInputStream ois=null;
 
+        fis = new FileInputStream(name);
         try {
-            fis = new FileInputStream(name);
+            ois = new ObjectInputStream(fis);
+                try {
+                    output = ois.readObject();
 
-
-            try {
-                ois = new ObjectInputStream(fis);
-                output = ois.readObject();
-
-            } catch (IOException ioe) {
-                ioe.printStackTrace();
-                return null;
-            } catch (ClassNotFoundException c) {
-                System.out.println("Class not found");
-                c.printStackTrace();
-                return null;
-            }
-            finally {
-                if (ois!=null)
-                ois.close();
-            }
-
-
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                finally{
+                    ois.close();
+                }
 
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (fis!=null) {
-                try {
-                    fis.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
 
+        finally{
+            try {
+                fis.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
 
         return output;
@@ -55,6 +47,38 @@ class LoadingFromFile {
 
     public static void toFile(Object root, String name) {
 
+        Object output = null;
+        FileOutputStream fos = null;
+        ObjectOutputStream oos = null;
+
+        try {
+            fos = new FileOutputStream(name);
+            try {
+                oos = new ObjectOutputStream(fos);
+                oos.writeObject(root);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                oos.close();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+
+/*
         try {
             FileOutputStream fos = new FileOutputStream(name);
             ObjectOutputStream oos;
@@ -66,5 +90,5 @@ class LoadingFromFile {
         } catch (IOException i) {
             i.printStackTrace();
         }
-    }
+    }*/
 }
