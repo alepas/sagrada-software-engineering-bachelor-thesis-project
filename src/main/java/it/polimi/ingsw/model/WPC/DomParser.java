@@ -24,7 +24,6 @@ public class DomParser {
             document = builder.parse(new File("C:\\Users\\User\\Documents\\GitHub\\ing-sw-2018-zorzenon-pasini-piovani\\src\\main\\resources\\WPC store\\wpc_schema")); //pathname del file con tutte le wpc
             document.getDocumentElement().normalize();
             NodeList wpcList = document.getElementsByTagName("wpc");
-
             for (int i = 0; i < wpcList.getLength(); i++) {
                 Node wpcNode = wpcList.item(i);
                 if (wpcNode.getNodeType() == Node.ELEMENT_NODE) {
@@ -37,10 +36,14 @@ public class DomParser {
                     }
                 }
             }
-        } catch (SAXException e) {
+        }catch (SAXException e) {
             e.printStackTrace();
-        } catch (IOException e) {
+        }catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void extractWpcSchema(){
+
     }
 }

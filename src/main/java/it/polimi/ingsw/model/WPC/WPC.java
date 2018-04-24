@@ -11,7 +11,7 @@ public class WPC {
 
 
     public WPC( String id) throws ParserConfigurationException {
-        var Parser = new DomParser(id);
+        //var Parser = new DomParser(id);
         wpcId = id;
         favours = 1;
         schema = new Cell[4][5];

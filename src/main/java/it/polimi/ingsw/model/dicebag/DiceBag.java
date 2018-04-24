@@ -3,13 +3,14 @@ package it.polimi.ingsw.model.dicebag;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
 
+import static it.polimi.ingsw.model.costants.DiceBagCostants.INITIAL_DICE_NUMBER;
+
 public class DiceBag {
     private int yellowDices;
     private int redDices;
     private int blueDices;
     private int greenDices;
     private int violetDices;
-    private final int initialDiceNum = 18; //costante da inserire in class costante
 
     /*annotazione importante: DicesExtraction deve essere un metodo del game, in questo modo elimino i due costruttori
      e anche l'array extracedDices; davide nella classe game inserisce un set (credo non sia la scelta migliore in quanto
@@ -20,11 +21,11 @@ public class DiceBag {
     //quando costruisco il sacco nella partita multiplayer passerò al costruttore
     // l'int numDices =2*numplayers +1
     public DiceBag(){
-        yellowDices = initialDiceNum;
-        redDices = initialDiceNum;
-        blueDices = initialDiceNum;
-        greenDices = initialDiceNum;
-        violetDices = initialDiceNum;
+        yellowDices = INITIAL_DICE_NUMBER;
+        redDices = INITIAL_DICE_NUMBER;
+        blueDices = INITIAL_DICE_NUMBER;
+        greenDices = INITIAL_DICE_NUMBER;
+        violetDices = INITIAL_DICE_NUMBER;
     }
 
     public Dice[] DicesExtraction(int numPlayers){
