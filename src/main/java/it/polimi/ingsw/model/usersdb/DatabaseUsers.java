@@ -1,8 +1,8 @@
 package it.polimi.ingsw.model.usersdb;
 
 
+import it.polimi.ingsw.model.exceptions.userExceptions.CannotLoginUserException;
 import it.polimi.ingsw.model.exceptions.userExceptions.CannotRegisterUserException;
-import it.polimi.ingsw.model.exceptions.userExceptions.NoUserInDBException;
 import it.polimi.ingsw.model.exceptions.userExceptions.PasswordParsingException;
 
 import java.io.File;
@@ -48,7 +48,7 @@ public class DatabaseUsers {
         return userDataTable.containsKey(username);
     }
 
-    public synchronized String registerUser(String username, String password) {
+    public synchronized String registerUser(String username, String password) throws CannotRegisterUserException{
         byte[] salt;
         String passwordHash;
 
@@ -81,18 +81,23 @@ public class DatabaseUsers {
 
     }
 
-    public synchronized String login(String username, String password) throws NoSuchAlgorithmException, IOException{
+    public synchronized String login(String username, String password) throws  CannotLoginUserException {
         String passwordHash;
         String storedPasswordHash;
         // username isn't registered
         if(!userDataTable.containsKey(username) ){
-            throw new NoUserInDBException(username);
+            throw new CannotLoginUserException(username,3);
         }
         User foundUser=null;
         foundUser=userDataTable.get(username);
+        try {
         byte[] salt=foundUser.salt;
 
-        passwordHash = SHAFunction.getShaPwd(password, salt);
+
+            passwordHash = SHAFunction.getShaPwd(password, salt);
+        } catch (PasswordParsingException e) {
+            throw new CannotLoginUserException(username,0);
+        }
         storedPasswordHash = foundUser.password;
         if (passwordHash.equals(storedPasswordHash)){
             String newtoken = UUID.randomUUID().toString();
@@ -108,7 +113,7 @@ public class DatabaseUsers {
             return newtoken;
         }
         else{
-            return null;
+            throw new CannotLoginUserException(username,1);
         }
     }
 

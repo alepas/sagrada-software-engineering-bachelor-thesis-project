@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.usersdb;
 
 
+import org.junit.After;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -35,6 +36,11 @@ public class LoadingFromFileTest{
             File f = new File("it/polimi/ingsw/model/userdb/filesaved.file");
             Assertions.assertTrue(f.isFile());
         });
+    }
+    @After
+    void removeFile(){
+        File f = new File("it/polimi/ingsw/model/userdb/filesaved.file");
+        f.delete();
     }
 
 

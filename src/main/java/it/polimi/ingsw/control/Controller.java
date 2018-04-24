@@ -23,28 +23,16 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
     }
     @Override
     public synchronized String registerUser(String username, String password) throws RemoteException {
-        try {
+
             return database.registerUser(username, password);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            return null;
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return null;
-        }
 
     }
     @Override
     public synchronized String login(String user, String pwd) throws RemoteException {
-        try {
+
             return database.login(user, pwd);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            return null;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
+
+
     }
     @Override
     public synchronized void addWonGames(String token){
