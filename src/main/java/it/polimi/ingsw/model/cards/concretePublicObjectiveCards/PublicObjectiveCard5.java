@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.constants.POCConstants;
 
 public class PublicObjectiveCard5  extends PublicObjectiveCard {
+    //SFUMATURE CHIARE
 
     public PublicObjectiveCard5(){ this.id = POCConstants.POC5_ID; }
 

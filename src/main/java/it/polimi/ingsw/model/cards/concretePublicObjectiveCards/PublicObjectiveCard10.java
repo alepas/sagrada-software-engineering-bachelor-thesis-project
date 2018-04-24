@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.constants.POCConstants;
 
 public class PublicObjectiveCard10  extends PublicObjectiveCard {
+    //VARIETA' DI COLORE
 
     public PublicObjectiveCard10(){ this.id = POCConstants.POC10_ID; }
 
