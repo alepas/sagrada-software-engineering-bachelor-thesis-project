@@ -74,7 +74,15 @@ public class MultiPlayerGame extends AbstractGame implements Runnable {
         }
     }
 
-    private int nextPlayer() throws MaxNumberOfTurnsPlayedExeption {
+    protected void setTurnPlayer(int turnPlayer){
+        this.turnPlayer = turnPlayer;
+    }
+
+    protected void setCurrentTurn(int currentTurn) {
+        this.currentTurn = currentTurn;
+    }
+
+    protected int nextPlayer() throws MaxNumberOfTurnsPlayedExeption {
         if (currentTurn == numPlayers*GameCostants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME) {
             throw new MaxNumberOfTurnsPlayedExeption(this);
         }

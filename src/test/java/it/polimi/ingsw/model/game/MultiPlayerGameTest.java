@@ -5,11 +5,8 @@ import it.polimi.ingsw.model.constants.GameCostants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;
-import it.polimi.ingsw.model.exceptions.gameExceptions.NotEnoughPlayersException;
-import it.polimi.ingsw.model.exceptions.gameExceptions.UserAlreadyInThisGameException;
-import it.polimi.ingsw.model.exceptions.gameExceptions.UserNotInThisGameException;
+import it.polimi.ingsw.model.exceptions.gameExceptions.*;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
-import it.polimi.ingsw.model.exceptions.gameExceptions.MaxPlayersExceededException;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -135,6 +132,7 @@ public class MultiPlayerGameTest {
 
     @Test
     public void extractToolCardsTest(){
+        ToolCard.loadCards();
         game.extractToolCards();
 
         Assert.assertEquals(GameCostants.NUM_TOOL_CARDS_IN_MULTIPLAYER_GAME, game.getToolCards().size());
@@ -152,8 +150,9 @@ public class MultiPlayerGameTest {
         }
     }
 
-    @Test
+    @Test       //Prima di eseguirlo assicurarsi che loadCards(), getCardByID() e getCardsIDs() siano testati
     public void extractPublicObjectivesTest(){
+        PublicObjectiveCard.loadCards();
         game.extractPublicObjectives();
 
         Assert.assertEquals(GameCostants.NUM_PUBLIC_OBJ_IN_MULTIPLAYER_GAME, game.getPublicObjectiveCards().size());
@@ -183,6 +182,92 @@ public class MultiPlayerGameTest {
     @Test(expected = NotEnoughPlayersException.class)
     public void starGameIllegalTest() {
         game.startGame();
+    }
+
+    @Test
+    public void nextPlayerTest1(){
+        game.addPlayer(username2);
+        game.addPlayer(username3);
+
+        Assert.assertEquals(1, game.nextPlayer());
+        game.setTurnPlayer(game.nextPlayer());
+        game.setCurrentTurn(game.getCurrentTurn()+1);
+
+        Assert.assertEquals(2, game.nextPlayer());
+        game.setTurnPlayer(game.nextPlayer());
+        game.setCurrentTurn(game.getCurrentTurn()+1);
+
+        Assert.assertEquals(2, game.nextPlayer());
+        game.setTurnPlayer(game.nextPlayer());
+        game.setCurrentTurn(game.getCurrentTurn()+1);
+
+        Assert.assertEquals(1, game.nextPlayer());
+        game.setTurnPlayer(game.nextPlayer());
+        game.setCurrentTurn(game.getCurrentTurn()+1);
+
+        Assert.assertEquals(0, game.nextPlayer());
+    }
+
+    @Test
+    public void nextPlayerTest2(){
+        game.addPlayer(username2);
+        game.addPlayer(username3);
+
+        game.setTurnPlayer(1);
+
+        Assert.assertEquals(2, game.nextPlayer());
+        game.setTurnPlayer(game.nextPlayer());
+        game.setCurrentTurn(game.getCurrentTurn()+1);
+
+        Assert.assertEquals(0, game.nextPlayer());
+        game.setTurnPlayer(game.nextPlayer());
+        game.setCurrentTurn(game.getCurrentTurn()+1);
+
+        Assert.assertEquals(0, game.nextPlayer());
+        game.setTurnPlayer(game.nextPlayer());
+        game.setCurrentTurn(game.getCurrentTurn()+1);
+
+        Assert.assertEquals(2, game.nextPlayer());
+        game.setTurnPlayer(game.nextPlayer());
+        game.setCurrentTurn(game.getCurrentTurn()+1);
+
+        Assert.assertEquals(1, game.nextPlayer());
+    }
+
+    @Test
+    public void nextPlayerTest3(){
+        game.addPlayer(username2);
+        game.addPlayer(username3);
+
+        game.setTurnPlayer(2);
+
+        Assert.assertEquals(0, game.nextPlayer());
+        game.setTurnPlayer(game.nextPlayer());
+        game.setCurrentTurn(game.getCurrentTurn()+1);
+
+        Assert.assertEquals(1, game.nextPlayer());
+        game.setTurnPlayer(game.nextPlayer());
+        game.setCurrentTurn(game.getCurrentTurn()+1);
+
+        Assert.assertEquals(1, game.nextPlayer());
+        game.setTurnPlayer(game.nextPlayer());
+        game.setCurrentTurn(game.getCurrentTurn()+1);
+
+        Assert.assertEquals(0, game.nextPlayer());
+        game.setTurnPlayer(game.nextPlayer());
+        game.setCurrentTurn(game.getCurrentTurn()+1);
+
+        Assert.assertEquals(2, game.nextPlayer());
+    }
+
+    @Test(expected = MaxNumberOfTurnsPlayedExeption.class)
+    public void nextPlayerIllegalTest(){
+        game.addPlayer(username2);
+        game.addPlayer(username3);
+
+        game.setCurrentTurn(game.getNumPlayers()*GameCostants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME);
+
+        game.nextPlayer();
     }
 
     @Test

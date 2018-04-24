@@ -1,29 +1,52 @@
 package it.polimi.ingsw.model.cards;
 
+import it.polimi.ingsw.model.cards.concreteToolCards.*;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 
 import java.util.ArrayList;
 
 public abstract class ToolCard {
-    private String id;
+    protected String id;
     private Boolean used = false;
 
-    //Deve restitituire un ArrayList di Stringhe contententi tutti gli ID delle ToolCards
-    //L'ordine non è importante
-    public static ArrayList<String> getCardsIDs() {
-        return null;
+    public static ArrayList<ToolCard> toolCards = new ArrayList<>();
+
+    public static void loadCards(){
+        toolCards.add(new ToolCard1());
+        toolCards.add(new ToolCard2());
+        toolCards.add(new ToolCard3());
+        toolCards.add(new ToolCard4());
+        toolCards.add(new ToolCard5());
+        toolCards.add(new ToolCard6());
+        toolCards.add(new ToolCard7());
+        toolCards.add(new ToolCard8());
+        toolCards.add(new ToolCard9());
+        toolCards.add(new ToolCard10());
+        toolCards.add(new ToolCard11());
+        toolCards.add(new ToolCard12());
     }
 
-    //Passandogli l'id deve restituire l'oggetto toolcard corrispondente all'id passato
+    public static ArrayList<String> getCardsIDs() {
+        ArrayList<String> ids = new ArrayList<>();
+
+        for (ToolCard card : toolCards){
+            ids.add(card.getID());
+        }
+
+        return ids;
+    }
+
     public static ToolCard getCardByID(String id){
+        for(ToolCard card : toolCards){
+            if(card.getID().equals(id)) return card;
+        }
         return null;
     }
 
     public String getID(){ return id; }
 
-    public Boolean getUsed() { return used; }
+    public Boolean isUsed() { return used; }
 
     public abstract void use(PlayerInGame player);
-
 
 }

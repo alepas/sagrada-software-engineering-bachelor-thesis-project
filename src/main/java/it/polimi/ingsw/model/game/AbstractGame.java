@@ -80,9 +80,8 @@ public abstract class AbstractGame {
 
         for(PlayerInGame player : players){
             ChooseWPCThread chooseThread = new ChooseWPCThread(player,
-                    (ArrayList<String>) ids.subList(GameCostants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER*i,
-                            GameCostants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER*i
-                                    +GameCostants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER-1));
+                    new ArrayList<String> (ids.subList(GameCostants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER*i,
+                            GameCostants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER*(i+1))));
             chooseThreads[i] = chooseThread;
             chooseThread.start();
             i++;
@@ -100,8 +99,7 @@ public abstract class AbstractGame {
         for (i = 0; i < chooseThreads.length; i++){
             if (chooseThreads[i].isInterrupted()){
                 players.get(i).setWPC(ids.subList(GameCostants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER*i,
-                        GameCostants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER*i
-                                +GameCostants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER-1).get(0));
+                        GameCostants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER*(i+1)).get(0));
             }
         }
     }
@@ -109,7 +107,7 @@ public abstract class AbstractGame {
     void extractToolCards() {
         ArrayList<String> ids = ToolCard.getCardsIDs();
         Collections.shuffle(ids);
-        ArrayList<String> toolCardsExtracted = (ArrayList<String>) ids.subList(0, numOfToolCards-1);
+        ArrayList<String> toolCardsExtracted = new ArrayList<>(ids.subList(0, numOfToolCards));
         for (String id : toolCardsExtracted){
             toolCards.add(ToolCard.getCardByID(id));
         }
@@ -118,7 +116,7 @@ public abstract class AbstractGame {
     void extractPublicObjectives(){
         ArrayList<String> ids = PublicObjectiveCard.getCardsIDs();
         Collections.shuffle(ids);
-        ArrayList<String> publicCardsExtracted = (ArrayList<String>) ids.subList(0, numOfPublicObjectiveCards-1);
+        ArrayList<String> publicCardsExtracted = new ArrayList<>(ids.subList(0, numOfPublicObjectiveCards));
         for (String id : publicCardsExtracted){
             publicObjectiveCards.add(PublicObjectiveCard.getCardByID(id));
         }
