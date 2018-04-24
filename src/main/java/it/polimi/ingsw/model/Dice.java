@@ -10,7 +10,7 @@ public class Dice {
         num = rollDice();
     }
 
-    Dice(Color color, int number) {
+    public Dice(Color color, int number) {
         this.color = color;
         num = number;
     }

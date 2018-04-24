@@ -20,6 +20,10 @@ public class WPC {
         }
     }
 
+    public static ArrayList<String> getWpcIDs() {
+        return null;
+    }
+
     public int getFavours(){ return favours;};
     public static ArrayList<String> getWPCid(){
         return null;

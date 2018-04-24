@@ -6,7 +6,7 @@ public class RoundTrack {
     private ArrayList[] dicesNotUsed;
 
     //array di arraylist in questo modo posso aggiungere tutti i dadi che voglio in modo dinamico
-    private RoundTrack( ){
+    public RoundTrack(){
         currentRound = 0;
         dicesNotUsed = new ArrayList[10];
         for(int i = 0; i< dicesNotUsed.length; i++) {
