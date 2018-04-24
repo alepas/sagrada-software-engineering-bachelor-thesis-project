@@ -14,10 +14,10 @@ public class PositionTest {
     public void Before(){
         position = new Position(row, column);
     }
+
     @Test
     private void checkPositionCOnstructor(){
         Assert.assertTrue(position.getRow() >= 0 && position.getRow() <= 3);
-        Assert.assertTrue(position.getColumn() >= 0 && position.getColumn() <= 3);
-
+        Assert.assertTrue(position.getColumn() >= 0 && position.getColumn() <= 4);
     }
 }

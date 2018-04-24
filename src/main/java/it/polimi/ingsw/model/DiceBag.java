@@ -18,7 +18,7 @@ public class DiceBag {
 
     //quando costruisco il sacco nella partita multiplayer passerò al costruttore
     // l'int numDices =2*numplayers +1
-    private DiceBag( ){
+    DiceBag( ){
         yellowDices = initialDiceNum;
         redDices = initialDiceNum;
         blueDices = initialDiceNum;
