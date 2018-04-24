@@ -3,25 +3,52 @@ package it.polimi.ingsw.model.usersdb;
 import java.io.*;
 
 
-public class LoadingFromFile {
+class LoadingFromFile {
 
-    public static Object fromFile(String name) throws FileNotFoundException {
+    private LoadingFromFile() {
+    }
+
+    static Object fromFile(String name) throws FileNotFoundException{
         Object output = null;
+        FileInputStream fis = null;
+        ObjectInputStream ois=null;
 
-            FileInputStream fis = new FileInputStream(name);
         try {
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            output = ois.readObject();
-            ois.close();
-            fis.close();
-      } catch (IOException ioe) {
-            ioe.printStackTrace();
-            return null;
-        } catch (ClassNotFoundException c) {
-            System.out.println("Class not found");
-            c.printStackTrace();
-            return null;
+            fis = new FileInputStream(name);
+
+
+            try {
+                ois = new ObjectInputStream(fis);
+                output = ois.readObject();
+
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+                return null;
+            } catch (ClassNotFoundException c) {
+                System.out.println("Class not found");
+                c.printStackTrace();
+                return null;
+            }
+            finally {
+                if (ois!=null)
+                ois.close();
+            }
+
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fis!=null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
+
+
 
         return output;
     }

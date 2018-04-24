@@ -3,7 +3,7 @@ package it.polimi.ingsw.model.usersdb;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.WPC.WPC;
 
-
+import java.util.ArrayList;
 
 
 public class PlayerInGame {
@@ -23,9 +23,44 @@ public class PlayerInGame {
 */
 
 
+    public PlayerInGame(String user, Color pvOb1){
+        db=DatabaseUsers.getInstance();
+        username=user;
+        wpc=null;
+        privateObjective1=pvOb1;
+        privateObjective2=null;
+        favours=0;
+        active=false;
+
+        /*
+        la funzione deve inizializzare il valore di username e deve andare a chiamare la corrispettiva
+        funzione per la crittografia della password e quindi salvare la password con relativo salt se presente.
+        tutti i parametri sulle partite sono 0. Il parametro online è il Controller corrente dell-user. activegame è null.*/
+    }
+
+    public PlayerInGame(String user, Color pvOb1, Color pvOb2){
+        db=DatabaseUsers.getInstance();
+        username=user;
+        wpc=null;
+        privateObjective1=pvOb1;
+        privateObjective2=pvOb2;
+        favours=0;
+        active=false;
+
+        /*
+        la funzione deve inizializzare il valore di username e deve andare a chiamare la corrispettiva
+        funzione per la crittografia della password e quindi salvare la password con relativo salt se presente.
+        tutti i parametri sulle partite sono 0. Il parametro online è il Controller corrente dell-user. activegame è null.*/
+    }
+
     public PlayerInGame(String user){
         db=DatabaseUsers.getInstance();
         username=user;
+        wpc=null;
+        privateObjective1=null;
+        privateObjective2=null;
+        favours=0;
+        active=false;
 
         /*
         la funzione deve inizializzare il valore di username e deve andare a chiamare la corrispettiva
@@ -123,6 +158,13 @@ public class PlayerInGame {
         this.privateObjective2=color;
 
     }
+
+    public void chooseWPC(ArrayList<String> cards){
+        //da implementare select carta e poi
+        String ab="123";
+        //this.wpc= new WPC(ab);
+    }
+
 
     //isInGame() capire come implementarla
 

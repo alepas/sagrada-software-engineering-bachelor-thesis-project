@@ -7,16 +7,33 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SHAFunctionTest {
-    String password="sonoUnaPasswordDiProva";
-    String password2="sonounapassworddiprova";
-    String password3="sonoUnaPasswordDiProva";
-    Byte[] salt={0x1,0x2,0x3,0x45,0x6,0x7,0x13,0x15,0x12,0x40,0x43,0x71,0x19,0x52,0x61,0x8};
+    String password = "sonoUnaPasswordDiProva";
+    String password2 = "sonounapassworddiprova";
+    String password3 = "sonoUnaPasswordDiProva";
+    byte[] salt = {94, 42, -9, -19, 96, -21, -56, 52, -64, -118, 4, -124, -113, -70, -118, -65};
+    byte[] salt2 = {94, 64, -9, -19, 111, -21, -56, 52, -64, -118, 4, -97, -5, -70, -118, -65};
 
     @Test
     void sameSHAforSamePwd() {
-        Assertions.assertEquals(SHAFunction.getShaPwd(password, salt), );
+        Assertions.assertEquals(SHAFunction.getShaPwd(password, salt), SHAFunction.getShaPwd(password3, salt));
 
-
-        assertEquals(2, 2);
-        assertEquals(4, 4, "The optional assertion message is now the last parameter.");
     }
+
+    @Test
+    void parsedPasswordDifferentFromPasswordInBlank(){
+        Assertions.assertNotEquals(SHAFunction.getShaPwd(password,salt),password);
+    }
+
+    @Test
+    void differentSHAForDifferentpwd(){
+        Assertions.assertNotEquals(SHAFunction.getShaPwd(password,salt),SHAFunction.getShaPwd(password2,salt));
+    }
+
+    @Test
+    void differentSHASamePwdButDifferentSalt() {
+        Assertions.assertEquals(SHAFunction.getShaPwd(password, salt), SHAFunction.getShaPwd(password, salt2));
+
+    }
+
+
+}
