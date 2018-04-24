@@ -1,5 +1,10 @@
 package it.polimi.ingsw.model.cards;
 
+import it.polimi.ingsw.model.WPC.WPC;
+import it.polimi.ingsw.model.dicebag.Dice;
+import it.polimi.ingsw.model.dicebag.DiceBag;
+import it.polimi.ingsw.model.game.RoundTrack;
+
 import java.util.ArrayList;
 
 public abstract class ToolCard {
@@ -20,4 +25,6 @@ public abstract class ToolCard {
     public String getID(){
         return id;
     }
+
+    public abstract void use(WPC wpc, DiceBag diceBag, ArrayList<Dice> extractedDices, RoundTrack roundTrack);
 }

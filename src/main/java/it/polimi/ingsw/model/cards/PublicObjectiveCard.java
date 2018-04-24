@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.cards;
 
+import it.polimi.ingsw.model.WPC.WPC;
+
 import java.util.ArrayList;
 
 public abstract class PublicObjectiveCard {
@@ -20,4 +22,6 @@ public abstract class PublicObjectiveCard {
     public String getID(){
         return id;
     }
+
+    public abstract int calculateScore(WPC wpc);
 }
