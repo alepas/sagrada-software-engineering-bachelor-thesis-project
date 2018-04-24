@@ -17,7 +17,7 @@ public class DomParser {
 
 
 
-    public static void DomParser(String wpcId) throws ParserConfigurationException {
+    public static void WPcLecture(String wpcId) throws ParserConfigurationException {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance(); //inizializzo la factory per processare il flusso di dati
             DocumentBuilder builder = factory.newDocumentBuilder(); //inzializzo documento

@@ -8,21 +8,21 @@ public class Cell {
     private int cellNum;
     private Position position;
 
-    private void Cell(Color color, Position pos){
+    private Cell(Color color, Position pos){
         cellDice = null;
         cellColor = color;
         cellNum = 0;
         position = pos;
     }
 
-    private void Cell( int n, Position pos){
+    private Cell( int n, Position pos){
         cellDice = null;
         cellColor = null;
         cellNum = n;
         position = pos;
     }
 
-    private void Cell(Position pos){
+    private Cell(Position pos){
         cellDice = null;
         cellColor = null;
         cellNum = 0;
