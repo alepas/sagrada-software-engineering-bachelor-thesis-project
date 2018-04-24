@@ -52,7 +52,7 @@ public abstract class AbstractGame {
     abstract void saveScore();
 
     void extractWPCs(){
-        ArrayList<String> ids = WPC.getWpcIDS();
+        ArrayList<String> ids = WPC.getWpcIDs();
         Collections.shuffle(ids);
         ChooseWPCThread[] chooseThreads = new ChooseWPCThread[numPlayers];
 

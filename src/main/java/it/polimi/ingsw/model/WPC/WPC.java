@@ -48,9 +48,9 @@ public class WPC {
                 wpcNode = wpcList.item(i);
             if (wpcNode.getNodeType() == Node.ELEMENT_NODE) {
                 eElement = (Element) wpcNode;
-                //allWpcIDS.add(eElement.getAttribute("wpcId"));
+                allWpcIDS.add(eElement.getAttribute("wpcId"));
                 for(int i=0; i<allWpcIDS.size(); i++){
-                    //WPC(eElement.getAttribute("wpcId"));
+                    //WPC( allWpcIDS.get(i) );
                 }
 
             }
@@ -65,7 +65,7 @@ public class WPC {
     public static WPC getWpcByID(String Id){
         return null;
     }
-    public static ArrayList<String> getWpcIDS( ){
+    public static ArrayList<String> getWpcIDs( ){
         NodeList wpcList = null;
         Node wpcNode = null;
         Element eElement = null;
