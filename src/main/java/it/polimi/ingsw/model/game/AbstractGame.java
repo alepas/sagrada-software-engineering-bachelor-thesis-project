@@ -60,7 +60,10 @@ public abstract class AbstractGame {
         int i = 0;
 
         for(PlayerInGame player : players){
-            ChooseWPCThread chooseThread = new ChooseWPCThread(player, (ArrayList<String>) ids.subList(4*i, 4*i+3));
+            ChooseWPCThread chooseThread = new ChooseWPCThread(player,
+                    (ArrayList<String>) ids.subList(GameCostants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER*i,
+                            GameCostants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER*i
+                                    +GameCostants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER-1));
             chooseThreads[i] = chooseThread;
             chooseThread.start();
             i++;
@@ -69,7 +72,7 @@ public abstract class AbstractGame {
         try {
             System.out.println("Waiting for threads to finish.");
             for (ChooseWPCThread chooseThread : chooseThreads ){
-                chooseThread.join(GameCostants.CHOOSEWPCWAITINGTIME * 1000);
+                chooseThread.join(GameCostants.CHOOSE_WPC_WAITING_TIME * 1000);
             }
         } catch (InterruptedException e) {
             System.out.println("Main thread Interrupted");

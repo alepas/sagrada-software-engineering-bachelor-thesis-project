@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.game;
 
+import it.polimi.ingsw.model.costants.GameCostants;
 import it.polimi.ingsw.model.exceptions.gameExceptions.*;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 
@@ -16,9 +17,9 @@ public class MultiPlayerGame extends AbstractGame implements Runnable {
         turnPlayer = 0;
         roundPlayer = 0;
         currentTurn = 1;
-        numOfPrivateObjectivesForPlayer = 1;
-        numOfToolCards = 3;
-        numOfPublicObjectiveCards = 3;
+        numOfPrivateObjectivesForPlayer = GameCostants.NUM_PRIVATE_OBJ_FOR_PLAYER_IN_MULTIPLAYER_GAME;
+        numOfToolCards = GameCostants.NUM_TOOL_CARDS_IN_MULTIPLAYER_GAME;
+        numOfPublicObjectiveCards = GameCostants.NUM_PUBLIC_OBJ_IN_MULTIPLAYER_GAME;
     }
 
     public void start(){
@@ -31,7 +32,6 @@ public class MultiPlayerGame extends AbstractGame implements Runnable {
     @Override
     public void run() {
         //Codice che regola il funzionamento della partita
-        startGame();
     }
 
     public int getTurnPlayer() { return turnPlayer; }
@@ -78,7 +78,7 @@ public class MultiPlayerGame extends AbstractGame implements Runnable {
 
     @Override
     public void nextTurn() {
-        if (currentTurn < 2*getNumPlayers()) {
+        if (currentTurn < GameCostants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME*getNumPlayers()) {
             turnPlayer = nextPlayer();
             currentTurn++;
         } else {
@@ -87,15 +87,18 @@ public class MultiPlayerGame extends AbstractGame implements Runnable {
     }
 
     private int nextPlayer() throws MaxNumberOfTurnsPlayedExeption {
-        if (currentTurn == numPlayers*2) throw new MaxNumberOfTurnsPlayedExeption(this);
-        if (currentTurn < numPlayers){
+        if (currentTurn == numPlayers*GameCostants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME) {
+            throw new MaxNumberOfTurnsPlayedExeption(this);
+        }
+
+        if (currentTurn % numPlayers == 0) {
+            return turnPlayer;
+        } else if ((currentTurn / numPlayers) % 2 == 0){
             if (turnPlayer != numPlayers-1){
                 return turnPlayer+1;
             } else {
                 return 0;
             }
-        } else if (currentTurn == numPlayers){
-            return turnPlayer;
         } else {
             if (turnPlayer != 0){
                 return turnPlayer-1;
