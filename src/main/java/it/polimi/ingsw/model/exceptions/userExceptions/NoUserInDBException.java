@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.exceptions;
+package it.polimi.ingsw.model.exceptions.userExceptions;
 
 public class NoUserInDBException extends RuntimeException{
     private String user;

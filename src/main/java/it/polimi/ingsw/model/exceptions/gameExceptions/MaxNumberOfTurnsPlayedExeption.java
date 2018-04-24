@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.exceptions;
+package it.polimi.ingsw.model.exceptions.gameExceptions;
 
 import it.polimi.ingsw.model.game.AbstractGame;
 

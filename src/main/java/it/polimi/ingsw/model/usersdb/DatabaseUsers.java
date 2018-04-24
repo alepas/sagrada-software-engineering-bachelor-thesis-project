@@ -1,9 +1,9 @@
 package it.polimi.ingsw.model.usersdb;
 
 
-import it.polimi.ingsw.model.exceptions.CannotRegisterUserException;
-import it.polimi.ingsw.model.exceptions.NoUserInDBException;
-import it.polimi.ingsw.model.exceptions.PasswordParsingException;
+import it.polimi.ingsw.model.exceptions.userExceptions.CannotRegisterUserException;
+import it.polimi.ingsw.model.exceptions.userExceptions.NoUserInDBException;
+import it.polimi.ingsw.model.exceptions.userExceptions.PasswordParsingException;
 
 import java.io.File;
 import java.io.FileNotFoundException;

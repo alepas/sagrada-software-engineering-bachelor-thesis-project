@@ -3,11 +3,11 @@ package it.polimi.ingsw.model.game;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;
-import it.polimi.ingsw.model.exceptions.NotEnoughPlayersException;
-import it.polimi.ingsw.model.exceptions.UserAlreadyInThisGameException;
-import it.polimi.ingsw.model.exceptions.UserNotInThisGameException;
+import it.polimi.ingsw.model.exceptions.gameExceptions.NotEnoughPlayersException;
+import it.polimi.ingsw.model.exceptions.gameExceptions.UserAlreadyInThisGameException;
+import it.polimi.ingsw.model.exceptions.gameExceptions.UserNotInThisGameException;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
-import it.polimi.ingsw.model.exceptions.MaxPlayersExceededException;
+import it.polimi.ingsw.model.exceptions.gameExceptions.MaxPlayersExceededException;
 
 import org.junit.Assert;
 import org.junit.Before;

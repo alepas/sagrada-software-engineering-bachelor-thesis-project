@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.usersdb;
 
-import it.polimi.ingsw.model.exceptions.PasswordParsingException;
+import it.polimi.ingsw.model.exceptions.userExceptions.PasswordParsingException;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
