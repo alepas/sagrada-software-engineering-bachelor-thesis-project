@@ -1,7 +1,14 @@
 package it.polimi.ingsw.model.WPC;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class WPC {
@@ -13,24 +20,45 @@ public class WPC {
     public WPC( String id) throws ParserConfigurationException {
         //var Parser = new DomParser(id);
         wpcId = id;
-        favours = 1;
+        favours = 0;
         schema = new Cell[4][5];
         for(int i= 0; i<4; i++) {
             for(int j=0; j<5; j++)
                 schema[i][j]=null;
         }
+        domParser();
+    }
+
+    private void domParser(){}
+    public static NodeList WPcLecture( ) throws ParserConfigurationException {
+        NodeList wpcList;
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance(); //inizializzo la factory per processare il flusso di dati
+            DocumentBuilder builder = factory.newDocumentBuilder(); //inzializzo documento
+            Document document = null;
+            document = builder.parse(new File("C:\\Users\\User\\Documents\\GitHub\\ing-sw-2018-zorzenon-pasini-piovani\\src\\main\\resources\\WPC store\\wpc_schema")); //pathname del file con tutte le wpc
+            document.getDocumentElement().normalize();
+            wpcList = document.getElementsByTagName("wpc");
+        }catch (SAXException e) {
+            e.printStackTrace();
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+        return wpcList;
+
+
     }
 
     public void setFavours(int favours) {
         this.favours = favours;
     }
 
-    public static ArrayList<String> getWpcIDs() {
+    public static ArrayList<String> getWpcIDS() {
         return null;
     }
 
     public int getFavours(){ return favours;};
-    public static ArrayList<String> getWPCid(){
+    public String getWpcID(){
         return null;
     }
     private void checkCellRestriction(){}
