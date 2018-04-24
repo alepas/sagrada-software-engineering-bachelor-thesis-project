@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.game;
 
-import it.polimi.ingsw.model.exceptions.NotEnoughPlayersException;
+import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 
 import java.util.Collections;
@@ -31,6 +31,7 @@ public class MultiPlayerGame extends AbstractGame implements Runnable {
     @Override
     public void run() {
         //Codice che regola il funzionamento della partita
+        startGame();
     }
 
     public int getTurnPlayer() { return turnPlayer; }
@@ -85,8 +86,23 @@ public class MultiPlayerGame extends AbstractGame implements Runnable {
         }
     }
 
-    private int nextPlayer(){
-        return 0;
+    private int nextPlayer() throws MaxNumberOfTurnsPlayedExeption {
+        if (currentTurn == numPlayers*2) throw new MaxNumberOfTurnsPlayedExeption(this);
+        if (currentTurn < numPlayers){
+            if (turnPlayer != numPlayers-1){
+                return turnPlayer+1;
+            } else {
+                return 0;
+            }
+        } else if (currentTurn == numPlayers){
+            return turnPlayer;
+        } else {
+            if (turnPlayer != 0){
+                return turnPlayer-1;
+            } else {
+                return numPlayers-1;
+            }
+        }
     }
 
     //Da testare
@@ -101,11 +117,24 @@ public class MultiPlayerGame extends AbstractGame implements Runnable {
 
     }
 
-    public void addPlayer(String user){
+    public void addPlayer(String user) throws MaxPlayersExceededException, UserAlreadyInThisGameException {
+        if (players.size() == numPlayers) throw new MaxPlayersExceededException(user, this);
 
+        for (PlayerInGame player : players){
+            if (player.getUser().equals(user)) throw new UserAlreadyInThisGameException(user, this);
+        }
+
+        PlayerInGame player = new PlayerInGame(user);
+        players.add(player);
     }
 
-    public void removePlayer(String user){
-
+    public void removePlayer(String user) throws UserNotInThisGameException {
+        for (PlayerInGame player : players){
+            if(player.getUser().equals(user)){
+                players.remove(player);
+                return;
+            }
+        }
+        throw new UserNotInThisGameException(user, this);
     }
 }

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.game;
 
+import it.polimi.ingsw.model.costants.GameCostants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.dicebag.DiceBag;
@@ -25,9 +26,6 @@ public abstract class AbstractGame {
     int numOfPrivateObjectivesForPlayer;
     int numOfToolCards;
     int numOfPublicObjectiveCards;
-
-    //Altre costanti utilizzate
-    int chooseWpcWaitingTime = 60;
 
     AbstractGame(String user, int numPlayers) {
         toolCards = new ArrayList<>();
@@ -71,7 +69,7 @@ public abstract class AbstractGame {
         try {
             System.out.println("Waiting for threads to finish.");
             for (ChooseWPCThread chooseThread : chooseThreads ){
-                chooseThread.join(chooseWpcWaitingTime * 1000);
+                chooseThread.join(GameCostants.CHOOSEWPCWAITINGTIME * 1000);
             }
         } catch (InterruptedException e) {
             System.out.println("Main thread Interrupted");
@@ -91,7 +89,7 @@ public abstract class AbstractGame {
         for (PlayerInGame player : players){
             for (int i = 0; i < numOfPrivateObjectivesForPlayer; i++) {
                 do {
-                    color = Color.randomColour();
+                    color = Color.randomColor();
                 } while (colorsExtracted.contains(color));
 
                 colorsExtracted.add(color);
