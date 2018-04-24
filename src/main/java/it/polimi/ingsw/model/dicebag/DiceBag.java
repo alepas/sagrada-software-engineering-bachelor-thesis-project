@@ -1,6 +1,7 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.model.dicebag;
 
-import java.util.Random;
+import it.polimi.ingsw.model.dicebag.Color;
+import it.polimi.ingsw.model.dicebag.Dice;
 
 public class DiceBag {
     private int yellowDices;
@@ -70,10 +71,10 @@ public class DiceBag {
             return false;
     }
 
-     int getYellowDices(){return yellowDices;}
-     int getRedDices(){return redDices;}
-     int getGreenDices(){return greenDices;}
-     int getBlueDices(){return blueDices;}
-     int getVioletDices(){return violetDices;}
+     public int getYellowDices(){return yellowDices;}
+     public int getRedDices(){return redDices;}
+     public int getGreenDices(){return greenDices;}
+     public int getBlueDices(){return blueDices;}
+     public int getVioletDices(){return violetDices;}
 }
 

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.usersdb;
 
-import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.WPC.WPC;
+import it.polimi.ingsw.model.dicebag.Color;
 
 import java.util.ArrayList;
 

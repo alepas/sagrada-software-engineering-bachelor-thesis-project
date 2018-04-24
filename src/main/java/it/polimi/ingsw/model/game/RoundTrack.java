@@ -1,4 +1,6 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.model.game;
+import it.polimi.ingsw.model.dicebag.Dice;
+
 import java.util.*;
 
 public class RoundTrack {

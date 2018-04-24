@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.WPC;
-import it.polimi.ingsw.model.Color;
-import it.polimi.ingsw.model.Dice;
+import it.polimi.ingsw.model.dicebag.Color;
+import it.polimi.ingsw.model.dicebag.Dice;
 
 public class Cell {
     private Dice cellDice;

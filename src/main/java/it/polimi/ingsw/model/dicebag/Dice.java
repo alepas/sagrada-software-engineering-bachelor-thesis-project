@@ -1,4 +1,6 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.model.dicebag;
+import it.polimi.ingsw.model.dicebag.Color;
+
 import java.util.Random;
 
 public class Dice {

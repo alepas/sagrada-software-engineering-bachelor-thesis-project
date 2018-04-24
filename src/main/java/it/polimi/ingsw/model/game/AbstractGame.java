@@ -1,9 +1,8 @@
 package it.polimi.ingsw.model.game;
 
-import it.polimi.ingsw.model.Color;
-import it.polimi.ingsw.model.Dice;
-import it.polimi.ingsw.model.DiceBag;
-import it.polimi.ingsw.model.RoundTrack;
+import it.polimi.ingsw.model.dicebag.Color;
+import it.polimi.ingsw.model.dicebag.Dice;
+import it.polimi.ingsw.model.dicebag.DiceBag;
 import it.polimi.ingsw.model.WPC.WPC;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;

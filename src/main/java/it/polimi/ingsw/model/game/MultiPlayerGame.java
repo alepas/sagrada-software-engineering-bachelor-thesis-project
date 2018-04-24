@@ -1,10 +1,8 @@
 package it.polimi.ingsw.model.game;
 
-import it.polimi.ingsw.model.Color;
 import it.polimi.ingsw.model.exceptions.NotEnoughPlayersException;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 
-import java.util.ArrayList;
 import java.util.Collections;
 
 public class MultiPlayerGame extends AbstractGame implements Runnable {
