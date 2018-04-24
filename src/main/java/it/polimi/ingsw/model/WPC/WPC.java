@@ -24,7 +24,7 @@ public class WPC {
     public WPC( String id){
         //var Parser = new DomParser(id);
         wpcId = id;
-        favours = 0;
+        //favours = 0;
         schema = new Cell[4][5];
         for(int i= 0; i<4; i++) {
             for(int j=0; j<5; j++)
@@ -33,7 +33,7 @@ public class WPC {
     }
 
     //ritorna tutti gli id
-    public static ArrayList<String> getWpcIDS( ) throws ParserConfigurationException {
+    public static ArrayList<String> getWpcIDS( ){
         NodeList wpcList = null;
         Node wpcNode = null;
         Element eElement = null;
@@ -55,6 +55,8 @@ public class WPC {
             e.printStackTrace();
         }catch (IOException e) {
             e.printStackTrace();
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return allWpcIDS;
     }
@@ -63,7 +65,8 @@ public class WPC {
 
     }
 
-    public void setFavours(int favours) {
+    public void setFavours() {
+        getFavours();
         this.favours = favours;
     }
 
