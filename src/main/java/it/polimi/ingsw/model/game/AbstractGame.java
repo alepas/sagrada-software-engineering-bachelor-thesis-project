@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.game;
 
-import it.polimi.ingsw.model.constants.GameCostants;
+import it.polimi.ingsw.model.constants.GameConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.dicebag.DiceBag;
@@ -80,8 +80,8 @@ public abstract class AbstractGame {
 
         for(PlayerInGame player : players){
             ChooseWPCThread chooseThread = new ChooseWPCThread(player,
-                    new ArrayList<String> (ids.subList(GameCostants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER*i,
-                            GameCostants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER*(i+1))));
+                    new ArrayList<String> (ids.subList(GameConstants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER*i,
+                            GameConstants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER*(i+1))));
             chooseThreads[i] = chooseThread;
             chooseThread.start();
             i++;
@@ -90,7 +90,7 @@ public abstract class AbstractGame {
         try {
             System.out.println("Waiting for threads to finish.");
             for (ChooseWPCThread chooseThread : chooseThreads ){
-                chooseThread.join(GameCostants.CHOOSE_WPC_WAITING_TIME * 1000);
+                chooseThread.join(GameConstants.CHOOSE_WPC_WAITING_TIME * 1000);
             }
         } catch (InterruptedException e) {
             System.out.println("Main thread Interrupted");
@@ -98,8 +98,8 @@ public abstract class AbstractGame {
 
         for (i = 0; i < chooseThreads.length; i++){
             if (chooseThreads[i].isInterrupted()){
-                players.get(i).setWPC(ids.subList(GameCostants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER*i,
-                        GameCostants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER*(i+1)).get(0));
+                players.get(i).setWPC(ids.subList(GameConstants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER*i,
+                        GameConstants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER*(i+1)).get(0));
             }
         }
     }
@@ -122,7 +122,6 @@ public abstract class AbstractGame {
         }
     }
 
-
     public ArrayList<ToolCard> getToolCards() {
         return toolCards;
     }
@@ -131,24 +130,14 @@ public abstract class AbstractGame {
         return publicObjectiveCards;
     }
 
-    public String getGameID() {
-        return gameID;
-    }
+    public String getGameID() { return gameID; }
 
-    public int getNumPlayers() {
-        return numPlayers;
-    }
+    public int getNumPlayers() { return numPlayers; }
 
-    public ArrayList<Dice> getExtractedDices() {
-        return extractedDices;
-    }
+    public ArrayList<Dice> getExtractedDices() { return extractedDices; }
 
-    public ArrayList<PlayerInGame> getPlayers() {
-        return players;
-    }
+    public ArrayList<PlayerInGame> getPlayers() { return players; }
 
-    public void removeExtractedDice(Dice dice){
-        extractedDices.remove(dice);
-    }
+    public void removeExtractedDice(Dice dice){ extractedDices.remove(dice); }
 
 }

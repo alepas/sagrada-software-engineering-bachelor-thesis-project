@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.game;
 
-import it.polimi.ingsw.model.constants.GameCostants;
+import it.polimi.ingsw.model.constants.GameConstants;
 import it.polimi.ingsw.model.exceptions.gameExceptions.*;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 
@@ -17,9 +17,9 @@ public class MultiPlayerGame extends AbstractGame implements Runnable {
         turnPlayer = 0;
         roundPlayer = 0;
         currentTurn = 1;
-        numOfPrivateObjectivesForPlayer = GameCostants.NUM_PRIVATE_OBJ_FOR_PLAYER_IN_MULTIPLAYER_GAME;
-        numOfToolCards = GameCostants.NUM_TOOL_CARDS_IN_MULTIPLAYER_GAME;
-        numOfPublicObjectiveCards = GameCostants.NUM_PUBLIC_OBJ_IN_MULTIPLAYER_GAME;
+        numOfPrivateObjectivesForPlayer = GameConstants.NUM_PRIVATE_OBJ_FOR_PLAYER_IN_MULTIPLAYER_GAME;
+        numOfToolCards = GameConstants.NUM_TOOL_CARDS_IN_MULTIPLAYER_GAME;
+        numOfPublicObjectiveCards = GameConstants.NUM_PUBLIC_OBJ_IN_MULTIPLAYER_GAME;
     }
 
     public void start(){
@@ -66,7 +66,7 @@ public class MultiPlayerGame extends AbstractGame implements Runnable {
 
     @Override
     public void nextTurn() {
-        if (currentTurn < GameCostants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME*getNumPlayers()) {
+        if (currentTurn < GameConstants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME*getNumPlayers()) {
             turnPlayer = nextPlayer();
             currentTurn++;
         } else {
@@ -83,7 +83,7 @@ public class MultiPlayerGame extends AbstractGame implements Runnable {
     }
 
     protected int nextPlayer() throws MaxNumberOfTurnsPlayedExeption {
-        if (currentTurn == numPlayers*GameCostants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME) {
+        if (currentTurn == numPlayers*GameConstants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME) {
             throw new MaxNumberOfTurnsPlayedExeption(this);
         }
 

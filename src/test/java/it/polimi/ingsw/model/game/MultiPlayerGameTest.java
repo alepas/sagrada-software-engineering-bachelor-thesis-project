@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.game;
 
 import it.polimi.ingsw.model.WPC.WPC;
-import it.polimi.ingsw.model.constants.GameCostants;
+import it.polimi.ingsw.model.constants.GameConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;
@@ -85,7 +85,7 @@ public class MultiPlayerGameTest {
             Color p1 = player.getPrivateObjective1();
             Color p2 = player.getPrivateObjective2();
 
-            if(GameCostants.NUM_PRIVATE_OBJ_FOR_PLAYER_IN_MULTIPLAYER_GAME == 1){
+            if(GameConstants.NUM_PRIVATE_OBJ_FOR_PLAYER_IN_MULTIPLAYER_GAME == 1){
                 Assert.assertNotNull(p1);
                 Assert.assertNull(p2);
 
@@ -135,7 +135,7 @@ public class MultiPlayerGameTest {
         ToolCard.loadCards();
         game.extractToolCards();
 
-        Assert.assertEquals(GameCostants.NUM_TOOL_CARDS_IN_MULTIPLAYER_GAME, game.getToolCards().size());
+        Assert.assertEquals(GameConstants.NUM_TOOL_CARDS_IN_MULTIPLAYER_GAME, game.getToolCards().size());
 
         ArrayList<ToolCard> cardsExtracted = new ArrayList<>();
 
@@ -155,7 +155,7 @@ public class MultiPlayerGameTest {
         PublicObjectiveCard.loadCards();
         game.extractPublicObjectives();
 
-        Assert.assertEquals(GameCostants.NUM_PUBLIC_OBJ_IN_MULTIPLAYER_GAME, game.getPublicObjectiveCards().size());
+        Assert.assertEquals(GameConstants.NUM_PUBLIC_OBJ_IN_MULTIPLAYER_GAME, game.getPublicObjectiveCards().size());
 
         ArrayList<PublicObjectiveCard> cardsExtracted = new ArrayList<>();
 
@@ -265,7 +265,7 @@ public class MultiPlayerGameTest {
         game.addPlayer(username2);
         game.addPlayer(username3);
 
-        game.setCurrentTurn(game.getNumPlayers()*GameCostants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME);
+        game.setCurrentTurn(game.getNumPlayers()*GameConstants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME);
 
         game.nextPlayer();
     }

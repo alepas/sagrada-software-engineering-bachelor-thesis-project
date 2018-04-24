@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.constants;
 
-public class GameCostants {
+public class GameConstants {
     //General
     public static final int CHOOSE_WPC_WAITING_TIME = 60; //Tempo in secondi
     public static final int NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER = 4;

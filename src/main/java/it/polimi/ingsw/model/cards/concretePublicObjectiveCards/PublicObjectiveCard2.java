@@ -2,12 +2,11 @@ package it.polimi.ingsw.model.cards.concretePublicObjectiveCards;
 
 import it.polimi.ingsw.model.WPC.WPC;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
+import it.polimi.ingsw.model.constants.POCConstants;
 
 public class PublicObjectiveCard2 extends PublicObjectiveCard {
 
-    public PublicObjectiveCard2(){
-        this.id = "2";
-    }
+    public PublicObjectiveCard2() { this.id = POCConstants.POC2_ID; }
 
     @Override
     public int calculateScore(WPC wpc) {
