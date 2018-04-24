@@ -27,6 +27,8 @@ public abstract class AbstractGame {
     int numOfToolCards;
     int numOfPublicObjectiveCards;
 
+    //Altre costanti utilizzate
+    int chooseWpcWaitingTime = 60;
 
     AbstractGame(String user, int numPlayers) {
         toolCards = new ArrayList<>();
@@ -54,7 +56,7 @@ public abstract class AbstractGame {
     abstract void saveScore();
 
     protected void extractWPCs(){
-        ArrayList<String> ids = WPC.getWPCids();
+        ArrayList<String> ids = WPC.getWpcIDs();
         Collections.shuffle(ids);
         ChooseWPCThread[] chooseThreads = new ChooseWPCThread[numPlayers];
 
@@ -68,7 +70,6 @@ public abstract class AbstractGame {
         }
 
         try {
-            int chooseWpcWaitingTime = 60;
             System.out.println("Waiting for threads to finish.");
             for (ChooseWPCThread chooseThread : chooseThreads ){
                 chooseThread.join(chooseWpcWaitingTime * 1000);
