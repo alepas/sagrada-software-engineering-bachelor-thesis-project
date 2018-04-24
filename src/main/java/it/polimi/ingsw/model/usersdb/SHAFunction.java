@@ -9,8 +9,7 @@ class SHAFunction {
     private SHAFunction(){}
     private static final String PEPPER="�`�y�3��G�u0019��ļ�hfb8673552f4fc89b53d6a7cf9cb1c6eb�w�1U�b�Uc78ab44a9177����x�.32";
 
-    static String getShaPwd(String passwordToHash, byte[] salt) throws PasswordParsingException
-    {
+    static String getShaPwd(String passwordToHash, byte[] salt) throws PasswordParsingException {
         String pepperedPassword = passwordToHash +PEPPER;
         String generatedPassword;
         try {

@@ -1,10 +1,13 @@
 package it.polimi.ingsw.model.usersdb;
 
 
+import it.polimi.ingsw.model.exceptions.CannotRegisterUserException;
+import it.polimi.ingsw.model.exceptions.NoUserInDBException;
+import it.polimi.ingsw.model.exceptions.PasswordParsingException;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.HashMap;
@@ -41,18 +44,26 @@ public class DatabaseUsers {
     private DatabaseUsers(){}
 
     private synchronized boolean isUsernameTaken(String username){
+
         return userDataTable.containsKey(username);
     }
 
-    public synchronized String registerUser(String username, String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    public synchronized String registerUser(String username, String password) {
+        byte[] salt;
+        String passwordHash;
+
         if (isUsernameTaken(username)){
-            System.out.println("nickname non valido");
-            return null;
+            throw new CannotRegisterUserException(username,2);
+
         }
-        else {
-            System.out.println("creo nuovo utente");
-            byte[] salt = getSalt();
-            String passwordHash = SHAFunction.getShaPwd(password,salt);
+        System.out.println("creo nuovo utente");
+            try {
+                salt = getSalt();
+                passwordHash = SHAFunction.getShaPwd(password, salt);
+            }
+            catch (PasswordParsingException e){
+            throw new CannotRegisterUserException(username,1);
+            }
             User newuser= new User();
             newuser.password=passwordHash;
             newuser.salt=salt;
@@ -67,22 +78,22 @@ public class DatabaseUsers {
             tokenbyUsername.put(username,newtoken);
             return newtoken;
 
-        }
+
     }
 
     public synchronized String login(String username, String password) throws NoSuchAlgorithmException, IOException{
-
+        String passwordHash;
+        String storedPasswordHash;
         // username isn't registered
         if(!userDataTable.containsKey(username) ){
-            System.out.println("login scorretto");
-            return null;
+            throw new NoUserInDBException(username);
         }
         User foundUser=null;
         foundUser=userDataTable.get(username);
         byte[] salt=foundUser.salt;
 
-        String passwordHash = SHAFunction.getShaPwd(password, salt);
-        String storedPasswordHash = foundUser.password;
+        passwordHash = SHAFunction.getShaPwd(password, salt);
+        storedPasswordHash = foundUser.password;
         if (passwordHash.equals(storedPasswordHash)){
             String newtoken = UUID.randomUUID().toString();
             if (tokenbyUsername.containsKey(username))
@@ -196,10 +207,17 @@ public class DatabaseUsers {
     }
 
 
-    static byte[] getSalt() throws NoSuchAlgorithmException, UnsupportedEncodingException {
-        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
-        byte[] salt = new byte[16];
-        sr.nextBytes(salt);
+    static byte[] getSalt() throws PasswordParsingException {
+        SecureRandom sr;
+        try {
+            sr = SecureRandom.getInstance("SHA1PRNG");
+        }
+        catch(NoSuchAlgorithmException e) {
+            throw new PasswordParsingException();
+        }
+                    byte[] salt = new byte[16];
+            sr.nextBytes(salt);
+
         return salt;
     }
 
