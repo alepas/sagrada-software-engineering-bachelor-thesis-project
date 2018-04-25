@@ -129,7 +129,7 @@ public class WPC {
     }
 
 
-    public WPC getWpcByID(String ID){
+    public static WPC getWpcByID(String ID){
         //dato l'id selezionato dal giocatore si chiama il costruttore che genera una copia della wpc
         WPC wpc = null;
 
@@ -146,8 +146,6 @@ public class WPC {
 
     public String getWpcID(){ return wpcID; }
 
-
-
     private void checkCellExistence(Cell cell) throws NotExistingCellException {
         //controllo se la cella esiste
         for (Cell schemaCell : schema){
@@ -156,7 +154,6 @@ public class WPC {
 
         throw new NotExistingCellException(cell);
     }
-
 
     private boolean checkFirstTurnRestriction(Cell cell) {
         //controllo che, durante il primo turno, il dado sia posizionato solo sul bordo della wpc
@@ -262,7 +259,7 @@ public class WPC {
         return columnDices;
     }
 
-    private ArrayList<Dice> getWpcDices(){
+    public ArrayList<Dice> getWpcDices(){
         //restituisce tutti i dadi presenti sulla wpc
         ArrayList<Dice>  WPCDices = new ArrayList<>();
 
