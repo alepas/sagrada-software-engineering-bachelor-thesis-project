@@ -21,7 +21,8 @@ public class WPC {
     private static WPC personalWPC ;
     private String wpcID;
     private int favours;
-    private ArrayList<Cell> schema = new ArrayList<>();
+    private ArrayList<Cell> schema = new ArrayList<>();     //Commento di Davide: è giusto usare un ArrayList?
+    // Tieni presente che l'ArrayList non garantisce che venga mantenuto l'ordine degli elementi all'interno
     private static ArrayList<WPC> WPCs;
     private static ArrayList<String> allWpcIDS = new ArrayList<String>();
 
@@ -148,20 +149,7 @@ public class WPC {
     private void checkAdjacentRestriction(){}
 
 
-
-
-
     //AGGIUNTI DA DAVIDE
-    public int numOfRows(){
-        //Restituisce il numero di righe della wpc
-        return 0;
-    }
-
-    public int numOfCols(){
-        //Restituisce il numero di colonne della wpc
-        return 0;
-    }
-
     public Dice[] getRowDices(int row){
         //Restituisce i dadi presenti nella riga passata
         return null;
@@ -177,7 +165,8 @@ public class WPC {
         return null;
     }
 
-    public int numOfDicesOfShade(int shade){
+    public int numDicesOfShade(int shade){
+        //Restituisce il numero di dadi sulla wpc che hanno il numero uguale a shade
         int count = 0;
 
         for (Dice dice : getWpcDices()){
@@ -187,7 +176,8 @@ public class WPC {
         return count;
     }
 
-    public int numOfDicesOfColor(Color color){
+    public int numDicesOfColor(Color color){
+        //Restituisce il numero di dadi sulla wpc che hanno il colore uguale a color
         int count = 0;
 
         for (Dice dice : getWpcDices()){
