@@ -30,8 +30,8 @@ public class PublicObjectiveCard1 extends PublicObjectiveCard {
         ArrayList<Color> extractedColors = new ArrayList<>();
 
         for (Dice dice : dices){
-            if (extractedColors.contains(dice.getDiceColour())) return false;
-            extractedColors.add(dice.getDiceColour());
+            if (extractedColors.contains(dice.getDiceColor())) return false;
+            extractedColors.add(dice.getDiceColor());
         }
 
         return true;
