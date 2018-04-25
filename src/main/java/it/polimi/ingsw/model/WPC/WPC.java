@@ -186,4 +186,14 @@ public class WPC {
 
         return count;
     }
+
+    public int numOfDicesOfColor(Color color){
+        int count = 0;
+
+        for (Dice dice : getWpcDices()){
+            if (dice.getDiceColour() == color) count++;
+        }
+
+        return count;
+    }
 }
