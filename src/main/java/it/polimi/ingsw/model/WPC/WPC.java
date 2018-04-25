@@ -129,7 +129,7 @@ public class WPC {
     }
 
 
-    public WPC getWpcByID(String ID){
+    public static WPC getWpcByID(String ID){
         //dato l'id selezionato dal giocatore si chiama il costruttore che genera una copia della wpc
         WPC wpc = null;
 
@@ -259,7 +259,7 @@ public class WPC {
         return columnDices;
     }
 
-    private ArrayList<Dice> getWpcDices(){
+    public ArrayList<Dice> getWpcDices(){
         //restituisce tutti i dadi presenti sulla wpc
         ArrayList<Dice>  WPCDices = new ArrayList<>();
 
