@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.dicebag;
 
+import java.util.ArrayList;
+
 import static it.polimi.ingsw.model.constants.DiceBagCostants.INITIAL_DICE_NUMBER;
 
 public class DiceBag {
@@ -25,15 +27,15 @@ public class DiceBag {
         violetDices = INITIAL_DICE_NUMBER;
     }
 
-    public Dice[] DicesExtraction(int numPlayers){
+    public ArrayList<Dice> DicesExtraction(int numPlayers){
         int numOfDices;
         if(numPlayers == 1)
             numOfDices = 4; //costante da inserire in class costante
         else
-            numOfDices = numPlayers*2 +1;
-        Dice[] extractedDices = new Dice[numOfDices];
-        for (int i = 0; i < extractedDices.length; i++)
-            extractedDices[i] = pickDice();
+            numOfDices = numPlayers*2 +1; //costante computata
+            ArrayList<Dice> extractedDices = new ArrayList<>();
+        for (int i = 0; i < numOfDices; i++)
+            extractedDices.add(pickDice());
         return extractedDices;
     }
 
@@ -52,6 +54,7 @@ public class DiceBag {
         return new Dice(color);
     }
 
+
     //nell enum ogni val è associato ad un valore numerico tramite color.ordinal() recupero tale valore
     //utile per fare il check
     private boolean checkColor(Color color) throws EnumConstantNotPresentException{
@@ -66,6 +69,24 @@ public class DiceBag {
         else
             return (greenDices > 0);
     }
+
+    //Diluente per pasta salda: reinserisco un dado nel sacchetto
+    public void reInsertDice(Dice dice){
+        Color color = dice.getDiceColor();
+        switch (color) {
+            case RED:
+                redDices++;
+            case BLUE:
+                blueDices++;
+            case GREEN:
+                greenDices++;
+            case VIOLET:
+                violetDices++;
+            case YELLOW:
+                yellowDices++;
+        }
+    }
+
 
      public int getYellowDices(){return yellowDices;}
      public int getRedDices(){return redDices;}

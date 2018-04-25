@@ -1,7 +1,6 @@
-package it.polimi.ingsw.model.dicebagtest;
+package it.polimi.ingsw.model.dicebagTest;
 
 import it.polimi.ingsw.model.dicebag.Color;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import java.util.Random;

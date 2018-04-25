@@ -1,129 +1,2187 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wpcs>
-    <wpc wpcId= "1" >
+    <wpc wpcID= "1" >
         <favour>5</favour>
         <row x="0">
             <column y="0">
+                <color>null</color>
                 <number>4</number>
             </column>
-            <column y="1"/>
+            <column y="1">
+                <color>null</color>
+                <number>0</number>
+            </column>
             <column y="2">
+                <color>null</color>
                 <number>2</number>
             </column>
             <column y="3">
+                <color>null</color>
                 <number>5</number>
             </column>
             <column y="4">
-                <color>GREEN</color>
+                <color>green</color>
+                <number>0</number>
             </column>
         </row>
         <row x="1">
-            <column y="0"/>
-            <column y="1"/>
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>0</number>
+            </column>
             <column y="2">
+                <color>null</color>
                 <number>6</number>
             </column>
             <column y="3">
-                <color>GREEN</color>
+                <color>green</color>
+                <number>0</number>
             </column>
             <column y="4">
+                <color>null</color>
                 <number>2</number>
             </column>
         </row>
         <row x="2">
-            <column y="0"/>
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
             <column y="1">
+                <color>null</color>
                 <number>3</number>
             </column>
             <column y="2">
-                <color>GREEN</color>
+                <color>green</color>
+                <number>0</number>
             </column>
             <column y="3">
+                <color>null</color>
                 <number>4</number>
             </column>
-            <column y="4"/>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
         </row>
         <row x="3">
             <column y="0">
+                <color>null</color>
                 <number>5</number>
             </column>
             <column y="1">
-                <color>GREEN</color>
+                <color>green</color>
+                <number>0</number>
             </column>
             <column y="2">
+                <color>null</color>
                 <number>1</number>
             </column>
-            <column y="3"/>
-            <column y="4"/>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
         </row>
     </wpc>
-    <wpc wpcId="2">
-
+    <wpc wpcID="2">
+        <favour>4</favour>
+        <row x="0">
+            <column y="0">
+                <color>yellow</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>blue</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>1</number>
+            </column>
+        </row>
+        <row x="1">
+            <column y="0">
+                <color>green</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>5</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>4</number>
+            </column>
+        </row>
+        <row x="2">
+            <column y="0">
+                <color>null</color>
+                <number>3</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>red</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>green</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="3">
+            <column y="0">
+                <color>null</color>
+                <number>2</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>blue</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>yellow</color>
+                <number>0</number>
+            </column>
+        </row>
     </wpc>
-    <wpc wpcId="3">
-
+    <wpc wpcID="3">
+        <favour>4</favour>
+        <row x="0">
+            <column y="0">
+                <color>yellow</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>6</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="1">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>1</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>5</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>2</number>
+            </column>
+        </row>
+        <row x="2">
+            <column y="0">
+                <color>null</color>
+                <number>3</number>
+            </column>
+            <column y="1">
+                <color>yellow</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>red</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>violet</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="3">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>4</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>3</number>
+            </column>
+            <column y="4">
+                <color>red</color>
+                <number>0</number>
+            </column>
+        </row>
     </wpc>
-    <wpc wpcId="4">
-
+    <wpc wpcID="4">
+        <favour>5</favour>
+        <row x="0">
+            <column y="0">
+                <color>null</color>
+                <number>5</number>
+            </column>
+            <column y="1">
+                <color>green</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>blue</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>violet</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>2</number>
+            </column>
+        </row>
+        <row x="1">
+            <column y="0">
+                <color>violet</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>yellow</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="2">
+            <column y="0">
+                <color>yellow</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>6</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>violet</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="3">
+            <column y="0">
+                <color>null</color>
+                <number>1</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>green</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>4</number>
+            </column>
+        </row>
     </wpc>
-    <wpc wpcId="5">
-
+    <wpc wpcID="5">
+        <favour>3</favour>
+        <row x="0">
+            <column y="0">
+                <color>blue</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>6</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>yellow</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="1">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>3</number>
+            </column>
+            <column y="2">
+                <color>blue</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="2">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>5</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>6</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>2</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="3">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>4</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>1</number>
+            </column>
+            <column y="4">
+                <color>green</color>
+                <number>0</number>
+            </column>
+        </row>
     </wpc>
-    <wpc wpcId="6">
-
+    <wpc wpcID="6">
+        <favour>3</favour>
+        <row x="0">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>blue</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>2</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>yellow</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="1">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>4</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>red</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="2">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>5</number>
+            </column>
+            <column y="3">
+                <color>yellow</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="3">
+            <column y="0">
+                <color>green</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>3</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>violet</color>
+                <number>0</number>
+            </column>
+        </row>
     </wpc>
-    <wpc wpcId="7">
-
+    <wpc wpcID="7">
+        <favour>6</favour>
+        <row x="0">
+            <column y="0">
+                <color>null</color>
+                <number>2</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>5</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>1</number>
+            </column>
+        </row>
+        <row x="1">
+            <column y="0">
+                <color>yellow</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>6</number>
+            </column>
+            <column y="2">
+                <color>violet</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>2</number>
+            </column>
+            <column y="4">
+                <color>red</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="2">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>blue</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>4</number>
+            </column>
+            <column y="3">
+                <color>green</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="3">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>3</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>5</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
+        </row>
     </wpc>
-    <wpc wpcId="8">
-
+    <wpc wpcID="8">
+        <favour>5</favour>
+        <row x="0">
+            <column y="0">
+                <color>violet</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>6</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>3</number>
+            </column>
+        </row>
+        <row x="1">
+            <column y="0">
+                <color>null</color>
+                <number>5</number>
+            </column>
+            <column y="1">
+                <color>violet</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>3</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="2">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>2</number>
+            </column>
+            <column y="2">
+                <color>violet</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>1</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="3">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>1</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>5</number>
+            </column>
+            <column y="3">
+                <color>violet</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>4</number>
+            </column>
+        </row>
     </wpc>
-    <wpc wpcId="9">
-
+    <wpc wpcID="9">
+        <favour>5</favour>
+        <row x="0">
+            <column y="0">
+                <color>null</color>
+                <number>1</number>
+            </column>
+            <column y="1">
+                <color>red</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>3</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>6</number>
+            </column>
+        </row>
+        <row x="1">
+            <column y="0">
+                <color>null</color>
+                <number>5</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>4</number>
+            </column>
+            <column y="2">
+                <color>red</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>2</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="2">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>5</number>
+            </column>
+            <column y="3">
+                <color>red</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>1</number>
+            </column>
+        </row>
+        <row x="3">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>3</number>
+            </column>
+            <column y="4">
+                <color>red</color>
+                <number>0</number>
+            </column>
+        </row>
     </wpc>
-    <wpc wpcId="10">
-
+    <wpc wpcID="10">
+        <favour>4</favour>
+        <row x="0">
+            <column y="0">
+                <color>red</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>blue</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>yellow</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="1">
+            <column y="0">
+                <color>null</color>
+                <number>4</number>
+            </column>
+            <column y="1">
+                <color>violet</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>3</number>
+            </column>
+            <column y="3">
+                <color>green</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>2</number>
+            </column>
+        </row>
+        <row x="2">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>1</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>5</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="3">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>6</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
+        </row>
     </wpc>
-    <wpc wpcId="11">
-
+    <wpc wpcID="11">
+        <favour>5</favour>
+        <row x="0">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>6</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="1">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>5</number>
+            </column>
+            <column y="2">
+                <color>blue</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>4</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="2">
+            <column y="0">
+                <color>null</color>
+                <number>3</number>
+            </column>
+            <column y="1">
+                <color>green</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>yellow</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>violet</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>2</number>
+            </column>
+        </row>
+        <row x="3">
+            <column y="0">
+                <color>null</color>
+                <number>1</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>4</number>
+            </column>
+            <column y="2">
+                <color>red</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>5</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>3</number>
+            </column>
+        </row>
     </wpc>
-    <wpc wpcId="12">
-
+    <wpc wpcID="12">
+        <favour>5</favour>
+        <row x="0">
+            <column y="0">
+                <color>null</color>
+                <number>6</number>
+            </column>
+            <column y="1">
+                <color>violet</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>5</number>
+            </column>
+        </row>
+        <row x="1">
+            <column y="0">
+                <color>null</color>
+                <number>5</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>violet</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="2">
+            <column y="0">
+                <color>red</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>6</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>violet</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="3">
+            <column y="0">
+                <color>yellow</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>red</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>5</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>4</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>3</number>
+            </column>
+        </row>
     </wpc>
-    <wpc wpcId="13">
-
+    <wpc wpcID="13">
+        <favour>3</favour>
+        <row x="0">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>4</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>yellow</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>6</number>
+            </column>
+        </row>
+        <row x="1">
+            <column y="0">
+                <color>red</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>2</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="2">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>red</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>violet</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>1</number>
+            </column>
+        </row>
+        <row x="3">
+            <column y="0">
+                <color>blue</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>yellow</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
+        </row>
     </wpc>
-    <wpc wpcId="14">
-
+    <wpc wpcID="14">
+        <favour>5</favour>
+        <row x="0">
+            <column y="0">
+                <color>null</color>
+                <number>1</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>3</number>
+            </column>
+            <column y="3">
+                <color>blue</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="1">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>2</number>
+            </column>
+            <column y="2">
+                <color>blue</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="2">
+            <column y="0">
+                <color>null</color>
+                <number>6</number>
+            </column>
+            <column y="1">
+                <color>blue</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>4</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="3">
+            <column y="0">
+                <color>blue</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>5</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>2</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>1</number>
+            </column>
+        </row>
     </wpc>
-    <wpc wpcId="15">
-
+    <wpc wpcID="15">
+        <favour>4</favour>
+        <row x="0">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>green</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="1">
+            <column y="0">
+                <color>null</color>
+                <number>2</number>
+            </column>
+            <column y="1">
+                <color>yellow</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>5</number>
+            </column>
+            <column y="3">
+                <color>blue</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>1</number>
+            </column>
+        </row>
+        <row x="2">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>red</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>3</number>
+            </column>
+            <column y="3">
+                <color>violet</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="3">
+            <column y="0">
+                <color>null</color>
+                <number>1</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>6</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>4</number>
+            </column>
+        </row>
     </wpc>
-    <wpc wpcId="16">
-
+    <wpc wpcID="16">
+        <favour>5</favour>
+        <row x="0">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>1</number>
+            </column>
+            <column y="2">
+                <color>green</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>violet</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>4</number>
+            </column>
+        </row>
+        <row x="1">
+            <column y="0">
+                <color>null</color>
+                <number>6</number>
+            </column>
+            <column y="1">
+                <color>violet</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>2</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>5</number>
+            </column>
+            <column y="4">
+                <color>green</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="2">
+            <column y="0">
+                <color>null</color>
+                <number>1</number>
+            </column>
+            <column y="1">
+                <color>green</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>5</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>3</number>
+            </column>
+            <column y="4">
+                <color>violet</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="3">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
+        </row>
     </wpc>
-    <wpc wpcId="17">
-
+    <wpc wpcID="17">
+        <favour>3</favour>
+        <row x="0">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>red</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>5</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="1">
+            <column y="0">
+                <color>violet</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>4</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>green</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>3</number>
+            </column>
+        </row>
+        <row x="2">
+            <column y="0">
+                <color>null</color>
+                <number>6</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>blue</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="3">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>yellow</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>2</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
+        </row>
     </wpc>
-    <wpc wpcId="18">
-
+    <wpc wpcID="18">
+        <favour>5</favour>
+        <row x="0">
+            <column y="0">
+                <color>null</color>
+                <number>3</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>4</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>1</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>5</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="1">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>6</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>2</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>yellow</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="2">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>yellow</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>red</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="3">
+            <column y="0">
+                <color>null</color>
+                <number>5</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>yellow</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>red</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>6</number>
+            </column>
+        </row>
     </wpc>
-    <wpc wpcId="19">
-
+    <wpc wpcID="19">
+        <favour>5</favour>
+        <row x="0">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>red</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>5</number>
+            </column>
+        </row>
+        <row x="1">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>violet</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>4</number>
+            </column>
+            <column y="4">
+                <color>blue</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="2">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>blue</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>3</number>
+            </column>
+            <column y="3">
+                <color>yellow</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>6</number>
+            </column>
+        </row>
+        <row x="3">
+            <column y="0">
+                <color>yellow</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>2</number>
+            </column>
+            <column y="2">
+                <color>green</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>1</number>
+            </column>
+            <column y="4">
+                <color>red</color>
+                <number>0</number>
+            </column>
+        </row>
     </wpc>
-    <wpc wpcId="20">
-
+    <wpc wpcID="20">
+        <favour>6</favour>
+        <row x="0">
+            <column y="0">
+                <color>null</color>
+                <number>6</number>
+            </column>
+            <column y="1">
+                <color>blue</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>1</number>
+            </column>
+        </row>
+        <row x="1">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>5</number>
+            </column>
+            <column y="2">
+                <color>blue</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="2">
+            <column y="0">
+                <color>null</color>
+                <number>4</number>
+            </column>
+            <column y="1">
+                <color>red</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>2</number>
+            </column>
+            <column y="3">
+                <color>blue</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="3">
+            <column y="0">
+                <color>green</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>6</number>
+            </column>
+            <column y="2">
+                <color>yellow</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>3</number>
+            </column>
+            <column y="4">
+                <color>violet</color>
+                <number>0</number>
+            </column>
+        </row>
     </wpc>
-    <wpc wpcId="21">
-
+    <wpc wpcID="21">
+        <favour>5</favour>
+        <row x="0">
+            <column y="0">
+                <color>yellow</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>2</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>6</number>
+            </column>
+        </row>
+        <row x="1">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>4</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>5</number>
+            </column>
+            <column y="4">
+                <color>yellow</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="2">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>yellow</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>5</number>
+            </column>
+        </row>
+        <row x="3">
+            <column y="0">
+                <color>null</color>
+                <number>1</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>2</number>
+            </column>
+            <column y="2">
+                <color>yellow</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>3</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
+        </row>
     </wpc>
-    <wpc wpcId="22">
-
+    <wpc wpcID="22">
+        <favour>6</favour>
+        <row x="0">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>1</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="1">
+            <column y="0">
+                <color>null</color>
+                <number>1</number>
+            </column>
+            <column y="1">
+                <color>green</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>3</number>
+            </column>
+            <column y="3">
+                <color>blue</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>2</number>
+            </column>
+        </row>
+        <row x="2">
+            <column y="0">
+                <color>blue</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>5</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>4</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>6</number>
+            </column>
+            <column y="4">
+                <color>green</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="3">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>blue</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>5</number>
+            </column>
+            <column y="3">
+                <color>green</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
+        </row>
     </wpc>
-    <wpc wpcId="23">
-
+    <wpc wpcID="23">
+        <favour>5</favour>
+        <row x="0">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>blue</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>red</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="1">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>4</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>5</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>blue</color>
+                <number>0</number>
+            </column>
+        </row>
+        <row x="2">
+            <column y="0">
+                <color>blue</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>2</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>red</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>5</number>
+            </column>
+        </row>
+        <row x="3">
+            <column y="0">
+                <color>null</color>
+                <number>6</number>
+            </column>
+            <column y="1">
+                <color>red</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>3</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>1</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>0</number>
+            </column>
+        </row>
     </wpc>
-    <wpc wpcId="24">
-
+    <wpc wpcID="24">
+        <favour>6</favour>
+        <row x="0">
+            <column y="0">
+                <color>null</color>
+                <number>1</number>
+            </column>
+            <column y="1">
+                <color>violet</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>yellow</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>4</number>
+            </column>
+        </row>
+        <row x="1">
+            <column y="0">
+                <color>violet</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>yellow</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>6</number>
+            </column>
+        </row>
+        <row x="2">
+            <column y="0">
+                <color>yellow</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>5</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>3</number>
+            </column>
+        </row>
+        <row x="3">
+            <column y="0">
+                <color>null</color>
+                <number>0</number>
+            </column>
+            <column y="1">
+                <color>null</color>
+                <number>5</number>
+            </column>
+            <column y="2">
+                <color>null</color>
+                <number>4</number>
+            </column>
+            <column y="3">
+                <color>null</color>
+                <number>2</number>
+            </column>
+            <column y="4">
+                <color>null</color>
+                <number>1</number>
+            </column>
+        </row>
     </wpc>
 </wpcs>

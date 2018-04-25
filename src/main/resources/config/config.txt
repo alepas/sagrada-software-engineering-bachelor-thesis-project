@@ -1,1 +1,26 @@
 qui andrà messo un config
+
+wpcid = 1  virtus
+wpcid = 2  kaleidoscopic Dreams
+wpcid = 3  vialux
+wpcid = 4  aurorae magnificus
+wpcid = 5  bellesguard
+wpcid = 6  sun catcher
+wpcid = 7  symphony of life
+wpcid = 8  firmitas
+wpcid = 9  industria
+wpcid = 10 aurorae sagradis
+wpcid = 11 batllo
+wpcid = 12 shadow thief
+wpcid = 13 fractal drops
+wpcid = 14 gravitas
+wpcid = 15 chromatic splendor
+wpcid = 16 lux astram
+wpcid = 17 lux celestial
+wpcid = 18 firelight
+wpcid = 19 ripples of light
+wpcid = 20 water of life
+wpcid = 21 comitas
+wpcid = 22 lux mundi
+wpcid = 23 fulgor del cielo
+wpcid = 24 sun's glory

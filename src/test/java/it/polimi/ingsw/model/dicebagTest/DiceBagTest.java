@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.dicebagtest;
+package it.polimi.ingsw.model.dicebagTest;
 
 import it.polimi.ingsw.model.dicebag.DiceBag;
 import org.junit.Assert;

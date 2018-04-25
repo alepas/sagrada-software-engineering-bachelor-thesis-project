@@ -1,7 +1,6 @@
-package it.polimi.ingsw.model.wpctest;
+package it.polimi.ingsw.model.wpcTest;
 import it.polimi.ingsw.model.WPC.Cell;
 import it.polimi.ingsw.model.dicebag.Dice;
-import it.polimi.ingsw.model.dicebag.Color;
 
 import org.junit.Assert;
 import org.junit.Before;
