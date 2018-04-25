@@ -4,6 +4,9 @@ import java.util.ArrayList;
 //copio la wpc corrispondente
 
 import it.polimi.ingsw.model.dicebag.Color;
+import it.polimi.ingsw.model.dicebag.Dice;
+import it.polimi.ingsw.model.exceptions.wpcExceptions.IsNotPossibleToAddDiceException;
+import it.polimi.ingsw.model.exceptions.wpcExceptions.NotExistingCellException;
 import  org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
@@ -17,10 +20,10 @@ import java.io.File;
 import java.io.IOException;
 
 public class WPC {
-    private static WPC personalWPC ;
-    private String wpcID;
-    private int favours;
-    private ArrayList<Cell> schema = new ArrayList<>();
+    private  WPC personalWPC ;
+    private  String wpcID;
+    private  int favours;
+    private  ArrayList<Cell> schema = new ArrayList<>();
     private static ArrayList<WPC> WPCs;
     private static ArrayList<String> allWpcIDS = new ArrayList<String>();
 
@@ -125,24 +128,111 @@ public class WPC {
             e.printStackTrace();
         }
     }
-    public static WPC getWpcByID(String ID){
-        for (int i = 0; i<WPCs.size(); i++){
-            if(WPCs.get(i).wpcID.equals(ID))
-                personalWPC = new WPC(WPCs.get(i));
+
+    //dato l'id selezionato dal giocatore si chiama il costruttore che genera una copia della wpc
+    public WPC getWpcByID(String ID){
+        for (WPC WPC: WPCs) {
+            if(WPC.wpcID.equals(ID))
+                personalWPC = new WPC(WPC);
         }
         return personalWPC;
     }
 
-    public static ArrayList<String> getWpcIDs( ) {
-        return allWpcIDS;
-    }
+    public static ArrayList<String> getWpcIDs( ) { return allWpcIDS; }
 
     public int getFavours(){ return personalWPC.favours;};
 
-    public String getWpcID(){
-        return personalWPC.wpcID;
+    public String getWpcID(){ return personalWPC.wpcID; }
+
+
+    //controllo se la cella esiste
+    private boolean checkCellExistence(Cell cell) throws NotExistingCellException {
+        for(Cell schemaCell : personalWPC.schema){
+            if(schemaCell.equals(cell))
+                return true;
+        }
+        throw new NotExistingCellException(cell);
     }
 
-    private void checkCellRestriction(){}
-    private void checkAdjacentRestriction(){}
+    //controllo che, durante il primo turno, il dado sia posizionato solo sul bordo della wpc
+    private boolean checkFirstTurnRestriction(Cell cell) throws IsNotPossibleToAddDiceException {
+        int row = cell.getCellPosition().getRow();
+        int column = cell.getCellPosition().getColumn();
+        if (row!= 0 && column != 0)
+            throw new IsNotPossibleToAddDiceException(cell);
+        else
+        return true;
+    }
+
+    //controllo che il dado possa essere inserito nella cella selezionata secondo le restrizioni di questa
+    private boolean checkCellRestriction(Cell cell, Dice dice) throws IsNotPossibleToAddDiceException {
+        if(cell.getCellDice()!= null)
+            throw new IsNotPossibleToAddDiceException(cell);
+        switch(cell.getCellNumber()){
+            case 0:
+                if(cell.getCellColor().equals(dice.getDiceColor())) break;
+                else
+                    throw new IsNotPossibleToAddDiceException(cell);
+            default:
+                if(cell.getCellNumber() == dice.getDiceNumber()) break;
+                else
+                    throw new IsNotPossibleToAddDiceException(cell);
+        }
+        return true;
+    }
+
+    //pennello per eglomise: impone che sia considerata sulla cella solo la restrizione di numero e non quella di colore
+    private boolean checkOnlyNumberCellRestriction(Cell cell, Dice dice) throws IsNotPossibleToAddDiceException{
+        if(cell.getCellDice()!= null)
+            throw new IsNotPossibleToAddDiceException(cell);
+        if(cell.getCellNumber() == dice.getDiceNumber())
+            return true;
+        else
+            throw new IsNotPossibleToAddDiceException(cell);
+    }
+
+    //Alesatore per lamine di rame: impone che sia considerata sulla cella solo la restrizione di colore e non quella di numero
+    private boolean checkOnlyColorCellRestriction(Cell cell, Dice dice) throws IsNotPossibleToAddDiceException{
+        if(cell.getCellDice()!= null)
+            throw new IsNotPossibleToAddDiceException(cell);
+        if(cell.getCellColor().equals(dice.getDiceColor()))
+            return true;
+        else
+            throw new IsNotPossibleToAddDiceException(cell);
+    }
+
+    //controllo se le celle adiacenti hanno dadi con numero o colore uguali a quelli del dado che si desidera inserire
+    private boolean checkAdjacentRestriction(Cell cell, Dice dice) throws IsNotPossibleToAddDiceException{
+        int i= 1;
+        int row= cell.getCellPosition().getRow();
+        int column= cell.getCellPosition().getColumn();
+        for(Cell schemaCell: personalWPC.schema){
+            if(schemaCell.getCellPosition().getRow() == row) {
+                if (schemaCell.getCellPosition().getColumn() == column + i || schemaCell.getCellPosition().getColumn() == column - i) {
+                    if (schemaCell.getCellDice() != null) {
+                        if (schemaCell.getCellDice().getDiceNumber() == dice.getDiceNumber())
+                            throw new IsNotPossibleToAddDiceException(cell);
+                        if (schemaCell.getCellDice().getDiceColor().equals(dice.getDiceColor()))
+                            throw new IsNotPossibleToAddDiceException(cell);
+                    }
+                }
+            }
+            if(schemaCell.getCellPosition().getColumn() == column) {
+                if (schemaCell.getCellPosition().getColumn() == row + i || schemaCell.getCellPosition().getColumn() == row - i) {
+                    if (schemaCell.getCellDice() != null) {
+                        if (schemaCell.getCellDice().getDiceNumber() == dice.getDiceNumber())
+                            throw new IsNotPossibleToAddDiceException(cell);
+                        if (schemaCell.getCellDice().getDiceColor().equals(dice.getDiceColor()))
+                            throw new IsNotPossibleToAddDiceException(cell);
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    //manca il controllo che ci sia almeno un dado attorno alla cella selezionata
+    private void IsThereAtLeastADice(Cell cell){
+        
+    }
 }

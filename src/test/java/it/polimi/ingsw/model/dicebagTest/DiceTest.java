@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.dicebagtest;
+package it.polimi.ingsw.model.dicebagTest;
 
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
@@ -17,7 +17,7 @@ public class DiceTest {
 
     @Test
     public void checkDiceConstructor() {
-        Assert.assertEquals(Color.VIOLET, dice.getDiceColour());
+        Assert.assertEquals(Color.VIOLET, dice.getDiceColor());
     }
 
     @Test

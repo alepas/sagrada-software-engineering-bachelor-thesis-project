@@ -12,18 +12,25 @@ public enum Color {
 
     public static Color parseColor(String stringColor) {
         Color color = null;
-        if (stringColor.equals("violet"))
-            color = VIOLET;
-        else if (stringColor.equals("blue"))
-            color = BLUE;
-        else if (stringColor.equals("green"))
-            color = GREEN;
-        else if (stringColor.equals("red"))
-            color = RED;
-        else if (stringColor.equals("yellow"))
-            color = YELLOW;
-        else
-            color = null;
+        switch (stringColor){
+            case "violet":
+                color = VIOLET;
+                break;
+            case "blue":
+                color = BLUE;
+                break;
+            case "green":
+                color = GREEN;
+                break;
+            case "red":
+                color = RED;
+                break;
+            case "yellow":
+                color = YELLOW;
+                break;
+            case "null":
+                break;
+        }
         return color;
     }
 

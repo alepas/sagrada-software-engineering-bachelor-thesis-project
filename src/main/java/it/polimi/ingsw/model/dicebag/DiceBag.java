@@ -54,6 +54,7 @@ public class DiceBag {
         return new Dice(color);
     }
 
+
     //nell enum ogni val è associato ad un valore numerico tramite color.ordinal() recupero tale valore
     //utile per fare il check
     private boolean checkColor(Color color) throws EnumConstantNotPresentException{
@@ -69,8 +70,9 @@ public class DiceBag {
             return (greenDices > 0);
     }
 
+    //Diluente per pasta salda: reinserisco un dado nel sacchetto
     public void reInsertDice(Dice dice){
-        Color color = dice.getDiceColour();
+        Color color = dice.getDiceColor();
         switch (color) {
             case RED:
                 redDices++;
@@ -84,6 +86,7 @@ public class DiceBag {
                 yellowDices++;
         }
     }
+
 
      public int getYellowDices(){return yellowDices;}
      public int getRedDices(){return redDices;}
