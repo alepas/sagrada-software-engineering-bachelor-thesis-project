@@ -242,16 +242,6 @@ public class WPC {
 
 
     //AGGIUNTI DA DAVIDE
-    public int numOfRows(){
-        //Restituisce il numero di righe della wpc
-        return 0;
-    }
-
-    public int numOfCols(){
-        //Restituisce il numero di colonne della wpc
-        return 0;
-    }
-
     public Dice[] getRowDices(int row){
         //Restituisce i dadi presenti nella riga passata
         return null;
@@ -267,7 +257,8 @@ public class WPC {
         return null;
     }
 
-    public int numOfDicesOfShade(int shade){
+    public int numDicesOfShade(int shade){
+        //Restituisce il numero di dadi sulla wpc che hanno il numero uguale a shade
         int count = 0;
 
         for (Dice dice : getWpcDices()){
@@ -277,7 +268,8 @@ public class WPC {
         return count;
     }
 
-    public int numOfDicesOfColor(Color color){
+    public int numDicesOfColor(Color color){
+        //Restituisce il numero di dadi sulla wpc che hanno il colore uguale a color
         int count = 0;
 
         for (Dice dice : getWpcDices()){
