@@ -26,10 +26,10 @@ class User implements Serializable {
         wonGames++;
     }
     void addLostGames(){
-        wonGames++;
+        lostGames++;
     }
     void addAbandonedGames(){
-        wonGames++;
+        abandonedGames++;
     }
     void addPointsToRanking(int points){
         ranking+=points;

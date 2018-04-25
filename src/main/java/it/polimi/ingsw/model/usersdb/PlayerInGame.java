@@ -12,7 +12,7 @@ public class PlayerInGame {
     private Color privateObjective1;
     private Color privateObjective2;
     private int favours;
-    private boolean active;
+    private boolean active=false;
     private WPC wpc;
 
 
@@ -31,10 +31,6 @@ public class PlayerInGame {
         favours=0;
         active=false;
 
-        /*
-        la funzione deve inizializzare il valore di username e deve andare a chiamare la corrispettiva
-        funzione per la crittografia della password e quindi salvare la password con relativo salt se presente.
-        tutti i parametri sulle partite sono 0. Il parametro online è il Controller corrente dell-user. activegame è null.*/
     }
 
 
@@ -65,13 +61,12 @@ public class PlayerInGame {
     }
 
 
-    public void modifyRanking(int pointsToAdd){
+    public void addPointsToRanking(int pointsToAdd){
 
-        db.modifyRankingFromUsername(pointsToAdd,username);
+        db.addPointsRankingFromUsername(username,pointsToAdd);
     }
     public void addWonGame() {
         db.addWonGamesFromUsername(username);
-        /*verificare che per ognuno di questi la chiamata produca un aumento efffettivo dei giochi*/
     }
     public void addLostGame() {
         db.addLostGamesFromUsername(username);

@@ -24,8 +24,9 @@ public class DatabaseUsers {
 
     public synchronized static DatabaseUsers getInstance(){
         if (instance==null) {
-            pathFile=UserDBConstants.getPathDbFile();
+
             instance = new DatabaseUsers();
+            instance.pathFile=UserDBConstants.getPathDbFile();
             try {
                 instance.userDataTable = (HashMap<String, User>) LoadingFromFile.fromFile(pathFile);
 
@@ -42,8 +43,8 @@ public class DatabaseUsers {
 
     public synchronized static DatabaseUsers getInstance(String path){
         if (instance==null) {
-            pathFile=path;
             instance = new DatabaseUsers();
+            instance.pathFile=path;
             try {
                 instance.userDataTable = (HashMap<String, User>) LoadingFromFile.fromFile(pathFile);
 
@@ -67,7 +68,7 @@ public class DatabaseUsers {
         String newtoken=null;
 
         if (userDataTable.containsKey(username)){
-            throw new CannotRegisterUserException(username,2);
+            throw new CannotRegisterUserException(username,0);
 
         }
         System.out.println("creo nuovo utente");
@@ -167,6 +168,8 @@ public class DatabaseUsers {
             throw new NullTokenException();
 
         User us=usersbyToken.get(token);
+        if (us == null)
+            throw new CannotFindUserInDB("");
         return us.getRanking();
     }
 
@@ -243,7 +246,7 @@ public class DatabaseUsers {
         return us.getAbandonedGames();
     }
 
-    synchronized void modifyRankingFromUsername(int pointsToAdd, String user){
+    synchronized void addPointsRankingFromUsername(String user, int pointsToAdd){
 
         User us = userDataTable.get(user);
         if (us == null)

@@ -34,5 +34,31 @@ public class UserTest {
 
     }
 
+    @Test
+    void addWonGames(){
+        mio.addWonGames();
+        Assertions.assertEquals(1,mio.getWonGames());
+    }
+
+
+
+    @Test
+    void addLostGames(){
+        mio.addLostGames();
+        Assertions.assertEquals(1,mio.getLostGames());
+    }
+
+
+    @Test
+    void addAbandonedGames(){
+        mio.addAbandonedGames();
+        Assertions.assertEquals(1,mio.getAbandonedGames());
+    }
+
+    @Test
+    void addPointsToRanking(){
+        mio.addPointsToRanking(10);
+        Assertions.assertEquals(10,mio.getRanking());
+    }
 
 }
