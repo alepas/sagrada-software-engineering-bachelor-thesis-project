@@ -19,7 +19,9 @@ public class PublicObjectiveCard4  extends PublicObjectiveCard {
 
         for (int col = 0; col < WpcConstants.COLS_NUMBER; col++){
             Dice[] colDices = wpc.getColDices(col);
-            if (allNumbersAreDifferent(colDices)) score += POCConstants.POC4_SCORE;
+            if (colDices.length == WpcConstants.ROWS_NUMBER && allNumbersAreDifferent(colDices)){
+                score += POCConstants.POC4_SCORE;
+            }
         }
 
         return score;
