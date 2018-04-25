@@ -33,5 +33,6 @@ public class Dice {
         return num;
     }
 
+    public void setNum(){}
 
 }

@@ -9,4 +9,22 @@ public enum Color {
         Random randomColor = new Random ();
         return values()[randomColor.nextInt(4)];
     }
+
+    public static Color parseColor(String stringColor) {
+        Color color = null;
+        if (stringColor.equals("violet"))
+            color = VIOLET;
+        else if (stringColor.equals("blue"))
+            color = BLUE;
+        else if (stringColor.equals("green"))
+            color = GREEN;
+        else if (stringColor.equals("red"))
+            color = RED;
+        else if (stringColor.equals("yellow"))
+            color = YELLOW;
+        else
+            color = null;
+        return color;
+    }
+
 }

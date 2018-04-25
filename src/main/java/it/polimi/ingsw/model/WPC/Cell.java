@@ -5,27 +5,13 @@ import it.polimi.ingsw.model.dicebag.Dice;
 public class Cell {
     private Dice cellDice;
     private Color cellColor;
-    private int cellNum;
+    private int cellNumber;
     private Position position;
 
-    Cell(Color color, Position position){
+    Cell(Position position, Color cellColor, int cellNumber){
         cellDice = null;
-        cellColor = color;
-        cellNum = 0;
-        this.position = position;
-    }
-
-    Cell( int n, Position position){
-        cellDice = null;
-        cellColor = null;
-        cellNum = n;
-        this.position = position;
-    }
-
-    Cell(Position position){
-        cellDice = null;
-        cellColor = null;
-        cellNum = 0;
+        this.cellColor = cellColor;
+        this.cellNumber = cellNumber;
         this.position = position;
     }
 
@@ -34,7 +20,7 @@ public class Cell {
     }
 
     public int getCellNumber( ) {
-        return cellNum;
+        return cellNumber;
     }
 
     public Dice getCellDice( ){

@@ -2,7 +2,9 @@ package it.polimi.ingsw.model.WPC;
 import java.util.ArrayList;
 //HO UN ARRAY base di wpc, quando giocatore sceglie una wpc mi viene passato l'id, faccio ricerca nel mio array e poi
 //copio la wpc corrispondente
-import org.w3c.dom.Document;
+
+import it.polimi.ingsw.model.dicebag.Color;
+import  org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -10,33 +12,54 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import org.xml.sax.SAXException;
-public class WPC {
-    private String wpcId;
-    private int favours;
-    private Cell[][] schema;
-    public static ArrayList<WPC> WPCs;
 
-    private WPC( String id){
-        wpcId = id;
-        //favours = 0;
-        schema = new Cell[4][5];
-        for(int i= 0; i<4; i++) {
-            for(int j=0; j<5; j++)
-                schema[i][j]=null;
-        }
+public class WPC {
+    private static WPC personalWPC ;
+    private String wpcID;
+    private int favours;
+    private ArrayList<Cell> schema = new ArrayList<>();
+    private static ArrayList<WPC> WPCs;
+    private static ArrayList<String> allWpcIDS = new ArrayList<String>();
+
+    private WPC(WPC WPC){
+        personalWPC = WPC;
+    }
+
+
+    private WPC(String wpcID, int favours, ArrayList<Cell> schema) {
+        this.wpcID = wpcID;
+        this.favours = favours;
+        this.schema.addAll(schema);
     }
 
     public static void loadWPC(){
         NodeList wpcList = null;
         Node wpcNode = null;
-        Element eElement = null;
-        ArrayList<String> allWpcIDS = new ArrayList<String>();
+        NodeList wpcRow = null;
+        Node wpcRowNode = null;
+        NodeList wpcColumn = null;
+        Element eElementID = null;
+        Element eElementRow = null;
+        Node wpcColumnNode = null;
+        Element eElementColumn = null;
+        NodeList wpcCellColor = null;
+        Node wpcCellColorNode = null;
+        Element eElementCellColor= null;
+        NodeList wpcCellNumber = null;
+        Node wpcCellNumberNode = null;
+        Element eElementCellNumber = null;
+        NodeList wpcFavours = null;
+        Node wpcFavoursNode = null;
+        Element eElementFavours = null;
+        int number = 0;
+        Color color = null;
+        Position position;
+        int favours = 0;
+        String wpcID = null;
+        ArrayList<Cell> schema = new ArrayList<>();
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance(); //inizializzo la factory per processare il flusso di dati
             DocumentBuilder builder = factory.newDocumentBuilder(); //inzializzo documento
@@ -47,65 +70,79 @@ public class WPC {
             for (int i = 0; i < wpcList.getLength(); i++)
                 wpcNode = wpcList.item(i);
             if (wpcNode.getNodeType() == Node.ELEMENT_NODE) {
-                eElement = (Element) wpcNode;
-                allWpcIDS.add(eElement.getAttribute("wpcId"));
-                for(int i=0; i<allWpcIDS.size(); i++){
-                    //WPC( allWpcIDS.get(i) );
+                eElementID = (Element) wpcNode;
+                allWpcIDS.add(eElementID.getAttribute("wpcID"));
+                wpcID = eElementID.getAttribute("wpcID");
+                wpcRow= eElementID.getElementsByTagName("row");
+                for (int j=0; j< wpcRow.getLength(); j++) {
+                    wpcRowNode = wpcRow.item(j);
+                    if (wpcRowNode.getNodeType() == Node.ELEMENT_NODE) {
+                        eElementRow = (Element) wpcRowNode;
+                        int row = Integer.parseInt(eElementRow.getAttribute("x"));
+                        wpcColumn = eElementRow.getElementsByTagName("column");
+                        for (int w = 0; w < wpcColumn.getLength(); w++) {
+                            wpcColumnNode = wpcColumn.item(w);
+                            if (wpcColumnNode.getNodeType() == Node.ELEMENT_NODE) {
+                                eElementColumn = (Element) wpcColumnNode;
+                                int column = Integer.parseInt(eElementColumn.getAttribute("y"));
+                                position = new Position(row, column);
+                                wpcCellColor = eElementColumn.getElementsByTagName("color");
+                                for (int z = 0; z < wpcCellColor.getLength(); z++) {
+                                    wpcCellColorNode = wpcCellColor.item(z);
+                                    if (wpcCellColorNode.getNodeType() == Node.ELEMENT_NODE) {
+                                        eElementCellColor = (Element) wpcCellColorNode;
+                                        color = Color.parseColor(eElementCellColor.getTextContent());
+                                    }
+                                }
+                                wpcCellNumber = eElementColumn.getElementsByTagName("number");
+                                for (int s = 0; s < wpcCellNumber.getLength(); s++) {
+                                    wpcCellNumberNode = wpcCellNumber.item(s);
+                                    if (wpcCellNumberNode.getNodeType() == Node.ELEMENT_NODE) {
+                                        eElementCellNumber = (Element) wpcCellNumberNode;
+                                        number = Integer.parseInt(eElementCellNumber.getTextContent());
+                                    }
+                                }
+                                schema.add(new Cell(position, color, number));
+                            }
+                        }
+                        wpcFavours = eElementID.getElementsByTagName("favour");
+                        for (int s = 0; s < wpcFavours.getLength(); s++) {
+                            wpcFavoursNode = wpcFavours.item(s);
+                            if (wpcFavoursNode.getNodeType() == Node.ELEMENT_NODE) {
+                                eElementFavours = (Element) wpcFavoursNode;
+                                favours = Integer.parseInt(eElementFavours.getTextContent());
+                            }
+                        }
+                    }
                 }
+            }
+            WPCs.add(new WPC( wpcID, favours, schema ));
+        }catch (SAXException e) {
+            e.printStackTrace();
+        }catch (IOException e) {
+            e.printStackTrace();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    public static WPC getWpcByID(String ID){
+        for (int i = 0; i<WPCs.size(); i++){
+            if(WPCs.get(i).wpcID.equals(ID))
+                personalWPC = new WPC(WPCs.get(i));
+        }
+        return personalWPC;
+    }
 
-            }
-        }catch (SAXException e) {
-            e.printStackTrace();
-        }catch (IOException e) {
-            e.printStackTrace();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-    public static WPC getWpcByID(String Id){
-        return null;
-    }
-    public static ArrayList<String> getWpcIDs( ){
-        NodeList wpcList = null;
-        Node wpcNode = null;
-        Element eElement = null;
-        ArrayList<String> allWpcIDS = new ArrayList<String>();
-        try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance(); //inizializzo la factory per processare il flusso di dati
-            DocumentBuilder builder = factory.newDocumentBuilder(); //inzializzo documento
-            Document document = null;
-            document = builder.parse(new File("C:\\Users\\User\\Documents\\GitHub\\ing-sw-2018-zorzenon-pasini-piovani\\src\\main\\resources\\WPC store\\wpc_schema")); //pathname del file con tutte le wpc
-            document.getDocumentElement().normalize();
-            wpcList = document.getElementsByTagName("wpc");
-            for (int i = 0; i < wpcList.getLength(); i++)
-                wpcNode = wpcList.item(i);
-            if (wpcNode.getNodeType() == Node.ELEMENT_NODE) {
-                eElement = (Element) wpcNode;
-                allWpcIDS.add(eElement.getAttribute("wpcId"));
-            }
-        }catch (SAXException e) {
-            e.printStackTrace();
-        }catch (IOException e) {
-            e.printStackTrace();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+    public static ArrayList<String> getWpcIDs( ) {
         return allWpcIDS;
     }
 
-    public void FindWPC(String wpcId){
+    public int getFavours(){ return personalWPC.favours;};
 
-    }
-
-    public void setFavours() {
-        getFavours();
-        this.favours = favours;
-    }
-
-    public int getFavours(){ return favours;};
     public String getWpcID(){
-        return null;
+        return personalWPC.wpcID;
     }
+
     private void checkCellRestriction(){}
     private void checkAdjacentRestriction(){}
 }

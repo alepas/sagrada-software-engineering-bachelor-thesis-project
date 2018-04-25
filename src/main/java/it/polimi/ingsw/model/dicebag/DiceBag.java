@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.dicebag;
 
+import java.util.ArrayList;
+
 import static it.polimi.ingsw.model.constants.DiceBagCostants.INITIAL_DICE_NUMBER;
 
 public class DiceBag {
@@ -25,15 +27,15 @@ public class DiceBag {
         violetDices = INITIAL_DICE_NUMBER;
     }
 
-    public Dice[] DicesExtraction(int numPlayers){
+    public ArrayList<Dice> DicesExtraction(int numPlayers){
         int numOfDices;
         if(numPlayers == 1)
             numOfDices = 4; //costante da inserire in class costante
         else
-            numOfDices = numPlayers*2 +1;
-        Dice[] extractedDices = new Dice[numOfDices];
-        for (int i = 0; i < extractedDices.length; i++)
-            extractedDices[i] = pickDice();
+            numOfDices = numPlayers*2 +1; //costante computata
+            ArrayList<Dice> extractedDices = new ArrayList<>();
+        for (int i = 0; i < numOfDices; i++)
+            extractedDices.add(pickDice());
         return extractedDices;
     }
 
@@ -65,6 +67,22 @@ public class DiceBag {
             return (yellowDices > 0);
         else
             return (greenDices > 0);
+    }
+
+    public void reInsertDice(Dice dice){
+        Color color = dice.getDiceColour();
+        switch (color) {
+            case RED:
+                redDices++;
+            case BLUE:
+                blueDices++;
+            case GREEN:
+                greenDices++;
+            case VIOLET:
+                violetDices++;
+            case YELLOW:
+                yellowDices++;
+        }
     }
 
      public int getYellowDices(){return yellowDices;}
