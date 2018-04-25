@@ -11,6 +11,13 @@ public class PublicObjectiveCard5  extends PublicObjectiveCard {
 
     @Override
     public int calculateScore(WPC wpc) {
-        return 0;
+        int score = 0;
+
+        int numOf1 = wpc.numDicesOfShade(1);
+        int numOf2 = wpc.numDicesOfShade(2);
+
+        int count = Math.min(numOf1, numOf2);
+
+        return count*POCConstants.POC7_SCORE;
     }
 }

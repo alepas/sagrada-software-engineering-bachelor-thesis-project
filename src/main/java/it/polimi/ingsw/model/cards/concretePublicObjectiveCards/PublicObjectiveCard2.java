@@ -27,17 +27,13 @@ public class PublicObjectiveCard2 extends PublicObjectiveCard {
     }
 
     private boolean allColorsAreDifferent(ArrayList<Dice> columnDices){
-        //controllo se nella colonna ci sono 4 colori
         ArrayList<Color> extractedColors = new ArrayList<>();
-        int numberOfColor = 0;
 
         for (Dice dice : columnDices){
-            if (!extractedColors.contains(dice.getDiceColor())) {
-                extractedColors.add(dice.getDiceColor());
-                numberOfColor++;
-            }
+            if (extractedColors.contains(dice.getDiceColor())) return false;
+            extractedColors.add(dice.getDiceColor());
         }
 
-        return numberOfColor == 4;
+        return true;
     }
 }

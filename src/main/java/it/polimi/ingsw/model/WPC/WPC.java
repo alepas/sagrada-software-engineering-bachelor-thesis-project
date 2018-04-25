@@ -293,7 +293,7 @@ public class WPC {
     }
 
 
-    public int numFreeCells(){
+    public int getNumFreeCells(){
         //restituisce il numero di celle vuote sulla wpc
         int count = 0;
 
