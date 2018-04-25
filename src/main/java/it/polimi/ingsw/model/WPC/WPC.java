@@ -4,6 +4,7 @@ import java.util.ArrayList;
 //copio la wpc corrispondente
 
 import it.polimi.ingsw.model.dicebag.Color;
+import it.polimi.ingsw.model.dicebag.Dice;
 import  org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
@@ -145,4 +146,44 @@ public class WPC {
 
     private void checkCellRestriction(){}
     private void checkAdjacentRestriction(){}
+
+
+
+
+
+    //AGGIUNTI DA DAVIDE
+    public int numOfRows(){
+        //Restituisce il numero di righe della wpc
+        return 0;
+    }
+
+    public int numOfCols(){
+        //Restituisce il numero di colonne della wpc
+        return 0;
+    }
+
+    public Dice[] getRowDices(int row){
+        //Restituisce i dadi presenti nella riga passata
+        return null;
+    }
+
+    public Dice[] getColDices(int col){
+        //Restituisce i dadi presenti nella colonna passata
+        return null;
+    }
+
+    public Dice[] getWpcDices(){
+        //Restituisce tutti i dadi presenti nella wpc
+        return null;
+    }
+
+    public int numOfDicesOfShade(int shade){
+        int count = 0;
+
+        for (Dice dice : getWpcDices()){
+            if (dice.getDiceNumber() == shade) count++;
+        }
+
+        return count;
+    }
 }
