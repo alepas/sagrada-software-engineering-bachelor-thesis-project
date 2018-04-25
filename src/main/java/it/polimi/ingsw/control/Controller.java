@@ -2,13 +2,8 @@ package it.polimi.ingsw.control;
 
 import it.polimi.ingsw.model.usersdb.DatabaseUsers;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-
 
 
 public class Controller extends UnicastRemoteObject implements RemoteController {
@@ -36,11 +31,11 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
     }
     @Override
     public synchronized void addWonGames(String token){
-        database.addWonGames(token);
+        database.addWonGamesFromToken(token);
     }
     @Override
     public synchronized int getWonGames(String token){
-        return database.getWonGames(token);
+        return database.getWonGamesFromToken(token);
     }
 
 

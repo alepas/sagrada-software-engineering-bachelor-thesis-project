@@ -5,15 +5,14 @@ import it.polimi.ingsw.model.exceptions.userExceptions.CannotFindUserInDB;
 import it.polimi.ingsw.model.exceptions.userExceptions.CannotLoginUserException;
 import it.polimi.ingsw.model.exceptions.userExceptions.CannotRegisterUserException;
 import it.polimi.ingsw.model.exceptions.userExceptions.NullTokenException;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
-import static org.mockito.Mockito.mock;
-
-public class DatabaseUsersTest {
+public class DatabaseUsersAttributeTest {
     static private DatabaseUsers db1, db2, db3, db4;
     static String path= "src/test/resources/databasetest/database.db";
     static File f;

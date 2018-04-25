@@ -1,21 +1,18 @@
 package it.polimi.ingsw.model.usersdb;
 
 
-import it.polimi.ingsw.model.exceptions.userExceptions.CannotLoginUserException;
-import it.polimi.ingsw.model.exceptions.userExceptions.CannotRegisterUserException;
-import it.polimi.ingsw.model.exceptions.userExceptions.PasswordParsingException;
+import it.polimi.ingsw.model.constants.UserDBConstants;
+import it.polimi.ingsw.model.exceptions.userExceptions.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.UUID;
 
 public class DatabaseUsers {
-    private static final String PATHFILE="store.db";
-
+    private static String pathFile;
 
     private static DatabaseUsers instance ;
 
@@ -27,15 +24,35 @@ public class DatabaseUsers {
 
     public synchronized static DatabaseUsers getInstance(){
         if (instance==null) {
+            pathFile=UserDBConstants.getPathDbFile();
             instance = new DatabaseUsers();
             try {
-                instance.userDataTable = (HashMap<String, User>) LoadingFromFile.fromFile(PATHFILE);
+                instance.userDataTable = (HashMap<String, User>) LoadingFromFile.fromFile(pathFile);
 
             }catch (FileNotFoundException i){
-                File f = new File(PATHFILE);
+                File f = new File(pathFile);
                 instance.userDataTable=new HashMap<String, User>();
             }
             instance.tokenbyUsername=new HashMap<String, String>();
+
+            instance.usersbyToken=new HashMap<String, User>();
+        }
+        return instance;
+    }
+
+    public synchronized static DatabaseUsers getInstance(String path){
+        if (instance==null) {
+            pathFile=path;
+            instance = new DatabaseUsers();
+            try {
+                instance.userDataTable = (HashMap<String, User>) LoadingFromFile.fromFile(pathFile);
+
+            }catch (FileNotFoundException i){
+                File f = new File(pathFile);
+                instance.userDataTable=new HashMap<String, User>();
+            }
+            instance.tokenbyUsername=new HashMap<String, String>();
+
             instance.usersbyToken=new HashMap<String, User>();
         }
         return instance;
@@ -43,17 +60,13 @@ public class DatabaseUsers {
 
     private DatabaseUsers(){}
 
-    private synchronized boolean isUsernameTaken(String username){
-
-        return userDataTable.containsKey(username);
-    }
 
     public synchronized String registerUser(String username, String password) throws CannotRegisterUserException{
         byte[] salt;
         String passwordHash;
         String newtoken=null;
 
-        if (isUsernameTaken(username)){
+        if (userDataTable.containsKey(username)){
             throw new CannotRegisterUserException(username,2);
 
         }
@@ -61,13 +74,7 @@ public class DatabaseUsers {
         try {
             salt = getSalt();
             passwordHash = SHAFunction.getShaPwd(password, salt);
-            User newuser= new User();
-            newuser.password=passwordHash;
-            newuser.salt=salt;
-            newuser.wonGames=0;
-            newuser.lostGames=0;
-            newuser.abandonedGames=0;
-            newuser.ranking=0;
+            User newuser= new User(passwordHash,salt);
             userDataTable.put(username,newuser);
             updateFileDB();
             newtoken = UUID.randomUUID().toString();
@@ -94,14 +101,14 @@ public class DatabaseUsers {
         User foundUser=null;
         foundUser=userDataTable.get(username);
         try {
-            byte[] salt=foundUser.salt;
+            byte[] salt=foundUser.getSalt();
 
 
             passwordHash = SHAFunction.getShaPwd(password, salt);
         } catch (PasswordParsingException e) {
             throw new CannotLoginUserException(username,0);
         }
-        storedPasswordHash = foundUser.password;
+        storedPasswordHash = foundUser.getPassword();
         if (passwordHash.equals(storedPasswordHash)){
             newtoken = UUID.randomUUID().toString();
             if (tokenbyUsername.containsKey(username))
@@ -124,94 +131,133 @@ public class DatabaseUsers {
         return tokenbyUsername.get(user);
     }
 
-    public synchronized void addWonGames(String token){
-        if(token==null)
-            System.out.println("no token : null");
-        else {
-            User us = usersbyToken.get(token);
-            if (us == null) {
-                System.out.println("no user baby");
-            } else {
-                us.wonGames++;
-                updateFileDB();
-            }
-        }
-    }
 
-    public synchronized int getWonGames(String token){
-        if(token==null){
-            System.out.println("no token : null");
-            return 0;}
+    public synchronized int getWonGamesFromToken (String token) throws NullTokenException, CannotFindUserInDB {
+        if(token==null)
+            throw new NullTokenException();
 
         User us=usersbyToken.get(token);
-        return us.wonGames;
+        if (us == null)
+            throw new CannotFindUserInDB("");
+
+        return us.getWonGames();
+    }
+
+    public synchronized int getLostGamesFromToken(String token)throws NullTokenException, CannotFindUserInDB{
+        if(token==null)
+            throw new NullTokenException();
+        User us=usersbyToken.get(token);
+        if (us == null)
+            throw new CannotFindUserInDB("");
+        return us.getLostGames();
+    }
+
+    public synchronized int getAbandonedGamesFromToken(String token)throws NullTokenException, CannotFindUserInDB{
+        if(token==null)
+            throw new NullTokenException();
+
+        User us=usersbyToken.get(token);
+        if (us == null)
+            throw new CannotFindUserInDB("");
+        return us.getAbandonedGames();
+    }
+
+    public synchronized int getRankingFromToken(String token)throws NullTokenException, CannotFindUserInDB{
+        if(token==null)
+            throw new NullTokenException();
+
+        User us=usersbyToken.get(token);
+        return us.getRanking();
     }
 
 
-    synchronized void addWonGamesFromUsername(String user){
+
+
+    public synchronized void addWonGamesFromToken(String token)throws NullTokenException, CannotFindUserInDB{
+        if(token==null)
+            throw new NullTokenException();
+
+        User us = usersbyToken.get(token);
+        if (us == null)
+            throw new CannotFindUserInDB("");
+            us.addWonGames();
+            updateFileDB();
+
+
+    }
+
+
+
+
+    synchronized void addWonGamesFromUsername(String user)throws CannotFindUserInDB{
 
         User us = userDataTable.get(user);
-        if (us == null) {
-            System.out.println("no user baby");
-        } else {
-            us.wonGames++;
-            updateFileDB();
-        }
+        if (us == null)
+            throw new CannotFindUserInDB(user);
+
+        us.addWonGames();
+        updateFileDB();
+
 
     }
 
-    synchronized int getWonGamesFromUsername(String user){
+    synchronized int getWonGamesFromUsername(String user)throws CannotFindUserInDB{
         User us=userDataTable.get(user);
-        return us.wonGames;
+        return us.getWonGames();
     }
 
     synchronized void addLostGamesFromUsername(String user){
 
         User us = userDataTable.get(user);
-        if (us == null) {
-            System.out.println("no user baby");
-        } else {
-            us.lostGames++;
-            updateFileDB();
-        }
+        if (us == null)
+            throw new CannotFindUserInDB(user);
+
+        us.addLostGames();
+        updateFileDB();
+
 
     }
-    synchronized int getLostGamesFromUsername(String user){
+    synchronized int getLostGamesFromUsername(String user)throws CannotFindUserInDB{
         User us=userDataTable.get(user);
-        return us.lostGames;
+        if (us == null)
+            throw new CannotFindUserInDB(user);
+        return us.getWonGames();
     }
 
     synchronized void addAbandonedGamesFromUsername(String user){
 
         User us = userDataTable.get(user);
-        if (us == null) {
-            System.out.println("no user baby");
-        } else {
-            us.abandonedGames++;
-            updateFileDB();
-        }
+        if (us == null)
+            throw new CannotFindUserInDB(user);
+
+        us.addAbandonedGames();
+        updateFileDB();
+
 
     }
 
-    synchronized int getAbandonedGamesFromUsername(String user){
+    synchronized int getAbandonedGamesFromUsername(String user)throws CannotFindUserInDB{
         User us=userDataTable.get(user);
-        return us.abandonedGames;
+        if (us == null)
+            throw new CannotFindUserInDB(user);
+        return us.getAbandonedGames();
     }
 
     synchronized void modifyRankingFromUsername(int pointsToAdd, String user){
 
         User us = userDataTable.get(user);
-        if (us == null) {
-            System.out.println("no user baby");
-        } else {
-            us.ranking+=pointsToAdd;
-            updateFileDB();
-        }
+        if (us == null)
+            throw new CannotFindUserInDB(user);
+        us.addPointsToRanking(pointsToAdd);
+        updateFileDB();
+
 
     }
     synchronized int getRankingFromUsername(String user){
         User us=userDataTable.get(user);
-        return us.ranking;
+        if (us == null)
+            throw new CannotFindUserInDB(user);
+        return us.getRanking();
     }
 
 
@@ -231,7 +277,7 @@ public class DatabaseUsers {
 
     private void updateFileDB(){
         //LoadingFromFile.toFile(userDataTable, "src/main/resources/database/store.db");
-        LoadingFromFile.toFile(userDataTable, PATHFILE);
+        LoadingFromFile.toFile(userDataTable, pathFile);
 
     }
 

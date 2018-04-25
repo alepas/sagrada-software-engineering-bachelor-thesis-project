@@ -8,11 +8,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SHAFunctionTest {
-    String password = "sonoUnaPasswordDiProva";
-    String password2 = "sonounapassworddiprova";
-    String password3 = "sonoUnaPasswordDiProva";
-    byte[] salt = {94, 42, -9, -19, 96, -21, -56, 52, -64, -118, 4, -124, -113, -70, -118, -65};
-    byte[] salt2 = {94, 64, -9, -19, 111, -21, -56, 52, -64, -118, 4, -97, -5, -70, -118, -65};
+    private String password = "sonoUnaPasswordDiProva";
+    private String password2 = "sonounapassworddiprova";
+    private String password3 = "sonoUnaPasswordDiProva";
+    private byte[] salt = {94, 42, -9, -19, 96, -21, -56, 52, -64, -118, 4, -124, -113, -70, -118, -65};
+    private byte[] salt2 = {94, 64, -9, -19, 111, -21, -56, 52, -64, -118, 4, -97, -5, -70, -118, -65};
 
 
 

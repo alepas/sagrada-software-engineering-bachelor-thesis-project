@@ -1,15 +1,11 @@
 package it.polimi.ingsw.model.usersdb;
 
 
-import it.polimi.ingsw.control.RemoteController;
 import it.polimi.ingsw.model.exceptions.userExceptions.CannotLoginUserException;
 import it.polimi.ingsw.model.exceptions.userExceptions.CannotRegisterUserException;
 
-import javax.xml.crypto.Data;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 
 
 public class NotARealTest {
@@ -59,8 +55,8 @@ public class NotARealTest {
                                 System.out.println("ora provo ad aggiungere una partita\n");
                                 if (db == null)
                                         System.out.println("niente db");
-                                db.addWonGames(token);
-                                int voti = db.getWonGames(token);
+                                db.addWonGamesFromToken(token);
+                                int voti = db.getWonGamesFromToken(token);
                                 System.out.println("\nPartite vinte: " + voti);
                         } catch (CannotLoginUserException e) {
                                 System.out.print(e.getMessage());
