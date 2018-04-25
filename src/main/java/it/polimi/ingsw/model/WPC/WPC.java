@@ -146,8 +146,6 @@ public class WPC {
 
     public String getWpcID(){ return wpcID; }
 
-
-
     private void checkCellExistence(Cell cell) throws NotExistingCellException {
         //controllo se la cella esiste
         for (Cell schemaCell : schema){
@@ -156,7 +154,6 @@ public class WPC {
 
         throw new NotExistingCellException(cell);
     }
-
 
     private boolean checkFirstTurnRestriction(Cell cell) {
         //controllo che, durante il primo turno, il dado sia posizionato solo sul bordo della wpc

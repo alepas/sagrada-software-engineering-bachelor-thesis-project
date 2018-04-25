@@ -18,14 +18,14 @@ public class PublicObjectiveCard4  extends PublicObjectiveCard {
         int score = 0;
 
         for (int col = 0; col < WpcConstants.COLS_NUMBER; col++){
-            Dice[] colDices = wpc.getColDices(col);
+            ArrayList<Dice> colDices = wpc.getColDices(col);
             if (allNumbersAreDifferent(colDices)) score += POCConstants.POC4_SCORE;
         }
 
         return score;
     }
 
-    private boolean allNumbersAreDifferent(Dice[] dices) {
+    private boolean allNumbersAreDifferent(ArrayList<Dice> dices) {
         ArrayList<Integer> extractedNumbers = new ArrayList<>();
 
         for (Dice dice : dices){
