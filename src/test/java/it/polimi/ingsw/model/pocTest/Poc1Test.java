@@ -3,12 +3,13 @@ package it.polimi.ingsw.model.pocTest;
 import it.polimi.ingsw.model.WPC.WPC;
 import it.polimi.ingsw.model.cards.concretePublicObjectiveCards.PublicObjectiveCard1;
 import it.polimi.ingsw.model.constants.POCConstants;
-import it.polimi.ingsw.model.constants.WpcConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -16,140 +17,181 @@ import static org.mockito.Mockito.when;
 public class Poc1Test {
     private PublicObjectiveCard1 card;
     private WPC wpc;
-    private Dice[] wpcDices;
-    private Dice[] colDices = new Dice[4];
-    private Dice[] colDices2 = new Dice[3];
-    private Dice[] rowDices = new Dice[5];
-    private Dice[] rowDices2 = new Dice[3];
+    private ArrayList<Dice> wpcDices = new ArrayList<>();
+    private ArrayList<Dice> colDices = new ArrayList<>();
+    private ArrayList<Dice> rowDices = new ArrayList<>();
 
     @Before
     public void before(){
         card = new PublicObjectiveCard1();
 
         wpc = mock(WPC.class);
-        wpcDices = new Dice[18];
-        for(int i = 0; i < wpcDices.length; i++){
-            wpcDices[i] = mock(Dice.class);
-        }
-
-        when(wpcDices[0].getDiceColor()).thenReturn(Color.RED);
-        when(wpcDices[0].getDiceNumber()).thenReturn(3);
-
-        when(wpcDices[1].getDiceColor()).thenReturn(Color.VIOLET);
-        when(wpcDices[1].getDiceNumber()).thenReturn(4);
-
-        when(wpcDices[2].getDiceColor()).thenReturn(Color.YELLOW);
-        when(wpcDices[2].getDiceNumber()).thenReturn(1);
-
-        when(wpcDices[3].getDiceColor()).thenReturn(Color.GREEN);
-        when(wpcDices[3].getDiceNumber()).thenReturn(5);
-
-        when(wpcDices[4].getDiceColor()).thenReturn(Color.BLUE);
-        when(wpcDices[4].getDiceNumber()).thenReturn(6);
 
 
 
+        Dice dice0 = mock(Dice.class);
+        when(dice0.getDiceColor()).thenReturn(Color.RED);
+        when(dice0.getDiceNumber()).thenReturn(3);
+        wpcDices.add(dice0);
 
-        when(wpcDices[5].getDiceColor()).thenReturn(Color.GREEN);
-        when(wpcDices[5].getDiceNumber()).thenReturn(5);
+        Dice dice1 = mock(Dice.class);
+        when(dice1.getDiceColor()).thenReturn(Color.VIOLET);
+        when(dice1.getDiceNumber()).thenReturn(4);
+        wpcDices.add(dice1);
 
-        when(wpcDices[6].getDiceColor()).thenReturn(Color.RED);
-        when(wpcDices[6].getDiceNumber()).thenReturn(3);
+        Dice dice2 = mock(Dice.class);
+        when(dice2.getDiceColor()).thenReturn(Color.YELLOW);
+        when(dice2.getDiceNumber()).thenReturn(1);
+        wpcDices.add(dice2);
 
-        when(wpcDices[7].getDiceColor()).thenReturn(Color.GREEN);
-        when(wpcDices[7].getDiceNumber()).thenReturn(4);
+        Dice dice3 = mock(Dice.class);
+        when(dice3.getDiceColor()).thenReturn(Color.GREEN);
+        when(dice3.getDiceNumber()).thenReturn(5);
+        wpcDices.add(dice3);
 
-        when(wpcDices[8].getDiceColor()).thenReturn(Color.RED);
-        when(wpcDices[8].getDiceNumber()).thenReturn(2);
-
-        when(wpcDices[9].getDiceColor()).thenReturn(Color.GREEN);
-        when(wpcDices[9].getDiceNumber()).thenReturn(6);
+        Dice dice4 = mock(Dice.class);
+        when(dice4.getDiceColor()).thenReturn(Color.BLUE);
+        when(dice4.getDiceNumber()).thenReturn(6);
+        wpcDices.add(dice4);
 
 
 
 
-        when(wpcDices[10].getDiceColor()).thenReturn(Color.VIOLET);
-        when(wpcDices[10].getDiceNumber()).thenReturn(1);
+        Dice dice5 = mock(Dice.class);
+        when(dice5.getDiceColor()).thenReturn(Color.GREEN);
+        when(dice5.getDiceNumber()).thenReturn(5);
+        wpcDices.add(dice5);
 
-        when(wpcDices[11].getDiceColor()).thenReturn(Color.GREEN);
-        when(wpcDices[11].getDiceNumber()).thenReturn(4);
+        Dice dice6 = mock(Dice.class);
+        when(dice6.getDiceColor()).thenReturn(Color.RED);
+        when(dice6.getDiceNumber()).thenReturn(3);
+        wpcDices.add(dice6);
 
-        when(wpcDices[12].getDiceColor()).thenReturn(Color.BLUE);
-        when(wpcDices[12].getDiceNumber()).thenReturn(6);
+        Dice dice7 = mock(Dice.class);
+        when(dice7.getDiceColor()).thenReturn(Color.GREEN);
+        when(dice7.getDiceNumber()).thenReturn(4);
+        wpcDices.add(dice7);
 
-        when(wpcDices[13].getDiceColor()).thenReturn(Color.YELLOW);
-        when(wpcDices[13].getDiceNumber()).thenReturn(1);
+        Dice dice8 = mock(Dice.class);
+        when(dice8.getDiceColor()).thenReturn(Color.RED);
+        when(dice8.getDiceNumber()).thenReturn(2);
+        wpcDices.add(dice8);
 
-        when(wpcDices[14].getDiceColor()).thenReturn(Color.RED);
-        when(wpcDices[14].getDiceNumber()).thenReturn(2);
+        Dice dice9 = mock(Dice.class);
+        when(dice9.getDiceColor()).thenReturn(Color.GREEN);
+        when(dice9.getDiceNumber()).thenReturn(6);
+        wpcDices.add(dice9);
 
 
 
 
-        when(wpcDices[15].getDiceColor()).thenReturn(Color.YELLOW);
-        when(wpcDices[15].getDiceNumber()).thenReturn(4);
+        Dice dice10 = mock(Dice.class);
+        when(dice10.getDiceColor()).thenReturn(Color.VIOLET);
+        when(dice10.getDiceNumber()).thenReturn(1);
+        wpcDices.add(dice10);
 
-        when(wpcDices[16].getDiceColor()).thenReturn(Color.GREEN);
-        when(wpcDices[16].getDiceNumber()).thenReturn(4);
+        Dice dice11 = mock(Dice.class);
+        when(dice11.getDiceColor()).thenReturn(Color.GREEN);
+        when(dice11.getDiceNumber()).thenReturn(4);
+        wpcDices.add(dice11);
 
-        when(wpcDices[17].getDiceColor()).thenReturn(Color.BLUE);
-        when(wpcDices[17].getDiceNumber()).thenReturn(6);
+        Dice dice12 = mock(Dice.class);
+        when(dice12.getDiceColor()).thenReturn(Color.BLUE);
+        when(dice12.getDiceNumber()).thenReturn(6);
+        wpcDices.add(dice12);
+
+        Dice dice13 = mock(Dice.class);
+        when(dice13.getDiceColor()).thenReturn(Color.YELLOW);
+        when(dice13.getDiceNumber()).thenReturn(1);
+        wpcDices.add(dice13);
+
+        Dice dice14 = mock(Dice.class);
+        when(dice14.getDiceColor()).thenReturn(Color.RED);
+        when(dice14.getDiceNumber()).thenReturn(2);
+        wpcDices.add(dice14);
+
+
+
+
+        Dice dice15 = mock(Dice.class);
+        when(dice15.getDiceColor()).thenReturn(Color.YELLOW);
+        when(dice15.getDiceNumber()).thenReturn(4);
+        wpcDices.add(dice15);
+
+        Dice dice16 = mock(Dice.class);
+        when(dice16.getDiceColor()).thenReturn(Color.GREEN);
+        when(dice16.getDiceNumber()).thenReturn(4);
+        wpcDices.add(dice16);
+
+        Dice dice17 = mock(Dice.class);
+        when(dice17.getDiceColor()).thenReturn(Color.BLUE);
+        when(dice17.getDiceNumber()).thenReturn(6);
+        wpcDices.add(dice17);
 
         when(wpc.getWpcDices()).thenReturn(wpcDices);
 
-        colDices[0] = wpcDices[0];
-        colDices[1] = wpcDices[5];
-        colDices[2] = wpcDices[10];
-        colDices[3] = wpcDices[15];
+        colDices.clear();
+        colDices.add(dice0);
+        colDices.add(dice5);
+        colDices.add(dice10);
+        colDices.add(dice15);
         when(wpc.getColDices(0)).thenReturn(colDices);
 
-        colDices2[0] = wpcDices[1];
-        colDices2[1] = wpcDices[6];
-        colDices2[2] = wpcDices[11];
-        when(wpc.getColDices(1)).thenReturn(colDices2);
+        colDices.clear();
+        colDices.add(dice1);
+        colDices.add(dice6);
+        colDices.add(dice11);
+        when(wpc.getColDices(1)).thenReturn(colDices);
 
-        colDices[0] = wpcDices[2];
-        colDices[1] = wpcDices[7];
-        colDices[2] = wpcDices[12];
-        colDices[3] = wpcDices[16];
+        colDices.clear();
+        colDices.add(dice2);
+        colDices.add(dice7);
+        colDices.add(dice12);
+        colDices.add(dice16);
         when(wpc.getColDices(2)).thenReturn(colDices);
 
-        colDices[0] = wpcDices[3];
-        colDices[1] = wpcDices[8];
-        colDices[2] = wpcDices[13];
-        colDices[3] = wpcDices[17];
+        colDices.clear();
+        colDices.add(dice3);
+        colDices.add(dice8);
+        colDices.add(dice13);
+        colDices.add(dice17);
         when(wpc.getColDices(3)).thenReturn(colDices);
 
-        colDices2[0] = wpcDices[4];
-        colDices2[1] = wpcDices[9];
-        colDices2[2] = wpcDices[14];
-        when(wpc.getColDices(4)).thenReturn(colDices2);
+        colDices.clear();
+        colDices.add(dice4);
+        colDices.add(dice9);
+        colDices.add(dice14);
+        when(wpc.getColDices(4)).thenReturn(colDices);
 
-        rowDices[0] = wpcDices[0];
-        rowDices[1] = wpcDices[1];
-        rowDices[2] = wpcDices[2];
-        rowDices[3] = wpcDices[3];
-        rowDices[4] = wpcDices[4];
+        rowDices.clear();
+        rowDices.add(dice0);
+        rowDices.add(dice1);
+        rowDices.add(dice2);
+        rowDices.add(dice3);
+        rowDices.add(dice4);
         when(wpc.getRowDices(0)).thenReturn(rowDices);
 
-        rowDices[0] = wpcDices[5];
-        rowDices[1] = wpcDices[6];
-        rowDices[2] = wpcDices[7];
-        rowDices[3] = wpcDices[8];
-        rowDices[4] = wpcDices[9];
+        rowDices.clear();
+        rowDices.add(dice5);
+        rowDices.add(dice6);
+        rowDices.add(dice7);
+        rowDices.add(dice8);
+        rowDices.add(dice9);
         when(wpc.getRowDices(1)).thenReturn(rowDices);
 
-        rowDices[0] = wpcDices[10];
-        rowDices[1] = wpcDices[11];
-        rowDices[2] = wpcDices[12];
-        rowDices[3] = wpcDices[13];
-        rowDices[4] = wpcDices[14];
+        rowDices.clear();
+        rowDices.add(dice10);
+        rowDices.add(dice11);
+        rowDices.add(dice12);
+        rowDices.add(dice13);
+        rowDices.add(dice14);
         when(wpc.getRowDices(2)).thenReturn(rowDices);
 
-        rowDices2[0] = wpcDices[15];
-        rowDices2[1] = wpcDices[16];
-        rowDices2[2] = wpcDices[17];
-        when(wpc.getRowDices(3)).thenReturn(rowDices2);
+        rowDices.clear();
+        rowDices.add(dice15);
+        rowDices.add(dice16);
+        rowDices.add(dice17);
+        when(wpc.getRowDices(3)).thenReturn(rowDices);
 
 
         when(wpc.numDicesOfColor(Color.BLUE)).thenReturn(3);

@@ -1,9 +1,12 @@
 package it.polimi.ingsw.model.game;
 
 import it.polimi.ingsw.model.constants.GameConstants;
+import it.polimi.ingsw.model.dicebag.Color;
+import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.exceptions.gameExceptions.*;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 public class MultiPlayerGame extends AbstractGame implements Runnable {
@@ -108,6 +111,19 @@ public class MultiPlayerGame extends AbstractGame implements Runnable {
     @Override
     public void calculateScore() {
 
+    }
+
+    private int privateObjScore(PlayerInGame player){
+        Color playerColor = player.getPrivateObjective1();
+        ArrayList<Dice> dices = player.getWPC().getWpcDices();
+
+        int score = 0;
+
+        for(Dice dice : dices){
+            if (dice.getDiceColor() == playerColor) score += dice.getDiceNumber();
+        }
+
+        return score;
     }
 
     //Da testare
