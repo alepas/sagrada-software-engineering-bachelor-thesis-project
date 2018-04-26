@@ -1,8 +1,7 @@
-package it.polimi.ingsw.model.wpcEdited;
+package it.polimi.ingsw.model.wpc;
 
 import it.polimi.ingsw.model.dicebag.Color;
-import it.polimi.ingsw.model.dicebag.Dice;
-import it.polimi.ingsw.model.exceptions.wpcExceptions.NotExistingCellException;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -14,39 +13,38 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
-public class WpcDBEdited {
-    private static WpcDBEdited instance;
+public class WpcDB {
+    private static WpcDB instance;
     private static String pathFile;
-    private static HashMap<String,WpcEdited> map;
+    private static HashMap<String, WPC> map;
 
-    public static WpcDBEdited getInstance(){
+    public static WpcDB getInstance(){
         if (instance==null) {
 
-            instance = new WpcDBEdited();
+            instance = new WpcDB();
             pathFile="src/main/resources/wpc/wpc_schema";
-            map = new HashMap<String, WpcEdited>();
+            map = new HashMap<String, WPC>();
 
         }
         return instance;
 
     }
 
-    public static WpcDBEdited getInstance(String pathOfWpcFile){
+    public static WpcDB getInstance(String pathOfWpcFile){
         if (instance==null) {
 
-            instance = new WpcDBEdited();
+            instance = new WpcDB();
             pathFile=pathOfWpcFile;
-            map = new HashMap<String, WpcEdited>();
+            map = new HashMap<String, WPC >();
 
         }
         return instance;
 
     }
 
-    private WpcDBEdited(){
+    private WpcDB(){
 
         NodeList wpcList;
         NodeList wpcRow;
@@ -69,13 +67,13 @@ public class WpcDBEdited {
         Element eElementCellNumber;
         Element eElementFavours;
 
-        PositionEdited position;
-        WpcEdited wpcTemp=null;
+        Position position;
+        WPC wpcTemp;
         int number = 0;
         int favours = 0;
         String wpcID = null;
         Color color = null;
-        ArrayList<CellEdited> schema = new ArrayList<>();
+        ArrayList<Cell> schema = new ArrayList<>();
 
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance(); //inizializzo la factory per processare il flusso di dati
@@ -101,7 +99,7 @@ public class WpcDBEdited {
                             if (wpcColumnNode.getNodeType() == Node.ELEMENT_NODE) {
                                 eElementColumn = (Element) wpcColumnNode;
                                 int column = Integer.parseInt(eElementColumn.getAttribute("y"));
-                                position = new PositionEdited(row, column);
+                                position = new Position(row, column);
                                 wpcCellColor = eElementColumn.getElementsByTagName("color");
                                 for (int z = 0; z < wpcCellColor.getLength(); z++) {
                                     wpcCellColorNode = wpcCellColor.item(z);
@@ -118,7 +116,7 @@ public class WpcDBEdited {
                                         number = Integer.parseInt(eElementCellNumber.getTextContent());
                                     }
                                 }
-                                schema.add(new CellEdited(position, color, number));
+                                schema.add(new Cell(position, color, number));
                             }
                         }
                         wpcFavours = eElementID.getElementsByTagName("favour");
@@ -132,7 +130,7 @@ public class WpcDBEdited {
                     }
                 }
             }
-            wpcTemp= new WpcEdited( wpcID, favours, schema );
+            wpcTemp= new WPC( wpcID, favours, schema );
             map.put(wpcID,wpcTemp);
         }catch (SAXException e) {
             e.printStackTrace();
@@ -144,9 +142,9 @@ public class WpcDBEdited {
     }
 
 
-    public static WpcEdited getWpcByID(String ID){
+    public static WPC getWpcByID(String ID){
         //dato l'id selezionato dal giocatore si chiama il costruttore che genera una copia della wpc
-        WpcEdited originalWpc=map.get(ID);
+        WPC originalWpc=map.get(ID);
         return originalWpc.copyWpc();
     }
 

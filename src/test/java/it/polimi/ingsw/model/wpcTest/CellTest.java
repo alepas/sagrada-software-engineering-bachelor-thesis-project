@@ -1,5 +1,5 @@
 package it.polimi.ingsw.model.wpcTest;
-import it.polimi.ingsw.model.WPC.Cell;
+import it.polimi.ingsw.model.wpc.Cell;
 import it.polimi.ingsw.model.dicebag.Dice;
 
 import org.junit.Assert;

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.wpcTest;
 
-import it.polimi.ingsw.model.WPC.Position;
+import it.polimi.ingsw.model.wpc.Position;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

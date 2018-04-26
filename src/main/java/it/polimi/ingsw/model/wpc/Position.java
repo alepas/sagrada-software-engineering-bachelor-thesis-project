@@ -1,10 +1,10 @@
-package it.polimi.ingsw.model.wpcEdited;
+package it.polimi.ingsw.model.wpc;
 
-public class PositionEdited {
+public class Position {
     int row;
     int column;
 
-    public PositionEdited(int row, int column) {
+    public Position(int row, int column) {
         this.row = row ;
         this.column = column;
     }

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.usersdb;
 
-import it.polimi.ingsw.model.WPC.WPC;
+import it.polimi.ingsw.model.wpc.WPC;
 import it.polimi.ingsw.model.dicebag.Color;
 
 import java.util.ArrayList;
@@ -125,7 +125,7 @@ public class PlayerInGame {
     public void chooseWPC(ArrayList<String> cards){
         //da implementare select carta e poi
         String ab="123";
-        //this.wpc= WPC.getWpcByID(id); // id è una stringa
+        //this.wpc= wpc.getWpcByID(id); // id è una stringa
     }
 
 

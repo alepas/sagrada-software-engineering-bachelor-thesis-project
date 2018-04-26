@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.wpcEdited;
+package it.polimi.ingsw.model.wpc;
 import java.util.ArrayList;
 
 import it.polimi.ingsw.model.dicebag.Color;
@@ -19,44 +19,49 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.io.IOException;
 
-public class WpcEdited {
+public class WPC {
     private  String wpcID;
     private  int favours;
-    //private Cell[][] Schema;
-    private  ArrayList<CellEdited> schema = new ArrayList<>();
+    private  ArrayList<Cell> schema = new ArrayList<>();
 
-    WpcEdited(String wpcID, int favours, ArrayList<CellEdited> schema) {
+
+    WPC(String wpcID, int favours, ArrayList<Cell> schema) {
         this.wpcID = wpcID;
         this.favours = favours;
         this.schema.addAll(schema);
     }
 
-    public WpcEdited copyWpc(){
-        return new WpcEdited(wpcID,favours,schema);
+    public WPC copyWpc(){
+        return new WPC(wpcID,favours,schema);
     }
+
 
     public int getFavours(){ return favours; }
 
+
     public String getWpcID(){ return wpcID; }
 
-    private void checkCellExistence(CellEdited cell) throws NotExistingCellException {
+
+    private void checkCellExistence(Cell cell) throws NotExistingCellException {
         //controllo se la cella esiste
-        for (CellEdited schemaCell : schema){
+        for (Cell schemaCell : schema){
             if (schemaCell.equals(cell)) return;
         }
 
-        //throw new NotExistingCellException(cell);
+        throw new NotExistingCellException(cell);
     }
 
-    private boolean checkFirstTurnRestriction(CellEdited cell) {
+
+    private boolean checkFirstTurnRestriction(Cell cell) {
         //controllo che, durante il primo turno, il dado sia posizionato solo sul bordo della wpc
         int row = cell.getCellPosition().getRow();
         int column = cell.getCellPosition().getColumn();
         return row == 0 || column == 0;
     }
 
+
     //controllo che il dado possa essere inserito nella cella selezionata secondo le restrizioni di questa
-    private boolean checkCellRestriction(CellEdited cell, Dice dice){
+    private boolean checkCellRestriction(Cell cell, Dice dice){
         if (cell.getCellDice()!= null)
            return false;
         switch (cell.getCellNumber()){
@@ -73,7 +78,7 @@ public class WpcEdited {
     }
 
 
-    private boolean checkOnlyNumberCellRestriction(CellEdited cell, Dice dice){
+    private boolean checkOnlyNumberCellRestriction(Cell cell, Dice dice){
         //pennello per eglomise: impone che sia considerata sulla cella solo la restrizione di numero e non quella di colore
         if (cell.getCellDice()!= null)
             return false;
@@ -82,7 +87,7 @@ public class WpcEdited {
     }
 
 
-    private boolean checkOnlyColorCellRestriction(CellEdited cell, Dice dice){
+    private boolean checkOnlyColorCellRestriction(Cell cell, Dice dice){
         //Alesatore per lamine di rame: impone che sia considerata sulla cella solo la restrizione di colore e non quella di numero
         if (cell.getCellDice()!= null)
             return false;
@@ -91,13 +96,13 @@ public class WpcEdited {
     }
 
 
-    private boolean checkAdjacentRestriction(CellEdited cell, Dice dice){
+    private boolean checkAdjacentRestriction(Cell cell, Dice dice){
         //controllo se le celle adiacenti hanno dadi con numero o colore uguali a quelli del dado che si desidera inserire
         int i= 1;
         int row= cell.getCellPosition().getRow();
         int column= cell.getCellPosition().getColumn();
 
-        for(CellEdited schemaCell: schema){
+        for(Cell schemaCell: schema){
             if(schemaCell.getCellPosition().getRow() == row) {
                 if (schemaCell.getCellPosition().getColumn() == column + i || schemaCell.getCellPosition().getColumn() == column - i){
                     if (schemaCell.getCellDice() != null)
@@ -115,7 +120,7 @@ public class WpcEdited {
     }
 
     //manca il controllo che ci sia almeno un dado attorno alla cella selezionata
-    private void IsThereAtLeastADice(CellEdited cell) {
+    private void IsThereAtLeastADice(Cell cell) {
     }
 
 
@@ -125,12 +130,12 @@ public class WpcEdited {
             return dice.getDiceNumber() != cellDice.getDiceNumber() && !dice.getDiceColor().equals(cellDice.getDiceColor());
     }
 
-    //gli arraylist sono così comodi perchè usare un array?
+
     public ArrayList<Dice> getRowDices(int row){
         //restituisce tutti i dadi presenti in una riga
         ArrayList<Dice> rowDices = new ArrayList<>();
 
-        for(CellEdited cell: schema){
+        for(Cell cell: schema){
             if(cell.getCellPosition().getRow() == row)
                 if(cell.getCellDice()!= null)
                     rowDices.add(cell.getCellDice());
@@ -139,11 +144,12 @@ public class WpcEdited {
         return rowDices;
     }
 
+
     public ArrayList<Dice> getColDices(int column){
         //restituisce tutti i dadi presenti in una colonna
         ArrayList<Dice> columnDices = new ArrayList<>();
 
-        for(CellEdited cell: schema) {
+        for(Cell cell: schema) {
             if (cell.getCellPosition().getColumn() == column)
                 if (cell.getCellDice() != null)
                     columnDices.add(cell.getCellDice());
@@ -152,16 +158,18 @@ public class WpcEdited {
         return columnDices;
     }
 
+
     public ArrayList<Dice> getWpcDices(){
         //restituisce tutti i dadi presenti sulla wpc
         ArrayList<Dice>  WPCDices = new ArrayList<>();
 
-        for(CellEdited cell: schema){
+        for(Cell cell: schema){
             if(cell.getCellDice()!= null) WPCDices.add(cell.getCellDice());
         }
 
         return WPCDices;
     }
+
 
     public int numDicesOfShade(int shade){
         //Restituisce il numero di dadi sulla wpc che hanno il numero uguale a shade
@@ -174,23 +182,35 @@ public class WpcEdited {
         return count;
     }
 
+
+    public int countTotalPrivateObjective(Color color){
+        int score = 0;
+
+        for (Dice dice : getWpcDices()){
+            if ( dice.getDiceColor().equals(color)) score++;
+        }
+
+        return score;
+    }
+
+
     public int numDicesOfColor(Color color){
         //Restituisce il numero di dadi sulla wpc che hanno il colore uguale a color
         int count = 0;
 
         for (Dice dice : getWpcDices()){
-            if (dice.getDiceColor() == color) count++;
+            if (dice.getDiceColor().equals(color)) count++;
         }
 
         return count;
     }
 
 
-    public int numFreeCells(){
+    public int getNumFreeCells(){
         //restituisce il numero di celle vuote sulla wpc
         int count = 0;
 
-        for (CellEdited cell : schema){
+        for (Cell cell : schema){
             if (cell.getCellDice() == null) count++;
         }
 

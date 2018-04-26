@@ -4,7 +4,7 @@ import it.polimi.ingsw.model.constants.GameConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.dicebag.DiceBag;
-import it.polimi.ingsw.model.WPC.WPC;
+import it.polimi.ingsw.model.wpc.WPC;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;

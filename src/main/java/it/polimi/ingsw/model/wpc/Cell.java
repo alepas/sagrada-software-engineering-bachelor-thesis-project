@@ -1,14 +1,14 @@
-package it.polimi.ingsw.model.wpcEdited;
+package it.polimi.ingsw.model.wpc;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
 
-public class CellEdited {
+public class Cell {
     private Dice cellDice;
     private Color cellColor;
     private int cellNumber;
-    private PositionEdited position;
+    private Position position;
 
-    CellEdited(PositionEdited position, Color cellColor, int cellNumber){
+    Cell(Position position, Color cellColor, int cellNumber){
         cellDice = null;
         this.cellColor = cellColor;
         this.cellNumber = cellNumber;
@@ -27,7 +27,7 @@ public class CellEdited {
         return cellDice;
     }
 
-    public PositionEdited getCellPosition( ){
+    public Position getCellPosition( ){
         return position;
     }
 

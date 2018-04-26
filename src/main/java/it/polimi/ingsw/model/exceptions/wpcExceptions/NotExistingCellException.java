@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.exceptions.wpcExceptions;
 
-import it.polimi.ingsw.model.WPC.Cell;
+import it.polimi.ingsw.model.wpc.Cell;
 
 public class NotExistingCellException extends Exception {
     public final Cell cell;

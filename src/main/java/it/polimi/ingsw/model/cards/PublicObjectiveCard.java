@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.cards;
 
-import it.polimi.ingsw.model.WPC.WPC;
+import it.polimi.ingsw.model.wpc.WPC;
 import it.polimi.ingsw.model.cards.concretePublicObjectiveCards.*;
 
 import java.util.ArrayList;

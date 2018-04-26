@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.pocTest;
 
-import it.polimi.ingsw.model.WPC.WPC;
+import it.polimi.ingsw.model.wpc.WPC;
 import it.polimi.ingsw.model.cards.concretePublicObjectiveCards.PublicObjectiveCard1;
 import it.polimi.ingsw.model.constants.POCConstants;
 import it.polimi.ingsw.model.dicebag.Color;
