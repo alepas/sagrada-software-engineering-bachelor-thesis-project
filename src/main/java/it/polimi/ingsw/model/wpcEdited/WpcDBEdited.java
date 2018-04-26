@@ -146,8 +146,8 @@ public class WpcDBEdited {
 
     public static WpcEdited getWpcByID(String ID){
         //dato l'id selezionato dal giocatore si chiama il costruttore che genera una copia della wpc
-        WpcEdited wpc=map.get(ID);
-        return wpc;
+        WpcEdited originalWpc=map.get(ID);
+        return originalWpc.copyWpc();
     }
 
     public static ArrayList<String> getWpcIDs() {

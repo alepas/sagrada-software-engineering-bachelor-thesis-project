@@ -31,7 +31,9 @@ public class WpcEdited {
         this.schema.addAll(schema);
     }
 
-
+    public WpcEdited copyWpc(){
+        return new WpcEdited(wpcID,favours,schema);
+    }
 
     public int getFavours(){ return favours; }
 
