@@ -3,16 +3,21 @@ import it.polimi.ingsw.model.dicebag.Dice;
 
 import java.util.*;
 
+import static it.polimi.ingsw.model.constants.RoundTrackConstants.HYPOTHETICAL_MAX_DICES_PER_ROUND;
+import static it.polimi.ingsw.model.constants.RoundTrackConstants.NUM_OF_ROUND;
+
 public class RoundTrack {
     private int currentRound;
-    private ArrayList[] dicesNotUsed;
+    private Dice[][] dicesNotUsed;
 
     //array di arraylist in questo modo posso aggiungere tutti i dadi che voglio in modo dinamico
     public RoundTrack(){
         currentRound = 0;
-        dicesNotUsed = new ArrayList[10];
-        for(int i = 0; i< dicesNotUsed.length; i++) {
-            dicesNotUsed[i] = new ArrayList<Dice>();
+        dicesNotUsed = new Dice[NUM_OF_ROUND][HYPOTHETICAL_MAX_DICES_PER_ROUND];
+        for (int row = 0;  row< NUM_OF_ROUND; row++ ) {
+
+            for (int column = 0; column < HYPOTHETICAL_MAX_DICES_PER_ROUND; column++)
+                dicesNotUsed[row][column] = null;
         }
     }
 
@@ -20,8 +25,27 @@ public class RoundTrack {
         return currentRound;
     }
 
-    public ArrayList[] getDicesNotUsed() {
-        return dicesNotUsed;
+
+    private Boolean isThereADice(int row, int column){
+        return dicesNotUsed[row][column]!= null;
+    }
+
+    private Dice getDice(int row, int column){
+        return dicesNotUsed[row][column];    
+    }
+    
+    
+    public ArrayList<Dice> getDicesNotUsed() {
+        //restituisce tutti i dadi presenti sul Round Track
+        ArrayList<Dice> allRoundTrackDices = new ArrayList<>();
+
+        for (int row = 0;  row< NUM_OF_ROUND; row++ ) {
+
+            for (int column = 0; column < HYPOTHETICAL_MAX_DICES_PER_ROUND; column++)
+                if (isThereADice(row, column))
+                allRoundTrackDices.add(getDice(row, column));
+        }
+        return allRoundTrackDices;
     }
 
     private void nextRound( ){
@@ -29,34 +53,43 @@ public class RoundTrack {
     }
 
     public void addDice( Dice dice){
-            int i = currentRound - 1;
-            dicesNotUsed[i].add(dice);
+            int column = currentRound - 1;
+            int row = 0;
+            
+            do {
+                row++;
+            }while(isThereADice(row,column) && row<HYPOTHETICAL_MAX_DICES_PER_ROUND);
+            
+            dicesNotUsed[row][column] = dice;
+                
     }
 
-    //genero e ritorno il dado che intendo rimuovere, con la set posiziono il dado che voglio aggiungere
-    //potrei anchescrivere il metodo removeDice ma non ne trovo davvero l'utilità in quanto l'operazione risulta c
-    //comunque rapida anche in questo modo
-    public Dice swapDice (Dice addedDice, int indexRemovedDice, int round){
-        Dice removedDice;
-        int index = round - 1;
-        removedDice = (Dice) dicesNotUsed[index].get(indexRemovedDice); //sto dicendo io che sta prendendo un dado
-        dicesNotUsed[index].set(indexRemovedDice, addedDice);
+
+    
+    public Dice swapDice (Dice addedDice, Dice roundTrackDice, int round){
+        Dice removedDice = null;
+        int column = round - 1;
+        
+        for (int row = 0; row < HYPOTHETICAL_MAX_DICES_PER_ROUND; row++) {
+            if (getDice(row, column).equals(roundTrackDice)) {
+                removedDice = dicesNotUsed[row][column];
+                dicesNotUsed[row][column] = addedDice;
+            }
+        }
+        
         return removedDice;
     }
 
-    public void getRoundDices ( int round){
-        int index = round - 1;
-        dicesNotUsed[index].toArray();
-    }
+    
+    public ArrayList<Dice> getRoundDices ( int round) {
+        ArrayList<Dice> roundNotUsedDices = new ArrayList<>();
+        int column = round - 1;
 
-    public void getAllDices ( ){
+        for (int row = 0; row < HYPOTHETICAL_MAX_DICES_PER_ROUND; row++){
+            if (isThereADice(row, column))
+                roundNotUsedDices.add(dicesNotUsed[row][column]);
+        }
+        
+        return roundNotUsedDices;
     }
-
-    //chiamato alla fine del gioco per frimuovere tutti i dadi ? forse useless
-    private void removeAll ( ){
-        for( int i = 0; i < dicesNotUsed.length; i++)
-            for( int j = 0; j < dicesNotUsed[i].size(); j++)
-                dicesNotUsed[i].remove(j);
-    }
-
 }

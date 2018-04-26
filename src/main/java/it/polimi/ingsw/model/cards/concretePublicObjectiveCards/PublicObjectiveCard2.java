@@ -20,7 +20,8 @@ public class PublicObjectiveCard2 extends PublicObjectiveCard {
 
         for (int column = 0; column < WpcConstants.COLS_NUMBER; column++){
             ArrayList<Dice> columnDices = wpc.getColDices(column);
-            if (allColorsAreDifferent(columnDices)) score += POCConstants.POC2_SCORE;
+            if (columnDices.size() == WpcConstants.COLS_NUMBER && allColorsAreDifferent(columnDices))
+                score += POCConstants.POC2_SCORE;
         }
 
         return score;
