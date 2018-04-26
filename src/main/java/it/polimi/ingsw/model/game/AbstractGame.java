@@ -8,6 +8,7 @@ import it.polimi.ingsw.model.wpc.WPC;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
+import it.polimi.ingsw.model.wpc.WpcDB;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -72,7 +73,7 @@ public abstract class AbstractGame {
     }
 
     void extractWPCs(){
-        ArrayList<String> ids = WPC.getWpcIDs();
+        ArrayList<String> ids = WpcDB.getWpcIDs();
         Collections.shuffle(ids);
         ChooseWPCThread[] chooseThreads = new ChooseWPCThread[numPlayers];
 
