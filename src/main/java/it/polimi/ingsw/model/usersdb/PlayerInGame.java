@@ -2,13 +2,16 @@ package it.polimi.ingsw.model.usersdb;
 
 import it.polimi.ingsw.model.wpc.WPC;
 import it.polimi.ingsw.model.dicebag.Color;
+import it.polimi.ingsw.model.game.AbstractGame;
+import it.polimi.ingsw.model.wpc.WpcDB;
 
 import java.util.ArrayList;
 
 
 public class PlayerInGame {
-    private DatabaseUsers db;
     private String username;
+    private DatabaseUsers db;
+    private AbstractGame game;
     private Color privateObjective1;
     private Color privateObjective2;
     private int favours;
@@ -22,7 +25,8 @@ public class PlayerInGame {
     private Game activegame;
 */
 
-    public PlayerInGame(String user){
+    public PlayerInGame(String user, AbstractGame game){
+        this.game=game;
         db=DatabaseUsers.getInstance();
         username=user;
         wpc=null;
@@ -65,6 +69,7 @@ public class PlayerInGame {
 
         db.addPointsRankingFromUsername(username,pointsToAdd);
     }
+
     public void addWonGame() {
         db.addWonGamesFromUsername(username);
     }
@@ -82,7 +87,7 @@ public class PlayerInGame {
     }
 
     public void setWPC(String id) {
-        this.wpc =  WPC.getWpcByID(id);
+        this.wpc =  WpcDB.getWpcByID(id);
     }
 
     public int getFavours(){
@@ -101,7 +106,7 @@ public class PlayerInGame {
     }
 
 
-    public boolean removeFavours(int favoursToRemove){
+    private boolean removeFavours(int favoursToRemove){
         if (favours<favoursToRemove)
             return false;
         favours-=favoursToRemove;
@@ -122,11 +127,24 @@ public class PlayerInGame {
 
     }
 
+
+    public void endTurn(){
+        //game.
+    }
+
     public void chooseWPC(ArrayList<String> cards){
+
         //da implementare select carta e poi
         String ab="123";
         //this.wpc= wpc.getWpcByID(id); // id è una stringa
     }
+
+    void setWpc(String wpcId){
+        WpcDB dbwpc=WpcDB.getInstance();
+        this.wpc=dbwpc.getWpcByID(wpcId).copyWpc();
+    }
+
+    void UseToolCard(){}
 
 
     //isInGame() capire come implementarla
