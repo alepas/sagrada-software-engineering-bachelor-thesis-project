@@ -139,7 +139,7 @@ public class MultiPlayerGame extends AbstractGame implements Runnable {
             if (player.getUser().equals(user)) throw new UserAlreadyInThisGameException(user, this);
         }
 
-        PlayerInGame player = new PlayerInGame(user);
+        PlayerInGame player = new PlayerInGame(user, this);
         players.add(player);
     }
 
