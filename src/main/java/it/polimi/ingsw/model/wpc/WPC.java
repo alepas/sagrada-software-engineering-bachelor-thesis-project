@@ -28,7 +28,8 @@ public class WPC {
     WPC(String wpcID, int favours, ArrayList<Cell> schema) {
         this.wpcID = wpcID;
         this.favours = favours;
-        this.schema.addAll(schema);
+        for( Cell cell: schema)
+            this.schema.add(new Cell(cell));
     }
 
     public WPC copyWpc(){

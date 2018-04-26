@@ -15,6 +15,13 @@ public class Cell {
         this.position = position;
     }
 
+    Cell(Cell cell){
+        cellDice = null;
+        this.cellColor = cell.getCellColor();
+        this.cellNumber = cell.getCellNumber();
+        this.position = cell.getCellPosition();
+    }
+
     public Color getCellColor( ){
         return cellColor;
     }
