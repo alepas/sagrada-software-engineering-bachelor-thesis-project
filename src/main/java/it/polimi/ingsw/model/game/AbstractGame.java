@@ -37,7 +37,7 @@ public abstract class AbstractGame {
         roundTrack = new RoundTrack();
         extractedDices = new ArrayList<>();
         players = new ArrayList<>();
-        PlayerInGame player = new PlayerInGame(user);
+        PlayerInGame player = new PlayerInGame(user, this);
         players.add(player);
         diceBag = new DiceBag();
         //Nota: settare il numero di private objectives nel costruttore della classe concreta

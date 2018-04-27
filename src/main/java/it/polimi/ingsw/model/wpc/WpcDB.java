@@ -24,7 +24,7 @@ public class WpcDB {
         if (instance==null) {
 
             instance = new WpcDB();
-            pathFile="src/main/resources/wpc/wpc_schema";
+            pathFile="src/main/resources/wpc2/wpc_schema";
             map = new HashMap<String, WPC>();
 
         }
@@ -79,9 +79,10 @@ public class WpcDB {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance(); //inizializzo la factory per processare il flusso di dati
             DocumentBuilder builder = factory.newDocumentBuilder(); //inzializzo documento
             Document document = null;
-            document = builder.parse(new File(pathFile)); //pathname del file con tutte le wpc
+            document = builder.parse(new File(pathFile)); //pathname del file con tutte le wpc2
             document.getDocumentElement().normalize();
-            wpcList = document.getElementsByTagName("wpc");
+            wpcList = document.getElementsByTagName("wpc2");
+
             for (int i = 0; i < wpcList.getLength(); i++)
                 wpcNode = wpcList.item(i);
             if (wpcNode.getNodeType() == Node.ELEMENT_NODE) {
@@ -143,7 +144,7 @@ public class WpcDB {
 
 
     public static WPC getWpcByID(String ID){
-        //dato l'id selezionato dal giocatore si chiama il costruttore che genera una copia della wpc
+        //dato l'id selezionato dal giocatore si chiama il costruttore che genera una copia della wpc2
         WPC originalWpc=map.get(ID);
         return originalWpc.copyWpc();
     }

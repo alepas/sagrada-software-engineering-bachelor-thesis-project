@@ -3,6 +3,7 @@ package it.polimi.ingsw.model.dicebag;
 import java.util.ArrayList;
 
 import static it.polimi.ingsw.model.constants.DiceBagCostants.INITIAL_DICE_NUMBER;
+import static it.polimi.ingsw.model.constants.DiceBagCostants.SOLO_PLAYER_DICES;
 
 public class DiceBag {
     private int yellowDices;
@@ -11,11 +12,6 @@ public class DiceBag {
     private int greenDices;
     private int violetDices;
 
-    /*annotazione importante: DicesExtraction deve essere un metodo del game, in questo modo elimino i due costruttori
-     e anche l'array extracedDices; davide nella classe game inserisce un set (credo non sia la scelta migliore in quanto
-     in un set non possono essereci due o più lementi uguali tra di loro mentre nel nostro gioco tale evento è possibile)
-     io l'avevo pensato come un array: dobbiamo scegliere quale via seguire
-     */
 
     //quando costruisco il sacco nella partita multiplayer passerò al costruttore
     // l'int numDices =2*numplayers +1
@@ -29,27 +25,37 @@ public class DiceBag {
 
     public ArrayList<Dice> DicesExtraction(int numPlayers){
         int numOfDices;
+        ArrayList<Dice> extractedDices = new ArrayList<>();
         if(numPlayers == 1)
-            numOfDices = 4; //costante da inserire in class costante
+            numOfDices = SOLO_PLAYER_DICES;
         else
             numOfDices = numPlayers*2 +1; //costante computata
-            ArrayList<Dice> extractedDices = new ArrayList<>();
         for (int i = 0; i < numOfDices; i++)
             extractedDices.add(pickDice());
         return extractedDices;
     }
 
-    private Dice pickDice() {
+     private Dice pickDice() {
         Color color;
         do {
             color = Color.randomColor();
         } while(!checkColor(color));
         switch (color){
-            case RED: redDices--;
-            case BLUE: blueDices--;
-            case GREEN: greenDices--;
-            case VIOLET: violetDices--;
-            case YELLOW: yellowDices--;
+            case RED:
+                redDices--;
+                break;
+            case BLUE:
+                blueDices--;
+                break;
+            case GREEN:
+                greenDices--;
+                break;
+            case VIOLET:
+                violetDices--;
+                break;
+            case YELLOW:
+                yellowDices--;
+                break;
         }
         return new Dice(color);
     }
@@ -57,7 +63,7 @@ public class DiceBag {
 
     //nell enum ogni val è associato ad un valore numerico tramite color.ordinal() recupero tale valore
     //utile per fare il check
-    private boolean checkColor(Color color) throws EnumConstantNotPresentException{
+    private boolean checkColor(Color color){
         if (color == Color.VIOLET)
             return (violetDices > 0);
         else if (color == Color.BLUE)
@@ -75,23 +81,33 @@ public class DiceBag {
         Color color = dice.getDiceColor();
         switch (color) {
             case RED:
-                redDices++;
+                if (redDices <= 18)
+                    redDices++;
+                break;
             case BLUE:
-                blueDices++;
+                if (blueDices <= 18)
+                    blueDices++;
+                break;
             case GREEN:
-                greenDices++;
+                if (greenDices <= 18)
+                    greenDices++;
+                break;
             case VIOLET:
-                violetDices++;
+                if (violetDices <= 18)
+                    violetDices++;
+                break;
             case YELLOW:
-                yellowDices++;
+                if (yellowDices <= 18)
+                    yellowDices++;
+                break;
         }
     }
 
 
-     public int getYellowDices(){return yellowDices;}
-     public int getRedDices(){return redDices;}
-     public int getGreenDices(){return greenDices;}
-     public int getBlueDices(){return blueDices;}
-     public int getVioletDices(){return violetDices;}
+    int getYellowDices(){return yellowDices;}
+    int getRedDices(){return redDices;}
+    int getGreenDices(){return greenDices;}
+    int getBlueDices(){return blueDices;}
+    int getVioletDices(){return violetDices;}
 }
 

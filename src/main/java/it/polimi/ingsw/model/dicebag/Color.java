@@ -28,7 +28,7 @@ public enum Color {
             case "yellow":
                 color = YELLOW;
                 break;
-            case "null":
+            default:
                 break;
         }
         return color;

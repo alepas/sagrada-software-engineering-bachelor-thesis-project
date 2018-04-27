@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.dicebag;
 
+import it.polimi.ingsw.model.exceptions.dicebagExceptions.IncorrectNumberException;
+
 import java.util.Random;
 
 public class Dice {
@@ -27,7 +29,9 @@ public class Dice {
         return number;
     }
 
-    public void setNumber(int number){
+    public void setNumber(int number) throws IncorrectNumberException {
+        if (number < 0 || number > 6 )
+            throw new IncorrectNumberException(number);
         this.number = number;
     }
 

@@ -1,10 +1,7 @@
-package it.polimi.ingsw.model.wpcTest;
+package it.polimi.ingsw.model.wpc;
 
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
-
-import it.polimi.ingsw.model.wpc.Cell;
-import it.polimi.ingsw.model.wpc.Position;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -16,7 +13,6 @@ import static org.mockito.Mockito.when;
 public class CellTest {
     private Cell cell;
     private Cell cell1;
-    private Cell cell2;
     private Dice dice;
     private Position position;
     private int cellNumber;
@@ -24,15 +20,14 @@ public class CellTest {
 
     @Before
     public void Before(){
+
         dice = mock(Dice.class);
-        cell2 = mock(Cell.class);
-        when(cell2.getCellDice()).thenReturn(dice);
 
         position = mock(Position.class);
         cellNumber = 1;
-        cellColor = mock(Color.class);
-        //cell = new Cell(position, cellColor, cellNumber);
-        //cell1 = new Cell(cell);
+        cellColor = Color.VIOLET;
+        cell = new Cell(position, cellColor, cellNumber);
+        cell1 = new Cell(cell);
     }
 
     @Test
@@ -52,14 +47,10 @@ public class CellTest {
     }
 
     @Test
-    public void checkRemoveDice(){
-        cell2.removeDice();
-        Assert.assertNull(cell2.getCellDice());
-    }
-
-    @Test
-    public void checkSetDice(){
+    public void checkSetAndRemoveDice(){
         cell.setDice(dice);
-        Assert.assertEquals(dice, cell.getCellDice());
+        Assert.assertEquals( dice, cell.getCellDice());
+        cell.removeDice();
+        Assert.assertEquals(null, cell.getCellDice());
     }
 }

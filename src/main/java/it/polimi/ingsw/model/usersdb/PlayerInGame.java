@@ -136,7 +136,7 @@ public class PlayerInGame {
 
         //da implementare select carta e poi
         String ab="123";
-        //this.wpc= wpc.getWpcByID(id); // id è una stringa
+        //this.wpc2= wpc2.getWpcByID(id); // id è una stringa
     }
 
     void setWpc(String wpcId){
