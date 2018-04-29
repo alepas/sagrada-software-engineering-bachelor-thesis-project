@@ -1,8 +1,8 @@
-package it.polimi.ingsw.control.socketNetworking.network;
+package it.polimi.ingsw.control.network.socket;
 
-import it.polimi.ingsw.control.socketNetworking.SocketServerController;
-import it.polimi.ingsw.control.socketNetworking.network.commands.Request;
-import it.polimi.ingsw.control.socketNetworking.network.commands.Response;
+import it.polimi.ingsw.control.ServerController;
+import it.polimi.ingsw.control.network.commands.Request;
+import it.polimi.ingsw.control.network.commands.Response;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -16,14 +16,14 @@ public class SocketClientHandler implements Runnable{
     private final ObjectOutputStream out;
     private boolean stop;
 
-    private final SocketServerController controller;
+    private final ServerController controller;
 
     public SocketClientHandler(Socket socket) throws IOException {
         this.socket = socket;
         this.out = new ObjectOutputStream(socket.getOutputStream());
         this.in = new ObjectInputStream(socket.getInputStream());
 
-        this.controller = new SocketServerController(this);
+        this.controller = new ServerController(this);
     }
 
     public void respond(Response response) {

@@ -1,14 +1,15 @@
-package it.polimi.ingsw.control.socketNetworking;
+package it.polimi.ingsw.control;
 
-import it.polimi.ingsw.control.socketNetworking.network.SagradaSocketServer;
+import it.polimi.ingsw.control.network.socket.SocketServer;
 import it.polimi.ingsw.model.constants.SocketConstants;
 
 import java.io.IOException;
 
-public class LaunchSocketServer {
+public class LaunchServer {
 
     public static void main(String[] args) throws IOException {
-        SagradaSocketServer server = new SagradaSocketServer(SocketConstants.SOCKET_SERVER_PORT);
+        //TODO: RmiServer
+        SocketServer server = new SocketServer(SocketConstants.SOCKET_SERVER_PORT);
 
         try {
             server.run();

@@ -1,4 +1,4 @@
-package it.polimi.ingsw.control.socketNetworking.network.commands;
+package it.polimi.ingsw.control.network.commands;
 
 import java.io.Serializable;
 

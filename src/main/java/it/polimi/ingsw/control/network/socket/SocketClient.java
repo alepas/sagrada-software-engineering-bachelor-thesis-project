@@ -1,21 +1,21 @@
-package it.polimi.ingsw.control.socketNetworking.network;
+package it.polimi.ingsw.control.network.socket;
 
-import it.polimi.ingsw.control.socketNetworking.network.commands.Request;
-import it.polimi.ingsw.control.socketNetworking.network.commands.Response;
+import it.polimi.ingsw.control.network.commands.Request;
+import it.polimi.ingsw.control.network.commands.Response;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class SagradaSocketClient {
+public class SocketClient {
     private final String host;
     private final int port;
     private Socket connection;
     private ObjectInputStream in;
     private ObjectOutputStream out;
 
-    public SagradaSocketClient(String host, int port) {
+    public SocketClient(String host, int port) {
         this.host = host;
         this.port = port;
     }

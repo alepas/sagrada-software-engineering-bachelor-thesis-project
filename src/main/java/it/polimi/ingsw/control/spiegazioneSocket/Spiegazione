@@ -2,27 +2,27 @@
 
 Ecco brevemente come funziona il tutto:
 
-1) La classe LaunchSocketServer si occupa di avviare un SagradaSocketServer sulla porta 8000
+1) La classe LaunchServer si occupa di avviare un SocketServer sulla porta 8000
    invocando il metodo run
 
-2) La classe SagradaSocketServer effettua le seguenti azioni all'infinito "while(true)" :
+2) La classe SocketServer effettua le seguenti azioni all'infinito "while(true)" :
     - Attende che un client si connetta
     - Stampa a video il nome del client connesso
     - Crea un nuovo thread dove viene eseguito un nuovo SocketClientHandler che gestisce i messaggi attraverso
       la socket passata -->  "pool.submit(new SocketClientHandler(clientSocket));"
 
 3) Il SocketClientHandler ha due compiti:
-    - Attende di riceve richieste dal client e le inoltra al SocketServerController
+    - Attende di ricevere richieste dal client e le inoltra al ServerController
       "((Request) in.readObject()).handle(controller);"
 
-    - Attende la risposta del SocketServerController a seguito della richiesta effettuata dal client
+    - Attende la risposta del ServerController a seguito della richiesta effettuata dal client
       "Response response = ..."
-      Se non nulla, invia la risposta del SocketServerController al client
+      Se la risposta è non nulla, la invia al SocketClient a cui è connesso
       "if (response != null) {
           respond(response);
        }"
 
-4) Il SocketServerController ha il compito di processare le richieste ricevute dal client.
+4) Il ServerController ha il compito di processare le richieste ricevute dal client.
 
 
 
@@ -31,12 +31,12 @@ Ecco brevemente come funziona il tutto:
 Esempio: un client si connette al server e crea un nuovo utente
 
 1)  LATO SERVER:
-    Si avvia LaunchSocketServer che crea un nuovo SagradaSocketServer. Invocando il metodo run() questo
+    Si avvia LaunchServer che crea un nuovo SocketServer. Invocando il metodo run() questo
     si metterà in attesa di un nuovo client sulla porta 8000
     "Socket clientSocket = serverSocket.accept();"
 
 2)  LATO CLIENT:
-    Si avvia LaunchSocketClient che crea un nuovo SagradaSocketClient impostandogli l'indirizzo e la porta
+    Si avvia LaunchClient che crea un nuovo SocketClient impostandogli l'indirizzo e la porta
     a cui si dovrà connettere. Nel nostro esempio l'indirizzo è "localhost" e la porta è 8000.
 
 3)  LATO CLIENT:
@@ -44,12 +44,12 @@ Esempio: un client si connette al server e crea un nuovo utente
     con il server ("connection = new Socket(host, port);") e vengono impostati i canali di input e output
     lato client. ("out = new ObjectOutputStream(connection.getOutputStream());
                    in = new ObjectInputStream(connection.getInputStream());")
-    Viene poi avviato il controller che si occuperà di processare richieste e risposte del server.
+    Viene poi avviato il ClientController che si occuperà di processare richieste e risposte del server.
     "SocketClientController controller = new SocketClientController(client);"
     "controller.run();"
 
     LATO SERVER:
-    Contemporaneamente il SagradaSocketServer accetta la richiesta di connessione del SagradaSocketClient,
+    Contemporaneamente il SocketServer accetta la richiesta di connessione del SocketClient,
     avvia un nuovo thread che gestirà la connessione con il client invocando il metodo run() del
     SocketClientHandler ("pool.submit(new SocketClientHandler(clientSocket));")
     e si metterà in attesa di un nuovo client
@@ -57,31 +57,31 @@ Esempio: un client si connette al server e crea un nuovo utente
     Il SocketClientHandler rimane in attesa di richieste da parte del client
 
 4)  LATO CLIENT:
-    Il SocketClientController (dal suo metodo run()) invoca la view che chiederà all'utente di inserire
-    username e password. Quando l'utente li inserisce la view li passa al SocketClientController
+    Il ClientController (dal suo metodo run()) invoca la View che chiederà all'utente di inserire
+    username e password. Quando l'utente li inserisce, la View li passa al ClientController
     "controller.createUser(username, password);"
 
-    Ricevuti username e password il SocketClientController, attraverso il SagradaSocketClient inoltra la richiesta
+    Ricevuti username e password il ClientController, attraverso il SocketClient inoltra la richiesta
     di creare un nuovo utente al server e si mette in attesa della risposta.
 
-    SocketClientController: "client.request(new CreateUserRequest(username, password));"
-    SagradaSocketClient: "out.writeObject(request);"
-    SocketClientController: "client.nextResponse()"
+    ClientController: "client.request(new CreateUserRequest(username, password));"
+    SocketClient: "out.writeObject(request);"
+    ClientController: "client.nextResponse()"
 
 5)  LATO SERVER:
-    Il SocketClientHandler riceve la richiesta del client e fa in modo che il SocketServerController la processi
+    Il SocketClientHandler riceve la richiesta del client e fa in modo che il ServerController la processi
     "Response response = ((Request) in.readObject()).handle(controller);"
 
 6)  LATO SERVER:
-    Viene invocato il metodo handle(CreateUserRequest request) del SocketServerController che tenterà di creare
+    Viene invocato il metodo handle(CreateUserRequest request) del ServerController che tenterà di creare
     un nuovo utente.
     "String userToken = databaseUsers.registerUser(request.username, request.password);"
 
-    Il SocketServerController restituisce al SocketClientHandler una CreateUserResponse passando l'username
+    Il ServerController restituisce al SocketClientHandler una CreateUserResponse passando l'username
     dell'utente e il token ad esso associato. Nota: se non è stato possibile creare l'utente il token è null.
 
 7)  LATO SERVER:
-    Il SocketClientHandler riceve la risposta del SocketServerController e la inoltra al client
+    Il SocketClientHandler riceve la risposta del ServerController e la inoltra al client
 
     "Response response = ((Request) in.readObject()).handle(controller);"
 
@@ -98,27 +98,27 @@ Esempio: un client si connette al server e crea un nuovo utente
     }"
 
 8)  LATO CLIENT:
-    Il SagradaSocketClient riceve la risposta del server e la restituisce al SocketClientController
+    Il SocketClient riceve la risposta del server e la restituisce al ClientController
     che la processerà attraverso il suo metodo handle(CreateUserResponse response)
 
-    SagradaSocketClient: "return ((Response) in.readObject());"
-    SocketClientController aveva precedente invocato: "client.nextResponse().handle(this);"
+    SocketClient: "return ((Response) in.readObject());"
+    ClientController aveva precedente invocato: "client.nextResponse().handle(this);"
 
 
 9)  LATO CLIENT:
-    Il SocketClientController passa l'username alla view.
+    Il ClientController passa l'username alla View.
 
 10) LATO CLIENT:
-    Se il token è null il SocketClientController restituirà alla view null che stamperà a schermo
+    Se il token è null il ClientController restituirà alla View 'null' che stamperà a schermo
     che è stato impossibile creare l'utente.
-    Se il token è != null il SocketClientController imposterà i suoi attributi username e userToken uguali
-    a quelli ricevuti in risposta dal server e passerà l'username alla view.
+    Se il token è != null il ClientController imposterà i suoi attributi username e userToken uguali
+    a quelli ricevuti in risposta dal server e passerà l'username alla View.
 
     "this.username = response.username;
      this.userToken = response.userToken;"
     "return this.username;"
 
 11) LATO CLIENT:
-    La view riceve l'username dal SocketClientController.
+    La View riceve l'username dal ClientController.
     Se è null chiederà nuovamente di creare un utente.
-    Se è diverso da null mostrerà a schermo ("Connected as: " + username)
+    Se è diverso da null mostrerà a schermo ("Connesso come: " + username)

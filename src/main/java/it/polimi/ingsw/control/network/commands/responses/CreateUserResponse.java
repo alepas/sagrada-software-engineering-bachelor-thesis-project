@@ -1,7 +1,7 @@
-package it.polimi.ingsw.control.socketNetworking.network.commands.responses;
+package it.polimi.ingsw.control.network.commands.responses;
 
-import it.polimi.ingsw.control.socketNetworking.network.commands.Response;
-import it.polimi.ingsw.control.socketNetworking.network.commands.ResponseHandler;
+import it.polimi.ingsw.control.network.commands.Response;
+import it.polimi.ingsw.control.network.commands.ResponseHandler;
 
 public class CreateUserResponse implements Response {
     public final String username;

@@ -1,4 +1,6 @@
-package it.polimi.ingsw.control.socketNetworking.network;
+package it.polimi.ingsw.control.network.socket;
+
+import it.polimi.ingsw.control.network.socket.SocketClientHandler;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -6,11 +8,11 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class SagradaSocketServer {
+public class SocketServer {
     private final ServerSocket serverSocket;
     private final ExecutorService pool;
 
-    public SagradaSocketServer(int port) throws IOException {
+    public SocketServer(int port) throws IOException {
         serverSocket = new ServerSocket(port);
         pool = Executors.newCachedThreadPool();
         System.out.println(">>> Listening on " + port);
