@@ -17,7 +17,7 @@ Ecco brevemente come funziona il tutto:
 
     - Attende la risposta del SocketServerController a seguito della richiesta effettuata dal client
       "Response response = ..."
-      Se non nulla invia la risposta del SocketServerController al client
+      Se non nulla, invia la risposta del SocketServerController al client
       "if (response != null) {
           respond(response);
        }"
@@ -44,7 +44,7 @@ Esempio: un client si connette al server e crea un nuovo utente
     con il server ("connection = new Socket(host, port);") e vengono impostati i canali di input e output
     lato client. ("out = new ObjectOutputStream(connection.getOutputStream());
                    in = new ObjectInputStream(connection.getInputStream());")
-    Viene poi avviato il controller che si occuperà di gestire la connessione con il server
+    Viene poi avviato il controller che si occuperà di processare richieste e risposte del server.
     "SocketClientController controller = new SocketClientController(client);"
     "controller.run();"
 
@@ -57,7 +57,7 @@ Esempio: un client si connette al server e crea un nuovo utente
     Il SocketClientHandler rimane in attesa di richieste da parte del client
 
 4)  LATO CLIENT:
-    Il SocketClientController (tramite il metodo run()) invoca la view che chiederà all'utente di inserire
+    Il SocketClientController (dal suo metodo run()) invoca la view che chiederà all'utente di inserire
     username e password. Quando l'utente li inserisce la view li passa al SocketClientController
     "controller.createUser(username, password);"
 
@@ -78,7 +78,7 @@ Esempio: un client si connette al server e crea un nuovo utente
     "String userToken = databaseUsers.registerUser(request.username, request.password);"
 
     Il SocketServerController restituisce al SocketClientHandler una CreateUserResponse passando l'username
-    dell'utente e il token ad esso associato. Nota: se non è stato possibile creare l'utente il toke è null.
+    dell'utente e il token ad esso associato. Nota: se non è stato possibile creare l'utente il token è null.
 
 7)  LATO SERVER:
     Il SocketClientHandler riceve la risposta del SocketServerController e la inoltra al client
@@ -98,29 +98,27 @@ Esempio: un client si connette al server e crea un nuovo utente
     }"
 
 8)  LATO CLIENT:
-    Il SagradaSocketClient riceve la risposta del server e la inoltra al SocketClientController
+    Il SagradaSocketClient riceve la risposta del server e la restituisce al SocketClientController
+    che la processerà attraverso il suo metodo handle(CreateUserResponse response)
 
     SagradaSocketClient: "return ((Response) in.readObject());"
-    SocketClientController aveva precedente invocato: "client.nextResponse()"
+    SocketClientController aveva precedente invocato: "client.nextResponse().handle(this);"
+
 
 9)  LATO CLIENT:
-    Il SocketClientController invoca il metodo handle(CreateUserResponse response) passandogli la
-    CreateUserResponse ricevuta dal server
-    "client.nextResponse().handle(this);"
+    Il SocketClientController passa l'username alla view.
 
 10) LATO CLIENT:
-    Se il token è null la view stamperà a schermo che è stato impossibile creare l'utente
+    Se il token è null il SocketClientController restituirà alla view null che stamperà a schermo
+    che è stato impossibile creare l'utente.
     Se il token è != null il SocketClientController imposterà i suoi attributi username e userToken uguali
-    a quelli ricevuti in risposta dal server
+    a quelli ricevuti in risposta dal server e passerà l'username alla view.
 
     "this.username = response.username;
      this.userToken = response.userToken;"
-
-11) LATO CLIENT:
-    Il SocketClientController restituisce alla view l'username dell'utente connesso
     "return this.username;"
 
-12) LATO CLIENT:
+11) LATO CLIENT:
     La view riceve l'username dal SocketClientController.
     Se è null chiederà nuovamente di creare un utente.
     Se è diverso da null mostrerà a schermo ("Connected as: " + username)
