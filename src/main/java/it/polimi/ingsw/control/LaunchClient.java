@@ -4,6 +4,7 @@ import it.polimi.ingsw.control.network.socket.SocketClient;
 import it.polimi.ingsw.model.constants.SocketConstants;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.util.Scanner;
 
 public class LaunchClient {
@@ -16,22 +17,40 @@ public class LaunchClient {
         Tecnology tecnology = null;
 
         do {
-            System.out.println("Quale tecnologia vuoi usare? socket/rmi");
+            System.out.println(">>> Quale tecnologia vuoi usare? socket/rmi");
+            System.out.println(">>> Digita \"quit\" per uscire");
             answer = userInput().toLowerCase();
             if (answer.equals("socket")) tecnology = Tecnology.SOCKET;
             if (answer.equals("rmi")) tecnology = Tecnology.RMI;
-            if (tecnology == null) System.out.println("Istruzione non riconosciuta. Perfavore inserisci \"socket\" o \"rmi\"");
+            if (answer.equals("quit")) break;
+            if (tecnology == null) {
+                System.out.println(">>> Istruzione non riconosciuta. Perfavore inserisci \"socket\" o \"rmi\"");
+                continue;
+            }
+
+            switch (tecnology){
+                case SOCKET:
+                    try {
+                        startSocketClient();
+                    } catch (ConnectException e) {
+                        System.out.println(">>> Impossibile stabilire connessione Socket con il Server");
+                        tecnology = null;
+                    }
+                    break;
+                case RMI:
+                    try {
+                        startRmiClient();
+                    } catch (Exception e){
+                        System.out.println(">>> Impossibile stabilire connessione RMI con il Server");
+                        tecnology = null;
+                    }
+                    break;
+                default:
+                    System.out.println(">>> Tecnologia " + tecnology.toString() + " non ancora supportata");
+                    tecnology = null;
+                    break;
+            }
         } while (tecnology == null);
-
-        switch (tecnology){
-            case SOCKET:
-                startSocketClient();
-                break;
-            case RMI:
-                startRmiClient();
-        }
-
-
     }
 
     private static void startSocketClient() throws IOException{

@@ -22,7 +22,7 @@ public class MultiPlayerGameTest {
 
     @Before
     public void before() {
-        game = new MultiPlayerGame(username1, 3);
+        game = new MultiPlayerGame(3);
     }
 
     @Test

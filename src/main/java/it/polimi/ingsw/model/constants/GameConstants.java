@@ -5,6 +5,8 @@ public class GameConstants {
     public static final int CHOOSE_WPC_WAITING_TIME = 60; //Tempo in secondi
     public static final int NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER = 4;
     public static final int PRIVATE_OBJ_SCORE_VALUE = 1;
+    public static final int MIN_NUM_PLAYERS = 1;
+    public static final int MAX_NUM_PLAYERS = 4;
 
     //MultiplayerGame
     public static final int NUM_PRIVATE_OBJ_FOR_PLAYER_IN_MULTIPLAYER_GAME = 1;

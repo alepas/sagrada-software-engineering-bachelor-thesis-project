@@ -18,19 +18,3 @@ public class CreateUserRequest implements Request {
         return handler.handle(this);
     }
 }
-
-
-
-/*
-    Altre richieste:
-        - Login
-        - Ricevi statistiche giocatore
-        - Find game
-        - Passa turno
-        - Posiziona dado
-        - Usa toolcard
-        - ...
-
-
-
- */

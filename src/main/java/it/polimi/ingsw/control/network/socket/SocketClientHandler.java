@@ -26,6 +26,10 @@ public class SocketClientHandler implements Runnable{
         this.controller = new ServerController(this);
     }
 
+    public Socket getSocket() {
+        return socket;
+    }
+
     public void respond(Response response) {
         try {
             out.writeObject(response);
@@ -48,9 +52,7 @@ public class SocketClientHandler implements Runnable{
                 }
             } while (!stop);
         } catch (Exception e) {
-//            System.out.println("Appena prima");
 //            printError(e.getClass().getSimpleName() + " - " + e.getMessage());
-//            System.out.println("Appena dopo");
             close();
         }
 

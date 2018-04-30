@@ -23,7 +23,14 @@ public class CliConstants {
             "\" per tornare indietro";
 
     public static final String CREATE_USER_ERROR = "Impossibile creare l'utente";
-    public static final String LOGIN_ERROR = "Impossibile creare l'utente";
+    public static final String LOGIN_ERROR = "Impossibile effettuare il login";
 
     public static final String LOG_SUCCESS = "Sei connesso come: ";
+
+    public static final String PRESENT_MAIN_MENU = "Cosa vuoi fare? Digita:\n>>> 1) Cerca partita\n" +
+            ">>> 2) Visualizza statistiche giocatore";
+
+    public static final String SELECT_NUM_PLAYERS = "Seleziona numero giocatori:";
+
+    public static final String NUM_PLAYERS_ERROR = "Perfavore inserire un numero compreso tra 1 e 4";
 }

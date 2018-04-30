@@ -6,6 +6,7 @@ import it.polimi.ingsw.model.exceptions.userExceptions.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.net.Socket;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.HashMap;
@@ -20,6 +21,7 @@ public class DatabaseUsers {
 
     private HashMap<String, String> tokenbyUsername;
     private HashMap<String, User> usersbyToken;
+    private HashMap<String, Socket> socketbyUsername;
 
 
     public synchronized static DatabaseUsers getInstance(){
@@ -37,6 +39,8 @@ public class DatabaseUsers {
             instance.tokenbyUsername=new HashMap<String, String>();
 
             instance.usersbyToken=new HashMap<String, User>();
+
+            instance.socketbyUsername = new HashMap<>();
         }
         return instance;
     }
@@ -71,13 +75,30 @@ public class DatabaseUsers {
             throw new CannotRegisterUserException(username,0);
 
         }
-        System.out.println("creo nuovo utente");
+        System.out.println(">>> Creo nuovo utente");
         try {
             salt = getSalt();
             passwordHash = SHAFunction.getShaPwd(password, salt);
-            User newuser= new User(passwordHash,salt);
+            User newuser= new User(username, passwordHash,salt);
             userDataTable.put(username,newuser);
-            updateFileDB();
+//            updateFileDB();       //HO COMMENTATO QUESTA RIGA PERCHE' MI ANDAVA A GENERARE DELLE ECCEZIONI
+                                    //VEDI SE RIESCI A CAPIRE PERCHE'
+            /* java.io.FileNotFoundException: src/main/resources/database/store.db (No such file or directory)
+                at java.base/java.io.FileOutputStream.open0(Native Method)
+                at java.base/java.io.FileOutputStream.open(FileOutputStream.java:299)
+                at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:238)
+                at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:127)
+                at it.polimi.ingsw.model.usersdb.LoadingFromFile.toFile(LoadingFromFile.java:55)
+                at it.polimi.ingsw.model.usersdb.DatabaseUsers.updateFileDB(DatabaseUsers.java:295)
+                at it.polimi.ingsw.model.usersdb.DatabaseUsers.registerUser(DatabaseUsers.java:84)
+                at it.polimi.ingsw.control.ServerController.handle(ServerController.java:46)
+                at it.polimi.ingsw.control.network.commands.requests.SetSocketRequest.handle(SetSocketRequest.java:18)
+                at it.polimi.ingsw.control.network.socket.SocketClientHandler.run(SocketClientHandler.java:45)
+                at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:514)
+                at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+                at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1135)
+                at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+                at java.base/java.lang.Thread.run(Thread.java:844) */
             newtoken = UUID.randomUUID().toString();
             usersbyToken.put(newtoken,newuser);
             tokenbyUsername.put(username,newtoken);
@@ -128,8 +149,20 @@ public class DatabaseUsers {
         }
     }
 
-    public synchronized String getTokoen(String user){
+    public synchronized String getToken(String user){
         return tokenbyUsername.get(user);
+    }
+
+    public synchronized String getUsernameByToken(String token) throws NullTokenException, CannotFindUserInDB {
+        if (token == null) throw new NullTokenException();
+
+        String username = usersbyToken.get(token).getUsername();
+        if (username == null) throw new CannotFindUserInDB("");
+        return username;
+    }
+
+    public synchronized void setSocketForUser(String token, Socket socket) {
+        socketbyUsername.put(usersbyToken.get(token).getUsername(), socket);
     }
 
 
@@ -173,9 +206,6 @@ public class DatabaseUsers {
         return us.getRanking();
     }
 
-
-
-
     public synchronized void addWonGamesFromToken(String token)throws NullTokenException, CannotFindUserInDB{
         if(token==null)
             throw new NullTokenException();
@@ -188,9 +218,6 @@ public class DatabaseUsers {
 
 
     }
-
-
-
 
     synchronized void addWonGamesFromUsername(String user)throws CannotFindUserInDB{
 
@@ -283,6 +310,5 @@ public class DatabaseUsers {
         LoadingFromFile.toFile(userDataTable, pathFile);
 
     }
-
 
 }

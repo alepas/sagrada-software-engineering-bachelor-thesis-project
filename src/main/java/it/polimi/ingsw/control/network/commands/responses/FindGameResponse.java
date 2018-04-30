@@ -2,15 +2,14 @@ package it.polimi.ingsw.control.network.commands.responses;
 
 import it.polimi.ingsw.control.network.commands.Response;
 import it.polimi.ingsw.control.network.commands.ResponseHandler;
+import it.polimi.ingsw.model.game.AbstractGame;
 
-public class LoginResponse implements Response {
-    public final String username;
-    public final String userToken;
+public class FindGameResponse implements Response {
+    public final String gameID;
     public final String error;
 
-    public LoginResponse(String username, String userToken, String error) {
-        this.username = username;
-        this.userToken = userToken;
+    public FindGameResponse(String gameID, String error) {
+        this.gameID = gameID;
         this.error = error;
     }
 

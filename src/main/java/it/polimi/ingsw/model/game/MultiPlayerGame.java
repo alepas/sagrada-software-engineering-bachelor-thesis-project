@@ -10,13 +10,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class MultiPlayerGame extends AbstractGame implements Runnable {
-    private Thread t;
     private int turnPlayer;
     private int roundPlayer;
     private int currentTurn;
 
-    public MultiPlayerGame(String user, int numPlayers) {
-        super(user, numPlayers);
+    public MultiPlayerGame(int numPlayers) {
+        super(numPlayers);
         turnPlayer = 0;
         roundPlayer = 0;
         currentTurn = 1;
@@ -25,16 +24,10 @@ public class MultiPlayerGame extends AbstractGame implements Runnable {
         numOfPublicObjectiveCards = GameConstants.NUM_PUBLIC_OBJ_IN_MULTIPLAYER_GAME;
     }
 
-    public void start(){
-        if (t == null){
-            t = new Thread(this);
-            t.start();
-        }
-    }
-
     @Override
     public void run() {
         //Codice che regola il funzionamento della partita
+        startGame();
     }
 
     public int getTurnPlayer() { return turnPlayer; }
@@ -132,7 +125,8 @@ public class MultiPlayerGame extends AbstractGame implements Runnable {
 
     }
 
-    public void addPlayer(String user) throws MaxPlayersExceededException, UserAlreadyInThisGameException {
+    public synchronized boolean addPlayer(String user) throws MaxPlayersExceededException, UserAlreadyInThisGameException {
+        //Return true if, after adding the player, the game is complete
         if (players.size() == numPlayers) throw new MaxPlayersExceededException(user, this);
 
         for (PlayerInGame player : players){
@@ -141,6 +135,7 @@ public class MultiPlayerGame extends AbstractGame implements Runnable {
 
         PlayerInGame player = new PlayerInGame(user, this);
         players.add(player);
+        return players.size() == numPlayers;
     }
 
     public void removePlayer(String user) throws UserNotInThisGameException {

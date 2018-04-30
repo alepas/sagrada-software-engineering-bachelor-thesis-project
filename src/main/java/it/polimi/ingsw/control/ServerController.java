@@ -1,5 +1,7 @@
 package it.polimi.ingsw.control;
 
+import it.polimi.ingsw.control.network.commands.requests.FindGameRequest;
+import it.polimi.ingsw.control.network.commands.responses.FindGameResponse;
 import it.polimi.ingsw.control.network.socket.SocketClientHandler;
 import it.polimi.ingsw.control.network.commands.RequestHandler;
 import it.polimi.ingsw.control.network.commands.Response;
@@ -7,6 +9,13 @@ import it.polimi.ingsw.control.network.commands.requests.CreateUserRequest;
 import it.polimi.ingsw.control.network.commands.requests.LoginRequest;
 import it.polimi.ingsw.control.network.commands.responses.CreateUserResponse;
 import it.polimi.ingsw.control.network.commands.responses.LoginResponse;
+import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidPlayersException;
+import it.polimi.ingsw.model.exceptions.userExceptions.CannotFindUserInDB;
+import it.polimi.ingsw.model.exceptions.userExceptions.CannotLoginUserException;
+import it.polimi.ingsw.model.exceptions.userExceptions.CannotRegisterUserException;
+import it.polimi.ingsw.model.exceptions.userExceptions.NullTokenException;
+import it.polimi.ingsw.model.game.AbstractGame;
+import it.polimi.ingsw.model.gamesdb.DatabaseGames;
 import it.polimi.ingsw.model.usersdb.DatabaseUsers;
 
 public class ServerController implements RequestHandler {
@@ -15,10 +24,12 @@ public class ServerController implements RequestHandler {
 
     // pieces of the model
     private final DatabaseUsers databaseUsers;
+    private final DatabaseGames databaseGames;
 
     public ServerController(SocketClientHandler clientHandler) {
         this.clientHandler = clientHandler;
         this.databaseUsers = DatabaseUsers.getInstance();
+        this.databaseGames = DatabaseGames.getInstance();
     }
 
     public void displayText(String text){
@@ -27,22 +38,53 @@ public class ServerController implements RequestHandler {
 
     @Override
     public Response handle(CreateUserRequest request) {
-//        String userToken = databaseUsers.registerUser(request.username, request.password);
+        String userToken = null;
+        String error = null;
 
-        //Ipotizziamo che la creazione dell'utente sia andata a buon fine
-        displayText("Creato l'utente: " + request.username);
-        String userToken = "jhvhue7o%3u2hs";
-        return new CreateUserResponse(request.username, userToken);
+        try {
+            userToken = databaseUsers.registerUser(request.username, request.password);
+            displayText("Creato l'utente: " + request.username);
+            databaseUsers.setSocketForUser(userToken, clientHandler.getSocket());
+        } catch (CannotRegisterUserException e){
+            displayText(e.getMessage());
+            error = e.getMessage();
+        }
+
+        return new CreateUserResponse(request.username, userToken, error);
     }
 
     @Override
     public Response handle(LoginRequest request) {
-//        String userToken = databaseUsers.login(request.username, request.password);
+        String userToken = null;
+        String error = null;
 
-        //Ipotizziamo che il login sia andato a buon fine
-        displayText("Login avvenuto: " + request.username);
-        String userToken = "jhd739264%3£s";
+        try {
+            userToken = databaseUsers.login(request.username, request.password);
+            displayText("Login avvenuto: " + request.username);
+        } catch (CannotLoginUserException e){
+            displayText(e.getMessage());
+            error = e.getMessage();
+        }
 
-        return new LoginResponse(request.username, userToken);
+        return new LoginResponse(request.username, userToken, error);
+    }
+
+    @Override
+    public Response handle(FindGameRequest request) {
+        String username = null;
+        try {
+            username = databaseUsers.getUsernameByToken(request.token);
+            AbstractGame game = databaseGames.findGame(username, request.numPlayers);
+            return new FindGameResponse(game.getGameID(), null);
+
+        } catch (NullTokenException e) {
+            return new FindGameResponse(null, e.getMessage());
+        } catch (CannotFindUserInDB e) {
+            return new FindGameResponse(null, e.getMessage());
+        } catch (InvalidPlayersException e){
+            return new FindGameResponse(null, e.getMessage());
+        } catch (Exception e){
+            return new FindGameResponse(null, e.getMessage());
+        }
     }
 }

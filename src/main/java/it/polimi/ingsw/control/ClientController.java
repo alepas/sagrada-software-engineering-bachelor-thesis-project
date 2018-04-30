@@ -1,12 +1,17 @@
 package it.polimi.ingsw.control;
 
+import it.polimi.ingsw.control.network.commands.requests.FindGameRequest;
+import it.polimi.ingsw.control.network.commands.responses.FindGameResponse;
 import it.polimi.ingsw.control.network.socket.SocketClient;
 import it.polimi.ingsw.control.network.commands.ResponseHandler;
 import it.polimi.ingsw.control.network.commands.requests.CreateUserRequest;
 import it.polimi.ingsw.control.network.commands.requests.LoginRequest;
 import it.polimi.ingsw.control.network.commands.responses.CreateUserResponse;
 import it.polimi.ingsw.control.network.commands.responses.LoginResponse;
-import it.polimi.ingsw.model.constants.CliConstants;
+import it.polimi.ingsw.model.constants.GameConstants;
+import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidPlayersException;
+import it.polimi.ingsw.model.exceptions.userExceptions.NullTokenException;
+import it.polimi.ingsw.model.game.AbstractGame;
 import it.polimi.ingsw.view.CliView;
 
 public class ClientController implements ResponseHandler {
@@ -32,6 +37,9 @@ public class ClientController implements ResponseHandler {
             else view.createUsername();
         } while (userToken == null);
 
+        //---------- L'utente è ora loggato ----------
+
+        view.mainMenuPhase();
     }
 
 //    ------------------- Client methods ---------------------------
@@ -47,6 +55,11 @@ public class ClientController implements ResponseHandler {
         return this.username;
     }
 
+    public void findGame(int numPlayers) {
+        client.request(new FindGameRequest(userToken, numPlayers));
+        client.nextResponse().handle(this);
+    }
+
 
 //    ------------------ Response handling -------------------------
     public void cleanUser(){
@@ -58,7 +71,7 @@ public class ClientController implements ResponseHandler {
     public void handle(CreateUserResponse response) {
         if(response.userToken == null){
             cleanUser();
-            view.displayText(CliConstants.CREATE_USER_ERROR);
+            view.displayText(response.error);
             return;
         }
         this.username = response.username;
@@ -69,10 +82,20 @@ public class ClientController implements ResponseHandler {
     public void handle(LoginResponse response) {
         if(response.userToken == null){
             cleanUser();
-            view.displayText(CliConstants.LOGIN_ERROR);
+            view.displayText(response.error);
             return;
         }
         this.username = response.username;
         this.userToken = response.userToken;
+    }
+
+    @Override
+    public void handle(FindGameResponse response) {
+        String gameID = response.gameID;
+        if (gameID != null) {
+            view.displayText("Aggiunto alla partita: " + gameID);
+        } else {
+            view.displayText(response.error);
+        }
     }
 }

@@ -10,11 +10,12 @@ import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 import it.polimi.ingsw.model.wpc.WpcDB;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.UUID;
 
-public abstract class AbstractGame {
+public abstract class AbstractGame implements Runnable, Serializable {
     private ArrayList<ToolCard> toolCards;
     private ArrayList<PublicObjectiveCard> publicObjectiveCards;
     private String gameID;
@@ -29,7 +30,7 @@ public abstract class AbstractGame {
     int numOfToolCards;
     int numOfPublicObjectiveCards;
 
-    AbstractGame(String user, int numPlayers) {
+    AbstractGame(int numPlayers) {
         toolCards = new ArrayList<>();
         publicObjectiveCards = new ArrayList<>();
         gameID = UUID.randomUUID().toString();
@@ -37,8 +38,6 @@ public abstract class AbstractGame {
         roundTrack = new RoundTrack();
         extractedDices = new ArrayList<>();
         players = new ArrayList<>();
-        PlayerInGame player = new PlayerInGame(user, this);
-        players.add(player);
         diceBag = new DiceBag();
         //Nota: settare il numero di private objectives nel costruttore della classe concreta
         //Nota: settare il numero di toolcard nel costruttore della classe concreta

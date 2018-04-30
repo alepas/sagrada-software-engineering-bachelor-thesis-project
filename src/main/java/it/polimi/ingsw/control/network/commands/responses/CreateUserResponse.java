@@ -6,10 +6,12 @@ import it.polimi.ingsw.control.network.commands.ResponseHandler;
 public class CreateUserResponse implements Response {
     public final String username;
     public final String userToken;
+    public final String error;
 
-    public CreateUserResponse(String username, String userToken) {
+    public CreateUserResponse(String username, String userToken, String error) {
         this.username = username;
         this.userToken = userToken;
+        this.error = error;
     }
 
     @Override

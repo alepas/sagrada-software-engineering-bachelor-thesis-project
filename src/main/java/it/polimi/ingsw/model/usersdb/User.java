@@ -5,6 +5,7 @@ import java.io.Serializable;
 
 class User implements Serializable {
 
+    private String username;
     private String password;
     private byte[] salt;
     private int wonGames;
@@ -12,13 +13,14 @@ class User implements Serializable {
     private int abandonedGames;
     private int ranking;
 
-    User(String password,byte[] salt){
-      this.password=password;
-      this.salt=salt;
-      wonGames=0;
-      lostGames=0;
-      abandonedGames=0;
-      ranking=0;
+    User(String username, String password,byte[] salt){
+        this.username = username;
+        this.password=password;
+        this.salt=salt;
+        wonGames=0;
+        lostGames=0;
+        abandonedGames=0;
+        ranking=0;
     }
 
 
@@ -37,6 +39,10 @@ class User implements Serializable {
 
     String getPassword() {
         return password;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     byte[] getSalt() {

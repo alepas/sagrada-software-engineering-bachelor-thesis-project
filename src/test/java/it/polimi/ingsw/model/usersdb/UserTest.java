@@ -11,7 +11,7 @@ public class UserTest {
 
     @BeforeEach
     void setUp(){
-        mio=new User(pwd,salt);
+        mio=new User("username", pwd,salt);
     }
 
     @Test
