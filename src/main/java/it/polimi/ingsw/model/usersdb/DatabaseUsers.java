@@ -26,7 +26,7 @@ public class DatabaseUsers {
         if (instance==null) {
 
             instance = new DatabaseUsers();
-            instance.pathFile=UserDBConstants.getPathDbFile();
+            pathFile=UserDBConstants.getPathDbFile();
             try {
                 instance.userDataTable = (HashMap<String, User>) LoadingFromFile.fromFile(pathFile);
 
@@ -44,7 +44,7 @@ public class DatabaseUsers {
     public synchronized static DatabaseUsers getInstance(String path){
         if (instance==null) {
             instance = new DatabaseUsers();
-            instance.pathFile=path;
+            pathFile=path;
             try {
                 instance.userDataTable = (HashMap<String, User>) LoadingFromFile.fromFile(pathFile);
 

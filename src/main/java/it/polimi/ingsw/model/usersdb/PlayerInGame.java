@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.usersdb;
 
+import it.polimi.ingsw.model.cards.ToolCard;
+import it.polimi.ingsw.model.exceptions.userExceptions.CannotUseToolCard;
 import it.polimi.ingsw.model.wpc.WPC;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.game.AbstractGame;
@@ -144,7 +146,33 @@ public class PlayerInGame {
         this.wpc=dbwpc.getWpcByID(wpcId).copyWpc();
     }
 
-    void UseToolCard(){}
+    void UseToolCard(String cardID){
+        boolean foundCard=false;
+        ToolCard card=null;
+        for (ToolCard tempCard:game.getToolCards()) {
+            if (tempCard.getID().equals(cardID)) {
+                foundCard = true;
+                card=tempCard;
+                break;
+            }
+        }
+        if (foundCard==false)
+            throw new CannotUseToolCard(cardID,0);
+        if (card.isUsed()==true) {
+            if (favours >= 2) {
+                favours = favours - 2;
+                card.use(this);
+            } else throw new CannotUseToolCard(cardID, 1);
+        }
+        else{
+            if (favours >= 1) {
+                favours = favours - 1;
+                card.use(this);
+            } else throw new CannotUseToolCard(cardID, 1);
+        }
+
+
+    }
 
 
     //isInGame() capire come implementarla
