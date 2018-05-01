@@ -23,7 +23,7 @@ public class SocketClientHandler implements Runnable{
         this.out = new ObjectOutputStream(socket.getOutputStream());
         this.in = new ObjectInputStream(socket.getInputStream());
 
-        this.controller = new ServerController(this);
+        this.controller = ServerController.getInstance();
     }
 
     public Socket getSocket() {
@@ -85,7 +85,4 @@ public class SocketClientHandler implements Runnable{
             printError("Errors in closing - " + e.getMessage());
         }
     }
-
-
-    //Mancano altri medoti, ricontrollare poi
 }

@@ -16,9 +16,6 @@ public class MultiPlayerGame extends AbstractGame implements Runnable {
 
     public MultiPlayerGame(int numPlayers) {
         super(numPlayers);
-        turnPlayer = 0;
-        roundPlayer = 0;
-        currentTurn = 1;
         numOfPrivateObjectivesForPlayer = GameConstants.NUM_PRIVATE_OBJ_FOR_PLAYER_IN_MULTIPLAYER_GAME;
         numOfToolCards = GameConstants.NUM_TOOL_CARDS_IN_MULTIPLAYER_GAME;
         numOfPublicObjectiveCards = GameConstants.NUM_PUBLIC_OBJ_IN_MULTIPLAYER_GAME;
@@ -27,7 +24,7 @@ public class MultiPlayerGame extends AbstractGame implements Runnable {
     @Override
     public void run() {
         //Codice che regola il funzionamento della partita
-        startGame();
+        initializeGame();
     }
 
     public int getTurnPlayer() { return turnPlayer; }
@@ -37,7 +34,7 @@ public class MultiPlayerGame extends AbstractGame implements Runnable {
     public int getCurrentTurn() { return currentTurn; }
 
     @Override
-    public void startGame() throws NotEnoughPlayersException {
+    public void initializeGame() throws NotEnoughPlayersException {
         if (players.size() < numPlayers){
             throw new NotEnoughPlayersException(this);
         }
@@ -46,6 +43,10 @@ public class MultiPlayerGame extends AbstractGame implements Runnable {
         extractToolCards();
         extractPublicObjectives();
         shufflePlayers();
+
+        turnPlayer = 0;
+        roundPlayer = 0;
+        currentTurn = 1;
     }
 
     private void shufflePlayers(){ Collections.shuffle(players); }
@@ -138,7 +139,7 @@ public class MultiPlayerGame extends AbstractGame implements Runnable {
         return players.size() == numPlayers;
     }
 
-    public void removePlayer(String user) throws UserNotInThisGameException {
+    public synchronized void removePlayer(String user) throws UserNotInThisGameException {
         for (PlayerInGame player : players){
             if(player.getUser().equals(user)){
                 players.remove(player);

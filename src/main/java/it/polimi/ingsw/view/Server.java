@@ -1,6 +1,7 @@
 package it.polimi.ingsw.view;
 
-import it.polimi.ingsw.control.Controller;
+import it.polimi.ingsw.control.vecchioRmi.Controller;
+import it.polimi.ingsw.model.constants.NetworkConstants;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -13,7 +14,7 @@ public class Server {
         System.out.println(">>> Controller exported");
 
         Registry registry = LocateRegistry.getRegistry();
-        registry.rebind("controller", controller);
+        registry.rebind(NetworkConstants.RMI_CONTROLLER_ADDRESS, controller);
     }
 }
 

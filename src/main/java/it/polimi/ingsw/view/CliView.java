@@ -2,7 +2,6 @@ package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.control.ClientController;
 import it.polimi.ingsw.model.constants.CliConstants;
-import it.polimi.ingsw.model.constants.GameConstants;
 
 import java.util.Scanner;
 

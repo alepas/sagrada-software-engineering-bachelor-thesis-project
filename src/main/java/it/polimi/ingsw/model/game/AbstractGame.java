@@ -22,8 +22,8 @@ public abstract class AbstractGame implements Runnable, Serializable {
     private ArrayList<Dice> extractedDices;
     private DiceBag diceBag;
 
-    int numPlayers;
     RoundTrack roundTrack;
+    int numPlayers;
     ArrayList<PlayerInGame> players;
 
     int numOfPrivateObjectivesForPlayer;
@@ -34,17 +34,15 @@ public abstract class AbstractGame implements Runnable, Serializable {
         toolCards = new ArrayList<>();
         publicObjectiveCards = new ArrayList<>();
         gameID = UUID.randomUUID().toString();
-        this.numPlayers = numPlayers;
-        roundTrack = new RoundTrack();
         extractedDices = new ArrayList<>();
-        players = new ArrayList<>();
         diceBag = new DiceBag();
-        //Nota: settare il numero di private objectives nel costruttore della classe concreta
-        //Nota: settare il numero di toolcard nel costruttore della classe concreta
-        //Nota: settare il numero di public objectives nel costruttore della classe concreta
+
+        roundTrack = new RoundTrack();
+        this.numPlayers = numPlayers;
+        players = new ArrayList<>();
     }
 
-    abstract void startGame();
+    abstract void initializeGame();
     abstract void endGame();
     abstract void nextRound();
     abstract void nextTurn();
@@ -140,4 +138,23 @@ public abstract class AbstractGame implements Runnable, Serializable {
 
     public void removeExtractedDice(Dice dice){ extractedDices.remove(dice); }
 
+    public DiceBag getDiceBag() {
+        return diceBag;
+    }
+
+    public RoundTrack getRoundTrack() {
+        return roundTrack;
+    }
+
+    public int getNumOfPrivateObjectivesForPlayer() {
+        return numOfPrivateObjectivesForPlayer;
+    }
+
+    public int getNumOfToolCards() {
+        return numOfToolCards;
+    }
+
+    public int getNumOfPublicObjectiveCards() {
+        return numOfPublicObjectiveCards;
+    }
 }

@@ -1,10 +1,14 @@
 package it.polimi.ingsw.control;
 
+import it.polimi.ingsw.control.network.rmi.RemoteServer;
+import it.polimi.ingsw.control.network.rmi.RmiClient;
 import it.polimi.ingsw.control.network.socket.SocketClient;
-import it.polimi.ingsw.model.constants.SocketConstants;
+import it.polimi.ingsw.model.constants.NetworkConstants;
 
 import java.io.IOException;
 import java.net.ConnectException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.Scanner;
 
 public class LaunchClient {
@@ -55,7 +59,7 @@ public class LaunchClient {
 
     private static void startSocketClient() throws IOException{
         SocketClient client = new SocketClient(
-                SocketConstants.SOCKET_SERVER_ADDRESS, SocketConstants.SOCKET_SERVER_PORT);
+                NetworkConstants.SERVER_ADDRESS, NetworkConstants.SOCKET_SERVER_PORT);
 
         client.init();
         ClientController controller = new ClientController(client);
@@ -65,8 +69,10 @@ public class LaunchClient {
     }
 
 
-    private static void startRmiClient() {
-
+    private static void startRmiClient() throws Exception{
+        RmiClient client = new RmiClient();
+        ClientController controller = new ClientController(client);
+        controller.run();
     }
 
 

@@ -1,23 +1,20 @@
 package it.polimi.ingsw.control;
 
+import it.polimi.ingsw.control.network.NetworkClient;
+import it.polimi.ingsw.control.network.commands.Request;
 import it.polimi.ingsw.control.network.commands.requests.FindGameRequest;
 import it.polimi.ingsw.control.network.commands.responses.FindGameResponse;
-import it.polimi.ingsw.control.network.socket.SocketClient;
 import it.polimi.ingsw.control.network.commands.ResponseHandler;
 import it.polimi.ingsw.control.network.commands.requests.CreateUserRequest;
 import it.polimi.ingsw.control.network.commands.requests.LoginRequest;
 import it.polimi.ingsw.control.network.commands.responses.CreateUserResponse;
+import it.polimi.ingsw.control.network.commands.responses.GenericErrorResponse;
 import it.polimi.ingsw.control.network.commands.responses.LoginResponse;
-import it.polimi.ingsw.model.constants.GameConstants;
-import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidPlayersException;
-import it.polimi.ingsw.model.exceptions.userExceptions.NullTokenException;
-import it.polimi.ingsw.model.game.AbstractGame;
 import it.polimi.ingsw.view.CliView;
 
 public class ClientController implements ResponseHandler {
     // reference to networking layer
-    private final SocketClient client;
-    private Thread receiver;
+    private final NetworkClient client;
 
     // the view
     private final CliView view;
@@ -26,7 +23,7 @@ public class ClientController implements ResponseHandler {
     private String username;
     private String userToken;
 
-    public ClientController(SocketClient client) {
+    public ClientController(NetworkClient client) {
         this.client = client;
         this.view = new CliView(this);
     }
@@ -42,26 +39,26 @@ public class ClientController implements ResponseHandler {
         view.mainMenuPhase();
     }
 
-//    ------------------- Client methods ---------------------------
+    //    ------------------- Client methods ---------------------------
     public String createUser(String username, String password){
-        client.request(new CreateUserRequest(username, password));
-        client.nextResponse().handle(this);
+        Request request = new CreateUserRequest(username, password);
+        client.request(request).handle(this);
         return this.username;
     }
 
     public String login(String username, String password){
-        client.request(new LoginRequest(username, password));
-        client.nextResponse().handle(this);
+        Request request = new LoginRequest(username, password);
+        client.request(request).handle(this);
         return this.username;
     }
 
     public void findGame(int numPlayers) {
-        client.request(new FindGameRequest(userToken, numPlayers));
-        client.nextResponse().handle(this);
+        Request request = new FindGameRequest(userToken, numPlayers);
+        client.request(request).handle(this);
     }
 
 
-//    ------------------ Response handling -------------------------
+    //    ------------------ Response handling -------------------------
     public void cleanUser(){
         this.username = null;
         this.userToken = null;
@@ -97,5 +94,10 @@ public class ClientController implements ResponseHandler {
         } else {
             view.displayText(response.error);
         }
+    }
+
+    @Override
+    public void handle(GenericErrorResponse response) {
+        view.displayText(response.error);
     }
 }

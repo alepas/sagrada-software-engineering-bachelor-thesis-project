@@ -27,31 +27,46 @@ public class MultiPlayerGameTest {
 
     @Test
     public void checkMultiPlayerGameConstructor(){
-        Assert.assertNotNull(game.getGameID());
-        Assert.assertEquals(1, game.getPlayers().size());
         Assert.assertEquals(0, game.getToolCards().size());
         Assert.assertEquals(0, game.getPublicObjectiveCards().size());
+        Assert.assertNotNull(game.getGameID());
         Assert.assertEquals(0, game.getExtractedDices().size());
-        Assert.assertEquals(0, game.getTurnPlayer());
-        Assert.assertEquals(0, game.getRoundPlayer());
-        Assert.assertEquals(1, game.getCurrentTurn());
-        Assert.assertEquals(username1, game.getPlayers().iterator().next().getUser());
-        Assert.assertTrue(game.getNumPlayers() >= 2 && game.getNumPlayers() <= 4);
+        Assert.assertNotNull(game.getDiceBag());
+        Assert.assertNotNull(game.getRoundTrack());
+        Assert.assertTrue(game.getNumPlayers() >= GameConstants.MIN_NUM_PLAYERS &&
+                game.getNumPlayers() <= GameConstants.MAX_NUM_PLAYERS);
+        Assert.assertEquals(0, game.getPlayers().size());
+        Assert.assertEquals(GameConstants.NUM_PRIVATE_OBJ_FOR_PLAYER_IN_MULTIPLAYER_GAME, game.numOfPrivateObjectivesForPlayer);
+        Assert.assertEquals(GameConstants.NUM_TOOL_CARDS_IN_MULTIPLAYER_GAME, game.numOfToolCards);
+        Assert.assertEquals(GameConstants.NUM_PUBLIC_OBJ_IN_MULTIPLAYER_GAME, game.numOfPublicObjectiveCards);
     }
 
     @Test
     public void addingAndRemovingPlayersTest() {
-        Assert.assertEquals(1, game.getPlayers().size());
-        game.addPlayer(username2);
-        Assert.assertEquals(2, game.getPlayers().size());
-        game.addPlayer(username3);
-        Assert.assertEquals(3, game.getPlayers().size());
+        Boolean bool;
+        Assert.assertEquals(0, game.getPlayers().size());
 
+        //Aggiunta fino a 3 utenti
+        bool = game.addPlayer(username1);
+        Assert.assertEquals(1, game.getPlayers().size());
+        Assert.assertFalse(bool);
+
+        bool = game.addPlayer(username2);
+        Assert.assertEquals(2, game.getPlayers().size());
+        Assert.assertFalse(bool);
+
+        bool = game.addPlayer(username3);
+        Assert.assertEquals(3, game.getPlayers().size());
+        Assert.assertTrue(bool);
+
+        //Rimozione e aggiunta dell'utente 2
         game.removePlayer(username2);
         Assert.assertEquals(2, game.getPlayers().size());
-        game.addPlayer(username2);
+        bool = game.addPlayer(username2);
         Assert.assertEquals(3, game.getPlayers().size());
+        Assert.assertTrue(bool);
 
+        //Rimozione di tutti gli utenti
         game.removePlayer(username1);
         Assert.assertEquals(2, game.getPlayers().size());
         game.removePlayer(username2);
@@ -62,13 +77,17 @@ public class MultiPlayerGameTest {
 
     @Test(expected = MaxPlayersExceededException.class)
     public void addPlayersIllegalTest1() {
+        game.addPlayer(username1);
         game.addPlayer(username2);
         game.addPlayer(username3);
         game.addPlayer(username4);
     }
 
     @Test(expected = UserAlreadyInThisGameException.class)
-    public void addPlayersIllegalTest2() { game.addPlayer(username1); }
+    public void addPlayersIllegalTest2() {
+        game.addPlayer(username1);
+        game.addPlayer(username1);
+    }
 
     @Test(expected = UserNotInThisGameException.class)
     public void removePlayerIllegalTest() { game.removePlayer(username2); }
@@ -112,6 +131,7 @@ public class MultiPlayerGameTest {
 
     @Test
     public void extractWpcTest(){
+        game.addPlayer(username1);
         game.addPlayer(username2);
         game.addPlayer(username3);
         game.extractWPCs();
@@ -171,23 +191,27 @@ public class MultiPlayerGameTest {
     }
 
     @Test
-    public void startGameTest() {
+    public void initializeGameTest() {
+        game.addPlayer(username1);
         game.addPlayer(username2);
         game.addPlayer(username3);
-        game.startGame();
+        game.initializeGame();
 
         Assert.assertEquals(3, game.getPlayers().size());
     }
 
     @Test(expected = NotEnoughPlayersException.class)
-    public void starGameIllegalTest() {
-        game.startGame();
+    public void initializeGameIllegalTest() {
+        game.initializeGame();
     }
 
     @Test
     public void nextPlayerTest1(){
+        game.addPlayer(username1);
         game.addPlayer(username2);
         game.addPlayer(username3);
+
+        game.setCurrentTurn(1);
 
         Assert.assertEquals(1, game.nextPlayer());
         game.setTurnPlayer(game.nextPlayer());
@@ -210,9 +234,11 @@ public class MultiPlayerGameTest {
 
     @Test
     public void nextPlayerTest2(){
+        game.addPlayer(username1);
         game.addPlayer(username2);
         game.addPlayer(username3);
 
+        game.setCurrentTurn(1);
         game.setTurnPlayer(1);
 
         Assert.assertEquals(2, game.nextPlayer());
@@ -236,9 +262,11 @@ public class MultiPlayerGameTest {
 
     @Test
     public void nextPlayerTest3(){
+        game.addPlayer(username1);
         game.addPlayer(username2);
         game.addPlayer(username3);
 
+        game.setCurrentTurn(1);
         game.setTurnPlayer(2);
 
         Assert.assertEquals(0, game.nextPlayer());

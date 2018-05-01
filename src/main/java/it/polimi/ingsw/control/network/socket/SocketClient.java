@@ -1,5 +1,6 @@
 package it.polimi.ingsw.control.network.socket;
 
+import it.polimi.ingsw.control.network.NetworkClient;
 import it.polimi.ingsw.control.network.commands.Request;
 import it.polimi.ingsw.control.network.commands.Response;
 
@@ -8,7 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class SocketClient {
+public class SocketClient implements NetworkClient {
     private final String host;
     private final int port;
     private Socket connection;
@@ -32,24 +33,14 @@ public class SocketClient {
         connection.close();
     }
 
-
-    public Response nextResponse() {
-        try {
-            return ((Response) in.readObject());
-        } catch (IOException e) {
-            System.err.println("Exception on network: " + e.getMessage());
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Wrong deserialization: " + e.getMessage());
-        }
-
-        return null;
-    }
-
-    public void request(Request request) {
+    public Response request(Request request) {
         try {
             out.writeObject(request);
+            return ((Response) in.readObject());
         } catch (IOException e) {
-            System.err.println("Exception on network: " + e.getMessage());
+            throw new RuntimeException("Exception on network: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Wrong deserialization: " + e.getMessage());
         }
     }
 }
