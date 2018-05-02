@@ -4,7 +4,7 @@ import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.exceptions.userExceptions.CannotUseToolCard;
 import it.polimi.ingsw.model.wpc.WPC;
 import it.polimi.ingsw.model.dicebag.Color;
-import it.polimi.ingsw.model.game.AbstractGame;
+import it.polimi.ingsw.model.game.Game;
 import it.polimi.ingsw.model.wpc.WpcDB;
 
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class PlayerInGame {
     private String username;
     private DatabaseUsers db;
-    private AbstractGame game;
+    private Game game;
     private Color privateObjective1;
     private Color privateObjective2;
     private int favours;
@@ -27,7 +27,7 @@ public class PlayerInGame {
     private Game activegame;
 */
 
-    public PlayerInGame(String user, AbstractGame game){
+    public PlayerInGame(String user, Game game){
         this.game=game;
         db=DatabaseUsers.getInstance();
         username=user;

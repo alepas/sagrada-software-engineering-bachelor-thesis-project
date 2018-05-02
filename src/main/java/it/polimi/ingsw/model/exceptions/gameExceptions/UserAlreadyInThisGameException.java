@@ -1,12 +1,12 @@
 package it.polimi.ingsw.model.exceptions.gameExceptions;
 
-import it.polimi.ingsw.model.game.AbstractGame;
+import it.polimi.ingsw.model.game.Game;
 
 public class UserAlreadyInThisGameException extends RuntimeException {
     private final String username;
-    private final AbstractGame game;
+    private final Game game;
 
-    public UserAlreadyInThisGameException(String username, AbstractGame game) {
+    public UserAlreadyInThisGameException(String username, Game game) {
         this.username = username;
         this.game = game;
     }

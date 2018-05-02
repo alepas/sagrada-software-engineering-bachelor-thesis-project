@@ -9,12 +9,12 @@ import it.polimi.ingsw.model.usersdb.PlayerInGame;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class MultiPlayerGame extends AbstractGame implements Runnable {
+public class MultiplayerGame extends Game implements Runnable {
     private int turnPlayer;
     private int roundPlayer;
     private int currentTurn;
 
-    public MultiPlayerGame(int numPlayers) {
+    public MultiplayerGame(int numPlayers) {
         super(numPlayers);
         numOfPrivateObjectivesForPlayer = GameConstants.NUM_PRIVATE_OBJ_FOR_PLAYER_IN_MULTIPLAYER_GAME;
         numOfToolCards = GameConstants.NUM_TOOL_CARDS_IN_MULTIPLAYER_GAME;

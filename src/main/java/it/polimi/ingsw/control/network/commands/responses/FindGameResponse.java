@@ -2,7 +2,6 @@ package it.polimi.ingsw.control.network.commands.responses;
 
 import it.polimi.ingsw.control.network.commands.Response;
 import it.polimi.ingsw.control.network.commands.ResponseHandler;
-import it.polimi.ingsw.model.game.AbstractGame;
 
 public class FindGameResponse implements Response {
     public final String gameID;
