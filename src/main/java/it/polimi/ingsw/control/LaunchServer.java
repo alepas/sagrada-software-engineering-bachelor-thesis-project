@@ -44,5 +44,16 @@ public class LaunchServer {
         } catch (RemoteException e){
             System.out.println(">>> " + e.getMessage());
         }
+
+//        try {
+//            Registry registry = LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
+//            RmiServer rmiServer = new RmiServer(ServerController.getInstance());
+//            RemoteServer remoteServer = (RemoteServer) UnicastRemoteObject.exportObject(rmiServer, 0);
+//
+//            registry.rebind(NetworkConstants.RMI_CONTROLLER_NAME, remoteServer);
+//            System.out.println(">>> RMI Server is running");
+//        } catch (RemoteException e){
+//            System.out.println(">>> " + e.getMessage());
+//        }
     }
 }

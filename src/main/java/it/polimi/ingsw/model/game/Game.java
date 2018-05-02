@@ -4,7 +4,6 @@ import it.polimi.ingsw.model.constants.GameConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.dicebag.DiceBag;
-import it.polimi.ingsw.model.wpc.WPC;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
@@ -15,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.UUID;
 
-public abstract class AbstractGame implements Runnable, Serializable {
+public abstract class Game implements Runnable, Serializable {
     private ArrayList<ToolCard> toolCards;
     private ArrayList<PublicObjectiveCard> publicObjectiveCards;
     private String gameID;
@@ -30,7 +29,7 @@ public abstract class AbstractGame implements Runnable, Serializable {
     int numOfToolCards;
     int numOfPublicObjectiveCards;
 
-    AbstractGame(int numPlayers) {
+    Game(int numPlayers) {
         toolCards = new ArrayList<>();
         publicObjectiveCards = new ArrayList<>();
         gameID = UUID.randomUUID().toString();

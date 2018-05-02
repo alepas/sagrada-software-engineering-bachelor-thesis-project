@@ -16,13 +16,13 @@ import java.util.ArrayList;
 
 import static org.mockito.Mockito.mock;
 
-public class MultiPlayerGameTest {
-    private MultiPlayerGame game;
+public class MultiplayerGameTest {
+    private MultiplayerGame game;
     private String username1 = "John", username2 = "Alice", username3 = "Bob", username4 = "Eva";
 
     @Before
     public void before() {
-        game = new MultiPlayerGame(3);
+        game = new MultiplayerGame(3);
     }
 
     @Test
@@ -290,8 +290,8 @@ public class MultiPlayerGameTest {
 
     @Test(expected = MaxNumberOfTurnsPlayedExeption.class)
     public void nextPlayerIllegalTest(){
+        game.addPlayer(username1);
         game.addPlayer(username2);
-        game.addPlayer(username3);
 
         game.setCurrentTurn(game.getNumPlayers()*GameConstants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME);
 
@@ -300,6 +300,7 @@ public class MultiPlayerGameTest {
 
     @Test
     public void nextTurnAndNextRoundTest(){
+        game.addPlayer(username1);
         game.addPlayer(username2);
         game.addPlayer(username3);
         Assert.assertEquals(0, game.getRoundPlayer());

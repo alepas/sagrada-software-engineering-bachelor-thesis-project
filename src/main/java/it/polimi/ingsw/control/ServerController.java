@@ -13,7 +13,7 @@ import it.polimi.ingsw.model.exceptions.userExceptions.CannotFindUserInDB;
 import it.polimi.ingsw.model.exceptions.userExceptions.CannotLoginUserException;
 import it.polimi.ingsw.model.exceptions.userExceptions.CannotRegisterUserException;
 import it.polimi.ingsw.model.exceptions.userExceptions.NullTokenException;
-import it.polimi.ingsw.model.game.AbstractGame;
+import it.polimi.ingsw.model.game.Game;
 import it.polimi.ingsw.model.gamesdb.DatabaseGames;
 import it.polimi.ingsw.model.usersdb.DatabaseUsers;
 
@@ -78,7 +78,7 @@ public class ServerController implements RequestHandler {
         String username = null;
         try {
             username = databaseUsers.getUsernameByToken(request.token);
-            AbstractGame game = databaseGames.findGame(username, request.numPlayers);
+            Game game = databaseGames.findGame(username, request.numPlayers);
             return new FindGameResponse(game.getGameID(), null);
 
         } catch (NullTokenException e) {
