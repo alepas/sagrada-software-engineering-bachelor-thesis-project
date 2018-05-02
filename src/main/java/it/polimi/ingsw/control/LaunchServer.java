@@ -35,7 +35,7 @@ public class LaunchServer {
 
         //Avvio di RMI
         try {
-            Registry registry = LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
+            Registry registry = LocateRegistry.getRegistry();
             RmiServer rmiServer = new RmiServer(ServerController.getInstance());
             RemoteServer remoteServer = (RemoteServer) UnicastRemoteObject.exportObject(rmiServer, 0);
 

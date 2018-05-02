@@ -47,7 +47,6 @@ class LoadingFromFile {
 
     public static void toFile(Object root, String name) {
 
-        Object output = null;
         FileOutputStream fos = null;
         ObjectOutputStream oos = null;
 
