@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.usersdb;
 
-import it.polimi.ingsw.model.exceptions.userExceptions.PasswordParsingException;
+import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.PasswordParsingException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

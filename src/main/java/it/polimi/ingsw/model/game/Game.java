@@ -44,8 +44,8 @@ public abstract class Game implements Runnable, Serializable {
     abstract void initializeGame();
     abstract void endGame();
     abstract void nextRound();
-    abstract void nextTurn();
-    abstract void calculateScore();
+    public abstract void nextTurn();
+    public abstract void calculateScore();
     abstract void saveScore();
 
     void extractPrivateObjectives() {
