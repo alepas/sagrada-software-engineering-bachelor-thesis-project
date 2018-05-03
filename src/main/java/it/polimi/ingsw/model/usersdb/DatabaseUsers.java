@@ -108,7 +108,7 @@ public class DatabaseUsers {
         String storedPasswordHash;
         String newtoken=null;
         PlayerInGame playerInGame=null;
-        Socket socket=null;
+        Socket oldsocket=null;
         // username isn't registered
         if(!usersByUsername.containsKey(username) ){
             throw new CannotLoginUserException(username,2);
@@ -130,10 +130,11 @@ public class DatabaseUsers {
             {
                 String oldtoken= tokenByUsername.get(username);
                 playerInGame=playerInGameByToken.get(oldtoken);
-                socket= socketByToken.get(oldtoken);
-                if (socket!=null) {
+                oldsocket= socketByToken.get(oldtoken);
+                if (oldsocket!=null) {
                     try {
-                        socket.close();
+                        oldsocket.close();
+                        socketByToken.remove(oldtoken);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -145,6 +146,56 @@ public class DatabaseUsers {
             tokenByUsername.put(username,newtoken);
             playerInGameByToken.put(newtoken,playerInGame);
 
+            return newtoken;
+        }
+        else{
+            throw new CannotLoginUserException(username,1);
+        }
+    }
+
+    public synchronized String login(String username, String password, Socket socket) throws  CannotLoginUserException {
+        String passwordHash;
+        String storedPasswordHash;
+        String newtoken=null;
+        PlayerInGame playerInGame=null;
+        Socket oldsocket=null;
+        // username isn't registered
+        if(!usersByUsername.containsKey(username) ){
+            throw new CannotLoginUserException(username,2);
+        }
+        User foundUser=null;
+        foundUser= usersByUsername.get(username);
+        try {
+            byte[] salt=foundUser.getSalt();
+
+
+            passwordHash = SHAFunction.getShaPwd(password, salt);
+        } catch (PasswordParsingException e) {
+            throw new CannotLoginUserException(username,0);
+        }
+        storedPasswordHash = foundUser.getPassword();
+        if (passwordHash.equals(storedPasswordHash)){
+            newtoken = UUID.randomUUID().toString();
+            if (tokenByUsername.containsKey(username))
+            {
+                String oldtoken= tokenByUsername.get(username);
+                playerInGame=playerInGameByToken.get(oldtoken);
+                oldsocket= socketByToken.get(oldtoken);
+                if (oldsocket!=null) {
+                    try {
+                        oldsocket.close();
+                        socketByToken.remove(oldtoken);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                usersByToken.remove(oldtoken);
+            }
+
+            usersByToken.put(newtoken,foundUser);
+            tokenByUsername.put(username,newtoken);
+            playerInGameByToken.put(newtoken,playerInGame);
+            socketByToken.put(newtoken, socket);
             return newtoken;
         }
         else{
@@ -164,10 +215,10 @@ public class DatabaseUsers {
         return username;
     }
 
-    public synchronized void setSocketForUser(String token, Socket socket) {
+    /*public synchronized void setSocketForUser(String token, Socket socket) {
         socketByToken.put(token, socket);
     }
-
+*/
 
     public synchronized int getWonGamesFromToken (String token) throws NullTokenException, CannotFindUserInDB {
         if(token==null)
@@ -232,6 +283,12 @@ public class DatabaseUsers {
         playerInGameByToken.remove(tokenByUsername.get(play.getUser()));
     }
 
+
+    public synchronized PlayerInGame getPlayerInGameFromToken(String token){
+        if(token==null)
+            throw new NullTokenException();
+        return playerInGameByToken.get(token);
+    }
 
     synchronized void addWonGamesFromUsername(String user)throws CannotFindUserInDB{
 

@@ -88,9 +88,15 @@ public class PlayerInGame {
         return wpc;
     }
 
-    public void setWPC(String id) {
-        this.wpc =  WpcDB.getWpcByID(id);
+    public boolean setWPC(String id) {
+        if (wpc==null) {
+            wpc = WpcDB.getWpcByID(id);
+            favours = this.wpc.getFavours();
+            return true;
+        }
+        else return false;
     }
+
 
     public int getFavours(){
 
@@ -107,13 +113,6 @@ public class PlayerInGame {
         return privateObjective2;
     }
 
-
-    private boolean removeFavours(int favoursToRemove){
-        if (favours<favoursToRemove)
-            return false;
-        favours-=favoursToRemove;
-        return true;
-    }
 
     private void setFavours(int favours){
         this.favours=favours;
@@ -141,12 +140,12 @@ public class PlayerInGame {
         //this.wpc2= wpc2.getWpcByID(id); // id è una stringa
     }
 
-    void setWpc(String wpcId){
+    public void setWpc(String wpcId){
         WpcDB dbwpc=WpcDB.getInstance();
         this.wpc=dbwpc.getWpcByID(wpcId).copyWpc();
     }
 
-    void UseToolCard(String cardID){
+    public void UseToolCard(String cardID){
         boolean foundCard=false;
         ToolCard card=null;
         for (ToolCard tempCard:game.getToolCards()) {
@@ -174,6 +173,9 @@ public class PlayerInGame {
 
     }
 
+    public Game getGame() {
+        return game;
+    }
 
     //isInGame() capire come implementarla
 
