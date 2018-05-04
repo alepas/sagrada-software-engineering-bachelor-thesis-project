@@ -10,10 +10,10 @@ import it.polimi.ingsw.control.network.commands.responses.CreateUserResponse;
 import it.polimi.ingsw.control.network.commands.responses.LoginResponse;
 import it.polimi.ingsw.control.network.socket.SocketClientHandler;
 import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidPlayersException;
-import it.polimi.ingsw.model.exceptions.userExceptions.CannotFindUserInDB;
-import it.polimi.ingsw.model.exceptions.userExceptions.CannotLoginUserException;
-import it.polimi.ingsw.model.exceptions.userExceptions.CannotRegisterUserException;
-import it.polimi.ingsw.model.exceptions.userExceptions.NullTokenException;
+import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotFindUserInDBException;
+import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotLoginUserException;
+import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotRegisterUserException;
+import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.NullTokenException;
 import it.polimi.ingsw.model.game.Game;
 import it.polimi.ingsw.model.gamesdb.DatabaseGames;
 import it.polimi.ingsw.model.usersdb.DatabaseUsers;
@@ -81,7 +81,7 @@ public class ServerController implements RequestHandler {
 
         } catch (NullTokenException e) {
             return new FindGameResponse(null, e.getMessage());
-        } catch (CannotFindUserInDB e) {
+        } catch (CannotFindUserInDBException e) {
             return new FindGameResponse(null, e.getMessage());
         } catch (InvalidPlayersException e){
             return new FindGameResponse(null, e.getMessage());

@@ -115,8 +115,10 @@ public class MultiplayerGame extends Game implements Runnable {
 
     @Override
     public void nextTurn() {
+        players.get(turnPlayer).setNotActive();
         if (currentTurn < GameConstants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME*getNumPlayers()) {
             turnPlayer = nextPlayer();
+            players.get(turnPlayer).setActive();
             currentTurn++;
         } else {
 //            nextRound();

@@ -1,10 +1,10 @@
-package it.polimi.ingsw.model.exceptions.userExceptions;
+package it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions;
 
-public class CannotUseToolCard extends RuntimeException{
+public class CannotUseToolCardException extends RuntimeException{
     private int cause;
     private String cardID;
 
-    public CannotUseToolCard(String card, int cause) {
+    public CannotUseToolCardException(String card, int cause) {
         this.cause=cause;
         this.cardID = card;
     }

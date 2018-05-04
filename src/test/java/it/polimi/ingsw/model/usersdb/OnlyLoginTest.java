@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.usersdb;
 
 
-import it.polimi.ingsw.model.exceptions.userExceptions.CannotLoginUserException;
+import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotLoginUserException;
 
 import java.io.BufferedReader;
 import java.io.IOException;

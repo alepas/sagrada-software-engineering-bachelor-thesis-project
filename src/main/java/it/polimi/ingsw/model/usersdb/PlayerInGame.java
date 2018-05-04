@@ -1,7 +1,8 @@
 package it.polimi.ingsw.model.usersdb;
 
 import it.polimi.ingsw.model.cards.ToolCard;
-import it.polimi.ingsw.model.exceptions.userExceptions.CannotUseToolCard;
+import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotUseToolCardException;
+import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.PlayerNotAuthorizedException;
 import it.polimi.ingsw.model.wpc.WPC;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.game.Game;
@@ -91,8 +92,8 @@ public class PlayerInGame implements Serializable {
 
     public boolean setWPC(String id) {
         if (wpc==null) {
-            wpc = WpcDB.getWpcByID(id);
-            favours = this.wpc.getFavours();
+            WpcDB dbwpc=WpcDB.getInstance();
+            this.wpc=dbwpc.getWpcByID(id).copyWpc();
             return true;
         }
         else return false;
@@ -115,23 +116,23 @@ public class PlayerInGame implements Serializable {
     }
 
 
-    private void setFavours(int favours){
-        this.favours=favours;
-    }
-
     public void setPrivateObjective1(Color color) {
-        this.privateObjective1=color;
+        if (privateObjective1==null)
+            privateObjective1=color;
 
     }
 
     public void setPrivateObjective2(Color color) {
-        this.privateObjective2=color;
+        if (privateObjective2==null)
+            privateObjective2=color;
 
     }
 
 
-    public void endTurn(){
-        //game.
+    public void endTurn()throws PlayerNotAuthorizedException{
+        if (!active)
+            throw new PlayerNotAuthorizedException(username);
+        game.nextTurn();
     }
 
     public void chooseWPC(ArrayList<String> cards){
@@ -141,12 +142,10 @@ public class PlayerInGame implements Serializable {
         //this.wpc2= wpc2.getWpcByID(id); // id è una stringa
     }
 
-    public void setWpc(String wpcId){
-        WpcDB dbwpc=WpcDB.getInstance();
-        this.wpc=dbwpc.getWpcByID(wpcId).copyWpc();
-    }
 
-    public void UseToolCard(String cardID){
+    public void useToolCard(String cardID) throws CannotUseToolCardException, PlayerNotAuthorizedException {
+        if (!active)
+            throw new PlayerNotAuthorizedException(username);
         boolean foundCard=false;
         ToolCard card=null;
         for (ToolCard tempCard:game.getToolCards()) {
@@ -157,27 +156,38 @@ public class PlayerInGame implements Serializable {
             }
         }
         if (foundCard==false)
-            throw new CannotUseToolCard(cardID,0);
+            throw new CannotUseToolCardException(cardID,0);
         if (card.isUsed()==true) {
             if (favours >= 2) {
                 favours = favours - 2;
                 card.use(this);
-            } else throw new CannotUseToolCard(cardID, 1);
+            } else throw new CannotUseToolCardException(cardID, 1);
         }
         else{
             if (favours >= 1) {
                 favours = favours - 1;
                 card.use(this);
-            } else throw new CannotUseToolCard(cardID, 1);
+            } else throw new CannotUseToolCardException(cardID, 1);
         }
 
 
     }
 
+    // public void placeDice( HO BISOGNO DI RIUSCIRE A CAPIRE QUAL E' IL DADO A CUI MI RIFERISCO.. AGGIUNGIAMO UN ID AL SINGOLO DADO?
+
+
     public Game getGame() {
         return game;
     }
 
-    //isInGame() capire come implementarla
+    public void setActive() {
+        this.active = true;
+    }
+
+    public void setNotActive() {
+        this.active = false;
+    }
+
+
 
 }

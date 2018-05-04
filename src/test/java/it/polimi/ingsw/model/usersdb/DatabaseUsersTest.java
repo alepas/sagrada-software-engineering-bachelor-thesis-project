@@ -1,10 +1,10 @@
 package it.polimi.ingsw.model.usersdb;
 
 
-import it.polimi.ingsw.model.exceptions.userExceptions.CannotFindUserInDB;
-import it.polimi.ingsw.model.exceptions.userExceptions.CannotLoginUserException;
-import it.polimi.ingsw.model.exceptions.userExceptions.CannotRegisterUserException;
-import it.polimi.ingsw.model.exceptions.userExceptions.NullTokenException;
+import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotFindUserInDBException;
+import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotLoginUserException;
+import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotRegisterUserException;
+import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.NullTokenException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -98,7 +98,7 @@ class DatabaseUsersTest {
 
         @Test
         void getWonGamesFromWrongToken() {
-            Assertions.assertThrows(CannotFindUserInDB.class, () -> {
+            Assertions.assertThrows(CannotFindUserInDBException.class, () -> {
                 db1.getWonGamesFromToken("WrongToken123");
             });
         }
@@ -113,7 +113,7 @@ class DatabaseUsersTest {
 
         @Test
         void getLostGamesFromWrongToken() {
-            Assertions.assertThrows(CannotFindUserInDB.class, () -> {
+            Assertions.assertThrows(CannotFindUserInDBException.class, () -> {
                 db1.getLostGamesFromToken("WrongToken123");
             });
         }
@@ -128,7 +128,7 @@ class DatabaseUsersTest {
 
         @Test
         void getAbandonedGamesFromWrongToken() {
-            Assertions.assertThrows(CannotFindUserInDB.class, () -> {
+            Assertions.assertThrows(CannotFindUserInDBException.class, () -> {
                 db1.getAbandonedGamesFromToken("WrongToken123");
             });
         }
@@ -143,7 +143,7 @@ class DatabaseUsersTest {
 
         @Test
         void getRankingFromWrongToken() {
-            Assertions.assertThrows(CannotFindUserInDB.class, () -> {
+            Assertions.assertThrows(CannotFindUserInDBException.class, () -> {
                 db1.getRankingFromToken("WrongToken123");
             });
         }

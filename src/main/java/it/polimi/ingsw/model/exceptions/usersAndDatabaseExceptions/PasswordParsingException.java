@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.exceptions.userExceptions;
+package it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions;
 
 public class PasswordParsingException extends Exception {
     public PasswordParsingException(){}
