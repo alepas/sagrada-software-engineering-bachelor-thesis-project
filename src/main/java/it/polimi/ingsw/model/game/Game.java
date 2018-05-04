@@ -201,7 +201,7 @@ public abstract class Game implements Runnable, Serializable, ObservedGame {
     abstract void initializeGame();
     abstract void endGame();
     abstract void nextRound();
-    abstract void nextTurn();
+    public abstract void nextTurn();
     abstract void calculateScore();
     abstract void saveScore();
 
