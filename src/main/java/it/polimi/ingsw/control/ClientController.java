@@ -10,6 +10,10 @@ import it.polimi.ingsw.control.network.commands.requests.LoginRequest;
 import it.polimi.ingsw.control.network.commands.responses.CreateUserResponse;
 import it.polimi.ingsw.control.network.commands.responses.GenericErrorResponse;
 import it.polimi.ingsw.control.network.commands.responses.LoginResponse;
+import it.polimi.ingsw.control.network.rmi.RmiClient;
+import it.polimi.ingsw.control.network.socket.SocketClient;
+import it.polimi.ingsw.model.clientModel.ClientContext;
+import it.polimi.ingsw.model.game.Game;
 import it.polimi.ingsw.view.CliView;
 
 public class ClientController implements ResponseHandler {
@@ -20,11 +24,11 @@ public class ClientController implements ResponseHandler {
     private final CliView view;
 
     // Pieces of the model
-    private String username;
-    private String userToken;
+    private ClientContext clientContext;
 
     public ClientController(NetworkClient client) {
         this.client = client;
+        this.clientContext = ClientContext.get();
         this.view = new CliView(this);
     }
 
@@ -32,65 +36,72 @@ public class ClientController implements ResponseHandler {
         do {
             if (view.logPhase()) view.login();
             else view.createUsername();
-        } while (userToken == null);
+        } while (clientContext.getUserToken() == null);
 
         //---------- L'utente è ora loggato ----------
 
         view.mainMenuPhase();
     }
 
+
+
     //    ------------------- Client methods ---------------------------
+
+    public void startPlaying(){
+        client.startPlaying(this, clientContext.getCurrentGame());
+    }
+
     public String createUser(String username, String password){
         Request request = new CreateUserRequest(username, password);
         client.request(request).handle(this);
-        return this.username;
+        return clientContext.getUsername();
     }
 
     public String login(String username, String password){
         Request request = new LoginRequest(username, password);
         client.request(request).handle(this);
-        return this.username;
+        return clientContext.getUsername();
     }
 
-    public void findGame(int numPlayers) {
-        Request request = new FindGameRequest(userToken, numPlayers);
+    public Game findGame(int numPlayers) {
+        Request request = null;
+        request = new FindGameRequest(clientContext.getUserToken(), numPlayers);
         client.request(request).handle(this);
+        return clientContext.getCurrentGame();
     }
 
 
     //    ------------------ Response handling -------------------------
-    public void cleanUser(){
-        this.username = null;
-        this.userToken = null;
-    }
 
     @Override
     public void handle(CreateUserResponse response) {
         if(response.userToken == null){
-            cleanUser();
+            clientContext.clean();
             view.displayText(response.error);
             return;
         }
-        this.username = response.username;
-        this.userToken = response.userToken;
+        clientContext.setUsername(response.username);
+        clientContext.setUserToken(response.userToken);
     }
 
     @Override
     public void handle(LoginResponse response) {
         if(response.userToken == null){
-            cleanUser();
+            clientContext.clean();
             view.displayText(response.error);
             return;
         }
-        this.username = response.username;
-        this.userToken = response.userToken;
+        clientContext.setUsername(response.username);
+        clientContext.setUserToken(response.userToken);
     }
 
     @Override
     public void handle(FindGameResponse response) {
-        String gameID = response.gameID;
-        if (gameID != null) {
-            view.displayText("Aggiunto alla partita: " + gameID);
+        Game game = response.game;
+        if (game != null) {
+            game.initializeObservers();
+            ClientContext.get().setCurrentGame(game);
+            startPlaying();
         } else {
             view.displayText(response.error);
         }

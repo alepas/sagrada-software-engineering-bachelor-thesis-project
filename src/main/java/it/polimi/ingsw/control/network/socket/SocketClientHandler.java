@@ -3,6 +3,8 @@ package it.polimi.ingsw.control.network.socket;
 import it.polimi.ingsw.control.ServerController;
 import it.polimi.ingsw.control.network.commands.Request;
 import it.polimi.ingsw.control.network.commands.Response;
+import it.polimi.ingsw.model.game.gameObservers.GameObserver;
+import it.polimi.ingsw.model.game.gameObservers.socketNotifications.PlayersChangedNotification;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -10,7 +12,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 
-public class SocketClientHandler implements Runnable{
+public class SocketClientHandler implements Runnable, GameObserver {
     private Socket socket;
     private final ObjectInputStream in;
     private final ObjectOutputStream out;
@@ -23,7 +25,7 @@ public class SocketClientHandler implements Runnable{
         this.out = new ObjectOutputStream(socket.getOutputStream());
         this.in = new ObjectInputStream(socket.getInputStream());
 
-        this.controller = ServerController.getInstance();
+        this.controller = new ServerController(this);
     }
 
     public Socket getSocket() {
@@ -84,5 +86,18 @@ public class SocketClientHandler implements Runnable{
         } catch (IOException e) {
             printError("Errors in closing - " + e.getMessage());
         }
+    }
+
+
+    //------------------------------ Game observer ------------------------------
+
+    @Override
+    public void onJoin(String username) {
+        respond(new PlayersChangedNotification(username, true));
+    }
+
+    @Override
+    public void onLeave(String username) {
+        respond(new PlayersChangedNotification(username, false));
     }
 }

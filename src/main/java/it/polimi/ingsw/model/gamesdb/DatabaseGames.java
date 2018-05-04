@@ -15,10 +15,13 @@ public class DatabaseGames {
     private ArrayList<MultiplayerGame> availableGames;
     private HashMap<Game, Thread> threadByGame;
 
+    private HashMap<String, Game> gameByID;
+
     private DatabaseGames(){
         this.activeGames = new ArrayList<>();
         this.availableGames = new ArrayList<>();
         this.threadByGame = new HashMap<>();
+        this.gameByID = new HashMap<>();
     }
 
     public synchronized static DatabaseGames getInstance(){
@@ -30,7 +33,11 @@ public class DatabaseGames {
 
     //------------------------------- Database methods -------------------------------
 
-    public synchronized Game findGame(String username, int numPlayers) throws InvalidPlayersException {
+    public synchronized Game findGameByID(String id){
+        return gameByID.get(id);
+    }
+
+    public synchronized Game findGameForUser(String username, int numPlayers) throws InvalidPlayersException {
         if (numPlayers < GameConstants.MIN_NUM_PLAYERS || numPlayers > GameConstants.MAX_NUM_PLAYERS)
             throw new InvalidPlayersException(numPlayers);
 
@@ -69,6 +76,9 @@ public class DatabaseGames {
             ((MultiplayerGame) game).addPlayer(username);
             availableGames.add((MultiplayerGame) game);
         }
+
+        gameByID.put(game.getID(), game);
+
         return game;
     }
 

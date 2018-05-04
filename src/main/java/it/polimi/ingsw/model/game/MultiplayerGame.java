@@ -4,8 +4,10 @@ import it.polimi.ingsw.model.constants.GameConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.exceptions.gameExceptions.*;
+import it.polimi.ingsw.model.game.gameObservers.GameObserver;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -13,6 +15,61 @@ public class MultiplayerGame extends Game implements Runnable {
     private int turnPlayer;
     private int roundPlayer;
     private int currentTurn;
+
+
+    //----------------------------- Metodi validi per entrambi i lati -----------------------------
+
+    public int getTurnPlayer() { return turnPlayer; }
+
+    public int getRoundPlayer() { return roundPlayer; }
+
+    public int getCurrentTurn() { return currentTurn; }
+
+    public synchronized boolean addPlayer(String user) throws MaxPlayersExceededException, UserAlreadyInThisGameException {
+        //Return true if, after adding the player, the game is complete
+        if (players.size() == numPlayers) throw new MaxPlayersExceededException(user, this);
+
+        for (PlayerInGame player : players){
+            if (player.getUser().equals(user)) throw new UserAlreadyInThisGameException(user, this);
+        }
+
+        PlayerInGame player = new PlayerInGame(user, this);
+        players.add(player);
+
+        for(GameObserver observer : gameObservers){
+            try {
+                observer.onJoin(user);
+            } catch (RemoteException e){
+                e.printStackTrace();
+            }
+        }
+
+        return players.size() == numPlayers;
+    }
+
+    public synchronized void removePlayer(String user) throws UserNotInThisGameException {
+        for (PlayerInGame player : players){
+            if(player.getUser().equals(user)){
+                players.remove(player);
+
+                for(GameObserver observer : gameObservers){
+                    try {
+                        observer.onLeave(user);
+                    } catch (RemoteException e){
+                        e.printStackTrace();
+                    }
+                }
+
+                return;
+            }
+        }
+        throw new UserNotInThisGameException(user, this);
+    }
+
+
+
+
+    //------------------------------- Metodi validi solo lato server ------------------------------
 
     public MultiplayerGame(int numPlayers) {
         super(numPlayers);
@@ -26,12 +83,6 @@ public class MultiplayerGame extends Game implements Runnable {
         //Codice che regola il funzionamento della partita
         initializeGame();
     }
-
-    public int getTurnPlayer() { return turnPlayer; }
-
-    public int getRoundPlayer() { return roundPlayer; }
-
-    public int getCurrentTurn() { return currentTurn; }
 
     @Override
     public void initializeGame() throws NotEnoughPlayersException {
@@ -51,6 +102,7 @@ public class MultiplayerGame extends Game implements Runnable {
 
     private void shufflePlayers(){ Collections.shuffle(players); }
 
+
     @Override
     public void endGame() {
 
@@ -69,14 +121,6 @@ public class MultiplayerGame extends Game implements Runnable {
         } else {
 //            nextRound();
         }
-    }
-
-    protected void setTurnPlayer(int turnPlayer){
-        this.turnPlayer = turnPlayer;
-    }
-
-    protected void setCurrentTurn(int currentTurn) {
-        this.currentTurn = currentTurn;
     }
 
     protected int nextPlayer() throws MaxNumberOfTurnsPlayedExeption {
@@ -126,26 +170,18 @@ public class MultiplayerGame extends Game implements Runnable {
 
     }
 
-    public synchronized boolean addPlayer(String user) throws MaxPlayersExceededException, UserAlreadyInThisGameException {
-        //Return true if, after adding the player, the game is complete
-        if (players.size() == numPlayers) throw new MaxPlayersExceededException(user, this);
 
-        for (PlayerInGame player : players){
-            if (player.getUser().equals(user)) throw new UserAlreadyInThisGameException(user, this);
-        }
 
-        PlayerInGame player = new PlayerInGame(user, this);
-        players.add(player);
-        return players.size() == numPlayers;
+
+    //------------------------------- Metodi validi solo lato client -------------------------------
+
+    public void setTurnPlayer(int turnPlayer){
+        this.turnPlayer = turnPlayer;
     }
 
-    public synchronized void removePlayer(String user) throws UserNotInThisGameException {
-        for (PlayerInGame player : players){
-            if(player.getUser().equals(user)){
-                players.remove(player);
-                return;
-            }
-        }
-        throw new UserNotInThisGameException(user, this);
+    public void setCurrentTurn(int currentTurn) {
+        this.currentTurn = currentTurn;
     }
+
+
 }

@@ -3,6 +3,8 @@ package it.polimi.ingsw.control.network.socket;
 import it.polimi.ingsw.control.network.NetworkClient;
 import it.polimi.ingsw.control.network.commands.Request;
 import it.polimi.ingsw.control.network.commands.Response;
+import it.polimi.ingsw.control.network.commands.ResponseHandler;
+import it.polimi.ingsw.model.game.Game;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -15,6 +17,8 @@ public class SocketClient implements NetworkClient {
     private Socket connection;
     private ObjectInputStream in;
     private ObjectOutputStream out;
+
+    private Thread receiver;
 
     public SocketClient(String host, int port) {
         this.host = host;
@@ -42,5 +46,26 @@ public class SocketClient implements NetworkClient {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("Wrong deserialization: " + e.getMessage());
         }
+    }
+
+    @Override
+    public void startPlaying(ResponseHandler handler, Game game) {
+        // start a receiver thread
+        receiver = new Thread(
+                () -> {
+                    Response response = null;
+                    do {
+                        try {
+                            response = (Response) in.readObject();
+                            if (response != null) {
+                                response.handle(handler);
+                            }
+                        } catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    } while (response != null);
+                }
+        );
+        receiver.start();
     }
 }

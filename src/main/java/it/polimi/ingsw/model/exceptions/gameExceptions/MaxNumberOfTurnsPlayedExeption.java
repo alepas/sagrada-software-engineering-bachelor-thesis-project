@@ -11,6 +11,6 @@ public class MaxNumberOfTurnsPlayedExeption extends RuntimeException {
 
     @Override
     public String getMessage() {
-        return "Cannot play another turn in this game: " + game.getGameID();
+        return "Cannot play another turn in this game: " + game.getID();
     }
 }

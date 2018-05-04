@@ -7,12 +7,13 @@ import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.game.Game;
 import it.polimi.ingsw.model.wpc.WpcDB;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
-public class PlayerInGame {
+public class PlayerInGame implements Serializable {
     private String username;
-    private DatabaseUsers db;
+    private transient DatabaseUsers db;
     private Game game;
     private Color privateObjective1;
     private Color privateObjective2;

@@ -1,14 +1,13 @@
 package it.polimi.ingsw.control;
 
-import it.polimi.ingsw.control.network.rmi.RemoteServer;
+import it.polimi.ingsw.control.network.rmi.RemoteObserver;
 import it.polimi.ingsw.control.network.rmi.RmiClient;
 import it.polimi.ingsw.control.network.socket.SocketClient;
+import it.polimi.ingsw.model.clientModel.ClientContext;
 import it.polimi.ingsw.model.constants.NetworkConstants;
 
 import java.io.IOException;
 import java.net.ConnectException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.util.Scanner;
 
 public class LaunchClient {
@@ -46,6 +45,7 @@ public class LaunchClient {
                         startRmiClient();
                     } catch (Exception e){
                         System.out.println(">>> Impossibile stabilire connessione RMI con il Server");
+                        e.printStackTrace();
                         tecnology = null;
                     }
                     break;
@@ -69,7 +69,7 @@ public class LaunchClient {
     }
 
 
-    private static void startRmiClient() throws Exception{
+    private static void startRmiClient() throws Exception {
         RmiClient client = new RmiClient();
         ClientController controller = new ClientController(client);
         controller.run();

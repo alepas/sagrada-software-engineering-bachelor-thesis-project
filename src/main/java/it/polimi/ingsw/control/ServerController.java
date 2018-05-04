@@ -8,6 +8,7 @@ import it.polimi.ingsw.control.network.commands.requests.CreateUserRequest;
 import it.polimi.ingsw.control.network.commands.requests.LoginRequest;
 import it.polimi.ingsw.control.network.commands.responses.CreateUserResponse;
 import it.polimi.ingsw.control.network.commands.responses.LoginResponse;
+import it.polimi.ingsw.control.network.socket.SocketClientHandler;
 import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidPlayersException;
 import it.polimi.ingsw.model.exceptions.userExceptions.CannotFindUserInDB;
 import it.polimi.ingsw.model.exceptions.userExceptions.CannotLoginUserException;
@@ -18,22 +19,16 @@ import it.polimi.ingsw.model.gamesdb.DatabaseGames;
 import it.polimi.ingsw.model.usersdb.DatabaseUsers;
 
 public class ServerController implements RequestHandler {
-    private static ServerController instance;
+    private final SocketClientHandler clientHandler;
 
     // pieces of the model
     private final DatabaseUsers databaseUsers;
     private final DatabaseGames databaseGames;
 
-    private ServerController() {
+    public ServerController(SocketClientHandler clientHandler) {
         this.databaseUsers = DatabaseUsers.getInstance();
         this.databaseGames = DatabaseGames.getInstance();
-    }
-
-    public synchronized static ServerController getInstance() {
-        if (instance == null){
-            instance = new ServerController();
-        }
-        return instance;
+        this.clientHandler = clientHandler;
     }
 
     public void displayText(String text){
@@ -78,8 +73,11 @@ public class ServerController implements RequestHandler {
         String username = null;
         try {
             username = databaseUsers.getUsernameByToken(request.token);
-            Game game = databaseGames.findGame(username, request.numPlayers);
-            return new FindGameResponse(game.getGameID(), null);
+            Game game = databaseGames.findGameForUser(username, request.numPlayers);
+
+            if (clientHandler != null) { game.addObserver(clientHandler); }
+
+            return new FindGameResponse(game, null);
 
         } catch (NullTokenException e) {
             return new FindGameResponse(null, e.getMessage());

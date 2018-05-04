@@ -6,13 +6,16 @@ import it.polimi.ingsw.control.network.socket.SocketServer;
 import it.polimi.ingsw.model.constants.NetworkConstants;
 
 import java.io.IOException;
-import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 public class LaunchServer {
+
+
+    // NOTA: Prima di far partire il server eseguire il comando './launch_registry.sh' dal terminale di intellij
+    // e aspettare un minuto circa (tempo necessario affinchè il registry sia caricato)
 
     public static void main(String[] args) throws IOException {
         //Avvio della socket
@@ -36,24 +39,12 @@ public class LaunchServer {
         //Avvio di RMI
         try {
             Registry registry = LocateRegistry.getRegistry();
-            RmiServer rmiServer = new RmiServer(ServerController.getInstance());
-            RemoteServer remoteServer = (RemoteServer) UnicastRemoteObject.exportObject(rmiServer, 0);
+            RemoteServer remoteServer = new RmiServer(new ServerController(null));
 
             registry.rebind(NetworkConstants.RMI_CONTROLLER_NAME, remoteServer);
             System.out.println(">>> RMI Server is running");
         } catch (RemoteException e){
             System.out.println(">>> " + e.getMessage());
         }
-
-//        try {
-//            Registry registry = LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
-//            RmiServer rmiServer = new RmiServer(ServerController.getInstance());
-//            RemoteServer remoteServer = (RemoteServer) UnicastRemoteObject.exportObject(rmiServer, 0);
-//
-//            registry.rebind(NetworkConstants.RMI_CONTROLLER_NAME, remoteServer);
-//            System.out.println(">>> RMI Server is running");
-//        } catch (RemoteException e){
-//            System.out.println(">>> " + e.getMessage());
-//        }
     }
 }

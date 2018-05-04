@@ -13,7 +13,7 @@ public class MaxPlayersExceededException extends RuntimeException {
 
     @Override
     public String getMessage() {
-        return "Cannot add " + username + " to game: " + game.getGameID() + ". "
+        return "Cannot add " + username + " to game: " + game.getID() + ". "
                 + "This game has already reached the maximum number of players: " + game.getPlayers();
     }
 }

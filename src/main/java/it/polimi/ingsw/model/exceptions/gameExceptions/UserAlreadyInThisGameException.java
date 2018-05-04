@@ -13,6 +13,6 @@ public class UserAlreadyInThisGameException extends RuntimeException {
 
     @Override
     public String getMessage() {
-        return username + " already joined this game: " + game.getGameID();
+        return username + " already joined this game: " + game.getID();
     }
 }

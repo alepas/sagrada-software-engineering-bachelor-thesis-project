@@ -29,7 +29,7 @@ public class MultiplayerGameTest {
     public void checkMultiPlayerGameConstructor(){
         Assert.assertEquals(0, game.getToolCards().size());
         Assert.assertEquals(0, game.getPublicObjectiveCards().size());
-        Assert.assertNotNull(game.getGameID());
+        Assert.assertNotNull(game.getID());
         Assert.assertEquals(0, game.getExtractedDices().size());
         Assert.assertNotNull(game.getDiceBag());
         Assert.assertNotNull(game.getRoundTrack());

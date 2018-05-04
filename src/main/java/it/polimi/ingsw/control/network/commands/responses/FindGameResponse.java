@@ -2,13 +2,14 @@ package it.polimi.ingsw.control.network.commands.responses;
 
 import it.polimi.ingsw.control.network.commands.Response;
 import it.polimi.ingsw.control.network.commands.ResponseHandler;
+import it.polimi.ingsw.model.game.Game;
 
 public class FindGameResponse implements Response {
-    public final String gameID;
+    public final Game game;
     public final String error;
 
-    public FindGameResponse(String gameID, String error) {
-        this.gameID = gameID;
+    public FindGameResponse(Game game, String error) {
+        this.game = game;
         this.error = error;
     }
 

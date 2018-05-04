@@ -1,12 +1,13 @@
 package it.polimi.ingsw.model.game;
 import it.polimi.ingsw.model.dicebag.Dice;
 
+import java.io.Serializable;
 import java.util.*;
 
 import static it.polimi.ingsw.model.constants.RoundTrackConstants.HYPOTHETICAL_MAX_DICES_PER_ROUND;
 import static it.polimi.ingsw.model.constants.RoundTrackConstants.NUM_OF_ROUND;
 
-public class RoundTrack {
+public class RoundTrack implements Serializable {
     private int currentRound;
     private Dice[][] dicesNotUsed;
 

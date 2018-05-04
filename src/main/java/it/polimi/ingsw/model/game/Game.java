@@ -6,6 +6,8 @@ import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.dicebag.DiceBag;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;
+import it.polimi.ingsw.model.game.gameObservers.GameObserver;
+import it.polimi.ingsw.model.game.gameObservers.ObservedGame;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 import it.polimi.ingsw.model.wpc.WpcDB;
 
@@ -14,39 +16,74 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.UUID;
 
-public abstract class Game implements Runnable, Serializable {
+public abstract class Game implements Runnable, Serializable, ObservedGame {
     private ArrayList<ToolCard> toolCards;
     private ArrayList<PublicObjectiveCard> publicObjectiveCards;
-    private String gameID;
+    private String id;
     private ArrayList<Dice> extractedDices;
-    private DiceBag diceBag;
+    private transient DiceBag diceBag;
 
     RoundTrack roundTrack;
     int numPlayers;
     ArrayList<PlayerInGame> players;
 
-    int numOfPrivateObjectivesForPlayer;
-    int numOfToolCards;
-    int numOfPublicObjectiveCards;
+    transient int numOfPrivateObjectivesForPlayer;
+    transient int numOfToolCards;
+    transient int numOfPublicObjectiveCards;
+
+    transient ArrayList<GameObserver> gameObservers;
+
+
+
+    //----------------------------- Metodi validi per entrambi i lati -----------------------------
+
+    @Override
+    public void addObserver(GameObserver observer){ gameObservers.add(observer); }
+
+    @Override
+    public void removeObserver(GameObserver observer) { gameObservers.remove(observer); }
+
+    public ArrayList<ToolCard> getToolCards() {
+        return toolCards;
+    }
+
+    public ArrayList<PublicObjectiveCard> getPublicObjectiveCards() {
+        return publicObjectiveCards;
+    }
+
+    public String getID() { return id; }
+
+    public int getNumPlayers() { return numPlayers; }
+
+    public ArrayList<Dice> getExtractedDices() { return extractedDices; }
+
+    public ArrayList<PlayerInGame> getPlayers() { return players; }
+
+    public void removeExtractedDice(Dice dice){ extractedDices.remove(dice); }
+
+    public RoundTrack getRoundTrack() {
+        return roundTrack;
+    }
+
+
+
+
+
+    //------------------------------- Metodi validi solo lato server ------------------------------
 
     Game(int numPlayers) {
         toolCards = new ArrayList<>();
         publicObjectiveCards = new ArrayList<>();
-        gameID = UUID.randomUUID().toString();
+        id = UUID.randomUUID().toString();
         extractedDices = new ArrayList<>();
         diceBag = new DiceBag();
 
         roundTrack = new RoundTrack();
         this.numPlayers = numPlayers;
         players = new ArrayList<>();
-    }
 
-    abstract void initializeGame();
-    abstract void endGame();
-    abstract void nextRound();
-    abstract void nextTurn();
-    abstract void calculateScore();
-    abstract void saveScore();
+        gameObservers = new ArrayList<>();
+    }
 
     void extractPrivateObjectives() {
         ArrayList<Color> colorsExtracted = new ArrayList<>();
@@ -119,32 +156,6 @@ public abstract class Game implements Runnable, Serializable {
         }
     }
 
-    public ArrayList<ToolCard> getToolCards() {
-        return toolCards;
-    }
-
-    public ArrayList<PublicObjectiveCard> getPublicObjectiveCards() {
-        return publicObjectiveCards;
-    }
-
-    public String getGameID() { return gameID; }
-
-    public int getNumPlayers() { return numPlayers; }
-
-    public ArrayList<Dice> getExtractedDices() { return extractedDices; }
-
-    public ArrayList<PlayerInGame> getPlayers() { return players; }
-
-    public void removeExtractedDice(Dice dice){ extractedDices.remove(dice); }
-
-    public DiceBag getDiceBag() {
-        return diceBag;
-    }
-
-    public RoundTrack getRoundTrack() {
-        return roundTrack;
-    }
-
     public int getNumOfPrivateObjectivesForPlayer() {
         return numOfPrivateObjectivesForPlayer;
     }
@@ -156,4 +167,42 @@ public abstract class Game implements Runnable, Serializable {
     public int getNumOfPublicObjectiveCards() {
         return numOfPublicObjectiveCards;
     }
+
+    public DiceBag getDiceBag() {
+        return diceBag;
+    }
+
+
+
+
+
+    //------------------------------- Metodi validi solo lato client -------------------------------
+
+    public void initializeObservers(){ gameObservers = new ArrayList<>(); }
+
+    public void setToolCards(ArrayList<ToolCard> toolCards) {
+        this.toolCards = toolCards;
+    }
+
+    public void setPublicObjectiveCards(ArrayList<PublicObjectiveCard> publicObjectiveCards) {
+        this.publicObjectiveCards = publicObjectiveCards;
+    }
+
+    public void setExtractedDices(ArrayList<Dice> extractedDices) {
+        this.extractedDices = extractedDices;
+    }
+
+
+
+
+
+    //--------------------------------------- Metodi astratti --------------------------------------
+
+    abstract void initializeGame();
+    abstract void endGame();
+    abstract void nextRound();
+    abstract void nextTurn();
+    abstract void calculateScore();
+    abstract void saveScore();
+
 }

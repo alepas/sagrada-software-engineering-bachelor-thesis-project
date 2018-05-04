@@ -1,11 +1,14 @@
 package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.control.ClientController;
+import it.polimi.ingsw.model.clientModel.ClientContext;
 import it.polimi.ingsw.model.constants.CliConstants;
+import it.polimi.ingsw.model.game.Game;
+import it.polimi.ingsw.model.game.MultiplayerGame;
 
 import java.util.Scanner;
 
-public class CliView {
+public class CliView implements AbstractView {
     private Scanner fromKeyBoard;
 
     // ----- The view is composed with the controller (strategy)
@@ -36,7 +39,7 @@ public class CliView {
     }
 
     public void login() {
-        String nickname = null;
+        String user = null;
 
         do {
             displayText(CliConstants.LOGIN_PHASE);
@@ -48,14 +51,15 @@ public class CliView {
             String password = userInput();
             if (password.equals(CliConstants.ESCAPE_RESPONSE)) return;
 
-            nickname = controller.login(username, password);
-        } while (nickname == null);
+            user = controller.login(username, password);
+        } while (user == null);
 
-        displayText(CliConstants.LOG_SUCCESS + nickname);
+        ClientContext.get().setUsername(user);
+        displayText(CliConstants.LOG_SUCCESS + user);
     }
 
     public void createUsername() {
-        String nickname = null;
+        String user = null;
 
         do {
             displayText(CliConstants.CREATE_USER_PHASE);
@@ -67,13 +71,12 @@ public class CliView {
             String password = userInput();
             if (password.equals(CliConstants.ESCAPE_RESPONSE)) return;
 
-            nickname = controller.createUser(username, password);
-        } while (nickname == null);
+            user = controller.createUser(username, password);
+        } while (user == null);
 
-        displayText(CliConstants.LOG_SUCCESS + nickname);
+        ClientContext.get().setUsername(user);
+        displayText(CliConstants.LOG_SUCCESS + user);
     }
-
-    //------------------------------- ADD HERE ALL NEW METHODS -------------------------------
 
     public void mainMenuPhase() {
         do {
@@ -104,8 +107,12 @@ public class CliView {
             try {
                 numPlayers = Integer.parseInt(response);
                 try {
-                    controller.findGame(numPlayers);
-                    return true;
+                    Game game = controller.findGame(numPlayers);
+                    if (game != null) {
+                        game.addObserver(this);
+                        displayText("Aggiunto alla partita: " + game.getID());
+                    }
+                    return (game != null);
                 } catch (Exception e){
                     displayText("Impossibile trovare partita. Riprovare più tardi");
                     return false;
@@ -118,7 +125,41 @@ public class CliView {
 
     private void playGame() {
         displayText("In attesa di altri giocatori...");
+        Thread waitingPlayers = new Thread(
+                () -> {
+                    do {}
+                    while (!ClientContext.get().isGameStarted());
+                }
+        );
 
-        displayText("\n>>>Da qui in poi è ancora da fare quindi non funziona più\n\n");
+        waitingPlayers.start();
+
+        try {
+            waitingPlayers.join();
+        } catch (InterruptedException e){
+            displayText("Ho smesso di aspettare la partita");
+        }
+
+    }
+
+
+
+
+    //------------------------------- Game observer -------------------------------
+
+    @Override
+    public void onJoin(String username) {
+        displayText(username + " è entrato nella partita");
+        MultiplayerGame game = (MultiplayerGame) ClientContext.get().getCurrentGame();
+        displayText("Giocatori in partita: " + game.getPlayers().size() + " di " +
+                game.getNumPlayers() + " necessari");
+    }
+
+    @Override
+    public void onLeave(String username) {
+        displayText(username + " è uscito dalla partita");
+        MultiplayerGame game = (MultiplayerGame) ClientContext.get().getCurrentGame();
+        displayText("Giocatori in partita: " + game.getPlayers().size() + " di " +
+                game.getNumPlayers() + " necessari");
     }
 }

@@ -12,6 +12,6 @@ public class UserNotInThisGameException extends RuntimeException {
 
     @Override
     public String getMessage() {
-        return username + " not in game: " + game.getGameID();
+        return username + " not in game: " + game.getID();
     }
 }
