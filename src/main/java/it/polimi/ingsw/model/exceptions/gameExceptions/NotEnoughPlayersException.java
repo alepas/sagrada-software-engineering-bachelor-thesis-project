@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.exceptions.gameExceptions;
 import it.polimi.ingsw.model.game.Game;
 
-public class NotEnoughPlayersException extends RuntimeException {
+public class NotEnoughPlayersException extends Exception {
     private final Game game;
 
     public NotEnoughPlayersException(Game game) {

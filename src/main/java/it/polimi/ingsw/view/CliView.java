@@ -6,6 +6,7 @@ import it.polimi.ingsw.model.constants.CliConstants;
 import it.polimi.ingsw.model.game.Game;
 import it.polimi.ingsw.model.game.MultiplayerGame;
 
+import java.rmi.RemoteException;
 import java.util.Scanner;
 
 public class CliView implements AbstractView {
@@ -161,5 +162,10 @@ public class CliView implements AbstractView {
         MultiplayerGame game = (MultiplayerGame) ClientContext.get().getCurrentGame();
         displayText("Giocatori in partita: " + game.getPlayers().size() + " di " +
                 game.getNumPlayers() + " necessari");
+    }
+
+    @Override
+    public void onGameStarted() throws RemoteException {
+        displayText("La partita è iniziata");
     }
 }

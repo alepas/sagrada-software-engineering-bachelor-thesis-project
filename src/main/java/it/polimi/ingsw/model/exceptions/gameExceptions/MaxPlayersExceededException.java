@@ -2,7 +2,7 @@ package it.polimi.ingsw.model.exceptions.gameExceptions;
 
 import it.polimi.ingsw.model.game.Game;
 
-public class MaxPlayersExceededException extends RuntimeException {
+public class MaxPlayersExceededException extends Exception {
     private final String username;
     private final Game game;
 

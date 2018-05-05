@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model.clientModel;
 
 import it.polimi.ingsw.model.game.Game;
-import it.polimi.ingsw.model.game.gameObservers.GameObserver;
 
 public class ClientContext {
     private static ClientContext instance;

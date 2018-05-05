@@ -26,7 +26,5 @@ public class PlayersChangedNotification implements Response {
         } catch (Exception e){
             System.out.println(e.getMessage());
         }
-
-
     }
 }

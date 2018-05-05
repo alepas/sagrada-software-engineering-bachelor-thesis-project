@@ -6,12 +6,15 @@ import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.dicebag.DiceBag;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;
+import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidPlayersException;
+import it.polimi.ingsw.model.exceptions.gameExceptions.NotEnoughPlayersException;
 import it.polimi.ingsw.model.game.gameObservers.GameObserver;
 import it.polimi.ingsw.model.game.gameObservers.ObservedGame;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 import it.polimi.ingsw.model.wpc.WpcDB;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.UUID;
@@ -22,6 +25,7 @@ public abstract class Game implements Runnable, Serializable, ObservedGame {
     private String id;
     private ArrayList<Dice> extractedDices;
     private transient DiceBag diceBag;
+    private boolean started;
 
     RoundTrack roundTrack;
     int numPlayers;
@@ -32,6 +36,21 @@ public abstract class Game implements Runnable, Serializable, ObservedGame {
     transient int numOfPublicObjectiveCards;
 
     transient ArrayList<GameObserver> gameObservers;
+
+    Game(int numPlayers) {
+        toolCards = new ArrayList<>();
+        publicObjectiveCards = new ArrayList<>();
+        id = UUID.randomUUID().toString();
+        extractedDices = new ArrayList<>();
+        diceBag = new DiceBag();
+        started = false;
+
+        roundTrack = new RoundTrack();
+        this.numPlayers = numPlayers;
+        players = new ArrayList<>();
+
+        gameObservers = new ArrayList<>();
+    }
 
 
 
@@ -65,25 +84,25 @@ public abstract class Game implements Runnable, Serializable, ObservedGame {
         return roundTrack;
     }
 
+    public boolean isStarted() {
+        return started;
+    }
 
-
-
+    public void setStarted(boolean started) {
+        this.started = started;
+        if (started){
+            for (GameObserver observer : gameObservers){
+                try {
+                    observer.onGameStarted();
+                } catch (RemoteException e){
+                    //TODO: vedi altri metodi
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
     //------------------------------- Metodi validi solo lato server ------------------------------
-
-    Game(int numPlayers) {
-        toolCards = new ArrayList<>();
-        publicObjectiveCards = new ArrayList<>();
-        id = UUID.randomUUID().toString();
-        extractedDices = new ArrayList<>();
-        diceBag = new DiceBag();
-
-        roundTrack = new RoundTrack();
-        this.numPlayers = numPlayers;
-        players = new ArrayList<>();
-
-        gameObservers = new ArrayList<>();
-    }
 
     void extractPrivateObjectives() {
         ArrayList<Color> colorsExtracted = new ArrayList<>();
@@ -106,36 +125,38 @@ public abstract class Game implements Runnable, Serializable, ObservedGame {
     }
 
     void extractWPCs(){
-        ArrayList<String> ids = WpcDB.getWpcIDs();
-        Collections.shuffle(ids);
-        ChooseWPCThread[] chooseThreads = new ChooseWPCThread[numPlayers];
+        //TODO:
 
-        int i = 0;
-
-        for(PlayerInGame player : players){
-            ChooseWPCThread chooseThread = new ChooseWPCThread(player,
-                    new ArrayList<String> (ids.subList(GameConstants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER*i,
-                            GameConstants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER*(i+1))));
-            chooseThreads[i] = chooseThread;
-            chooseThread.start();
-            i++;
-        }
-
-        try {
-            System.out.println("Waiting for threads to finish.");
-            for (ChooseWPCThread chooseThread : chooseThreads ){
-                chooseThread.join(GameConstants.CHOOSE_WPC_WAITING_TIME * 1000);
-            }
-        } catch (InterruptedException e) {
-            System.out.println("Main thread Interrupted");
-        }
-
-        for (i = 0; i < chooseThreads.length; i++){
-            if (chooseThreads[i].isInterrupted()){
-                players.get(i).setWPC(ids.subList(GameConstants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER*i,
-                        GameConstants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER*(i+1)).get(0));
-            }
-        }
+//        ArrayList<String> ids = WpcDB.getWpcIDs();
+//        Collections.shuffle(ids);
+//        ChooseWPCThread[] chooseThreads = new ChooseWPCThread[numPlayers];
+//
+//        int i = 0;
+//
+//        for(PlayerInGame player : players){
+//            ChooseWPCThread chooseThread = new ChooseWPCThread(player,
+//                    new ArrayList<String> (ids.subList(GameConstants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER*i,
+//                            GameConstants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER*(i+1))));
+//            chooseThreads[i] = chooseThread;
+//            chooseThread.start();
+//            i++;
+//        }
+//
+//        try {
+//            System.out.println("Waiting for threads to finish.");
+//            for (ChooseWPCThread chooseThread : chooseThreads ){
+//                chooseThread.join(GameConstants.CHOOSE_WPC_WAITING_TIME * 1000);
+//            }
+//        } catch (InterruptedException e) {
+//            System.out.println("Main thread Interrupted");
+//        }
+//
+//        for (i = 0; i < chooseThreads.length; i++){
+//            if (chooseThreads[i].isInterrupted()){
+//                players.get(i).setWPC(ids.subList(GameConstants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER*i,
+//                        GameConstants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER*(i+1)).get(0));
+//            }
+//        }
     }
 
     void extractToolCards() {
@@ -154,18 +175,6 @@ public abstract class Game implements Runnable, Serializable, ObservedGame {
         for (String id : publicCardsExtracted){
             publicObjectiveCards.add(PublicObjectiveCard.getCardByID(id));
         }
-    }
-
-    public int getNumOfPrivateObjectivesForPlayer() {
-        return numOfPrivateObjectivesForPlayer;
-    }
-
-    public int getNumOfToolCards() {
-        return numOfToolCards;
-    }
-
-    public int getNumOfPublicObjectiveCards() {
-        return numOfPublicObjectiveCards;
     }
 
     public DiceBag getDiceBag() {
@@ -191,8 +200,6 @@ public abstract class Game implements Runnable, Serializable, ObservedGame {
     public void setExtractedDices(ArrayList<Dice> extractedDices) {
         this.extractedDices = extractedDices;
     }
-
-
 
 
 

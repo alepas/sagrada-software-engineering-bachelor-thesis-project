@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.exceptions.gameExceptions;
 
-public class InvalidPlayersException extends RuntimeException {
+public class InvalidPlayersException extends Exception {
     private final int numPlayers;
 
     public InvalidPlayersException(int numPlayers){

@@ -8,4 +8,15 @@ public interface GameObserver extends Remote {
     void onJoin(String username) throws RemoteException;
 
     void onLeave(String username) throws RemoteException;
+
+    void onGameStarted() throws RemoteException;
 }
+
+
+/*  I game observer sono:
+
+    -   AbstractView
+    -   RemoteObserver
+    -   SocketClientHandler
+
+*/

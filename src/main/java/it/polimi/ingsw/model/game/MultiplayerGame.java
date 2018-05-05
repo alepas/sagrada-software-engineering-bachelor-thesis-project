@@ -16,6 +16,17 @@ public class MultiplayerGame extends Game implements Runnable {
     private int roundPlayer;
     private int currentTurn;
 
+    public MultiplayerGame(int numPlayers) throws InvalidMultiplayerGamePlayersException {
+        super(numPlayers);
+
+        if (numPlayers < GameConstants.MULTIPLAYER_MIN_NUM_PLAYERS || numPlayers > GameConstants.MAX_NUM_PLAYERS)
+            throw new InvalidMultiplayerGamePlayersException(numPlayers);
+
+        numOfPrivateObjectivesForPlayer = GameConstants.NUM_PRIVATE_OBJ_FOR_PLAYER_IN_MULTIPLAYER_GAME;
+        numOfToolCards = GameConstants.NUM_TOOL_CARDS_IN_MULTIPLAYER_GAME;
+        numOfPublicObjectiveCards = GameConstants.NUM_PUBLIC_OBJ_IN_MULTIPLAYER_GAME;
+    }
+
 
     //----------------------------- Metodi validi per entrambi i lati -----------------------------
 
@@ -41,6 +52,11 @@ public class MultiplayerGame extends Game implements Runnable {
                 observer.onJoin(user);
             } catch (RemoteException e){
                 e.printStackTrace();
+                //TODO: riconetti giocatore
+                /*Il giocatore che ha generato l'exception non riceverà la notifica che un altro giocatore
+                  è entrato in partita, pertanto non lo aggiungerà ai giocatori presenti nel modello della
+                  partita che lui ha salvato localmente. è necessario che il giocatore venga disconnesso e
+                  riconesso alla partita in modo che possa scaricare la versione aggiornata del Game*/
             }
         }
 
@@ -57,9 +73,13 @@ public class MultiplayerGame extends Game implements Runnable {
                         observer.onLeave(user);
                     } catch (RemoteException e){
                         e.printStackTrace();
+                        //TODO: riconetti giocatore
+                        /*Il giocatore che ha generato l'exception non riceverà la notifica che un altro giocatore
+                          è entrato in partita, pertanto non lo aggiungerà ai giocatori presenti nel modello della
+                          partita che lui ha salvato localmente. è necessario che il giocatore venga disconnesso e
+                          riconesso alla partita in modo che possa scaricare la versione aggiornata del Game*/
                     }
                 }
-
                 return;
             }
         }
@@ -71,26 +91,19 @@ public class MultiplayerGame extends Game implements Runnable {
 
     //------------------------------- Metodi validi solo lato server ------------------------------
 
-    public MultiplayerGame(int numPlayers) {
-        super(numPlayers);
-        numOfPrivateObjectivesForPlayer = GameConstants.NUM_PRIVATE_OBJ_FOR_PLAYER_IN_MULTIPLAYER_GAME;
-        numOfToolCards = GameConstants.NUM_TOOL_CARDS_IN_MULTIPLAYER_GAME;
-        numOfPublicObjectiveCards = GameConstants.NUM_PUBLIC_OBJ_IN_MULTIPLAYER_GAME;
-    }
-
     @Override
     public void run() {
         //Codice che regola il funzionamento della partita
-        initializeGame();
+        setStarted(true);
+
+        System.out.println("La partità è iniziata");
+//        initializeGame();
     }
 
     @Override
-    public void initializeGame() throws NotEnoughPlayersException {
-        if (players.size() < numPlayers){
-            throw new NotEnoughPlayersException(this);
-        }
+    public void initializeGame() {
         extractPrivateObjectives();
-        extractWPCs();
+        extractWPCs();              //Genera delle eccezioni?
         extractToolCards();
         extractPublicObjectives();
         shufflePlayers();

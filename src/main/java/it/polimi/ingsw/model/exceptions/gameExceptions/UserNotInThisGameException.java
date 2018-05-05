@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.exceptions.gameExceptions;
 import it.polimi.ingsw.model.game.Game;
 
-public class UserNotInThisGameException extends RuntimeException {
+public class UserNotInThisGameException extends Exception {
     private final String username;
     private final Game game;
 
