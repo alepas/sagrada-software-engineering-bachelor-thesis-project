@@ -3,7 +3,7 @@ package it.polimi.ingsw.view.gui.guicontroller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-
+import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
@@ -33,9 +33,9 @@ public class Controller {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Scene scene2 = new Scene(nextNode);
+        Scene scene = new Scene(nextNode);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        window.setScene(scene2);
+        window.setScene(scene);
         window.show();
     }
 }

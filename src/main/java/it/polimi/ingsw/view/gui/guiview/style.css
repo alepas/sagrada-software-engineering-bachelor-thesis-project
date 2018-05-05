@@ -22,7 +22,7 @@
 
 .Button{
     -fx-cursor: hand;
-    -fx-font-size: 14;
+    -fx-font-size: 14pt;
     -fx-font-fill: #ffffff;
     -fx-alignment: center;
 }

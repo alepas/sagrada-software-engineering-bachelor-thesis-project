@@ -1,36 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
+<?import java.lang.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
-            prefWidth="600.0" style="-fx-background-color: #f9c22d;" xmlns="http://javafx.com/javafx/8"
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="550.0" prefWidth="500.0" style="-fx-background-color: #f9c22d;" xmlns="http://javafx.com/javafx/8"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.guicontroller.SignUpController">
+    <ImageView fitHeight="540.0" fitWidth="490.0" layoutX="11.0" layoutY="7.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+        <Image url="@sfondo.JPG" />
+    </ImageView>
 
-    <AnchorPane layoutY="100.0" prefHeight="300.0" prefWidth="600.0" style="-fx-background-color: #a7c0cd;">
+    <AnchorPane layoutX="63.0" layoutY="194.0" prefHeight="300.0" prefWidth="375.0" style="-fx-background-color: #ffffff;">
 
-        <PasswordField fx:id="signUpPassword" layoutX="190.0" layoutY="138.0" prefHeight="25.0" prefWidth="220.0"
-                       promptText="password"/>
+        <PasswordField fx:id="signUpPassword" layoutX="80.0" layoutY="138.0" prefHeight="25.0" prefWidth="220.0" promptText="password">
+            <effect>
+                <InnerShadow blurType="GAUSSIAN" color="#c29300" />
+            </effect>
+        </PasswordField>
 
-        <TextField fx:id="signUpUsername" layoutX="190.0" layoutY="74.0" prefHeight="25.0" prefWidth="220.0"
-                   promptText="username"/>
+        <TextField fx:id="signUpUsername" layoutX="80.0" layoutY="73.0" prefHeight="25.0" prefWidth="220.0" promptText="username">
+            <effect>
+                <InnerShadow blurType="GAUSSIAN" color="#c29300" />
+            </effect>
+        </TextField>
 
-        <Button fx:id="signUpButton" styleClass="Button" layoutX="248.0" layoutY="205.0" mnemonicParsing="false"
-                prefHeight="25.0" prefWidth="105.0" style="-fx-background-color: #4b636e;" text="Sign Up"
-                textFill="WHITE"/>
-
-        <Label layoutX="240.0" layoutY="30.0" text="Create new account">
+        <Button fx:id="signUpButton" layoutX="138.0" layoutY="204.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="105.0" style="-fx-background-color: #4b636e;" styleClass="Button" text="Sign Up" textFill="WHITE">
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+            <effect>
+                <InnerShadow blurType="GAUSSIAN" color="#c29300" />
+            </effect>
+        </Button>
+      
+        <Label layoutX="130.0" layoutY="32.0" text="Create new account">
             <font>
-                <Font size="14.0"/>
+                <Font size="14.0" />
             </font>
         </Label>
     </AnchorPane>
-    <Label layoutX="217.0" layoutY="32.0" text="Sagrada">
-        <font>
-          <Font name="Consolas" size="43.0"/>
-        </font>
-    </Label>
 </AnchorPane>

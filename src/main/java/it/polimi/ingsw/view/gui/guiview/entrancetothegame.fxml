@@ -1,20 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<AnchorPane prefHeight="550.0" prefWidth="500.0" style="-fx-background-color: #f9c22d;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.guicontroller.EntranceToTheGameController">
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #f9c22d;"
-            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="it.polimi.ingsw.view.gui.guicontroller.EntranceToTheGameController">
+    <ImageView fitHeight="540.0" fitWidth="490.0" layoutX="11.0" layoutY="7.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+        <Image url="@sfondo.JPG" />
+    </ImageView>
 
-   <AnchorPane layoutY="100.0" prefHeight="300.0" prefWidth="600.0" style="-fx-background-color: #a7c0cd;">
+    <AnchorPane layoutX="69.0" layoutY="177.0" prefHeight="337.0" prefWidth="362.0" style="-fx-background-color: #ffffff;" AnchorPane.bottomAnchor="36.0" AnchorPane.leftAnchor="69.0" AnchorPane.rightAnchor="69.0" AnchorPane.topAnchor="177.0">
 
-      <Button fx:id="createGameButton" styleClass="Button" layoutX="225.0" layoutY="75.0" mnemonicParsing="false"
-              prefHeight="41.0" prefWidth="151.0" style="-fx-background-color: #4b636e;" text="Create New Game" textFill="WHITE"/>
-
-      <Button fx:id="enterGameButton" styleClass="Button" layoutX="225.0" layoutY="150.0" mnemonicParsing="false"
-              prefHeight="41.0" prefWidth="151.0" style="-fx-background-color: #4b636e;" text="Enter in a Game" textFill="WHITE"/>
-
+        <Button fx:id="createGameButton" layoutX="106.0" layoutY="227.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="151.0" style="-fx-background-color: #4b636e;" styleClass="Button" text="Find Game" textFill="WHITE" AnchorPane.bottomAnchor="69.0" AnchorPane.leftAnchor="106.0" AnchorPane.rightAnchor="105.0" AnchorPane.topAnchor="227.0">
+            <font>
+                <Font size="14.0" />
+            </font>
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+            <effect>
+                <InnerShadow blurType="GAUSSIAN" color="#c29300" />
+            </effect>
+        </Button>
+        <CheckBox fx:id="soloPlayerBox" layoutX="33.0" layoutY="102.0" mnemonicParsing="false" text="1 Player" textFill="#4a626d">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </CheckBox>
+        <CheckBox fx:id="twoPlayersBox" layoutX="221.0" layoutY="102.0" mnemonicParsing="false" text="2 Players" textFill="#4a626d">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </CheckBox>
+        <CheckBox fx:id="threePlayersBox" layoutX="33.0" layoutY="160.0" mnemonicParsing="false" text="3 Players" textFill="#4a626d">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </CheckBox>
+        <CheckBox fx:id="fourPlayersBox" layoutX="221.0" layoutY="160.0" mnemonicParsing="false" text="4 Players" textFill="#4a626d">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </CheckBox>
+        <Label layoutX="99.0" layoutY="43.0" text="Choose Number of Players" textFill="#4a626d">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </Label>
+    </AnchorPane>
    </AnchorPane>
-</AnchorPane>

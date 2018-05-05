@@ -58,7 +58,7 @@ public class SignUpController {
         System.out.println(password);
         System.out.println(username);
 
-        if(!username.equals("") && !password.equals("")) {
+        if(!username.equals("") || !password.equals("")) {
             controller.createUser(username, password);
         }
         else
