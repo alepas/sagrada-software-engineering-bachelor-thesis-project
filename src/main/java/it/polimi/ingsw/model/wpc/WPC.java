@@ -6,6 +6,9 @@ import it.polimi.ingsw.model.dicebag.Dice;
 
 import it.polimi.ingsw.model.exceptions.wpcExceptions.NotExistingCellException;
 
+import static it.polimi.ingsw.model.constants.WpcConstants.COLS_NUMBER;
+import static it.polimi.ingsw.model.constants.WpcConstants.ROWS_NUMBER;
+
 
 public class WPC {
     private  String wpcID;
@@ -28,6 +31,8 @@ public class WPC {
 
     public int getFavours(){ return favours; }
 
+    public ArrayList<Cell> getSchema(){ return schema;}
+
 
     public String getWpcID(){ return wpcID; }
 
@@ -38,11 +43,12 @@ public class WPC {
             if (!checkFirstTurnRestriction(cell))
                 return false;
         }
-        if (!checkCellRestriction(cell, dice) || !checkAdjacentRestriction(cell, dice) || !IsThereAtLeastADice(cell))
-            return false;
-
-        cell.setDice(dice);
-        return true;
+        if (checkCellRestriction(cell, dice) && checkAdjacentRestriction(cell, dice) && IsThereAtLeastADice(cell))
+        {
+            cell.setDice(dice);
+            return true;
+        }
+        return false;
     }
 
 
@@ -60,15 +66,17 @@ public class WPC {
         //controllo che, durante il primo turno, il dado sia posizionato solo sul bordo della wpc2
         int row = cell.getCellPosition().getRow();
         int column = cell.getCellPosition().getColumn();
-        return row == 0 || column == 0;
+        return row == 0 || column == 0 || row == ROWS_NUMBER - 1 || column == COLS_NUMBER - 1;
     }
 
 
     private boolean checkCellRestriction(Cell cell, Dice dice){
         //controllo che il dado possa essere inserito nella cella selezionata secondo le restrizioni di questa
         if (cell.getCellDice()== null) {
-            if (cell.getCellNumber() == 0)
+            if (cell.getCellNumber() == 0 && cell.getCellColor()!=null)
                 return (cell.getCellColor().equals(dice.getDiceColor()));
+            else if (cell.getCellColor()== null && cell.getCellNumber()== 0)
+                return true;
             else
                 return (cell.getCellNumber() == dice.getDiceNumber());
         }
@@ -100,9 +108,9 @@ public class WPC {
         int row= cell.getCellPosition().getRow();
         int column= cell.getCellPosition().getColumn();
 
-        for(Cell schemaCell: schema) {
-            if (isAnAdjacentCell(schemaCell, row, column) && checkEquivalence(schemaCell.getCellDice(), dice))
-                return false;
+        for(Cell schemaCell: this.schema) {
+            if (isAnAdjacentCell(schemaCell, row, column) && cell.getCellDice()!= null)
+                return checkDiceEquivalence(schemaCell.getCellDice(), dice);
         }
         return true;
     }
@@ -110,11 +118,10 @@ public class WPC {
 
     private boolean isAnAdjacentCell(Cell cell, int row, int column){
         //verifico se la cella è adiacente a quella sotto esame
+        int adjacentRow = cell.getCellPosition().getRow();
+        int adjacentColumn = cell.getCellPosition().getColumn();
+        return (adjacentRow == row && (adjacentColumn == (column + 1) || adjacentColumn == (column - 1)))|| (adjacentColumn == column && (adjacentRow== row-1 || adjacentRow == row+1));
 
-        if (cell.getCellPosition().getRow() == row && (cell.getCellPosition().getColumn() == (column + 1) || cell.getCellPosition().getColumn() == (column - 1)))
-            return true;
-        else
-            return cell.getCellPosition().getRow() == column && (cell.getCellPosition().getColumn() == (row + 1) || cell.getCellPosition().getColumn() == (row - 1));
     }
 
     //manca il controllo che ci sia almeno un dado attorno alla cella selezionata
@@ -123,7 +130,7 @@ public class WPC {
     }
 
 
-    private boolean checkEquivalence(Dice cellDice, Dice dice){
+    private boolean checkDiceEquivalence(Dice cellDice, Dice dice){
         //controlla se il dado della cella adiacente ha colore o numero uguale  a quello del dado che si desidera inserire
         return dice.getDiceNumber() == cellDice.getDiceNumber() || dice.getDiceColor().equals(cellDice.getDiceColor());
     }
@@ -134,7 +141,8 @@ public class WPC {
         ArrayList<Dice> rowDices = new ArrayList<>();
 
         for(Cell cell: schema){
-            if (cell.getCellPosition().getRow() == row && cell.getCellDice() != null) rowDices.add(cell.getCellDice());
+            if (cell.getCellPosition().getRow() == row && cell.getCellDice() != null)
+                rowDices.add(cell.getCellDice());
         }
 
         return rowDices;
@@ -206,7 +214,7 @@ public class WPC {
         int score = 0;
 
         for (Dice dice : getWpcDices()){
-            if ( dice.getDiceColor().equals(color)) score++;
+            if ( dice.getDiceColor().equals(color)) score += dice.getDiceNumber();
         }
 
         return score;

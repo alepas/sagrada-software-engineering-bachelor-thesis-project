@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #f9c22d;"
+            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="it.polimi.ingsw.view.gui.guicontroller.EntranceToTheGameController">
+
+   <AnchorPane layoutY="100.0" prefHeight="300.0" prefWidth="600.0" style="-fx-background-color: #a7c0cd;">
+
+      <Button fx:id="createGameButton" styleClass="Button" layoutX="225.0" layoutY="75.0" mnemonicParsing="false"
+              prefHeight="41.0" prefWidth="151.0" style="-fx-background-color: #4b636e;" text="Create New Game" textFill="WHITE"/>
+
+      <Button fx:id="enterGameButton" styleClass="Button" layoutX="225.0" layoutY="150.0" mnemonicParsing="false"
+              prefHeight="41.0" prefWidth="151.0" style="-fx-background-color: #4b636e;" text="Enter in a Game" textFill="WHITE"/>
+
+   </AnchorPane>
+</AnchorPane>

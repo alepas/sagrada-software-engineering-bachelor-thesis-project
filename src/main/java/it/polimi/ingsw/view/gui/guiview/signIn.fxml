@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import java.net.URL?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+            prefWidth="600.0" style="-fx-background-color: #f9c22d;" xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.guicontroller.SignInController">
+    <styleClass>
+        <URL value="@style.css" />
+    </styleClass>
+    <AnchorPane layoutY="100.0" prefHeight="300.0" prefWidth="600.0" style="-fx-background-color: #a7c0cd;">
+
+        <PasswordField fx:id="signInPassword" layoutX="190.0" layoutY="138.0" prefHeight="25.0" prefWidth="220.0"
+                       promptText="Password"/>
+
+        <TextField fx:id="signInUsername" layoutX="190.0" layoutY="74.0" prefHeight="25.0" prefWidth="220.0"
+                   promptText="Username"/>
+
+        <Button fx:id="signInButton" layoutX="248.0" layoutY="205.0" mnemonicParsing="false" prefHeight="25.0"
+                prefWidth="105.0" style="-fx-background-color: #4b636e;" styleClass="Button" text="Sign In"
+                textFill="WHITE"/>
+
+        <Label layoutX="283.0" layoutY="32.0" text="Login">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </Label>
+    </AnchorPane>
+    <Label layoutX="223.0" layoutY="22.0" text="Sagrada">
+        <font>
+          <Font name="Consolas" size="43.0"/>
+        </font>
+    </Label>
+</AnchorPane>

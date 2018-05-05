@@ -49,7 +49,7 @@ public class RoundTrack implements Serializable {
         return allRoundTrackDices;
     }
 
-    private void nextRound( ){
+    void nextRound( ){
         currentRound = currentRound ++;
     }
 
