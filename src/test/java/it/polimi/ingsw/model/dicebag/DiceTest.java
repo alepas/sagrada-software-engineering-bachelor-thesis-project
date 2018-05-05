@@ -8,15 +8,16 @@ import org.junit.Test;
 public class DiceTest {
     private Dice dice;
     private Color color= Color.VIOLET;
-
+    private int diceID = 1;
     @Before
     public void before() {
-        dice = new Dice(color);
+        dice = new Dice(color, diceID );
     }
 
     @Test
     public void checkDiceConstructor() {
         Assert.assertEquals(Color.VIOLET, dice.getDiceColor());
+        Assert.assertEquals(1 , dice.getDiceID());
         Assert.assertTrue(dice.getDiceNumber() >= 0 && dice.getDiceNumber()<= 6);
     }
 

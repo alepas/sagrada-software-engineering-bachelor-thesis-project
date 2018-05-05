@@ -7,11 +7,15 @@ import java.util.Random;
 public class Dice {
     private Color color;
     private int number;
+    private int diceID;
 
-    public Dice(Color color) {
+
+    public Dice(Color color, int diceId) {
         this.color = color;
         number = rollDice();
+        this.diceID = diceId;
     }
+
 
     //metodo invocato sia dal costruttore per assegnare un numero tra 1 e 6
     // ma anche nel caso in cui possa ritirare il dado
@@ -28,6 +32,8 @@ public class Dice {
     public int getDiceNumber( ){
         return number;
     }
+
+    public int getDiceID( ){ return diceID ;}
 
     public void setNumber(int number) throws IncorrectNumberException {
         if (number < 0 || number > 6 )

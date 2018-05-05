@@ -6,6 +6,7 @@ import static it.polimi.ingsw.model.constants.DiceBagCostants.INITIAL_DICE_NUMBE
 import static it.polimi.ingsw.model.constants.DiceBagCostants.SOLO_PLAYER_DICES;
 
 public class DiceBag {
+    private int diceIdGenerator;
     private int yellowDices;
     private int redDices;
     private int blueDices;
@@ -16,6 +17,7 @@ public class DiceBag {
     //quando costruisco il sacco nella partita multiplayer passerò al costruttore
     // l'int numDices =2*numplayers +1
     public DiceBag(){
+        diceIdGenerator = 0;
         yellowDices = INITIAL_DICE_NUMBER;
         redDices = INITIAL_DICE_NUMBER;
         blueDices = INITIAL_DICE_NUMBER;
@@ -57,8 +59,11 @@ public class DiceBag {
                 yellowDices--;
                 break;
         }
-        return new Dice(color);
+        return new Dice(color, setDiceID());
     }
+
+    //id per riconoscere il dado, valore sequenziale, non tiene conto del numero totale dei dadi
+    private int setDiceID() { return diceIdGenerator++; }
 
 
     //nell enum ogni val è associato ad un valore numerico tramite color.ordinal() recupero tale valore
@@ -109,5 +114,6 @@ public class DiceBag {
     int getGreenDices(){return greenDices;}
     int getBlueDices(){return blueDices;}
     int getVioletDices(){return violetDices;}
+    int getDiceIdGenerator(){return diceIdGenerator;}
 }
 

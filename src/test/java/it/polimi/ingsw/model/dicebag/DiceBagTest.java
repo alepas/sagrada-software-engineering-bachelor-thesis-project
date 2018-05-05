@@ -21,6 +21,7 @@ public class DiceBagTest {
 
     @Test
     public void checkDiceBagConstructor(){
+        Assert.assertEquals(0, diceBag.getDiceIdGenerator());
         Assert.assertEquals(18, diceBag.getBlueDices());
         Assert.assertEquals(18, diceBag.getGreenDices());
         Assert.assertEquals(18, diceBag.getRedDices());
