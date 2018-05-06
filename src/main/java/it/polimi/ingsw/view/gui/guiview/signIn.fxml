@@ -10,49 +10,42 @@
 <?import javafx.scene.layout.*?>
 
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0"
-            prefWidth="500.0" style="-fx-background-color: #f9c22d;" xmlns="http://javafx.com/javafx/8"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.guicontroller.SignInController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="500.0" style="-fx-background-color: #f9c22d;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.guicontroller.SignInController">
     <styleClass>
-        <URL value="@style.css"/>
+        <URL value="@style.css" />
     </styleClass>
 
-    <ImageView fitHeight="540.0" fitWidth="490.0" layoutX="11.0" layoutY="7.0" AnchorPane.bottomAnchor="5.0"
-               AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
-        <Image url="@sfondo.JPG"/>
+    <ImageView fitHeight="540.0" fitWidth="490.0" layoutX="11.0" layoutY="7.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+        <Image url="@FirstSettings.JPG" />
     </ImageView>
 
-    <AnchorPane layoutX="81.0" layoutY="199.0" prefHeight="300.0" prefWidth="338.0"
-                style="-fx-background-color: #ffffff;">
+    <AnchorPane layoutX="63.0" layoutY="194.0" prefHeight="300.0" prefWidth="375.0" style="-fx-background-color: #ffffff;">
 
-            <PasswordField fx:id="signInPassword" layoutX="59.0" layoutY="138.0" prefHeight="25.0" prefWidth="220.0"
-                           promptText="Password">
-                <effect>
-                    <InnerShadow blurType="GAUSSIAN" color="#c29300"/>
-                </effect>
-            </PasswordField>
+        <PasswordField fx:id="signInPassword" layoutX="80.0" layoutY="138.0" prefHeight="25.0" prefWidth="220.0" promptText="Password">
+            <effect>
+                <InnerShadow blurType="GAUSSIAN" color="#c29300" />
+            </effect>
+        </PasswordField>
 
-            <TextField fx:id="signInUsername" layoutX="59.0" layoutY="78.0" prefHeight="25.0" prefWidth="220.0"
-                       promptText="Username">
-                <effect>
-                    <InnerShadow blurType="GAUSSIAN" color="#c29300"/>
-                </effect>
-            </TextField>
+        <TextField fx:id="signInUsername" layoutX="80.0" layoutY="73.0" prefHeight="25.0" prefWidth="220.0" promptText="Username">
+            <effect>
+                <InnerShadow blurType="GAUSSIAN" color="#c29300" />
+            </effect>
+        </TextField>
 
-            <Button fx:id="signInButton" layoutX="117.0" layoutY="203.0" prefHeight="25.0" prefWidth="105.0"
-                    style="-fx-background-color: #4b636e;" styleClass="Button" text="Sign In" textFill="WHITE">
-                <cursor>
-                    <Cursor fx:constant="HAND"/>
-                </cursor>
-                <effect>
-                    <InnerShadow blurType="GAUSSIAN" color="#c29300"/>
-                </effect>
-            </Button>
+        <Button fx:id="signInButton" layoutX="138.0" layoutY="204.0" prefHeight="25.0" prefWidth="105.0" style="-fx-background-color: #4b636e;" styleClass="Button" text="Sign In" textFill="WHITE">
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+            <effect>
+                <InnerShadow blurType="GAUSSIAN" color="#c29300" />
+            </effect>
+        </Button>
 
-            <Label layoutX="152.0" layoutY="36.0" text="Login">
-                <font>
-                    <Font size="14.0"/>
-                </font>
-            </Label>
-        </AnchorPane>
+        <Label layoutX="170.0" layoutY="31.0" text="Login">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </Label>
+    </AnchorPane>
 </AnchorPane>

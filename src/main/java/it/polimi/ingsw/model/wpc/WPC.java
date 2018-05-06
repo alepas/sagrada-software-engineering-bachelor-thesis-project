@@ -31,8 +31,6 @@ public class WPC {
 
     public int getFavours(){ return favours; }
 
-    public ArrayList<Cell> getSchema(){ return schema;}
-
 
     public String getWpcID(){ return wpcID; }
 

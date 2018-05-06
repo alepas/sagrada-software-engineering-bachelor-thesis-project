@@ -1,7 +1,5 @@
 package it.polimi.ingsw.view.gui.guimodel;
 
-import it.polimi.ingsw.control.ClientController;
-import it.polimi.ingsw.view.gui.guicontroller.SignInController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -19,7 +17,7 @@ public class GuiMain extends Application {
 
         Parent root = FXMLLoader.load(getClass().getResource("/it/polimi/ingsw/view/gui/guiview/gui.fxml"));
         stage.setTitle("Sagrada");
-        stage.setScene(new Scene(root, 900, 700));
+        stage.setScene(new Scene(root));
         stage.show();
     }
 

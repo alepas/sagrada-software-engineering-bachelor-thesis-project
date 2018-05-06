@@ -61,7 +61,7 @@ public class SignInController {
         String password = signInPassword.getText();
         if(!password.equals("") || !username.equals("")) {
             ClientController controller = null;
-            Objects.requireNonNull(controller).login(username, password);
+            controller.login(username, password);
             System.out.println("login effettuato");
         }
         else
