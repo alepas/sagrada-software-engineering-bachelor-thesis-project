@@ -1,7 +1,8 @@
 package it.polimi.ingsw.model.dicebag;
+import java.io.Serializable;
 import java.util.Random;
 
-public enum Color {
+public enum Color implements Serializable {
     VIOLET, BLUE, RED, YELLOW, GREEN;
     //violet = 0; blue = 1; red = 2; yellow = 3; green = 4
 

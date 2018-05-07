@@ -61,7 +61,7 @@ public class WPC {
 
 
     private boolean checkFirstTurnRestriction(Cell cell) {
-        //controllo che, durante il primo turno, il dado sia posizionato solo sul bordo della wpc2
+        //controllo che, durante il primo turno, il dado sia posizionato solo sul bordo della wpc
         int row = cell.getCellPosition().getRow();
         int column = cell.getCellPosition().getColumn();
         return row == 0 || column == 0 || row == ROWS_NUMBER - 1 || column == COLS_NUMBER - 1;
@@ -161,7 +161,7 @@ public class WPC {
 
 
     public ArrayList<Dice> getWpcDices(){
-        //restituisce tutti i dadi presenti sulla wpc2
+        //restituisce tutti i dadi presenti sulla wpc
         ArrayList<Dice>  WPCDices = new ArrayList<>();
 
         for(Cell cell: schema){
@@ -173,7 +173,7 @@ public class WPC {
 
 
     public int numDicesOfShade(int shade){
-        //Restituisce il numero di dadi sulla wpc2 che hanno il numero uguale a shade
+        //Restituisce il numero di dadi sulla wpc che hanno il numero uguale a shade
         int count = 0;
 
         for (Dice dice : getWpcDices()){
@@ -185,7 +185,7 @@ public class WPC {
 
 
     public int numDicesOfColor(Color color){
-        //Restituisce il numero di dadi sulla wpc2 che hanno il colore uguale a color
+        //Restituisce il numero di dadi sulla wpc che hanno il colore uguale a color
         int count = 0;
 
         for (Dice dice : getWpcDices()){
@@ -197,7 +197,7 @@ public class WPC {
 
 
     public int getNumFreeCells(){
-        //restituisce il numero di celle vuote sulla wpc2
+        //restituisce il numero di celle vuote sulla wpc
         int count = 0;
 
         for (Cell cell : schema){

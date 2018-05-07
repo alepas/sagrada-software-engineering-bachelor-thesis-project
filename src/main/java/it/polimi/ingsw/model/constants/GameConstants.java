@@ -16,6 +16,11 @@ public class GameConstants {
     public static final int MULTIPLAYER_MIN_NUM_PLAYERS = 2;
 
     //SingleplayerGame
+    public static final int NUM_PRIVATE_OBJ_FOR_PLAYER_IN_SINGLEPLAYER_GAME = 2;
+    public static final int NUM_PUBLIC_OBJ_IN_SINGLEPLAYER_GAME = 2;
+    public static final int MIN_NUM_OF_TOOL_CARDS_IN_SINGLEPLAYER_GAME = 1;
+    public static final int MAX_NUM_OF_TOOL_CARDS_IN_SINGLEPLAYER_GAME = 5;
+    public static final int NUM_OF_TURNS_FOR_PLAYER_IN_SINGLEPLAYER_GAME = 2;
 
 
 }

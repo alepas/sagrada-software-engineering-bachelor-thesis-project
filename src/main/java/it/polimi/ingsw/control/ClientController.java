@@ -20,13 +20,26 @@ public class ClientController implements ResponseHandler {
     // reference to networking layer
     private final NetworkClient client;
 
+    private static ClientController instance;
+
     // the view
     private final CliView view;
 
     // Pieces of the model
     private ClientContext clientContext;
 
-    public ClientController(NetworkClient client) {
+    public static ClientController getInstance(NetworkClient client) {
+        if (instance == null){
+            instance = new ClientController(client);
+        }
+        return instance;
+    }
+
+    public static ClientController getInstance() {
+        return instance;
+    }
+
+    private ClientController(NetworkClient client) {
         this.client = client;
         this.clientContext = ClientContext.get();
         this.view = new CliView(this);
@@ -48,7 +61,7 @@ public class ClientController implements ResponseHandler {
     //    ------------------- Client methods ---------------------------
 
     public void startPlaying(){
-        client.startPlaying(this, clientContext.getCurrentGame());
+        client.startPlaying(this, clientContext.getCurrentGame().getID());
     }
 
     public String createUser(String username, String password){

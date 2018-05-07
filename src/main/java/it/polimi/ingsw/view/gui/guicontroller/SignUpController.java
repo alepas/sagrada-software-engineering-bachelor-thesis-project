@@ -18,7 +18,7 @@ import java.io.IOException;
 
 
 public class SignUpController {
-    private ClientController controller;
+    private ClientController controller = ClientController.getInstance();
 
 
     @FXML private PasswordField signUpPassword;
