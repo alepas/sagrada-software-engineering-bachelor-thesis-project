@@ -6,9 +6,7 @@ public class ClientContext {
     private static ClientContext instance;
     private String username;
     private String userToken;
-    private Game currentGame;
-
-    private boolean gameStarted;
+    private String currentGameID;
 
     private ClientContext() { }
 
@@ -24,8 +22,7 @@ public class ClientContext {
     public void clean(){
         this.username = null;
         this.userToken = null;
-        this.currentGame = null;
-        this.gameStarted = false;
+        this.currentGameID = null;
     }
 
     public String getUsername() {
@@ -44,20 +41,12 @@ public class ClientContext {
         this.userToken = userToken;
     }
 
-    public Game getCurrentGame() {
-        return currentGame;
+    public String getCurrentGameID() {
+        return currentGameID;
     }
 
-    public void setCurrentGame(Game currentGame) {
-        this.currentGame = currentGame;
-    }
-
-    public boolean isGameStarted() {
-        return gameStarted;
-    }
-
-    public void setGameStarted(boolean gameStarted) {
-        this.gameStarted = gameStarted;
+    public void setCurrentGameID(String currentGameID) {
+        this.currentGameID = currentGameID;
     }
 
 }

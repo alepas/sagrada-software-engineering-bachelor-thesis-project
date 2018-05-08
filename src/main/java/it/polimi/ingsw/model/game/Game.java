@@ -1,41 +1,30 @@
 package it.polimi.ingsw.model.game;
 
-import it.polimi.ingsw.model.constants.GameConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.dicebag.DiceBag;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;
-import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidPlayersException;
-import it.polimi.ingsw.model.exceptions.gameExceptions.NotEnoughPlayersException;
-import it.polimi.ingsw.model.game.gameObservers.GameObserver;
-import it.polimi.ingsw.model.game.gameObservers.ObservedGame;
+
+import it.polimi.ingsw.control.network.commands.responses.notifications.PrivateObjExtractedNotification;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
-import it.polimi.ingsw.model.wpc.WpcDB;
 
-import java.io.Serializable;
-import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.UUID;
+import java.util.*;
 
-public abstract class Game implements Runnable, Serializable, ObservedGame {
+public abstract class Game extends Observable implements Runnable {
     private ArrayList<ToolCard> toolCards;
     private ArrayList<PublicObjectiveCard> publicObjectiveCards;
     private String id;
     private ArrayList<Dice> extractedDices;
-    private transient DiceBag diceBag;
-    private boolean started;
+    private DiceBag diceBag;
 
     RoundTrack roundTrack;
     int numPlayers;
-    ArrayList<PlayerInGame> players;
+    PlayerInGame[] players;
 
-    transient int numOfPrivateObjectivesForPlayer;
-    transient int numOfToolCards;
-    transient int numOfPublicObjectiveCards;
-
-    transient ArrayList<GameObserver> gameObservers;
+    int numOfPrivateObjectivesForPlayer;
+    int numOfToolCards;
+    int numOfPublicObjectiveCards;
 
     Game(int numPlayers) {
         toolCards = new ArrayList<>();
@@ -43,24 +32,15 @@ public abstract class Game implements Runnable, Serializable, ObservedGame {
         id = UUID.randomUUID().toString();
         extractedDices = new ArrayList<>();
         diceBag = new DiceBag();
-        started = false;
 
         roundTrack = new RoundTrack();
         this.numPlayers = numPlayers;
-        players = new ArrayList<>();
-
-        gameObservers = new ArrayList<>();
+        players = new PlayerInGame[numPlayers];
     }
 
 
 
-    //----------------------------- Metodi validi per entrambi i lati -----------------------------
 
-    @Override
-    public void addObserver(GameObserver observer){ gameObservers.add(observer); }
-
-    @Override
-    public void removeObserver(GameObserver observer) { gameObservers.remove(observer); }
 
     public ArrayList<ToolCard> getToolCards() {
         return toolCards;
@@ -76,7 +56,7 @@ public abstract class Game implements Runnable, Serializable, ObservedGame {
 
     public ArrayList<Dice> getExtractedDices() { return extractedDices; }
 
-    public ArrayList<PlayerInGame> getPlayers() { return players; }
+    public PlayerInGame[] getPlayers() { return players; }
 
     public void removeExtractedDice(Dice dice){ extractedDices.remove(dice); }
 
@@ -84,29 +64,59 @@ public abstract class Game implements Runnable, Serializable, ObservedGame {
         return roundTrack;
     }
 
-    public boolean isStarted() {
-        return started;
+    public boolean isFull(){
+        return !(players[players.length-1] == null);
     }
 
-    public void setStarted(boolean started) {
-        this.started = started;
-        if (started){
-            for (GameObserver observer : gameObservers){
-                try {
-                    observer.onGameStarted();
-                } catch (RemoteException e){
-                    //TODO: vedi altri metodi
-                    e.printStackTrace();
-                }
+    public void changeAndNotifyObservers(Object arg){
+        this.setChanged();
+        notifyObservers(arg);
+    }
+
+    public int nextFree(){
+        //Restituisce la prima posizione null nell'array dei players
+        //-1 se nessun valore è a null
+        if (isFull()) return -1;
+        for(int i = 0; i < players.length; i++){
+            if (players[i] == null) return i;
+        }
+        return -1;
+    }
+
+    public int playerIndex(String username){
+        for(int i = 0; i < players.length; i++){
+            if (players[i] == null) return -1;
+            if (players[i].getUser().equals(username)) return i;
+        }
+        return -1;
+    }
+
+    public void removeArrayIndex(Object[] array, int index){
+        for(int i = index; i < array.length; i++){
+            if (i == array.length-1) {
+                array[i] = null;
+                return;
             }
+            if (array[i+1] == null) {
+                array[i] = null;
+                return;
+            }
+            Object temp = array[i];
+            array[i] = array[i+1];
+            array[i+1] = temp;
         }
     }
 
-    //------------------------------- Metodi validi solo lato server ------------------------------
+    public int numActualPlayers(){
+        if (isFull()) return numPlayers;
+        return nextFree();
+    }
 
     void extractPrivateObjectives() {
         ArrayList<Color> colorsExtracted = new ArrayList<>();
         Color color;
+        HashMap<String, Color[]> colorsByUser = new HashMap<>();
+
 
         for (PlayerInGame player : players){
             for (int i = 0; i < numOfPrivateObjectivesForPlayer; i++) {
@@ -115,13 +125,14 @@ public abstract class Game implements Runnable, Serializable, ObservedGame {
                 } while (colorsExtracted.contains(color));
 
                 colorsExtracted.add(color);
-                if (i == 0) {
-                    player.setPrivateObjective1(color);
-                } else {
-                    player.setPrivateObjective2(color);
-                }
+                player.setPrivateObjs(color, i);
             }
+
+            colorsByUser.put(player.getUser(), player.getPrivateObjs());
         }
+
+
+        changeAndNotifyObservers(new PrivateObjExtractedNotification(colorsByUser));
     }
 
     void extractWPCs(){
@@ -133,7 +144,7 @@ public abstract class Game implements Runnable, Serializable, ObservedGame {
 //
 //        int i = 0;
 //
-//        for(PlayerInGame player : players){
+//        for(PlayerInGame player : colorsByUser){
 //            ChooseWPCThread chooseThread = new ChooseWPCThread(player,
 //                    new ArrayList<String> (ids.subList(GameConstants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER*i,
 //                            GameConstants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER*(i+1))));
@@ -153,7 +164,7 @@ public abstract class Game implements Runnable, Serializable, ObservedGame {
 //
 //        for (i = 0; i < chooseThreads.length; i++){
 //            if (chooseThreads[i].isInterrupted()){
-//                players.get(i).setWPC(ids.subList(GameConstants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER*i,
+//                colorsByUser.get(i).setWPC(ids.subList(GameConstants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER*i,
 //                        GameConstants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER*(i+1)).get(0));
 //            }
 //        }
@@ -180,27 +191,6 @@ public abstract class Game implements Runnable, Serializable, ObservedGame {
     public DiceBag getDiceBag() {
         return diceBag;
     }
-
-
-
-
-
-    //------------------------------- Metodi validi solo lato client -------------------------------
-
-    public void initializeObservers(){ gameObservers = new ArrayList<>(); }
-
-    public void setToolCards(ArrayList<ToolCard> toolCards) {
-        this.toolCards = toolCards;
-    }
-
-    public void setPublicObjectiveCards(ArrayList<PublicObjectiveCard> publicObjectiveCards) {
-        this.publicObjectiveCards = publicObjectiveCards;
-    }
-
-    public void setExtractedDices(ArrayList<Dice> extractedDices) {
-        this.extractedDices = extractedDices;
-    }
-
 
 
     //--------------------------------------- Metodi astratti --------------------------------------
