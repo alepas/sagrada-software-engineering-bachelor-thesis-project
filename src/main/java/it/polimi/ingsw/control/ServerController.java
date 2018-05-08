@@ -77,16 +77,16 @@ public class ServerController implements RequestHandler {
 
             if (clientHandler != null) { game.addObserver(clientHandler); }
 
-            return new FindGameResponse(game, null);
+            return new FindGameResponse(game.getID(), game.numActualPlayers(), game.getNumPlayers(), null);
 
         } catch (NullTokenException e) {
-            return new FindGameResponse(null, e.getMessage());
+            return new FindGameResponse(null, 0, 0, e.getMessage());
         } catch (CannotFindUserInDBException e) {
-            return new FindGameResponse(null, e.getMessage());
+            return new FindGameResponse(null, 0, 0, e.getMessage());
         } catch (InvalidPlayersException e){
-            return new FindGameResponse(null, e.getMessage());
+            return new FindGameResponse(null, 0, 0, e.getMessage());
         } catch (Exception e){
-            return new FindGameResponse(null, e.getMessage());
+            return new FindGameResponse(null, 0, 0, e.getMessage());
         }
     }
 }

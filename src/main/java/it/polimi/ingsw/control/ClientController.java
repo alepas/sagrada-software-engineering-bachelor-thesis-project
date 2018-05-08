@@ -10,11 +10,14 @@ import it.polimi.ingsw.control.network.commands.requests.LoginRequest;
 import it.polimi.ingsw.control.network.commands.responses.CreateUserResponse;
 import it.polimi.ingsw.control.network.commands.responses.GenericErrorResponse;
 import it.polimi.ingsw.control.network.commands.responses.LoginResponse;
-import it.polimi.ingsw.control.network.rmi.RmiClient;
-import it.polimi.ingsw.control.network.socket.SocketClient;
 import it.polimi.ingsw.model.clientModel.ClientContext;
-import it.polimi.ingsw.model.game.Game;
+import it.polimi.ingsw.model.dicebag.Color;
+import it.polimi.ingsw.control.network.commands.responses.notifications.GameStartedNotification;
+import it.polimi.ingsw.control.network.commands.responses.notifications.PlayersChangedNotification;
+import it.polimi.ingsw.control.network.commands.responses.notifications.PrivateObjExtractedNotification;
 import it.polimi.ingsw.view.CliView;
+
+import java.util.HashMap;
 
 public class ClientController implements ResponseHandler {
     // reference to networking layer
@@ -61,7 +64,7 @@ public class ClientController implements ResponseHandler {
     //    ------------------- Client methods ---------------------------
 
     public void startPlaying(){
-        client.startPlaying(this, clientContext.getCurrentGame().getID());
+        client.startPlaying(this, clientContext.getCurrentGameID());
     }
 
     public String createUser(String username, String password){
@@ -76,11 +79,11 @@ public class ClientController implements ResponseHandler {
         return clientContext.getUsername();
     }
 
-    public Game findGame(int numPlayers) {
+    public String findGame(int numPlayers) {
         Request request = null;
         request = new FindGameRequest(clientContext.getUserToken(), numPlayers);
         client.request(request).handle(this);
-        return clientContext.getCurrentGame();
+        return clientContext.getCurrentGameID();
     }
 
 
@@ -110,18 +113,55 @@ public class ClientController implements ResponseHandler {
 
     @Override
     public void handle(FindGameResponse response) {
-        Game game = response.game;
-        if (game != null) {
-            game.initializeObservers();
-            ClientContext.get().setCurrentGame(game);
+        String gameID = response.gameID;
+        if (gameID != null) {
+            ClientContext.get().setCurrentGameID(gameID);
+            view.displayText("Aggiunto alla partita: " + gameID);
+            view.displayText("Giocatori in partita: " + response.actualPlayers +
+                        " di " + response.numPlayers + " necessari.");
             startPlaying();
         } else {
             view.displayText(response.error);
         }
     }
 
+
+
+    //    ------------------ Notification handling -------------------------
+
     @Override
     public void handle(GenericErrorResponse response) {
         view.displayText(response.error);
+    }
+
+    @Override
+    public void handle(GameStartedNotification response) {
+        view.displayText("La partita è iniziata");
+    }
+
+    @Override
+    public void handle(PlayersChangedNotification response) {
+        if (response.joined == true){
+            view.displayText(response.username + " si è unito alla partita.\n" +
+                    ">>> Giocatori in partita: " + response.actualPlayers + " di "
+                    + response.numPlayers + " necessari.");
+        } else {
+            view.displayText(response.username + " è uscito dalla partita.\n" +
+                    ">>> Giocatori in partita: " + response.actualPlayers + " di "
+                    + response.numPlayers + " necessari.");
+        }
+    }
+
+    @Override
+    public void handle(PrivateObjExtractedNotification response) {
+        HashMap<String, Color[]> colorByUser = response.colorsByUser;
+        Color[] playerColors = colorByUser.get(ClientContext.get().getUsername());
+        StringBuilder str = new StringBuilder();
+        if (playerColors.length == 1) str.append("Il tuo private objective è: ");
+        else str.append("I tui private objective sono: ");
+        for (Color color : playerColors){
+            str.append(color + "\t");
+        }
+        view.displayText(str.toString());
     }
 }

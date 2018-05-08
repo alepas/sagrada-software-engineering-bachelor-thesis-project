@@ -1,20 +1,19 @@
-package it.polimi.ingsw.control.network.commands.responses;
+package it.polimi.ingsw.control.network.commands.responses.notifications;
 
 import it.polimi.ingsw.control.network.commands.Response;
 import it.polimi.ingsw.control.network.commands.ResponseHandler;
-import it.polimi.ingsw.model.game.Game;
 
-public class FindGameResponse implements Response {
-    public final String gameID;
+public class PlayersChangedNotification implements Response {
+    public final String username;
+    public final boolean joined;
     public final int actualPlayers;
     public final int numPlayers;
-    public final String error;
 
-    public FindGameResponse(String gameID, int actualPlayers, int numPlayers, String error) {
-        this.gameID = gameID;
+    public PlayersChangedNotification(String username, boolean joined, int actualPlayers, int numPlayers) {
+        this.username = username;
+        this.joined = joined;
         this.actualPlayers = actualPlayers;
         this.numPlayers = numPlayers;
-        this.error = error;
     }
 
     @Override

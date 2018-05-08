@@ -4,14 +4,15 @@ import it.polimi.ingsw.model.constants.GameConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.exceptions.gameExceptions.*;
-import it.polimi.ingsw.model.game.gameObservers.GameObserver;
+import it.polimi.ingsw.control.network.commands.responses.notifications.GameStartedNotification;
+import it.polimi.ingsw.control.network.commands.responses.notifications.PlayersChangedNotification;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
-public class MultiplayerGame extends Game implements Runnable {
+public class MultiplayerGame extends Game {
     private int turnPlayer;
     private int roundPlayer;
     private int currentTurn;
@@ -38,52 +39,24 @@ public class MultiplayerGame extends Game implements Runnable {
 
     public synchronized boolean addPlayer(String user) throws MaxPlayersExceededException, UserAlreadyInThisGameException {
         //Return true if, after adding the player, the game is complete
-        if (players.size() == numPlayers) throw new MaxPlayersExceededException(user, this);
+        if (this.isFull()) throw new MaxPlayersExceededException(user, this);
 
-        for (PlayerInGame player : players){
-            if (player.getUser().equals(user)) throw new UserAlreadyInThisGameException(user, this);
-        }
+        if (playerIndex(user) >= 0) throw new UserAlreadyInThisGameException(user, this);
 
         PlayerInGame player = new PlayerInGame(user, this);
-        players.add(player);
+        players[nextFree()] = player;
 
-        for(GameObserver observer : gameObservers){
-            try {
-                observer.onJoin(user);
-            } catch (RemoteException e){
-                e.printStackTrace();
-                //TODO: riconetti giocatore
-                /*Il giocatore che ha generato l'exception non riceverà la notifica che un altro giocatore
-                  è entrato in partita, pertanto non lo aggiungerà ai giocatori presenti nel modello della
-                  partita che lui ha salvato localmente. è necessario che il giocatore venga disconnesso e
-                  riconesso alla partita in modo che possa scaricare la versione aggiornata del Game*/
-            }
-        }
+        changeAndNotifyObservers(new PlayersChangedNotification(user, true, numActualPlayers(), numPlayers));
 
-        return players.size() == numPlayers;
+        return this.isFull();
     }
 
     public synchronized void removePlayer(String user) throws UserNotInThisGameException {
-        for (PlayerInGame player : players){
-            if(player.getUser().equals(user)){
-                players.remove(player);
+        int index = playerIndex(user);
+        if (index < 0) throw new UserNotInThisGameException(user, this);
+        removeArrayIndex(players, index);
 
-                for(GameObserver observer : gameObservers){
-                    try {
-                        observer.onLeave(user);
-                    } catch (RemoteException e){
-                        e.printStackTrace();
-                        //TODO: riconetti giocatore
-                        /*Il giocatore che ha generato l'exception non riceverà la notifica che un altro giocatore
-                          è entrato in partita, pertanto non lo aggiungerà ai giocatori presenti nel modello della
-                          partita che lui ha salvato localmente. è necessario che il giocatore venga disconnesso e
-                          riconesso alla partita in modo che possa scaricare la versione aggiornata del Game*/
-                    }
-                }
-                return;
-            }
-        }
-        throw new UserNotInThisGameException(user, this);
+        changeAndNotifyObservers(new PlayersChangedNotification(user, false, numActualPlayers(), numPlayers));
     }
 
 
@@ -94,26 +67,50 @@ public class MultiplayerGame extends Game implements Runnable {
     @Override
     public void run() {
         //Codice che regola il funzionamento della partita
-        setStarted(true);
+        try {
+            Thread.sleep(3000); //Aspetta 3 secondi che i giocatori si connettano tutti
+            /* Quando l'ultimo giocatore si connette il thread della partita viene avviato immediatamente,
+               ma l'ultimo giocatore, di fatto, non è ancora in partita: lo è solo il suo playerInGame lato
+               server. Occorre aspettare che l'ultimo utente riceva la partita in cui è entrato e che si metta
+               in ascolto di eventuali cambiamenti. Ecco il perchè di questa attesa*/
+        } catch (InterruptedException e){
+            //TODO: La partita è stata sospesa forzatamente
+        }
+
+        changeAndNotifyObservers(new GameStartedNotification());
 
         System.out.println("La partità è iniziata");
-//        initializeGame();
+        initializeGame();
     }
 
     @Override
     public void initializeGame() {
         extractPrivateObjectives();
-        extractWPCs();              //Genera delle eccezioni?
-        extractToolCards();
-        extractPublicObjectives();
-        shufflePlayers();
-
-        turnPlayer = 0;
-        roundPlayer = 0;
-        currentTurn = 1;
+//        extractWPCs();              //Genera delle eccezioni?
+//        extractToolCards();
+//        extractPublicObjectives();
+//        shufflePlayers();
+//
+//        turnPlayer = 0;
+//        roundPlayer = 0;
+//        currentTurn = 1;
     }
 
-    private void shufflePlayers(){ Collections.shuffle(players); }
+    private void shufflePlayers(){
+        System.out.println("\nPrima dello shuffle");
+        for (PlayerInGame player : players){
+            System.out.println(player.getUser());
+        }
+
+        ArrayList<PlayerInGame> playersList = new ArrayList<>(Arrays.asList(players));
+        Collections.shuffle(playersList);
+        players = (PlayerInGame[]) playersList.toArray();
+
+        System.out.println("\nDopo lo shuffle");
+        for (PlayerInGame player : players){
+            System.out.println(player.getUser());
+        }
+    }
 
 
     @Override
@@ -128,14 +125,14 @@ public class MultiplayerGame extends Game implements Runnable {
 
     @Override
     public void nextTurn() {
-        players.get(turnPlayer).setNotActive();
-        if (currentTurn < GameConstants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME*getNumPlayers()) {
-            turnPlayer = nextPlayer();
-            players.get(turnPlayer).setActive();
-            currentTurn++;
-        } else {
-//            nextRound();
-        }
+//        colorsByUser.get(turnPlayer).setNotActive();
+//        if (currentTurn < GameConstants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME*getNumPlayers()) {
+//            turnPlayer = nextPlayer();
+//            colorsByUser.get(turnPlayer).setActive();
+//            currentTurn++;
+//        } else {
+////            nextRound();
+//        }
     }
 
     protected int nextPlayer() throws MaxNumberOfTurnsPlayedExeption {
@@ -167,13 +164,15 @@ public class MultiplayerGame extends Game implements Runnable {
     }
 
     private int privateObjScore(PlayerInGame player){
-        Color playerColor = player.getPrivateObjective1();
+        Color[] playerColors = player.getPrivateObjs();
         ArrayList<Dice> dices = player.getWPC().getWpcDices();
 
         int score = 0;
 
         for(Dice dice : dices){
-            if (dice.getDiceColor() == playerColor) score += dice.getDiceNumber();
+            for (Color color : playerColors){
+                if (dice.getDiceColor() == color) score += dice.getDiceNumber();
+            }
         }
 
         return score;

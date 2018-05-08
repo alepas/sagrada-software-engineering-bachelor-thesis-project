@@ -11,6 +11,6 @@ public class NotEnoughPlayersException extends Exception {
     @Override
     public String getMessage() {
         return "Not enough players to start game: " + game.getID() + ". Joined: "
-                + game.getPlayers().size() + ". Required: " + game.getNumPlayers();
+                + game.getPlayers().length + ". Required: " + game.getNumPlayers();
     }
 }

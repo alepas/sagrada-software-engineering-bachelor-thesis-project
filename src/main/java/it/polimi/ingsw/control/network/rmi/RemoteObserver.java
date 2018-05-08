@@ -1,48 +1,13 @@
 package it.polimi.ingsw.control.network.rmi;
 
-import it.polimi.ingsw.model.clientModel.ClientContext;
-import it.polimi.ingsw.model.exceptions.gameExceptions.MaxPlayersExceededException;
-import it.polimi.ingsw.model.exceptions.gameExceptions.UserAlreadyInThisGameException;
-import it.polimi.ingsw.model.exceptions.gameExceptions.UserNotInThisGameException;
-import it.polimi.ingsw.model.game.MultiplayerGame;
-import it.polimi.ingsw.model.game.gameObservers.GameObserver;
+import it.polimi.ingsw.control.network.commands.Response;
 
+import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
+import java.util.Observable;
 
-public class RemoteObserver extends UnicastRemoteObject implements GameObserver {
+public interface RemoteObserver extends Remote {
 
-    public RemoteObserver() throws RemoteException { }
+    public void update(Observable o, Object arg) throws RemoteException;
 
-    @Override
-    public void onJoin(String username) {
-        MultiplayerGame game = (MultiplayerGame) ClientContext.get().getCurrentGame();
-        try {
-            game.addPlayer(username);
-        } catch (MaxPlayersExceededException e){
-            //TODO
-            e.printStackTrace();
-        } catch (UserAlreadyInThisGameException e){
-            //TODO
-            e.printStackTrace();
-        }
-
-    }
-
-    @Override
-    public void onLeave(String username) {
-        MultiplayerGame game = (MultiplayerGame) ClientContext.get().getCurrentGame();
-        try {
-            game.removePlayer(username);
-        } catch (UserNotInThisGameException e){
-            //TODO
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onGameStarted() throws RemoteException {
-        MultiplayerGame game = (MultiplayerGame) ClientContext.get().getCurrentGame();
-        game.setStarted(true);
-    }
 }

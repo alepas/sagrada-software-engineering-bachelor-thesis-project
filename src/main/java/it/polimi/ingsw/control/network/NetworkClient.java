@@ -8,5 +8,5 @@ import it.polimi.ingsw.model.game.Game;
 public interface NetworkClient{
     Response request(Request request);
 
-    void startPlaying(ResponseHandler handler, Game game);
+    void startPlaying(ResponseHandler handler, String gameID);
 }

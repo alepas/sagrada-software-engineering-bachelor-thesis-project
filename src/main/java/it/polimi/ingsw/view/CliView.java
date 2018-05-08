@@ -3,10 +3,11 @@ package it.polimi.ingsw.view;
 import it.polimi.ingsw.control.ClientController;
 import it.polimi.ingsw.model.clientModel.ClientContext;
 import it.polimi.ingsw.model.constants.CliConstants;
+import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.game.Game;
 import it.polimi.ingsw.model.game.MultiplayerGame;
 
-import java.rmi.RemoteException;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class CliView implements AbstractView {
@@ -108,14 +109,11 @@ public class CliView implements AbstractView {
             try {
                 numPlayers = Integer.parseInt(response);
                 try {
-                    Game game = controller.findGame(numPlayers);
-                    if (game != null) {
-                        game.addObserver(this);
-                        displayText("Aggiunto alla partita: " + game.getID());
-                    }
-                    return (game != null);
+                    String gameID = controller.findGame(numPlayers);
+                    return (gameID != null);
                 } catch (Exception e){
                     displayText("Impossibile trovare partita. Riprovare più tardi");
+                    e.printStackTrace();
                     return false;
                 }
             } catch (NumberFormatException e){
@@ -129,7 +127,7 @@ public class CliView implements AbstractView {
         Thread waitingPlayers = new Thread(
                 () -> {
                     do {}
-                    while (!ClientContext.get().isGameStarted());
+                    while (true);
                 }
         );
 
@@ -143,29 +141,4 @@ public class CliView implements AbstractView {
 
     }
 
-
-
-
-    //------------------------------- Game observer -------------------------------
-
-    @Override
-    public void onJoin(String username) {
-        displayText(username + " è entrato nella partita");
-        MultiplayerGame game = (MultiplayerGame) ClientContext.get().getCurrentGame();
-        displayText("Giocatori in partita: " + game.getPlayers().size() + " di " +
-                game.getNumPlayers() + " necessari");
-    }
-
-    @Override
-    public void onLeave(String username) {
-        displayText(username + " è uscito dalla partita");
-        MultiplayerGame game = (MultiplayerGame) ClientContext.get().getCurrentGame();
-        displayText("Giocatori in partita: " + game.getPlayers().size() + " di " +
-                game.getNumPlayers() + " necessari");
-    }
-
-    @Override
-    public void onGameStarted() throws RemoteException {
-        displayText("La partita è iniziata");
-    }
 }

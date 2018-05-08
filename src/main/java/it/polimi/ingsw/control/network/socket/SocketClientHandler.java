@@ -3,18 +3,16 @@ package it.polimi.ingsw.control.network.socket;
 import it.polimi.ingsw.control.ServerController;
 import it.polimi.ingsw.control.network.commands.Request;
 import it.polimi.ingsw.control.network.commands.Response;
-import it.polimi.ingsw.model.game.gameObservers.GameObserver;
-import it.polimi.ingsw.model.game.gameObservers.socketNotifications.GameStartedNotification;
-import it.polimi.ingsw.model.game.gameObservers.socketNotifications.PlayersChangedNotification;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.rmi.RemoteException;
+import java.util.Observable;
+import java.util.Observer;
 
 
-public class SocketClientHandler implements Runnable, GameObserver {
+public class SocketClientHandler implements Runnable, Observer {
     private Socket socket;
     private final ObjectInputStream in;
     private final ObjectOutputStream out;
@@ -94,17 +92,7 @@ public class SocketClientHandler implements Runnable, GameObserver {
     //------------------------------ Game observer ------------------------------
 
     @Override
-    public void onJoin(String username) {
-        respond(new PlayersChangedNotification(username, true));
-    }
-
-    @Override
-    public void onLeave(String username) {
-        respond(new PlayersChangedNotification(username, false));
-    }
-
-    @Override
-    public void onGameStarted() throws RemoteException {
-        respond(new GameStartedNotification());
+    public void update(Observable o, Object arg) {
+        respond((Response) arg);
     }
 }

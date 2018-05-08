@@ -59,7 +59,7 @@ public class DatabaseGames {
 
                     } catch (UserAlreadyInThisGameException e){
                         try {
-                            if (game.getPlayers().size() == game.getNumPlayers()) startGame(game);
+                            if (game.isFull()) startGame(game);
                         } catch (NotEnoughPlayersException exc){
                             exc.printStackTrace();
                             return game;
@@ -81,7 +81,7 @@ public class DatabaseGames {
 
     private synchronized void startGame(Game game) throws GameNotInAvailableListException, NotEnoughPlayersException {
 
-        if (game.getPlayers().size() != game.getNumPlayers()) throw new NotEnoughPlayersException(game);
+        if (!game.isFull()) throw new NotEnoughPlayersException(game);
 
         moveGameToActive(game);
         Thread gameThread = new Thread(game);
@@ -103,10 +103,13 @@ public class DatabaseGames {
                 game = new MultiplayerGame(numPlayers);
                 ((MultiplayerGame) game).addPlayer(username);
                 availableGames.add((MultiplayerGame) game);
+
             } catch (InvalidMultiplayerGamePlayersException e){
                 throw new InvalidPlayersException(numPlayers);
+
             } catch (MaxPlayersExceededException e){
                 return createNewGame(username, numPlayers);
+
             } catch (UserAlreadyInThisGameException e){
                 if (!availableGames.contains(game)) availableGames.add((MultiplayerGame) game);
                 return game;

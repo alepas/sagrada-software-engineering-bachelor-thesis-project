@@ -1,8 +1,10 @@
 package it.polimi.ingsw.model.usersdb;
 
 import it.polimi.ingsw.model.cards.ToolCard;
+import it.polimi.ingsw.model.constants.GameConstants;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotUseToolCardException;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.PlayerNotAuthorizedException;
+import it.polimi.ingsw.model.game.MultiplayerGame;
 import it.polimi.ingsw.model.wpc.WPC;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.game.Game;
@@ -12,12 +14,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 
-public class PlayerInGame implements Serializable {
+public class PlayerInGame {
     private String username;
     private transient DatabaseUsers db;
     private Game game;
-    private Color privateObjective1;
-    private Color privateObjective2;
+    private Color[] privateObjs;
     private int favours;
     private boolean active=false;
     private WPC wpc;
@@ -34,8 +35,11 @@ public class PlayerInGame implements Serializable {
         db=DatabaseUsers.getInstance();
         username=user;
         wpc=null;
-        privateObjective1=null;
-        privateObjective2=null;
+        if (game instanceof MultiplayerGame) {
+            privateObjs = new Color[GameConstants.NUM_PRIVATE_OBJ_FOR_PLAYER_IN_MULTIPLAYER_GAME];
+        } else {
+            privateObjs = new Color[GameConstants.NUM_PRIVATE_OBJ_FOR_PLAYER_IN_SINGLEPLAYER_GAME];
+        }
         favours=0;
         active=false;
 
@@ -107,25 +111,12 @@ public class PlayerInGame implements Serializable {
 
 
 
-    public Color getPrivateObjective1() {
-        return privateObjective1;
+    public Color[] getPrivateObjs() {
+        return privateObjs;
     }
 
-    public Color getPrivateObjective2() {
-        return privateObjective2;
-    }
-
-
-    public void setPrivateObjective1(Color color) {
-        if (privateObjective1==null)
-            privateObjective1=color;
-
-    }
-
-    public void setPrivateObjective2(Color color) {
-        if (privateObjective2==null)
-            privateObjective2=color;
-
+    public void setPrivateObjs(Color color, int index) {
+        privateObjs[index] = color;
     }
 
 
@@ -139,7 +130,7 @@ public class PlayerInGame implements Serializable {
 
         //da implementare select carta e poi
         String ab="123";
-        //this.wpc2= wpc2.getWpcByID(id); // id è una stringa
+        //this.wpc= wpc.getWpcByID(id); // id è una stringa
     }
 
 

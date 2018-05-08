@@ -49,7 +49,7 @@ public class SocketClient implements NetworkClient {
     }
 
     @Override
-    public void startPlaying(ResponseHandler handler, Game game) {
+    public void startPlaying(ResponseHandler handler, String gameID) {
         // start a receiver thread
         receiver = new Thread(
                 () -> {

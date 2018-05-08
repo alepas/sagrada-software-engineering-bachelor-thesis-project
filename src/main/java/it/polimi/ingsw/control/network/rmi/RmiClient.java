@@ -6,8 +6,6 @@ import it.polimi.ingsw.control.network.commands.Response;
 import it.polimi.ingsw.control.network.commands.ResponseHandler;
 import it.polimi.ingsw.control.network.commands.responses.GenericErrorResponse;
 import it.polimi.ingsw.model.constants.NetworkConstants;
-import it.polimi.ingsw.model.game.Game;
-import it.polimi.ingsw.model.game.gameObservers.GameObserver;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -32,10 +30,10 @@ public class RmiClient implements NetworkClient {
     }
 
     @Override
-    public void startPlaying(ResponseHandler handler, Game game) {
+    public void startPlaying(ResponseHandler handler, String gameID) {
         try {
-            GameObserver gameObserver = new RemoteObserver();
-            remoteServer.addObserver(gameObserver, game);
+            RemoteObserver remoteObserver = new RmiRemoteObserver(handler);
+            remoteServer.addObserver(remoteObserver, gameID);
         } catch (RemoteException e){
             e.printStackTrace();
         }
