@@ -5,9 +5,7 @@ import org.junit.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
 
-import static it.polimi.ingsw.model.wpc.WpcDB.getInstance;
 
 public class WpcBDTest {
     static private WpcDB allWpc0, allWpc1;

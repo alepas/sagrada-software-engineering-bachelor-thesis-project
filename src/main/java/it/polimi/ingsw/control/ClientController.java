@@ -61,7 +61,7 @@ public class ClientController implements ResponseHandler {
     //    ------------------- Client methods ---------------------------
 
     public void startPlaying(){
-        client.startPlaying(this, clientContext.getCurrentGame().getID());
+       // client.startPlaying(this, clientContext.getCurrentGame().getID());
     }
 
     public String createUser(String username, String password){

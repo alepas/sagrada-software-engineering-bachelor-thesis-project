@@ -1,25 +1,31 @@
 package it.polimi.ingsw.view.gui.guicontroller;
 
-
+import it.polimi.ingsw.control.ClientController;
 
 import javafx.fxml.FXML;
-import it.polimi.ingsw.control.ClientController;
 import javafx.fxml.FXMLLoader;
+
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+
 import javafx.stage.Stage;
 
 import javafx.event.ActionEvent;
+
 import java.io.IOException;
 
+/*JOptionPane errorlabel = new JOptionPane();
+  errorlabel.setFont( new java.awt.Font("Ariel", 0, 12));
+  errorlabel.showMessageDialog(null, "Error", "ERRORE",  JOptionPane.ERROR_MESSAGE);*/
 
 public class SignUpController {
-    private ClientController controller = ClientController.getInstance();
 
+    private ClientController controller = ClientController.getInstance();
 
     @FXML private PasswordField signUpPassword;
 
@@ -27,13 +33,19 @@ public class SignUpController {
 
     @FXML private TextField signUpUsername;
 
+    @FXML private Label signUpErrorLabel;
 
     public void  initialize(){
 
         signUpButton.setOnAction(event->{
-            createAccount();
-            changeSceneHendle(event ,"/it/polimi/ingsw/view/gui/guiview/signIn.fxml");
+
+            if(createAccount() == null)
+                signUpErrorLabel.setVisible(true);    //rendo la label di errore visibile
+            else
+                changeSceneHendle(event ,"/it/polimi/ingsw/view/gui/guiview/entranceTotheGame.fxml");
         });
+
+        signUpUsername.setOnAction(event -> signUpErrorLabel.setVisible(false));
     }
 
 
@@ -51,18 +63,15 @@ public class SignUpController {
     }
 
 
-    private void createAccount() {
+    private String createAccount() {
 
         String username = signUpUsername.getText();
         String password = signUpPassword.getText();
-        System.out.println(password);
-        System.out.println(username);
+        String user =null;
 
-        if(!username.equals("") || !password.equals("")) {
-            controller.createUser(username, password);
-        }
-        else
-            System.out.println("Error login user");
+        if(!username.equals("") && !password.equals(""))
+             user = controller.createUser(username, password);
+
+        return user;
     }
-
 }

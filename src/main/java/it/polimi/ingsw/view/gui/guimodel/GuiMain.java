@@ -17,8 +17,6 @@ import java.util.Scanner;
 public class GuiMain extends Application {
 
 
-
-
         private static Scanner scanner = new Scanner(System.in);
 
         private enum Technology { SOCKET, RMI }
@@ -63,7 +61,7 @@ public class GuiMain extends Application {
                         break;
                 }
             } while (technology == null);
-            Application.launch(GuiMain.class, args);
+
         }
 
         private static void startSocketClient() throws IOException{
@@ -72,7 +70,8 @@ public class GuiMain extends Application {
 
             client.init();
             ClientController controller = ClientController.getInstance(client);
-            controller.run();
+            Application.launch(GuiMain.class, null);
+
 
             client.close();
         }
@@ -81,7 +80,7 @@ public class GuiMain extends Application {
         private static void startRmiClient() throws Exception {
             RmiClient client = new RmiClient();
             ClientController controller = ClientController.getInstance(client);
-            controller.run();
+            Application.launch(GuiMain.class, null);
         }
 
 
@@ -96,6 +95,7 @@ public class GuiMain extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("/it/polimi/ingsw/view/gui/guiview/gui.fxml"));
         stage.setTitle("Sagrada");
         stage.setScene(new Scene(root));
+        stage.setResizable(false);
         stage.show();
     }
 

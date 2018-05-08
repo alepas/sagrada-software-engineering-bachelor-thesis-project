@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.*?>
+
 <?import javafx.geometry.*?>
-<?import javafx.scene.text.*?>
 <?import javafx.scene.image.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
 
-<AnchorPane styleClass="Background"  xmlns="http://javafx.com/javafx/8"
+<AnchorPane styleClass="Window" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.guicontroller.Controller">
-    <stylesheets>
 
-    </stylesheets>
     <ImageView blendMode="MULTIPLY" fitHeight="705.0" fitWidth="900.0">
         <viewport>
             <Rectangle2D />
@@ -20,27 +16,9 @@
         <Image url="@SagradaFirstScene.jpg" />
     </ImageView>
 
-    <Button fx:id="button1" layoutX="391.0" layoutY="475.0" prefHeight="57.0" prefWidth="131.0" styleClass="Button1" text="Sign up" textAlignment="CENTER">
-        <font>
-            <Font size="24.0" />
-        </font>
-        <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-         <effect>
-            <InnerShadow blurType="GAUSSIAN" color="#f9c22d" />
-         </effect>
-    </Button>
+    <Button fx:id="button1" styleClass="FirstSceneButton" layoutX="391.0" layoutY="475.0" text="Sign up"/>
 
-    <Button fx:id="button2" alignment="CENTER" layoutX="391.0" layoutY="345.0" prefHeight="57.0" prefWidth="131.0" styleClass="Button1" text="Sign in" textAlignment="CENTER">
-        <font>
-            <Font size="24.0" />
-        </font>
-        <cursor>
-            <Cursor fx:constant="HAND" />
-        </cursor>
-        <effect>
-            <InnerShadow blurType="GAUSSIAN" color="#f9c22d" />
-        </effect>
-    </Button>
+    <Button fx:id="button2" styleClass="FirstSceneButton" layoutX="391.0" layoutY="345.0" text="Sign in"/>
+
+
 </AnchorPane>

@@ -1,19 +1,54 @@
 
-.Background{
+.Window{
     -fx-alignment: center;
     -fx-background-size: 900 705;
 }
 
 
-.Button1{
-    fx-alignment: center;
-    font-size: 24;
-    fx-cursor: hand;
+.FirstSceneButton{
+    -fx-alignment: CENTER;
+    -fx-font-size: 24px;
+
+    -fx-cursor: HAND;
+     -fx-effect: innershadow(gaussian, #c29300, 10 , 0.0 , 0.0, 0.0);
+
+    -fx-pref-height: 57.0;
+    -fx-pref-width: 131.0;
 }
 
+.Scene{
+    -fx-alignment: CENTER;
+    -fx-background-color: #f9c22d;
+
+    -fx-pref-height: 550.0;
+    -fx-pref-width: 500.0;
+}
+
+
 .Button{
-    -fx-cursor: hand;
-    -fx-font-size: 14pt;
-    -fx-font-fill: #ffffff;
-    -fx-alignment: center;
+    -fx-alignment: CENTER;
+
+    -fx-background-color: #4b636e;
+
+    -fx-effect: innershadow(gaussian, #c29300, 10 , 0.0 , 0.0, 0.0);
+    -fx-cursor: HAND;
+
+    -fx-font-size: 14px;
+    -fx-text-alignment: CENTER;
+    -fx-text-fill: #ffffff;
+
+    -fx-pref-height: 25;
+    -fx-pref-width: 105;
+}
+
+.InsertionField{
+    -fx-pref-height: 25;
+    -fx-pref-width: 220;
+
+    -fx-effect: innershadow(gaussian, #c29300, 10 , 0.0 , 0.0, 0.0);
+}
+
+.Label{
+    -fx-font-size: 14px;
+
 }

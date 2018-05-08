@@ -28,7 +28,7 @@ public class ClientControllerTest {
         clientContext = ClientContext.get();
         view = mock(AbstractView.class);
 
-        clientController = new ClientController(client);
+        //clientController = new ClientController(client);
     }
 
 //    @Test
