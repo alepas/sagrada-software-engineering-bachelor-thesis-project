@@ -7,7 +7,7 @@
 <?import javafx.scene.text.*?>
 
 <AnchorPane  styleClass="Scene" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-             fx:controller="it.polimi.ingsw.view.gui.guicontroller.SignUpController">
+             fx:controller="it.polimi.ingsw.control.guicontroller.SignUpController">
 
     <ImageView fitHeight="540.0" fitWidth="490.0" layoutX="11.0" layoutY="7.0"
                AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">

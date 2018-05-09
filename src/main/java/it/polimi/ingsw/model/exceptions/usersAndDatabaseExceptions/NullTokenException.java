@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions;
 
-public class NullTokenException extends RuntimeException{
+public class NullTokenException extends Exception{
     private String user;
 
     public NullTokenException(){}

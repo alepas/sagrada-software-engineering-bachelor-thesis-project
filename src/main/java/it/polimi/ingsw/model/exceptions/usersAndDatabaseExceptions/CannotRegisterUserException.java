@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions;
 
-public class CannotRegisterUserException extends RuntimeException{
+public class CannotRegisterUserException extends Exception{
     private int cause;
     private String user;
 

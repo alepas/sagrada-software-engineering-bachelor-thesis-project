@@ -7,7 +7,7 @@
 <?import javafx.scene.control.Button?>
 
 <AnchorPane styleClass="Window" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.guicontroller.Controller">
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.control.guicontroller.Controller">
 
     <ImageView blendMode="MULTIPLY" fitHeight="705.0" fitWidth="900.0">
         <viewport>

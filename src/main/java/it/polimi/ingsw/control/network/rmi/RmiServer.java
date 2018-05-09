@@ -3,6 +3,11 @@ package it.polimi.ingsw.control.network.rmi;
 import it.polimi.ingsw.control.ServerController;
 import it.polimi.ingsw.control.network.commands.Request;
 import it.polimi.ingsw.control.network.commands.Response;
+import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidPlayersException;
+import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotFindUserInDBException;
+import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotLoginUserException;
+import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotRegisterUserException;
+import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.NullTokenException;
 import it.polimi.ingsw.model.game.Game;
 import it.polimi.ingsw.model.gamesdb.DatabaseGames;
 
@@ -27,8 +32,18 @@ public class RmiServer extends UnicastRemoteObject implements RemoteServer, Obse
     }
 
     @Override
-    public Response request(Request request) throws RemoteException {
-        return request.handle(controller);
+    public Response createUser(String username, String password) throws CannotRegisterUserException {
+        return controller.createUser(username, password);
+    }
+
+    @Override
+    public Response login(String username, String password) throws CannotLoginUserException {
+        return controller.login(username, password);
+    }
+
+    @Override
+    public Response findGame(String userToken, int numPlayers) throws CannotFindUserInDBException, InvalidPlayersException, NullTokenException {
+        return controller.findGame(userToken, numPlayers);
     }
 
     @Override

@@ -1,9 +1,10 @@
 package it.polimi.ingsw.control.network.commands.responses.notifications;
 
+import it.polimi.ingsw.control.network.commands.NotificationHandler;
 import it.polimi.ingsw.control.network.commands.Response;
 import it.polimi.ingsw.control.network.commands.ResponseHandler;
 
-public class PlayersChangedNotification implements Response {
+public class PlayersChangedNotification implements Response, Notification {
     public final String username;
     public final boolean joined;
     public final int actualPlayers;
@@ -18,6 +19,11 @@ public class PlayersChangedNotification implements Response {
 
     @Override
     public void handle(ResponseHandler handler) {
+        handler.handle(this);
+    }
+
+    @Override
+    public void handle(NotificationHandler handler) {
         handler.handle(this);
     }
 }

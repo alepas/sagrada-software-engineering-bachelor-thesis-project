@@ -18,7 +18,7 @@ import it.polimi.ingsw.model.game.Game;
 import it.polimi.ingsw.model.gamesdb.DatabaseGames;
 import it.polimi.ingsw.model.usersdb.DatabaseUsers;
 
-public class ServerController implements RequestHandler {
+public class ServerController {
     private final SocketClientHandler clientHandler;
 
     // pieces of the model
@@ -35,58 +35,24 @@ public class ServerController implements RequestHandler {
         System.out.println(">>> " + text);
     }
 
-    @Override
-    public Response handle(CreateUserRequest request) {
-        String userToken = null;
-        String error = null;
-
-        try {
-            userToken = databaseUsers.registerUser(request.username, request.password);
-            displayText("Creato l'utente: " + request.username);
-//            databaseUsers.setSocketForUser(userToken, clientHandler.getSocket());
-        } catch (CannotRegisterUserException e){
-            displayText(e.getMessage());
-            error = e.getMessage();
-        }
-
-        return new CreateUserResponse(request.username, userToken, error);
+    public Response createUser(String username, String password) throws CannotRegisterUserException {
+        String userToken = databaseUsers.registerUser(username, password);
+        displayText("Creato l'utente: " + username);
+        return new CreateUserResponse(username, userToken, null);
     }
 
-    @Override
-    public Response handle(LoginRequest request) {
-        String userToken = null;
-        String error = null;
-
-        try {
-            userToken = databaseUsers.login(request.username, request.password);
-            displayText("Login avvenuto: " + request.username);
-        } catch (CannotLoginUserException e){
-            displayText(e.getMessage());
-            error = e.getMessage();
-        }
-
-        return new LoginResponse(request.username, userToken, error);
+    public Response login(String username, String password) throws CannotLoginUserException {
+        String userToken = databaseUsers.login(username, password);
+        displayText("Login avvenuto: " + username);
+        return new LoginResponse(username, userToken, null);
     }
 
-    @Override
-    public Response handle(FindGameRequest request) {
-        String username = null;
-        try {
-            username = databaseUsers.getUsernameByToken(request.token);
-            Game game = databaseGames.findGameForUser(username, request.numPlayers);
+    public Response findGame(String userToken, int numPlayers) throws InvalidPlayersException, NullTokenException, CannotFindUserInDBException {
+        String username = databaseUsers.getUsernameByToken(userToken);
+        Game game = databaseGames.findGameForUser(username, numPlayers);
 
-            if (clientHandler != null) { game.addObserver(clientHandler); }
+        if (clientHandler != null) { game.addObserver(clientHandler); }
 
-            return new FindGameResponse(game.getID(), game.numActualPlayers(), game.getNumPlayers(), null);
-
-        } catch (NullTokenException e) {
-            return new FindGameResponse(null, 0, 0, e.getMessage());
-        } catch (CannotFindUserInDBException e) {
-            return new FindGameResponse(null, 0, 0, e.getMessage());
-        } catch (InvalidPlayersException e){
-            return new FindGameResponse(null, 0, 0, e.getMessage());
-        } catch (Exception e){
-            return new FindGameResponse(null, 0, 0, e.getMessage());
-        }
+        return new FindGameResponse(game.getID(), game.numActualPlayers(), game.getNumPlayers(), null);
     }
 }

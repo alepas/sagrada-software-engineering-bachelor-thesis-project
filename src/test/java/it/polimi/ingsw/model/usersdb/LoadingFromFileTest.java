@@ -62,8 +62,8 @@ public class LoadingFromFileTest{
         Assertions.assertEquals(map.containsKey("mario"),tempmap.containsKey("mario"));
         map.equals()
         Assertions.assertEquals(map.values(),tempmap.values());
-        Assertions.assertEquals(map.get("luca"),tempmap.get("luca"));
-        Assertions.assertEquals(map.get("mario"),tempmap.get("mario"));
+        Assertions.assertEquals(map.getInstance("luca"),tempmap.getInstance("luca"));
+        Assertions.assertEquals(map.getInstance("mario"),tempmap.getInstance("mario"));
 */
 
 

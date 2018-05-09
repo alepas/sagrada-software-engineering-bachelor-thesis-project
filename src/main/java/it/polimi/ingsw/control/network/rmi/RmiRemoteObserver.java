@@ -1,7 +1,10 @@
 package it.polimi.ingsw.control.network.rmi;
 
+import it.polimi.ingsw.control.network.commands.NotificationHandler;
 import it.polimi.ingsw.control.network.commands.Response;
 import it.polimi.ingsw.control.network.commands.ResponseHandler;
+import it.polimi.ingsw.control.network.commands.responses.notifications.Notification;
+import org.mockito.internal.matchers.Not;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -11,14 +14,14 @@ import java.util.Observer;
 
 public class RmiRemoteObserver extends UnicastRemoteObject implements RemoteObserver {
 
-    private transient ResponseHandler handler;
+    private transient NotificationHandler handler;
 
-    public RmiRemoteObserver(ResponseHandler handler) throws RemoteException {
+    public RmiRemoteObserver(NotificationHandler handler) throws RemoteException {
         this.handler = handler;
     }
 
     @Override
     public void update(Observable o, Object arg) throws RemoteException {
-        ((Response) arg).handle(handler);
+        ((Notification) arg).handle(handler);
     }
 }

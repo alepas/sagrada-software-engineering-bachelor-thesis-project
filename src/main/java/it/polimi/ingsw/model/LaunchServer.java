@@ -1,5 +1,6 @@
-package it.polimi.ingsw.control;
+package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.control.ServerController;
 import it.polimi.ingsw.control.network.rmi.RemoteServer;
 import it.polimi.ingsw.control.network.rmi.RmiServer;
 import it.polimi.ingsw.control.network.socket.SocketServer;

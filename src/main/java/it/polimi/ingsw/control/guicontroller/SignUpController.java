@@ -1,6 +1,4 @@
-package it.polimi.ingsw.view.gui.guicontroller;
-
-import it.polimi.ingsw.control.ClientController;
+package it.polimi.ingsw.control.guicontroller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,8 +22,6 @@ import java.io.IOException;
   errorlabel.showMessageDialog(null, "Error", "ERRORE",  JOptionPane.ERROR_MESSAGE);*/
 
 public class SignUpController {
-
-    private ClientController controller = ClientController.getInstance();
 
     @FXML private PasswordField signUpPassword;
 
@@ -69,8 +65,8 @@ public class SignUpController {
         String password = signUpPassword.getText();
         String user =null;
 
-        if(!username.equals("") && !password.equals(""))
-             user = controller.createUser(username, password);
+//        if(!username.equals("") && !password.equals(""))
+//             user = controller.createUser(username, password);
 
         return user;
     }

@@ -315,7 +315,7 @@ public class DatabaseUsers {
     }
 
 
-    public synchronized PlayerInGame getPlayerInGameFromToken(String token){
+    public synchronized PlayerInGame getPlayerInGameFromToken(String token) throws NullTokenException{
         if(token==null)
             throw new NullTokenException();
         return playerInGameByToken.get(token);
@@ -338,7 +338,7 @@ public class DatabaseUsers {
         return us.getWonGames();
     }
 
-    synchronized void addLostGamesFromUsername(String user){
+    synchronized void addLostGamesFromUsername(String user) throws CannotFindUserInDBException {
 
         User us = usersByUsername.get(user);
         if (us == null)
@@ -356,7 +356,7 @@ public class DatabaseUsers {
         return us.getWonGames();
     }
 
-    synchronized void addAbandonedGamesFromUsername(String user){
+    synchronized void addAbandonedGamesFromUsername(String user) throws CannotFindUserInDBException {
 
         User us = usersByUsername.get(user);
         if (us == null)
@@ -375,7 +375,7 @@ public class DatabaseUsers {
         return us.getAbandonedGames();
     }
 
-    synchronized void addPointsRankingFromUsername(String user, int pointsToAdd){
+    synchronized void addPointsRankingFromUsername(String user, int pointsToAdd) throws CannotFindUserInDBException{
 
         User us = usersByUsername.get(user);
         if (us == null)
@@ -385,7 +385,7 @@ public class DatabaseUsers {
 
 
     }
-    synchronized int getRankingFromUsername(String user){
+    synchronized int getRankingFromUsername(String user) throws CannotFindUserInDBException{
         User us= usersByUsername.get(user);
         if (us == null)
             throw new CannotFindUserInDBException(user);

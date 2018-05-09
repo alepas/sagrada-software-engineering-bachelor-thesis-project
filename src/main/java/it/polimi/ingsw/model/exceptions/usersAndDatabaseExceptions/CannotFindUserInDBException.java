@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions;
 
-public class CannotFindUserInDBException extends RuntimeException{
+public class CannotFindUserInDBException extends Exception{
     private String user;
 
     public CannotFindUserInDBException(String user){

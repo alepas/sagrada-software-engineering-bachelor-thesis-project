@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions;
 
-public class CannotLoginUserException extends RuntimeException{
+public class CannotLoginUserException extends Exception{
     private int cause;
     private String user;
 

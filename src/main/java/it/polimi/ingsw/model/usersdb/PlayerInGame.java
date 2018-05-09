@@ -51,44 +51,44 @@ public class PlayerInGame {
 
         return username;
     }
-
-    public int getWonGames(){
-
-        return db.getWonGamesFromUsername(username);
-    }
-
-    public int getLostGames(){
-
-        return db.getLostGamesFromUsername(username);
-    }
-
-    public int getAbandonedGames(){
-
-        return db.getAbandonedGamesFromUsername(username);
-    }
-
-    public int getRanking() {
-
-        return db.getRankingFromUsername(username);
-    }
-
-
-    public void addPointsToRanking(int pointsToAdd){
-
-        db.addPointsRankingFromUsername(username,pointsToAdd);
-    }
-
-    public void addWonGame() {
-        db.addWonGamesFromUsername(username);
-    }
-    public void addLostGame() {
-        db.addLostGamesFromUsername(username);
-
-    }
-    public void addAbandonedGame() {
-
-        db.addAbandonedGamesFromUsername(username);
-    }
+//
+//    public int getWonGames(){
+//
+//        return db.getWonGamesFromUsername(username);
+//    }
+//
+//    public int getLostGames(){
+//
+//        return db.getLostGamesFromUsername(username);
+//    }
+//
+//    public int getAbandonedGames(){
+//
+//        return db.getAbandonedGamesFromUsername(username);
+//    }
+//
+//    public int getRanking() {
+//
+//        return db.getRankingFromUsername(username);
+//    }
+//
+//
+//    public void addPointsToRanking(int pointsToAdd){
+//
+//        db.addPointsRankingFromUsername(username,pointsToAdd);
+//    }
+//
+//    public void addWonGame() {
+//        db.addWonGamesFromUsername(username);
+//    }
+//    public void addLostGame() {
+//        db.addLostGamesFromUsername(username);
+//
+//    }
+//    public void addAbandonedGame() {
+//
+//        db.addAbandonedGamesFromUsername(username);
+//    }
 
     public WPC getWPC() {
         return wpc;

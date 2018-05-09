@@ -1,22 +1,26 @@
-package it.polimi.ingsw.view;
+package it.polimi.ingsw.view.cli;
 
-import it.polimi.ingsw.control.ClientController;
-import it.polimi.ingsw.model.clientModel.ClientContext;
+import it.polimi.ingsw.control.CliController;
+import it.polimi.ingsw.control.network.commands.NotificationHandler;
+import it.polimi.ingsw.control.network.commands.responses.notifications.GameStartedNotification;
+import it.polimi.ingsw.control.network.commands.responses.notifications.Notification;
+import it.polimi.ingsw.control.network.commands.responses.notifications.PlayersChangedNotification;
+import it.polimi.ingsw.control.network.commands.responses.notifications.PrivateObjExtractedNotification;
+import it.polimi.ingsw.model.clientModel.ClientModel;
 import it.polimi.ingsw.model.constants.CliConstants;
 import it.polimi.ingsw.model.dicebag.Color;
-import it.polimi.ingsw.model.game.Game;
-import it.polimi.ingsw.model.game.MultiplayerGame;
 
-import java.util.HashMap;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Scanner;
 
-public class CliView implements AbstractView {
+public class CliView implements Observer, NotificationHandler {
     private Scanner fromKeyBoard;
 
     // ----- The view is composed with the controller (strategy)
-    private final ClientController controller;
+    private final CliController controller;
 
-    public CliView(ClientController controller) {
+    public CliView(CliController controller) {
         this.controller = controller;
         this.fromKeyBoard = new Scanner(System.in);
     }
@@ -56,7 +60,7 @@ public class CliView implements AbstractView {
             user = controller.login(username, password);
         } while (user == null);
 
-        ClientContext.get().setUsername(user);
+        ClientModel.getInstance().setUsername(user);
         displayText(CliConstants.LOG_SUCCESS + user);
     }
 
@@ -76,7 +80,7 @@ public class CliView implements AbstractView {
             user = controller.createUser(username, password);
         } while (user == null);
 
-        ClientContext.get().setUsername(user);
+        ClientModel.getInstance().setUsername(user);
         displayText(CliConstants.LOG_SUCCESS + user);
     }
 
@@ -140,5 +144,49 @@ public class CliView implements AbstractView {
         }
 
     }
+
+    //-------------------------------------- Observer ------------------------------------------
+
+    @Override
+    public void update(Observable o, Object arg) {
+        ((Notification) arg).handle(this);
+    }
+
+
+
+
+    //-------------------------------- Notification Handler ------------------------------------
+
+    @Override
+    public void handle(GameStartedNotification response) {
+        displayText("Partita iniziata");
+    }
+
+    @Override
+    public void handle(PlayersChangedNotification response) {
+        if (response.joined){
+            displayText(response.username + " è entrato in partita.");
+        } else {
+            displayText(response.username + " è uscito dalla partita.");
+        }
+        displayText("Giocatori presenti: " + response.actualPlayers + " di " +
+                response.numPlayers + " necessari.");
+    }
+
+    @Override
+    public void handle(PrivateObjExtractedNotification response) {
+        Color[] colors = response.colorsByUser.get(response.username);
+        StringBuilder str = new StringBuilder();
+
+        if (colors.length > 1) str.append("I tuoi private objective sono: ");
+        else str.append("Il tuo private objective è: ");
+
+        for (Color color : colors){
+            str.append(color + "\t");
+        }
+
+        displayText(str.toString());
+    }
+
 
 }

@@ -1,6 +1,4 @@
-package it.polimi.ingsw.view.gui.guicontroller;
-
-import it.polimi.ingsw.control.ClientController;
+package it.polimi.ingsw.control.guicontroller;
 
 import javafx.event.ActionEvent;
 
@@ -22,8 +20,6 @@ import java.io.IOException;
 
 
 public class SignInController {
-
-    private ClientController controller = ClientController.getInstance();
 
     @FXML private TextField signInUsername;
 
@@ -62,10 +58,10 @@ public class SignInController {
         String username = signInUsername.getText();
         String password = signInPassword.getText();
 
-        if(!password.equals("") || !username.equals("")) {
-            return controller.login(username, password);
-        }
-        else
+//        if(!password.equals("") || !username.equals("")) {
+//            return controller.login(username, password);
+//        }
+//        else
             return null;
     }
 
