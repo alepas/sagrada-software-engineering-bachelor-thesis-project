@@ -22,7 +22,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Observer;
 
-public class RmiClient implements NetworkClient, ResponseHandler {
+public class RmiClient extends NetworkClient implements ResponseHandler {
     private final RemoteServer remoteServer;
 
     private ClientModel clientModel = ClientModel.getInstance();
@@ -42,6 +42,10 @@ public class RmiClient implements NetworkClient, ResponseHandler {
             e.printStackTrace();
         }
     }
+
+
+
+    //-------------------------------- NetworkClientMethods --------------------------------
 
     @Override
     public void createUser(String username, String password) throws CannotRegisterUserException {
@@ -69,6 +73,12 @@ public class RmiClient implements NetworkClient, ResponseHandler {
 
         }
     }
+
+
+
+
+
+    //-------------------------------- Response Handler --------------------------------
 
     @Override
     public void handle(CreateUserResponse response) {
@@ -104,6 +114,10 @@ public class RmiClient implements NetworkClient, ResponseHandler {
 //            view.displayText(response.exception);
         }
     }
+
+
+
+    //------------------------------- Notification Handler ------------------------------
 
     @Override
     public void handle(GameStartedNotification notification) {
