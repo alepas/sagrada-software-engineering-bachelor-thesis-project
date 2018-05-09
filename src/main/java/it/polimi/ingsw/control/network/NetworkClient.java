@@ -15,14 +15,14 @@ public abstract class NetworkClient {
     private static NetworkClient instance;
 
     public static SocketClient getNewSocketInstance(String host, int port){
-        if (instance != null){
+        if (instance == null){
             instance = new SocketClient(host, port);
         }
         return (SocketClient) instance;
     }
 
     public static RmiClient getNewRmiInstance() throws NotBoundException, RemoteException {
-        if (instance != null){
+        if (instance == null){
             instance = new RmiClient();
         }
         return (RmiClient) instance;
