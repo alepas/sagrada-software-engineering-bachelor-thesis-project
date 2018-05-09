@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.guimodel;
+package it.polimi.ingsw.view.gui;
 
 import it.polimi.ingsw.control.network.rmi.RmiClient;
 import it.polimi.ingsw.control.network.socket.SocketClient;

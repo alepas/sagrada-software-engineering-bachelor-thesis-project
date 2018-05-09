@@ -1,6 +1,7 @@
 package it.polimi.ingsw.view.cli;
 
 import it.polimi.ingsw.control.CliController;
+import it.polimi.ingsw.control.network.NetworkClient;
 import it.polimi.ingsw.control.network.rmi.RmiClient;
 import it.polimi.ingsw.control.network.socket.SocketClient;
 import it.polimi.ingsw.model.constants.NetworkConstants;
@@ -57,7 +58,7 @@ public class LaunchCli {
     }
 
     private static void startSocketClient() throws IOException{
-        SocketClient client = new SocketClient(
+        SocketClient client = NetworkClient.getNewSocketInstance(
                 NetworkConstants.SERVER_ADDRESS, NetworkConstants.SOCKET_SERVER_PORT);
 
         client.init();
@@ -69,7 +70,7 @@ public class LaunchCli {
 
 
     private static void startRmiClient() throws Exception {
-        RmiClient client = new RmiClient();
+        RmiClient client = NetworkClient.getNewRmiInstance();
         CliController controller = new CliController(client);
         controller.run();
     }

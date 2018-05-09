@@ -26,7 +26,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Observer;
 
-public class SocketClient implements NetworkClient, ResponseHandler {
+public class SocketClient extends NetworkClient implements ResponseHandler {
     private final String host;
     private final int port;
     private Socket connection;
