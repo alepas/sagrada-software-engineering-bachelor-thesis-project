@@ -52,3 +52,11 @@
     -fx-font-size: 14px;
 
 }
+
+.GridWPC{
+    -fx-background-color: BLACK;
+}
+
+.Favours{
+    -fx-fill: #ffffff;
+}
