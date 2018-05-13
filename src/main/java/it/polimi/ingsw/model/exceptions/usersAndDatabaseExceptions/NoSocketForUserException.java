@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions;
 
-public class NoSocketForUserException extends RuntimeException{
+public class NoSocketForUserException extends Exception{
     private String user;
 
     public NoSocketForUserException(String username) {

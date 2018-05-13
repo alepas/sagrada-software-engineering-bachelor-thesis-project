@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions;
 
-public class PlayerNotAuthorizedException extends RuntimeException{
+public class PlayerNotAuthorizedException extends Exception{
     private String user;
 
     public PlayerNotAuthorizedException(String username ){

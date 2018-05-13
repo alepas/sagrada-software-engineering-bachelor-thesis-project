@@ -55,7 +55,7 @@ public class NotARealTest {
                                 System.out.println("ora provo ad aggiungere una partita\n");
                                 if (db == null)
                                         System.out.println("niente db");
-                                db.addWonGamesFromToken(token);
+                               // db.addWonGamesFromToken(token);
                                 int voti = db.getWonGamesFromToken(token);
                                 System.out.println("\nPartite vinte: " + voti);
                         } catch (CannotLoginUserException e) {

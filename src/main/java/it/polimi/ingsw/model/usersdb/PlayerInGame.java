@@ -2,15 +2,15 @@ package it.polimi.ingsw.model.usersdb;
 
 import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.constants.GameConstants;
-import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotUseToolCardException;
-import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.PlayerNotAuthorizedException;
+import it.polimi.ingsw.model.dicebag.Dice;
+import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
 import it.polimi.ingsw.model.game.MultiplayerGame;
+import it.polimi.ingsw.model.wpc.Position;
 import it.polimi.ingsw.model.wpc.WPC;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.game.Game;
 import it.polimi.ingsw.model.wpc.WpcDB;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 
@@ -22,6 +22,7 @@ public class PlayerInGame {
     private int favours;
     private boolean active=false;
     private WPC wpc;
+    private int actionsForTurn=0;
 
 
 
@@ -51,44 +52,51 @@ public class PlayerInGame {
 
         return username;
     }
-//
-//    public int getWonGames(){
-//
-//        return db.getWonGamesFromUsername(username);
-//    }
-//
-//    public int getLostGames(){
-//
-//        return db.getLostGamesFromUsername(username);
-//    }
-//
-//    public int getAbandonedGames(){
-//
-//        return db.getAbandonedGamesFromUsername(username);
-//    }
-//
-//    public int getRanking() {
-//
-//        return db.getRankingFromUsername(username);
-//    }
-//
-//
-//    public void addPointsToRanking(int pointsToAdd){
-//
-//        db.addPointsRankingFromUsername(username,pointsToAdd);
-//    }
-//
-//    public void addWonGame() {
-//        db.addWonGamesFromUsername(username);
-//    }
-//    public void addLostGame() {
-//        db.addLostGamesFromUsername(username);
-//
-//    }
-//    public void addAbandonedGame() {
-//
-//        db.addAbandonedGamesFromUsername(username);
-//    }
+
+    public int getWonGames() throws CannotFindUserInDBException {
+
+        return db.getWonGamesFromUsername(username);
+    }
+
+    public int getLostGames() throws CannotFindUserInDBException {
+
+        return db.getLostGamesFromUsername(username);
+    }
+
+    public int getAbandonedGames() throws CannotFindUserInDBException {
+
+        return db.getAbandonedGamesFromUsername(username);
+    }
+
+    public int getRanking() throws CannotFindUserInDBException {
+
+        return db.getRankingFromUsername(username);
+    }
+
+
+    public void addPointsToRanking(int pointsToAdd) throws CannotUpdateStatsForUserException {
+
+
+            db.addPointsRankingFromUsername(username,pointsToAdd);
+
+    }
+
+    public void addWonGame() throws CannotUpdateStatsForUserException {
+
+            db.addWonGamesFromUsername(username);
+
+    }
+    public void addLostGame() throws CannotUpdateStatsForUserException {
+
+            db.addLostGamesFromUsername(username);
+
+
+    }
+    public void addAbandonedGame() throws CannotUpdateStatsForUserException {
+
+            db.addAbandonedGamesFromUsername(username);
+
+    }
 
     public WPC getWPC() {
         return wpc;
@@ -96,8 +104,8 @@ public class PlayerInGame {
 
     public boolean setWPC(String id) {
         if (wpc==null) {
-            WpcDB dbwpc=WpcDB.getInstance();
-            this.wpc=dbwpc.getWpcByID(id).copyWpc();
+            WpcDB dbWpc=WpcDB.getInstance();
+            wpc=dbWpc.getWpcByID(id).copyWpc();
             return true;
         }
         else return false;
@@ -146,9 +154,9 @@ public class PlayerInGame {
                 break;
             }
         }
-        if (foundCard==false)
+        if (!foundCard)
             throw new CannotUseToolCardException(cardID,0);
-        if (card.isUsed()==true) {
+        if (card.isUsed()) {
             if (favours >= 2) {
                 favours = favours - 2;
                 card.use(this);
@@ -160,12 +168,44 @@ public class PlayerInGame {
                 card.use(this);
             } else throw new CannotUseToolCardException(cardID, 1);
         }
-
+        incrementActionsForTurn();
 
     }
 
+
+    public void placeDice(int diceId, Position pos) throws PlayerNotAuthorizedException, CannotPlaceDiceException {
+        if (!active)
+            throw new PlayerNotAuthorizedException(username);
+        boolean foundDice=false;
+        Dice dice=null;
+        for(Dice tempDice:game.getExtractedDices()){
+            if(tempDice.getDiceID()==diceId){
+                foundDice=true;
+                dice=tempDice;
+                break;
+            }
+        }
+        if (!foundDice)
+            throw new CannotPlaceDiceException(username,0);
+        //wpc.addDice(dice,pos)
+
+
+//finire aggiungendo eccezioni per cannotplacedice
+        incrementActionsForTurn();
+
+    }
+
+
+
     // public void placeDice( HO BISOGNO DI RIUSCIRE A CAPIRE QUAL E' IL DADO A CUI MI RIFERISCO.. AGGIUNGIAMO UN ID AL SINGOLO DADO?
 
+    private void incrementActionsForTurn(){
+        actionsForTurn++;
+        if (actionsForTurn==2){
+            actionsForTurn=0;
+            game.nextTurn();
+        }
+    }
 
     public Game getGame() {
         return game;

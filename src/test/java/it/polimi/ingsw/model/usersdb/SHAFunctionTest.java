@@ -42,7 +42,7 @@ class SHAFunctionTest {
 
     @Test
     void differentSHASamePwdButDifferentSalt() throws PasswordParsingException {
-        Assertions.assertEquals(SHAFunction.getShaPwd(password, salt), SHAFunction.getShaPwd(password, salt2));
+        Assertions.assertNotEquals(SHAFunction.getShaPwd(password, salt), SHAFunction.getShaPwd(password, salt2));
 
     }
 

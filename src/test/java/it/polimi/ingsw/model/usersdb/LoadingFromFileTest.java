@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.usersdb;
 
 
+import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.DatabaseFileErrorException;
 import org.junit.After;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -26,7 +27,7 @@ public class LoadingFromFileTest{
 
     @Test
     void LoadWrongFile(){
-        Assertions.assertThrows(FileNotFoundException.class, () -> {
+        Assertions.assertThrows(DatabaseFileErrorException.class, () -> {
                     LoadingFromFile.fromFile("it/polimi/ingsw/model/userdb/testnottrue.db");
 
                 }
@@ -54,7 +55,11 @@ public class LoadingFromFileTest{
     @Test
     void LoadRightFile() throws FileNotFoundException {
         HashMap<String, Integer> tempmap=null;
-        tempmap=(HashMap<String, Integer>) LoadingFromFile.fromFile(PATH);
+        try {
+            tempmap=(HashMap<String, Integer>) LoadingFromFile.fromFile(PATH);
+        } catch (DatabaseFileErrorException e) {
+            e.printStackTrace();
+        }
         Assertions.assertTrue(map.equals(tempmap));
 
 /*
