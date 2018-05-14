@@ -18,6 +18,6 @@ public class PublicObjectiveCard5  extends PublicObjectiveCard {
 
         int count = Math.min(numOf1, numOf2);
 
-        return count*POCConstants.POC7_SCORE;
+        return count*POCConstants.POC5_SCORE;
     }
 }

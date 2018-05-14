@@ -7,10 +7,20 @@ import it.polimi.ingsw.model.constants.POCConstants;
 public class PublicObjectiveCard6  extends PublicObjectiveCard {
     //SFUMATURE MEDIE
 
-    public PublicObjectiveCard6(){ this.id = POCConstants.POC6_ID; }
+    public PublicObjectiveCard6() {
+        this.id = POCConstants.POC6_ID;
+    }
+
 
     @Override
     public int calculateScore(WPC wpc) {
-        return 0;
+        int score = 0;
+
+        int numOf1 = wpc.numDicesOfShade(3);
+        int numOf2 = wpc.numDicesOfShade(4);
+
+        int count = Math.min(numOf1, numOf2);
+
+        return count * POCConstants.POC6_SCORE;
     }
 }

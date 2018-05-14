@@ -1,10 +1,11 @@
 package it.polimi.ingsw.model.pocTest;
 
-import it.polimi.ingsw.model.wpc.WPC;
-import it.polimi.ingsw.model.cards.concretePublicObjectiveCards.PublicObjectiveCard1;
+
+import it.polimi.ingsw.model.cards.concretePublicObjectiveCards.PublicObjectiveCard9;
 import it.polimi.ingsw.model.constants.POCConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
+import it.polimi.ingsw.model.wpc.WPC;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,8 +15,9 @@ import java.util.ArrayList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class Poc1Test {
-    private PublicObjectiveCard1 card;
+public class Poc9Test {
+
+    private PublicObjectiveCard9 card;
     private WPC wpc;
     private ArrayList<Dice> wpcDices = new ArrayList<>();
     private ArrayList<Dice> col0Dices = new ArrayList<>();
@@ -30,7 +32,7 @@ public class Poc1Test {
 
     @Before
     public void before(){
-        card = new PublicObjectiveCard1();
+        card = new PublicObjectiveCard9();
 
         wpc = mock(WPC.class);
 
@@ -147,7 +149,6 @@ public class Poc1Test {
 
         when(wpc.getWpcDices()).thenReturn(wpcDices);
 
-
         col0Dices.clear();
         col0Dices.add(dice0);
         col0Dices.add(dice5);
@@ -216,7 +217,6 @@ public class Poc1Test {
         when(wpc.getRowDices(3)).thenReturn(row3Dices);
 
 
-
         when(wpc.numDicesOfColor(Color.BLUE)).thenReturn(3);
         when(wpc.numDicesOfColor(Color.RED)).thenReturn(4);
         when(wpc.numDicesOfColor(Color.YELLOW)).thenReturn(3);
@@ -232,7 +232,7 @@ public class Poc1Test {
     }
 
     @Test
-    public void poc1Test(){
-        Assert.assertEquals(2*POCConstants.POC1_SCORE, card.calculateScore(wpc));
+    public void poc9Test(){
+        Assert.assertEquals(9*POCConstants.POC9_SCORE, card.calculateScore(wpc));
     }
 }
