@@ -7,14 +7,15 @@ import it.polimi.ingsw.control.network.commands.Response;
 import it.polimi.ingsw.control.network.commands.requests.CreateUserRequest;
 import it.polimi.ingsw.control.network.commands.requests.FindGameRequest;
 import it.polimi.ingsw.control.network.commands.requests.LoginRequest;
+import it.polimi.ingsw.control.network.commands.requests.PickWpcRequest;
 import it.polimi.ingsw.control.network.commands.responses.CreateUserResponse;
 import it.polimi.ingsw.control.network.commands.responses.FindGameResponse;
 import it.polimi.ingsw.control.network.commands.responses.LoginResponse;
-import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidPlayersException;
-import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotFindUserInDBException;
-import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotLoginUserException;
-import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotRegisterUserException;
-import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.NullTokenException;
+import it.polimi.ingsw.control.network.commands.responses.PickWpcResponse;
+import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
+import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
+import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
+import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -106,7 +107,7 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
     @Override
     public Response handle(CreateUserRequest request){
         try {
-            return controller.createUser(request.username, request.password);
+            return controller.createUser(request.username, request.password, socket);
         } catch (CannotRegisterUserException e){
             return new CreateUserResponse(request.username, null, e);
         }
@@ -115,7 +116,7 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
     @Override
     public Response handle(LoginRequest request) {
         try {
-            return controller.login(request.username, request.password);
+            return controller.login(request.username, request.password, socket);
         } catch (CannotLoginUserException e){
             return new LoginResponse(request.username, null, e);
         }
@@ -124,13 +125,19 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
     @Override
     public Response handle(FindGameRequest request) {
         try {
-            return controller.findGame(request.token, request.numPlayers);
-        } catch (InvalidPlayersException e){
+            return controller.findGame(request.token, request.numPlayers, this);
+        } catch (InvalidNumOfPlayersException|CannotFindUserInDBException|CannotCreatePlayerException e){
             return new FindGameResponse(null, 0, 0, e);
-        } catch (NullTokenException e){
-            return new FindGameResponse(null, 0, 0, e);
-        } catch (CannotFindUserInDBException e){
-            return new FindGameResponse(null, 0, 0, e);
+        }
+    }
+
+    @Override
+    public Response handle(PickWpcRequest request) {
+        try {
+            Response response = controller.pickWpc(request.userToken, request.wpcID);
+            return response;
+        } catch (CannotFindPlayerInDatabaseException |NotYourWpcException e) {
+            return new PickWpcResponse(e);
         }
     }
 

@@ -5,6 +5,7 @@ import it.polimi.ingsw.control.network.rmi.RemoteServer;
 import it.polimi.ingsw.control.network.rmi.RmiServer;
 import it.polimi.ingsw.control.network.socket.SocketServer;
 import it.polimi.ingsw.model.constants.NetworkConstants;
+import it.polimi.ingsw.model.wpc.WpcDB;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
@@ -19,6 +20,8 @@ public class LaunchServer {
 
     public static void main(String[] args) throws IOException {
         //Avvio della socket
+        WpcDB.getInstance();
+
         new Thread(){
             @Override
             public void run() {

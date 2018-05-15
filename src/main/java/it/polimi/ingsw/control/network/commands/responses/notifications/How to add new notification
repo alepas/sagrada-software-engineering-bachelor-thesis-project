@@ -1,0 +1,39 @@
+1)  Crea la notifica.
+    Esempio di notifica:
+
+    public class PlayersChangedNotification implements Response, Notification {
+        public final String username;
+        public final boolean joined;
+        public final int actualPlayers;
+        public final int numPlayers;
+
+        public PlayersChangedNotification(String username, boolean joined, int actualPlayers, int numPlayers) {
+            this.username = username;
+            this.joined = joined;
+            this.actualPlayers = actualPlayers;
+            this.numPlayers = numPlayers;
+        }
+
+        @Override
+        public void handle(ResponseHandler handler) {
+            handler.handle(this);
+        }
+
+        @Override
+        public void handle(NotificationHandler handler) {
+            handler.handle(this);
+        }
+    }
+
+
+
+2)  Aggiungi la notifica al notification handler.
+    Esempio:
+
+    void handle(GameStartedNotification notification);
+
+3)  Fai in modo che i NotificationHandler gestiscano la notifica.
+    NotificationHandler attuali: RmiClient, SocketClient, CliView, Gui?
+
+4)  Fai in modo che l'oggetto observed invii la notifica.
+    changeAndNotifyObservers(new Notification)

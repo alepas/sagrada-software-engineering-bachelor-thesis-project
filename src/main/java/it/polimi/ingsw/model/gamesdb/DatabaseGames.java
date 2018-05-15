@@ -39,9 +39,9 @@ public class DatabaseGames {
         return gameByID.get(id);
     }
 
-    public synchronized Game findGameForUser(String username, int numPlayers) throws InvalidPlayersException {
+    public synchronized Game findGameForUser(String username, int numPlayers) throws InvalidNumOfPlayersException, CannotCreatePlayerException {
         if (numPlayers < GameConstants.MIN_NUM_PLAYERS || numPlayers > GameConstants.MAX_NUM_PLAYERS)
-            throw new InvalidPlayersException(numPlayers);
+            throw new InvalidNumOfPlayersException(numPlayers);
 
         if (numPlayers != 1) {
             for (MultiplayerGame game : availableGames) {
@@ -94,7 +94,7 @@ public class DatabaseGames {
         activeGames.add(game);
     }
 
-    private synchronized Game createNewGame(String username, int numPlayers) throws InvalidPlayersException {
+    private synchronized Game createNewGame(String username, int numPlayers) throws InvalidNumOfPlayersException, CannotCreatePlayerException {
         Game game = null;
         if (numPlayers == 1) {
             //Crea SingleplayerGame
@@ -105,7 +105,7 @@ public class DatabaseGames {
                 availableGames.add((MultiplayerGame) game);
 
             } catch (InvalidMultiplayerGamePlayersException e){
-                throw new InvalidPlayersException(numPlayers);
+                throw new InvalidNumOfPlayersException(numPlayers);
 
             } catch (MaxPlayersExceededException e){
                 return createNewGame(username, numPlayers);

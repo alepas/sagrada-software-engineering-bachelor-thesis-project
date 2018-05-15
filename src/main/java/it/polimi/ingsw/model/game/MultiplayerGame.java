@@ -6,6 +6,7 @@ import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.exceptions.gameExceptions.*;
 import it.polimi.ingsw.control.network.commands.responses.notifications.GameStartedNotification;
 import it.polimi.ingsw.control.network.commands.responses.notifications.PlayersChangedNotification;
+import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotAddPlayerInDatabaseException;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 
 import java.util.ArrayList;
@@ -37,13 +38,18 @@ public class MultiplayerGame extends Game {
 
     public int getCurrentTurn() { return currentTurn; }
 
-    public synchronized boolean addPlayer(String user) throws MaxPlayersExceededException, UserAlreadyInThisGameException {
+    public synchronized boolean addPlayer(String user) throws MaxPlayersExceededException, UserAlreadyInThisGameException, CannotCreatePlayerException {
         //Return true if, after adding the player, the game is complete
         if (this.isFull()) throw new MaxPlayersExceededException(user, this);
 
         if (playerIndex(user) >= 0) throw new UserAlreadyInThisGameException(user, this);
 
-        PlayerInGame player = new PlayerInGame(user, this);
+        PlayerInGame player = null;
+        try {
+            player = new PlayerInGame(user, this);
+        } catch (CannotAddPlayerInDatabaseException e) {
+            throw new CannotCreatePlayerException(user);
+        }
         players[nextFree()] = player;
 
         changeAndNotifyObservers(new PlayersChangedNotification(user, true, numActualPlayers(), numPlayers));
@@ -86,7 +92,7 @@ public class MultiplayerGame extends Game {
     @Override
     public void initializeGame() {
         extractPrivateObjectives();
-//        extractWPCs();              //Genera delle eccezioni?
+        extractWPCs();              //Genera delle eccezioni?
 //        extractToolCards();
 //        extractPublicObjectives();
 //        shufflePlayers();

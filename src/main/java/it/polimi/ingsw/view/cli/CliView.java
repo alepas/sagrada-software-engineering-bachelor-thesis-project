@@ -2,20 +2,22 @@ package it.polimi.ingsw.view.cli;
 
 import it.polimi.ingsw.control.CliController;
 import it.polimi.ingsw.control.network.commands.NotificationHandler;
-import it.polimi.ingsw.control.network.commands.responses.notifications.GameStartedNotification;
-import it.polimi.ingsw.control.network.commands.responses.notifications.Notification;
-import it.polimi.ingsw.control.network.commands.responses.notifications.PlayersChangedNotification;
-import it.polimi.ingsw.control.network.commands.responses.notifications.PrivateObjExtractedNotification;
+import it.polimi.ingsw.control.network.commands.responses.notifications.*;
 import it.polimi.ingsw.model.clientModel.ClientModel;
 import it.polimi.ingsw.model.constants.CliConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Scanner;
 
 public class CliView implements Observer, NotificationHandler {
     private Scanner fromKeyBoard;
+
+    private boolean gameStarted = false;
+    private boolean wpcExtracted = false;
+    private boolean isGameFull = false;
 
     // ----- The view is composed with the controller (strategy)
     private final CliController controller;
@@ -55,12 +57,10 @@ public class CliView implements Observer, NotificationHandler {
 
             displayText(CliConstants.INSERT_PASS);
             String password = userInput();
-            if (password.equals(CliConstants.ESCAPE_RESPONSE)) return;
 
             user = controller.login(username, password);
         } while (user == null);
 
-        ClientModel.getInstance().setUsername(user);
         displayText(CliConstants.LOG_SUCCESS + user);
     }
 
@@ -75,12 +75,10 @@ public class CliView implements Observer, NotificationHandler {
 
             displayText(CliConstants.INSERT_PASS);
             String password = userInput();
-            if (password.equals(CliConstants.ESCAPE_RESPONSE)) return;
 
             user = controller.createUser(username, password);
         } while (user == null);
 
-        ClientModel.getInstance().setUsername(user);
         displayText(CliConstants.LOG_SUCCESS + user);
     }
 
@@ -113,8 +111,8 @@ public class CliView implements Observer, NotificationHandler {
             try {
                 numPlayers = Integer.parseInt(response);
                 try {
-                    String gameID = controller.findGame(numPlayers);
-                    return (gameID != null);
+                    isGameFull = controller.findGame(numPlayers);
+                    return true;
                 } catch (Exception e){
                     displayText("Impossibile trovare partita. Riprovare più tardi");
                     e.printStackTrace();
@@ -127,11 +125,28 @@ public class CliView implements Observer, NotificationHandler {
     }
 
     private void playGame() {
-        displayText("In attesa di altri giocatori...");
+        waitPlayers();
+        waitForWpc();
+        chooseWpcPhase();
+
+
+        int stopHere = 0;
+        while (stopHere == 0){
+
+        };
+    }
+
+    private void waitPlayers() {
         Thread waitingPlayers = new Thread(
                 () -> {
-                    do {}
-                    while (true);
+                    if (!isGameFull) displayText("In attesa di altri giocatori...");
+                    while (!gameStarted){
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException e){
+
+                        }
+                    };
                 }
         );
 
@@ -142,7 +157,43 @@ public class CliView implements Observer, NotificationHandler {
         } catch (InterruptedException e){
             displayText("Ho smesso di aspettare la partita");
         }
+    }
 
+    private void waitForWpc() {
+        Thread waitingWPC = new Thread(
+                () -> {
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e){
+
+                    }
+                    if (!wpcExtracted) displayText("In attesa delle wpc...");
+                    while (!wpcExtracted){
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException e){
+
+                        }
+                    };
+                }
+        );
+
+        waitingWPC.start();
+
+        try {
+            waitingWPC.join();
+        } catch (InterruptedException e){
+            displayText("Ho smesso di aspettare la partita");
+        }
+    }
+
+    private void chooseWpcPhase() {
+        boolean ok;
+        do {
+            displayText("Seleziona la wpc che vuoi utilizzare");
+            String wpcID = userInput();
+            ok = controller.pickWpc(wpcID);
+        } while (!ok);
     }
 
     //-------------------------------------- Observer ------------------------------------------
@@ -158,24 +209,25 @@ public class CliView implements Observer, NotificationHandler {
     //-------------------------------- Notification Handler ------------------------------------
 
     @Override
-    public void handle(GameStartedNotification response) {
+    public void handle(GameStartedNotification notification) {
+        gameStarted = true;
         displayText("Partita iniziata");
     }
 
     @Override
-    public void handle(PlayersChangedNotification response) {
-        if (response.joined){
-            displayText(response.username + " è entrato in partita.");
+    public void handle(PlayersChangedNotification notification) {
+        if (notification.joined){
+            displayText(notification.username + " è entrato in partita.");
         } else {
-            displayText(response.username + " è uscito dalla partita.");
+            displayText(notification.username + " è uscito dalla partita.");
         }
-        displayText("Giocatori presenti: " + response.actualPlayers + " di " +
-                response.numPlayers + " necessari.");
+        displayText("Giocatori presenti: " + notification.actualPlayers + " di " +
+                notification.numPlayers + " necessari.");
     }
 
     @Override
-    public void handle(PrivateObjExtractedNotification response) {
-        Color[] colors = response.colorsByUser.get(response.username);
+    public void handle(PrivateObjExtractedNotification notification) {
+        Color[] colors = notification.colorsByUser.get(notification.username);
         StringBuilder str = new StringBuilder();
 
         if (colors.length > 1) str.append("I tuoi private objective sono: ");
@@ -186,6 +238,25 @@ public class CliView implements Observer, NotificationHandler {
         }
 
         displayText(str.toString());
+    }
+
+    @Override
+    public void handle(WpcsExtractedNotification notification) {
+        ArrayList<String> userWpcs = notification.wpcsByUser.get(notification.username);
+        StringBuilder str = new StringBuilder();
+        str.append("Le tue wpc sono: ");
+
+        for (String wpcID : userWpcs){
+            str.append(wpcID + "\t");
+        }
+
+        wpcExtracted = true;
+        displayText(str.toString());
+    }
+
+    @Override
+    public void handle(UserPickedWpcNotification notification) {
+        displayText(notification.username + " ha scelto la wpc: " + notification.wpcID);
     }
 
 

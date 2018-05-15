@@ -1,9 +1,9 @@
 package it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions;
 
-public class CannotAddPlayerInGameException extends Exception{
+public class CannotAddPlayerInDatabaseException extends Exception{
 
 
-    public CannotAddPlayerInGameException() {
+    public CannotAddPlayerInDatabaseException() {
 
     }
     @Override

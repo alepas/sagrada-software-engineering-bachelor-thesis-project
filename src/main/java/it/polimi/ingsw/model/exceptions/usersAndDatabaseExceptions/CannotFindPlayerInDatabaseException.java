@@ -1,9 +1,9 @@
 package it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions;
 
-public class CannotFindPlayerInGameException extends Exception{
+public class CannotFindPlayerInDatabaseException extends Exception{
 
 
-    public CannotFindPlayerInGameException() {
+    public CannotFindPlayerInDatabaseException() {
 
     }
     @Override

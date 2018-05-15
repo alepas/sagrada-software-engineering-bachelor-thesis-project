@@ -1,9 +1,9 @@
 package it.polimi.ingsw.model.exceptions.gameExceptions;
 
-public class InvalidPlayersException extends Exception {
+public class InvalidNumOfPlayersException extends Exception {
     private final int numPlayers;
 
-    public InvalidPlayersException(int numPlayers){
+    public InvalidNumOfPlayersException(int numPlayers){
         this.numPlayers = numPlayers;
     }
 

@@ -31,7 +31,7 @@ public class PlayerInGame {
     private Game activegame;
 */
 
-    public PlayerInGame(String user, Game game){
+    public PlayerInGame(String user, Game game) throws CannotAddPlayerInDatabaseException {
         this.game=game;
         db=DatabaseUsers.getInstance();
         username=user;
@@ -43,10 +43,8 @@ public class PlayerInGame {
         }
         favours=0;
         active=false;
-
+        db.addPlayerInGameToDB(this);
     }
-
-
 
     public String getUser(){
 

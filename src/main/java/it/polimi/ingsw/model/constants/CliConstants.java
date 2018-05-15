@@ -19,8 +19,7 @@ public class CliConstants {
 
     public static final String INSERT_USERNAME = "Inserisci l'username. Digita \"" + ESCAPE_RESPONSE +
             "\" per tornare indietro";
-    public static final String INSERT_PASS = "Inserisci la password. Digita \"" + ESCAPE_RESPONSE +
-            "\" per tornare indietro";
+    public static final String INSERT_PASS = "Inserisci la password.";
 
     public static final String CREATE_USER_ERROR = "Impossibile creare l'utente";
     public static final String LOGIN_ERROR = "Impossibile effettuare il login";

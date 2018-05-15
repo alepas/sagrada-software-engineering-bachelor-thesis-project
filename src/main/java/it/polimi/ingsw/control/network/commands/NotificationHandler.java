@@ -1,8 +1,6 @@
 package it.polimi.ingsw.control.network.commands;
 
-import it.polimi.ingsw.control.network.commands.responses.notifications.GameStartedNotification;
-import it.polimi.ingsw.control.network.commands.responses.notifications.PlayersChangedNotification;
-import it.polimi.ingsw.control.network.commands.responses.notifications.PrivateObjExtractedNotification;
+import it.polimi.ingsw.control.network.commands.responses.notifications.*;
 
 public interface NotificationHandler {
     void handle(GameStartedNotification notification);
@@ -10,4 +8,8 @@ public interface NotificationHandler {
     void handle(PlayersChangedNotification notification);
 
     void handle(PrivateObjExtractedNotification notification);
+
+    void handle(WpcsExtractedNotification notification);
+
+    void handle(UserPickedWpcNotification notification);
 }

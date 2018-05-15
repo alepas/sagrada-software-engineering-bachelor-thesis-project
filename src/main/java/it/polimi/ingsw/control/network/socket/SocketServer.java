@@ -1,6 +1,7 @@
 package it.polimi.ingsw.control.network.socket;
 
 import it.polimi.ingsw.control.network.socket.SocketClientHandler;
+import it.polimi.ingsw.model.constants.NetworkConstants;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -15,7 +16,7 @@ public class SocketServer {
     public SocketServer(int port) throws IOException {
         serverSocket = new ServerSocket(port);
         pool = Executors.newCachedThreadPool();
-        System.out.println(">>> Listening on " + port);
+        System.out.println(">>> Listening\tAddress: " + NetworkConstants.SERVER_ADDRESS + "\tPort: " + port);
     }
 
     public void run() throws IOException {
@@ -23,8 +24,6 @@ public class SocketServer {
             Socket clientSocket = serverSocket.accept();
             System.out.println(">>> New connection " + clientSocket.getRemoteSocketAddress());
             pool.submit(new SocketClientHandler(clientSocket));
-            if(false) break;        //Non cambia nulla ma in questo modo IntelliJ non segnala errore
-                                    //perchè "c'è un modo per uscire dal loop"
         }
     }
 

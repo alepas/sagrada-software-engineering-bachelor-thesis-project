@@ -2,9 +2,9 @@ package it.polimi.ingsw.control.network.commands.responses;
 
 import it.polimi.ingsw.control.network.commands.Response;
 import it.polimi.ingsw.control.network.commands.ResponseHandler;
-import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidPlayersException;
+import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
+import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotFindUserInDBException;
-import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.NullTokenException;
 
 public class FindGameResponse implements Response {
     public final String gameID;
@@ -20,7 +20,7 @@ public class FindGameResponse implements Response {
     }
 
     @Override
-    public void handle(ResponseHandler handler) throws InvalidPlayersException, NullTokenException, CannotFindUserInDBException {
+    public void handle(ResponseHandler handler) throws InvalidNumOfPlayersException, CannotFindUserInDBException, CannotCreatePlayerException {
         handler.handle(this);
     }
 }

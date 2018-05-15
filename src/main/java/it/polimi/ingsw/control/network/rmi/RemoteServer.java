@@ -1,12 +1,10 @@
 package it.polimi.ingsw.control.network.rmi;
 
-import it.polimi.ingsw.control.network.commands.Request;
 import it.polimi.ingsw.control.network.commands.Response;
-import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidPlayersException;
-import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotFindUserInDBException;
-import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotLoginUserException;
-import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotRegisterUserException;
-import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.NullTokenException;
+import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
+import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
+import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
+import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -16,7 +14,7 @@ public interface RemoteServer extends Remote {
 
     Response login(String username, String password) throws RemoteException, CannotLoginUserException;
 
-    Response findGame(String userToken, int numPlayers) throws RemoteException, CannotFindUserInDBException, InvalidPlayersException, NullTokenException;
+    Response findGame(String userToken, int numPlayers, RemoteObserver observer) throws RemoteException, InvalidNumOfPlayersException, CannotFindUserInDBException, CannotCreatePlayerException;
 
-    void addObserver(RemoteObserver observer, String gameID) throws RemoteException;
+    Response pickWpc(String userToken, String wpcID) throws RemoteException, CannotFindPlayerInDatabaseException, NotYourWpcException;
 }

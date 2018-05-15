@@ -1,5 +1,8 @@
 package it.polimi.ingsw.model.game;
 
+import it.polimi.ingsw.control.network.commands.responses.notifications.UserPickedWpcNotification;
+import it.polimi.ingsw.control.network.commands.responses.notifications.WpcsExtractedNotification;
+import it.polimi.ingsw.model.constants.GameConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.dicebag.DiceBag;
@@ -7,7 +10,9 @@ import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;
 
 import it.polimi.ingsw.control.network.commands.responses.notifications.PrivateObjExtractedNotification;
+import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
+import it.polimi.ingsw.model.wpc.WpcDB;
 
 import java.util.*;
 
@@ -25,6 +30,8 @@ public abstract class Game extends Observable implements Runnable {
     int numOfPrivateObjectivesForPlayer;
     int numOfToolCards;
     int numOfPublicObjectiveCards;
+
+    private HashMap<String, ArrayList<String>> wpcsByUser = new HashMap<>();
 
     Game(int numPlayers) {
         toolCards = new ArrayList<>();
@@ -62,6 +69,10 @@ public abstract class Game extends Observable implements Runnable {
 
     public RoundTrack getRoundTrack() {
         return roundTrack;
+    }
+
+    public HashMap<String, ArrayList<String>> getWpcsByUser() {
+        return wpcsByUser;
     }
 
     public boolean isFull(){
@@ -136,38 +147,53 @@ public abstract class Game extends Observable implements Runnable {
     }
 
     void extractWPCs(){
-        //TODO:
+        ArrayList<String> ids = WpcDB.getWpcIDs();
+        Collections.shuffle(ids);
+        HashMap<String, ArrayList<String>> wpcsByUser = new HashMap<>();
 
-//        ArrayList<String> ids = WpcDB.getWpcIDs();
-//        Collections.shuffle(ids);
-//        ChooseWPCThread[] chooseThreads = new ChooseWPCThread[numPlayers];
-//
-//        int i = 0;
-//
-//        for(PlayerInGame player : colorsByUser){
-//            ChooseWPCThread chooseThread = new ChooseWPCThread(player,
-//                    new ArrayList<String> (ids.subList(GameConstants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER*i,
-//                            GameConstants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER*(i+1))));
-//            chooseThreads[i] = chooseThread;
-//            chooseThread.start();
-//            i++;
-//        }
-//
-//        try {
-//            System.out.println("Waiting for threads to finish.");
-//            for (ChooseWPCThread chooseThread : chooseThreads ){
-//                chooseThread.join(GameConstants.CHOOSE_WPC_WAITING_TIME * 1000);
-//            }
-//        } catch (InterruptedException e) {
-//            System.out.println("Main thread Interrupted");
-//        }
-//
-//        for (i = 0; i < chooseThreads.length; i++){
-//            if (chooseThreads[i].isInterrupted()){
-//                colorsByUser.get(i).setWPC(ids.subList(GameConstants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER*i,
-//                        GameConstants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER*(i+1)).get(0));
-//            }
-//        }
+        int numOfWpcs = GameConstants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER;
+
+        for(int i = 0; i < players.length; i++){
+            wpcsByUser.put(players[i].getUser(), new ArrayList<String> (
+                    ids.subList(numOfWpcs*i, numOfWpcs*(i+1))));
+        }
+
+        this.wpcsByUser = wpcsByUser;
+        changeAndNotifyObservers(new WpcsExtractedNotification(wpcsByUser));
+
+        Thread waitForWpcs = new Thread(new ChooseWpcThread(players));
+        waitForWpcs.start();
+
+        try {
+            System.out.println("Sto aspettando che i giocatori scelgano le wpc");
+            waitForWpcs.join(GameConstants.CHOOSE_WPC_WAITING_TIME);
+            System.out.println("Ho smesso di aspettare che i giocatori scelgano le wpc");
+            if (waitForWpcs.isAlive()) {
+                waitForWpcs.interrupt();
+                selectRandomWpc(wpcsByUser);
+            }
+        } catch (InterruptedException e){
+
+        }
+    }
+
+    private void selectRandomWpc(HashMap<String,ArrayList<String>> wpcsByUser) {
+        for (PlayerInGame player : players){
+            if (player.getWPC() == null) {
+                try {
+                    setPlayerWpc(player, wpcsByUser.get(player.getUser()).get(0));
+                } catch (NotYourWpcException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void setPlayerWpc(PlayerInGame player, String wpcID) throws NotYourWpcException {
+        ArrayList<String> userWPCs = wpcsByUser.get(player.getUser());
+        if (userWPCs == null || !userWPCs.contains(wpcID)) throw new NotYourWpcException(wpcID);
+        player.setWPC(wpcID);
+        changeAndNotifyObservers(new UserPickedWpcNotification(player.getUser(), wpcID));
     }
 
     void extractToolCards() {

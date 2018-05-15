@@ -2,7 +2,7 @@ package it.polimi.ingsw.control.guicontroller;
 
 import it.polimi.ingsw.control.network.NetworkClient;
 import it.polimi.ingsw.model.clientModel.ClientModel;
-import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidPlayersException;
+import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotFindUserInDBException;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.NullTokenException;
 import javafx.application.Platform;
@@ -15,7 +15,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-import javax.swing.*;
 import java.io.IOException;
 
 public class EntranceToTheGameController {
@@ -97,10 +96,7 @@ public class EntranceToTheGameController {
                 try {
                     System.out.println(clientModel.getUserToken());
                     networkClient.findGame(clientModel.getUserToken(), numPlayers);
-                } catch (InvalidPlayersException e) {
-                //TODO
-                    e.printStackTrace();
-                } catch (NullTokenException e) {
+                } catch (InvalidNumOfPlayersException e) {
                 //TODO
                     e.printStackTrace();
                 } catch (CannotFindUserInDBException e) {

@@ -311,29 +311,29 @@ public class DatabaseUsers {
     }
 
 
-    public synchronized void addPlayerInGameToDB(PlayerInGame play) throws CannotAddPlayerInGameException {
+    public synchronized void addPlayerInGameToDB(PlayerInGame play) throws CannotAddPlayerInDatabaseException {
         String token=tokenByUsername.get(play.getUser());
         if (token==null)
-            throw new CannotAddPlayerInGameException();
+            throw new CannotAddPlayerInDatabaseException();
         playerInGameByToken.put(token,play);
 
     }
 
-    public synchronized void removePlayerInGameFromDB(PlayerInGame play) throws CannotFindPlayerInGameException {
+    public synchronized void removePlayerInGameFromDB(PlayerInGame play) throws CannotFindPlayerInDatabaseException {
         String token=tokenByUsername.get(play.getUser());
         if (token==null)
-            throw new CannotFindPlayerInGameException();
+            throw new CannotFindPlayerInDatabaseException();
         playerInGameByToken.remove(token);
     }
 
 
-    public synchronized PlayerInGame getPlayerInGameFromToken(String token) throws CannotFindPlayerInGameException {
+    public synchronized PlayerInGame getPlayerInGameFromToken(String token) throws CannotFindPlayerInDatabaseException {
         PlayerInGame play;
         if(token==null)
-            throw new CannotFindPlayerInGameException();
+            throw new CannotFindPlayerInDatabaseException();
         play=playerInGameByToken.get(token);
         if (play==null)
-            throw new CannotFindPlayerInGameException();
+            throw new CannotFindPlayerInDatabaseException();
         return play;
     }
 

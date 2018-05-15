@@ -1,15 +1,13 @@
 package it.polimi.ingsw.control.network.rmi;
 
 import it.polimi.ingsw.control.ServerController;
-import it.polimi.ingsw.control.network.commands.Request;
 import it.polimi.ingsw.control.network.commands.Response;
-import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidPlayersException;
-import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotFindUserInDBException;
-import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotLoginUserException;
-import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotRegisterUserException;
-import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.NullTokenException;
+import it.polimi.ingsw.control.network.commands.responses.FindGameResponse;
+import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
+import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
+import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
+import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
 import it.polimi.ingsw.model.game.Game;
-import it.polimi.ingsw.model.gamesdb.DatabaseGames;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -33,32 +31,30 @@ public class RmiServer extends UnicastRemoteObject implements RemoteServer, Obse
 
     @Override
     public Response createUser(String username, String password) throws CannotRegisterUserException {
-        return controller.createUser(username, password);
+        return controller.createUser(username, password, null);
     }
 
     @Override
     public Response login(String username, String password) throws CannotLoginUserException {
-        return controller.login(username, password);
+        return controller.login(username, password, null);
     }
 
     @Override
-    public Response findGame(String userToken, int numPlayers) throws CannotFindUserInDBException, InvalidPlayersException, NullTokenException {
-        return controller.findGame(userToken, numPlayers);
+    public Response findGame(String userToken, int numPlayers, RemoteObserver observer) throws CannotFindUserInDBException, InvalidNumOfPlayersException, CannotCreatePlayerException {
+        Response response = controller.findGame(userToken, numPlayers, this);
+
+        String gameID = ((FindGameResponse) response).gameID;
+        if (observersByGame.get(gameID) == null) observersByGame.put(gameID, new ArrayList<>());
+        if (!observersByGame.get(gameID).contains(observer)) observersByGame.get(gameID).add(observer);
+
+        return response;
     }
 
     @Override
-    public void addObserver(RemoteObserver observer, String gameID) throws RemoteException {
-        Game serverGame = DatabaseGames.getInstance().findGameByID(gameID);
-
-        if (serverGame != null){
-            if (observersByGame.get(gameID) == null) observersByGame.put(gameID, new ArrayList<>());
-            if (observersByGame.get(gameID).contains(observer)) return;
-            observersByGame.get(gameID).add(observer);
-            serverGame.addObserver(this);
-        } else {
-            //TODO: segnalare errore
-        }
+    public Response pickWpc(String userToken, String wpcID) throws CannotFindPlayerInDatabaseException, NotYourWpcException {
+        return controller.pickWpc(userToken, wpcID);
     }
+
 
     @Override
     public void update(Observable o, Object arg) {

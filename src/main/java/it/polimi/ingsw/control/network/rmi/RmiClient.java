@@ -5,16 +5,14 @@ import it.polimi.ingsw.control.network.commands.ResponseHandler;
 import it.polimi.ingsw.control.network.commands.responses.CreateUserResponse;
 import it.polimi.ingsw.control.network.commands.responses.FindGameResponse;
 import it.polimi.ingsw.control.network.commands.responses.LoginResponse;
-import it.polimi.ingsw.control.network.commands.responses.notifications.GameStartedNotification;
-import it.polimi.ingsw.control.network.commands.responses.notifications.PlayersChangedNotification;
-import it.polimi.ingsw.control.network.commands.responses.notifications.PrivateObjExtractedNotification;
+import it.polimi.ingsw.control.network.commands.responses.PickWpcResponse;
+import it.polimi.ingsw.control.network.commands.responses.notifications.*;
 import it.polimi.ingsw.model.clientModel.ClientModel;
 import it.polimi.ingsw.model.constants.NetworkConstants;
-import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidPlayersException;
-import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotFindUserInDBException;
-import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotLoginUserException;
-import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotRegisterUserException;
-import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.NullTokenException;
+import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
+import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
+import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
+import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -31,16 +29,6 @@ public class RmiClient extends NetworkClient implements ResponseHandler {
     public RmiClient() throws NotBoundException, RemoteException{
         Registry registry = LocateRegistry.getRegistry(NetworkConstants.SERVER_ADDRESS, Registry.REGISTRY_PORT);
         remoteServer = (RemoteServer) registry.lookup(NetworkConstants.RMI_CONTROLLER_NAME);
-    }
-
-    @Override
-    public void startPlaying() {
-        try {
-            RemoteObserver remoteObserver = new RmiRemoteObserver(this);
-            remoteServer.addObserver(remoteObserver, clientModel.getGameID());
-        } catch (RemoteException e){
-            e.printStackTrace();
-        }
     }
 
 
@@ -66,16 +54,23 @@ public class RmiClient extends NetworkClient implements ResponseHandler {
     }
 
     @Override
-    public void findGame(String token, int numPlayers) throws CannotFindUserInDBException, InvalidPlayersException, NullTokenException {
+    public void findGame(String token, int numPlayers) throws CannotFindUserInDBException, InvalidNumOfPlayersException, CannotCreatePlayerException {
         try {
-            ((FindGameResponse) remoteServer.findGame(token, numPlayers)).handle(this);
+            RemoteObserver remoteObserver = new RmiRemoteObserver(this);
+            ((FindGameResponse) remoteServer.findGame(token, numPlayers, remoteObserver)).handle(this);
         } catch (RemoteException e){
 
         }
     }
 
+    @Override
+    public void pickWpc(String userToken, String wpcID) throws CannotFindPlayerInDatabaseException, NotYourWpcException {
+        try {
+            ((PickWpcResponse) remoteServer.pickWpc(userToken, wpcID)).handle(this);
+        } catch (RemoteException e){
 
-
+        }
+    }
 
 
     //-------------------------------- Response Handler --------------------------------
@@ -109,12 +104,20 @@ public class RmiClient extends NetworkClient implements ResponseHandler {
             clientModel.setGameID(gameID);
             clientModel.setGameActualPlayers(response.actualPlayers);
             clientModel.setGameNumPlayers(response.numPlayers);
-            startPlaying();
+//            startReceiving();
         } else {
 //            view.displayText(response.exception);
         }
     }
 
+    @Override
+    public void handle(PickWpcResponse response) throws CannotFindPlayerInDatabaseException, NotYourWpcException {
+        Exception e = response.exception;
+        if (e != null){
+            if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
+            if (e instanceof NotYourWpcException) throw (NotYourWpcException) e;
+        }
+    }
 
 
     //------------------------------- Notification Handler ------------------------------
@@ -131,7 +134,18 @@ public class RmiClient extends NetworkClient implements ResponseHandler {
 
     @Override
     public void handle(PrivateObjExtractedNotification notification) {
-        ((PrivateObjExtractedNotification) notification).username = clientModel.getUsername();
+        notification.username = clientModel.getUsername();
+        observer.update(null, notification);
+    }
+
+    @Override
+    public void handle(WpcsExtractedNotification notification) {
+        notification.username = clientModel.getUsername();
+        observer.update(null, notification);
+    }
+
+    @Override
+    public void handle(UserPickedWpcNotification notification) {
         observer.update(null, notification);
     }
 }
