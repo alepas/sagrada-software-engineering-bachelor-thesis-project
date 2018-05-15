@@ -28,7 +28,7 @@ public abstract class NetworkClient {
         return (RmiClient) instance;
     }
 
-    static NetworkClient getInstance(){
+    public static NetworkClient getInstance(){
         return instance;
     }
 

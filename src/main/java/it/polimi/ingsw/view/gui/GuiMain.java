@@ -1,9 +1,11 @@
 package it.polimi.ingsw.view.gui;
 
-import it.polimi.ingsw.control.guicontroller.Controller;
+
+import it.polimi.ingsw.control.network.NetworkClient;
 import it.polimi.ingsw.control.network.rmi.RmiClient;
 import it.polimi.ingsw.control.network.socket.SocketClient;
 import it.polimi.ingsw.model.constants.NetworkConstants;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -69,16 +71,15 @@ public class GuiMain extends Application {
                     NetworkConstants.SERVER_ADDRESS, NetworkConstants.SOCKET_SERVER_PORT);
 
             client.init();
-
+            NetworkClient networkClient = NetworkClient.getNewSocketInstance(NetworkConstants.SERVER_ADDRESS, NetworkConstants.SOCKET_SERVER_PORT);
             Application.launch(GuiMain.class, null);
-
 
             client.close();
         }
 
 
         private static void startRmiClient() throws Exception {
-            RmiClient client = new RmiClient();
+            RmiClient client = NetworkClient.getNewRmiInstance();
             Application.launch(GuiMain.class, null);
         }
 

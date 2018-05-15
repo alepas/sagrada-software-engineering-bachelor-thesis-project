@@ -3,18 +3,13 @@ package it.polimi.ingsw.control.guicontroller;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 
-public class SelectWPC {
-
-    @FXML private GridPane fourthWPC;
+public class GameScene {
 
     @FXML private GridPane firstWPC;
 
-    @FXML private GridPane thirdWPC;
-
     @FXML private GridPane secondWPC;
 
-    @FXML
-    void initialize() {
+    @FXML private GridPane thirdWPC;
 
-    }
+    @FXML private GridPane fourthWPC;
 }

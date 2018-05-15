@@ -1,5 +1,9 @@
 package it.polimi.ingsw.control.guicontroller;
 
+import it.polimi.ingsw.control.network.NetworkClient;
+import it.polimi.ingsw.model.clientModel.ClientModel;
+import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotRegisterUserException;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 
@@ -22,6 +26,8 @@ import java.io.IOException;
   errorlabel.showMessageDialog(null, "Error", "ERRORE",  JOptionPane.ERROR_MESSAGE);*/
 
 public class SignUpController {
+    private NetworkClient networkClient;
+    private ClientModel clientModel;
 
     @FXML private PasswordField signUpPassword;
 
@@ -32,16 +38,27 @@ public class SignUpController {
     @FXML private Label signUpErrorLabel;
 
     public void  initialize(){
+        networkClient = NetworkClient.getInstance();
+        clientModel = ClientModel.getInstance();
 
         signUpButton.setOnAction(event->{
+                String username = signUpUsername.getText();
+                String password = signUpPassword.getText();
 
-            if(createAccount() == null)
-                signUpErrorLabel.setVisible(true);    //rendo la label di errore visibile
-            else
-                changeSceneHendle(event ,"/it/polimi/ingsw/view/gui/guiview/entranceTotheGame.fxml");
-        });
+                if (!password.equals("") && !username.equals("")) {
+                    createAccount(username, password);
 
-        signUpUsername.setOnAction(event -> signUpErrorLabel.setVisible(false));
+                    if (clientModel.getUsername() == null) {
+                        signUpErrorLabel.setVisible(true);
+                        signUpUsername.clear();
+                        signUpPassword.clear();
+                    } else changeSceneHendle(event, "/it/polimi/ingsw/view/gui/guiview/entranceTotheGame.fxml");
+
+                } else signUpErrorLabel.setVisible(true);
+
+            });
+
+        signUpUsername.setOnMouseClicked(event -> signUpErrorLabel.setVisible(false));
     }
 
 
@@ -59,15 +76,16 @@ public class SignUpController {
     }
 
 
-    private String createAccount() {
+    private void createAccount(String username, String password) {
 
-        String username = signUpUsername.getText();
-        String password = signUpPassword.getText();
-        String user =null;
-
-//        if(!username.equals("") && !password.equals(""))
-//             user = controller.createUser(username, password);
-
-        return user;
-    }
+            Platform.runLater(() -> {
+                try {
+                    clientModel.setUsername(username);
+                    networkClient.createUser(username, password);
+                } catch (CannotRegisterUserException e) {
+                    clientModel.setUsername(null);
+                    e.printStackTrace();
+                }
+            });
+        }
 }

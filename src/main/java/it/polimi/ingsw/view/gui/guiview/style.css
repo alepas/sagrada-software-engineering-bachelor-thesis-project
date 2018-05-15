@@ -41,22 +41,41 @@
     -fx-pref-width: 105;
 }
 
+.CheckBox{
+    -fx-text-fill: #4a626d;
+    -fx-font-size: 14px;
+}
+
 .InsertionField{
     -fx-pref-height: 25;
     -fx-pref-width: 220;
-
     -fx-effect: innershadow(gaussian, #c29300, 10 , 0.0 , 0.0, 0.0);
 }
 
 .Label{
     -fx-font-size: 14px;
-
+    -fx-text-fill:  #4a626d;
 }
 
 .GridWPC{
+    -fx-cursor: HAND;
     -fx-background-color: BLACK;
+    -fx-hgap: 5.0;
+    -fx-vgap: 5.0;
+    -fx-pref-height: 266.0;
+    -fx-pref-width: 386.0;
+    -fx-effect: dropshadow(gaussian, #c29300, 10 , 0.0 , 0.0, 0.0);
+    -fx-padding: 5.0 5.0 5.0 5.0;
+}
+
+.Cell{
+    -fx-background-color: #ffffff;
+    -fx-pref-height: 200;
+    -fx-pref-width: 200;
 }
 
 .Favours{
     -fx-fill: #ffffff;
+    -fx-stroke: BLACK;
+    -fx-stroke-type: INSIDE;
 }

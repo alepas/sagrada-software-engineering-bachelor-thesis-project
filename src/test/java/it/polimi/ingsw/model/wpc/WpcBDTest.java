@@ -22,6 +22,8 @@ public class WpcBDTest {
         Assert.assertNotNull(allWpc0);
         Assert.assertNotNull(allWpc1);
         Assert.assertEquals(allWpc0, allWpc1);
+        allWpc1.getWpcIDs();
+        allWpc1.getWpcByID("10");
     }
 
 }

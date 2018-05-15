@@ -1,5 +1,12 @@
 package it.polimi.ingsw.control.guicontroller;
 
+import it.polimi.ingsw.control.network.NetworkClient;
+
+import it.polimi.ingsw.model.clientModel.ClientModel;
+import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotLoginUserException;
+
+
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 
 import javafx.fxml.FXML;
@@ -20,6 +27,8 @@ import java.io.IOException;
 
 
 public class SignInController {
+    private NetworkClient networkClient;
+    private ClientModel clientModel;
 
     @FXML private TextField signInUsername;
 
@@ -29,14 +38,31 @@ public class SignInController {
 
     @FXML private Label signInErrorLabel;
 
+
     public void initialize( ) {
-        signInButton.setOnAction(event->{
-            String username = loginUser();
-            if ( username == null)
-                signInErrorLabel.setVisible(true);
-            else
-                changeSceneHendle(event, "/it/polimi/ingsw/view/gui/guiview/entranceTotheGame.fxml");
+        networkClient = NetworkClient.getInstance();
+        clientModel = ClientModel.getInstance();
+
+        signInButton.setOnAction(event-> {
+
+                String username = signInUsername.getText();
+                String password = signInPassword.getText();
+
+                if (!password.equals("") && !username.equals("")) {
+
+                    loginUser(username, password);
+                    System.out.println(clientModel.getUserToken());
+                    if (clientModel.getUsername() == null) {
+                        signInErrorLabel.setVisible(true);
+                        signInUsername.clear();
+                        signInPassword.clear();
+                    } else
+                        changeSceneHendle(event, "/it/polimi/ingsw/view/gui/guiview/entranceTotheGame.fxml");
+                } else signInErrorLabel.setVisible(true);
+
         });
+
+        signInUsername.setOnMouseClicked(event -> signInErrorLabel.setVisible(false));
     }
 
 
@@ -53,16 +79,18 @@ public class SignInController {
         window.show();
     }
 
-    private String loginUser() {
 
-        String username = signInUsername.getText();
-        String password = signInPassword.getText();
-
-//        if(!password.equals("") || !username.equals("")) {
-//            return controller.login(username, password);
-//        }
-//        else
-            return null;
+    private void loginUser(String username, String password) {
+        Platform.runLater(()-> {
+            try {
+                clientModel.setUsername(username);
+                networkClient.login(username, password);
+            } catch (CannotLoginUserException e) {
+                clientModel.setUsername(null);
+                e.printStackTrace();
+                //TODO
+            }
+        });
     }
 
 }

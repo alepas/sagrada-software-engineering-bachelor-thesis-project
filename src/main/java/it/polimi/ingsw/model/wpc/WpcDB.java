@@ -163,11 +163,22 @@ public class WpcDB {
     public static WPC getWpcByID(String ID){
         //dato l'id selezionato dal giocatore si chiama il costruttore che genera una copia della wpc
         WPC originalWpc=map.get(ID);
+       /* for(Cell cell: originalWpc.schema){
+            System.out.println("riga: "+ cell.getCellPosition().getRow());
+            System.out.println("colonna: "+ cell.getCellPosition().getColumn());
+            System.out.println("colore: "+ cell.getCellColor());
+            System.out.println("numero: "+ cell.getCellNumber());
+            System.out.println("---------");
+        }*/
+
         return originalWpc.copyWpc();
     }
 
     public static ArrayList<String> getWpcIDs() {
-        return new ArrayList<String>(map.keySet());
+        ArrayList<String> ids= new ArrayList(map.keySet());
+       /* for(String s: a)
+            System.out.println(s);*/
+        return ids;
     }
 
 }
