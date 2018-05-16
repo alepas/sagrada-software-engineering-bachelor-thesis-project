@@ -18,6 +18,7 @@ import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerExcepti
 import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
+import org.mockito.internal.matchers.Not;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -75,7 +76,13 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
                     do {
                         try {
                             response = (Response) in.readObject();
-                            if (response != null) response.handle(this);
+                            if (response != null) {
+                                response.handle(this);
+                                if (!(response instanceof Notification)) {
+                                    lastResponse = response;
+                                    notifyResponse();
+                                }
+                            }
                         } catch (Exception e){
                             e.printStackTrace();
                         }
@@ -85,38 +92,78 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
         receiver.start();
     }
 
+    private Response waitResponse(){
+        synchronized (responseWaiter){
+            while (lastResponse == null) {
+                try {
+                    responseWaiter.wait();
+                    return lastResponse;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+    }
+
+    private void notifyResponse(){
+        synchronized (responseWaiter){
+            responseWaiter.notifyAll();
+        }
+    }
+
 
     //-------------------------------- NetworkClientMethods --------------------------------
 
     @Override
     public void createUser(String username, String password) throws CannotRegisterUserException {
         request(new CreateUserRequest(username, password));
-        synchronized (responseWaiter){
-            try {
-                if (lastResponse == null) responseWaiter.wait();
-                CreateUserResponse createUserResponse = (CreateUserResponse) lastResponse;
-                Exception e = createUserResponse.exception;
-                lastResponse = null;
-                if (e != null) throw (CannotRegisterUserException) e;
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+
+        Exception e = ((CreateUserResponse) waitResponse()).exception;
+        lastResponse = null;
+
+        if (e != null){
+            if (e instanceof CannotRegisterUserException) throw (CannotRegisterUserException) e;
         }
     }
 
     @Override
     public void login(String username, String password) throws CannotLoginUserException {
         request(new LoginRequest(username, password));
+
+        Exception e = ((LoginResponse) waitResponse()).exception;
+        lastResponse = null;
+
+        if (e != null){
+            if (e instanceof CannotLoginUserException) throw (CannotLoginUserException) e;
+        }
     }
 
     @Override
     public void findGame(String token, int numPlayers) throws CannotFindUserInDBException, InvalidNumOfPlayersException, CannotCreatePlayerException {
         request(new FindGameRequest(token, numPlayers));
+
+        Exception e = ((FindGameResponse) waitResponse()).exception;
+        lastResponse = null;
+
+        if (e != null){
+            if (e instanceof CannotFindUserInDBException) throw (CannotFindUserInDBException) e;
+            if (e instanceof InvalidNumOfPlayersException) throw (InvalidNumOfPlayersException) e;
+            if (e instanceof CannotCreatePlayerException) throw (CannotCreatePlayerException) e;
+        }
     }
 
     @Override
     public void pickWpc(String userToken, String wpcID) throws CannotFindPlayerInDatabaseException, NotYourWpcException {
         request(new PickWpcRequest(wpcID, userToken));
+
+        Exception e = ((PickWpcResponse) waitResponse()).exception;
+        lastResponse = null;
+
+        if (e != null){
+            if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
+            if (e instanceof NotYourWpcException) throw (NotYourWpcException) e;
+        }
     }
 
 
@@ -124,49 +171,32 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
 
     @Override
     public void handle(CreateUserResponse response) throws CannotRegisterUserException {
-        synchronized (responseWaiter) {
-            lastResponse = response;
-            if (response.exception == null) {
-                clientModel.setUsername(response.username);
-                clientModel.setUserToken(response.userToken);
-            }
-            notifyAll();
+        if (response.exception == null) {
+            clientModel.setUsername(response.username);
+            clientModel.setUserToken(response.userToken);
         }
     }
 
     @Override
     public void handle(LoginResponse response) throws CannotLoginUserException{
-        if(response.userToken == null){
-            clientModel.clean();
-            if (response.exception instanceof CannotLoginUserException) throw (CannotLoginUserException) response.exception;
-            return;
+        if (response.exception == null) {
+            clientModel.setUsername(response.username);
+            clientModel.setUserToken(response.userToken);
         }
-        clientModel.setUsername(response.username);
-        clientModel.setUserToken(response.userToken);
     }
 
     @Override
     public void handle(FindGameResponse response) throws InvalidNumOfPlayersException, CannotFindUserInDBException, CannotCreatePlayerException {
-        String gameID = response.gameID;
-        if (gameID != null) {
-            clientModel.setGameID(gameID);
+        if (response.exception == null) {
+            clientModel.setGameID(response.gameID);
             clientModel.setGameActualPlayers(response.actualPlayers);
             clientModel.setGameNumPlayers(response.numPlayers);
-            startReceiving();
-        } else {
-            if (response.exception instanceof InvalidNumOfPlayersException) throw (InvalidNumOfPlayersException) response.exception;
-            if (response.exception instanceof CannotFindUserInDBException) throw (CannotFindUserInDBException) response.exception;
-            if (response.exception instanceof CannotCreatePlayerException) throw (CannotCreatePlayerException) response.exception;
         }
     }
 
     @Override
     public void handle(PickWpcResponse response) throws CannotFindPlayerInDatabaseException, NotYourWpcException {
-        Exception e = response.exception;
-        if (e != null){
-            if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
-            if (e instanceof NotYourWpcException) throw (NotYourWpcException) e;
-        }
+
     }
 
 
