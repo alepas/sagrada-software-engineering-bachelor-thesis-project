@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.game;
 
+import it.polimi.ingsw.model.constants.GameConstants;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 
 import java.util.ArrayList;
@@ -13,12 +14,11 @@ public class ChooseWpcThread implements Runnable {
 
     @Override
     public void run() {
+        int startTime = GameConstants.CHOOSE_WPC_WAITING_TIME + GameConstants.TASK_DELAY;
         while (needToWaitPlayersWpc()){
             try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+                Thread.sleep( startTime/ 20);
+            } catch (InterruptedException e) {}
         }
     }
 

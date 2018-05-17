@@ -146,6 +146,7 @@ public class RmiClient extends NetworkClient implements ResponseHandler {
 
     @Override
     public void handle(UserPickedWpcNotification notification) {
+        clientModel.wpcByUsername.put(notification.username, notification.wpcID);
         observer.update(null, notification);
     }
 }

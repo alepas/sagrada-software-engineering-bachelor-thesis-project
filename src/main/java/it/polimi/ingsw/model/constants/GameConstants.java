@@ -2,7 +2,8 @@ package it.polimi.ingsw.model.constants;
 
 public class GameConstants {
     //General
-    public static final int CHOOSE_WPC_WAITING_TIME = 500 * 1000; //Tempo in millisecondi
+    public static final int CHOOSE_WPC_WAITING_TIME = 60 * 1000; //Tempo in millisecondi
+    public static final int TASK_DELAY = 2 * 1000; //Ritardo per l'invio della notifica
     public static final int NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER = 4;
     public static final int PRIVATE_OBJ_SCORE_VALUE = 1;
     public static final int MIN_NUM_PLAYERS = 1;

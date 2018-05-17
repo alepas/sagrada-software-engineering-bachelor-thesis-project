@@ -97,7 +97,9 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
             while (lastResponse == null) {
                 try {
                     responseWaiter.wait();
-                    return lastResponse;
+                    Response response = lastResponse;
+                    lastResponse = null;
+                    return response;
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -120,7 +122,6 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
         request(new CreateUserRequest(username, password));
 
         Exception e = ((CreateUserResponse) waitResponse()).exception;
-        lastResponse = null;
 
         if (e != null){
             if (e instanceof CannotRegisterUserException) throw (CannotRegisterUserException) e;
@@ -132,7 +133,6 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
         request(new LoginRequest(username, password));
 
         Exception e = ((LoginResponse) waitResponse()).exception;
-        lastResponse = null;
 
         if (e != null){
             if (e instanceof CannotLoginUserException) throw (CannotLoginUserException) e;
@@ -144,7 +144,6 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
         request(new FindGameRequest(token, numPlayers));
 
         Exception e = ((FindGameResponse) waitResponse()).exception;
-        lastResponse = null;
 
         if (e != null){
             if (e instanceof CannotFindUserInDBException) throw (CannotFindUserInDBException) e;
@@ -158,7 +157,6 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
         request(new PickWpcRequest(wpcID, userToken));
 
         Exception e = ((PickWpcResponse) waitResponse()).exception;
-        lastResponse = null;
 
         if (e != null){
             if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
@@ -170,7 +168,7 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
     //-------------------------------- Response Handler --------------------------------
 
     @Override
-    public void handle(CreateUserResponse response) throws CannotRegisterUserException {
+    public void handle(CreateUserResponse response){
         if (response.exception == null) {
             clientModel.setUsername(response.username);
             clientModel.setUserToken(response.userToken);
@@ -178,7 +176,7 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
     }
 
     @Override
-    public void handle(LoginResponse response) throws CannotLoginUserException{
+    public void handle(LoginResponse response){
         if (response.exception == null) {
             clientModel.setUsername(response.username);
             clientModel.setUserToken(response.userToken);
@@ -186,7 +184,7 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
     }
 
     @Override
-    public void handle(FindGameResponse response) throws InvalidNumOfPlayersException, CannotFindUserInDBException, CannotCreatePlayerException {
+    public void handle(FindGameResponse response){
         if (response.exception == null) {
             clientModel.setGameID(response.gameID);
             clientModel.setGameActualPlayers(response.actualPlayers);
@@ -195,7 +193,7 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
     }
 
     @Override
-    public void handle(PickWpcResponse response) throws CannotFindPlayerInDatabaseException, NotYourWpcException {
+    public void handle(PickWpcResponse response){
 
     }
 
@@ -226,6 +224,7 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
 
     @Override
     public void handle(UserPickedWpcNotification notification) {
+        clientModel.wpcByUsername.put(notification.username, notification.wpcID);
         clientModel.update(null, notification);
     }
 }

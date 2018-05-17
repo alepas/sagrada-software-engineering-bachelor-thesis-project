@@ -6,6 +6,7 @@ import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerExcepti
 import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
+import it.polimi.ingsw.model.wpc.WPC;
 import it.polimi.ingsw.view.cli.CliView;
 
 public class CliController {
@@ -53,7 +54,7 @@ public class CliController {
         return clientModel.getUsername();
     }
 
-    public boolean findGame(int numPlayers) throws Exception{
+    public int findGame(int numPlayers){
         try {
             client.findGame(clientModel.getUserToken(), numPlayers);
         } catch (InvalidNumOfPlayersException e) {
@@ -72,9 +73,10 @@ public class CliController {
             view.displayText("Entrato nella partita: " + gameID);
             view.displayText("Giocatori presenti: " + clientModel.getGameActualPlayers() +
                     " di " + clientModel.getGameNumPlayers() + " necessari.");
-            return clientModel.getGameActualPlayers() == clientModel.getGameNumPlayers();
+            if (clientModel.getGameActualPlayers() == clientModel.getGameNumPlayers()) return 1;
+            return 0;
         } else {
-            throw new Exception();
+            return -1;
         }
     }
 
@@ -92,4 +94,16 @@ public class CliController {
         return false;
     }
 
+
+
+
+    //---------------------------------- Request to cli model ----------------------------------
+
+    public boolean areAllWpcsReceived(){
+        return clientModel.wpcByUsername.size() == clientModel.getGameNumPlayers();
+    }
+
+    public WPC getWpcByID(String id){
+        return clientModel.getWpcByID(id);
+    }
 }

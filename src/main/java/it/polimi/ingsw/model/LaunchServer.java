@@ -19,9 +19,10 @@ public class LaunchServer {
     // e aspettare un minuto circa (tempo necessario affinchè il registry sia caricato)
 
     public static void main(String[] args) throws IOException {
-        //Avvio della socket
+        //Caricamento delle wpc
         WpcDB.getInstance();
 
+        //Avvio della socket
         new Thread(){
             @Override
             public void run() {

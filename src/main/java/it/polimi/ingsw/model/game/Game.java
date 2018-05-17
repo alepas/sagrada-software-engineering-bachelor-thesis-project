@@ -147,6 +147,12 @@ public abstract class Game extends Observable implements Runnable {
     }
 
     void extractWPCs(){
+        wpcsByUser = extractRandomWpcsForUser();
+        changeAndNotifyObservers(new WpcsExtractedNotification(wpcsByUser));
+        waitForWpcResponse();
+    }
+
+    private HashMap<String, ArrayList<String>> extractRandomWpcsForUser(){
         ArrayList<String> ids = WpcDB.getWpcIDs();
         Collections.shuffle(ids);
         HashMap<String, ArrayList<String>> wpcsByUser = new HashMap<>();
@@ -158,19 +164,21 @@ public abstract class Game extends Observable implements Runnable {
                     ids.subList(numOfWpcs*i, numOfWpcs*(i+1))));
         }
 
-        this.wpcsByUser = wpcsByUser;
-        changeAndNotifyObservers(new WpcsExtractedNotification(wpcsByUser));
+        return wpcsByUser;
+    }
 
+    private void waitForWpcResponse() {
         Thread waitForWpcs = new Thread(new ChooseWpcThread(players));
-        waitForWpcs.start();
 
         try {
             System.out.println("Sto aspettando che i giocatori scelgano le wpc");
+            waitForWpcs.start();
             waitForWpcs.join(GameConstants.CHOOSE_WPC_WAITING_TIME);
             System.out.println("Ho smesso di aspettare che i giocatori scelgano le wpc");
             if (waitForWpcs.isAlive()) {
                 waitForWpcs.interrupt();
                 selectRandomWpc(wpcsByUser);
+                System.out.println("Ho estratto casualmente le wpc dei giocatori rimanenti");
             }
         } catch (InterruptedException e){
 
@@ -181,7 +189,8 @@ public abstract class Game extends Observable implements Runnable {
         for (PlayerInGame player : players){
             if (player.getWPC() == null) {
                 try {
-                    setPlayerWpc(player, wpcsByUser.get(player.getUser()).get(0));
+                    Random r = new Random();
+                    setPlayerWpc(player, wpcsByUser.get(player.getUser()).get(r.nextInt(GameConstants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER+1)));
                 } catch (NotYourWpcException e) {
                     e.printStackTrace();
                 }

@@ -1,13 +1,17 @@
 package it.polimi.ingsw.model.clientModel;
 
 import it.polimi.ingsw.model.dicebag.Color;
+import it.polimi.ingsw.model.wpc.WPC;
+import it.polimi.ingsw.model.wpc.WpcDB;
 
+import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 
 public class ClientModel implements Observer {
     private static ClientModel instance;
     private Observer observer;
+    private WpcDB wpcDB = WpcDB.getInstance();
 
     //User
     private String username;
@@ -18,6 +22,7 @@ public class ClientModel implements Observer {
     private int gameActualPlayers;
     private int gameNumPlayers;
     private Color[] privateObjectives;
+    public HashMap<String, String> wpcByUsername;
 
     private ClientModel() { }
 
@@ -34,6 +39,10 @@ public class ClientModel implements Observer {
         this.username = null;
         this.userToken = null;
         this.gameID = null;
+        gameActualPlayers = 0;
+        gameNumPlayers = 0;
+        privateObjectives = null;
+        this.wpcByUsername = new HashMap<>();
     }
 
     public void setObserver(Observer observer) {
@@ -86,6 +95,10 @@ public class ClientModel implements Observer {
 
     public void setPrivateObjectives(Color[] privateObjectives) {
         this.privateObjectives = privateObjectives;
+    }
+
+    public WPC getWpcByID(String id){
+        return WpcDB.getWpcByID(id);
     }
 
     @Override

@@ -3,21 +3,23 @@ package it.polimi.ingsw.view.cli;
 import it.polimi.ingsw.control.CliController;
 import it.polimi.ingsw.control.network.commands.NotificationHandler;
 import it.polimi.ingsw.control.network.commands.responses.notifications.*;
-import it.polimi.ingsw.model.clientModel.ClientModel;
 import it.polimi.ingsw.model.constants.CliConstants;
 import it.polimi.ingsw.model.dicebag.Color;
+import it.polimi.ingsw.model.wpc.WPC;
 
-import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Scanner;
+import java.util.*;
 
 public class CliView implements Observer, NotificationHandler {
     private Scanner fromKeyBoard;
+    private final CliRender cliRender;
 
     private boolean gameStarted = false;
     private boolean wpcExtracted = false;
     private boolean isGameFull = false;
+
+    private Timer timer = new Timer();
+    private Task task = null;
+    private final Object waiter = new Object();
 
     // ----- The view is composed with the controller (strategy)
     private final CliController controller;
@@ -25,6 +27,7 @@ public class CliView implements Observer, NotificationHandler {
     public CliView(CliController controller) {
         this.controller = controller;
         this.fromKeyBoard = new Scanner(System.in);
+        this.cliRender = new CliRender();
     }
 
     private String userInput() {
@@ -33,6 +36,34 @@ public class CliView implements Observer, NotificationHandler {
 
     public void displayText(String text) {
         System.out.println(">>> " + text);
+    }
+
+    private void stopHere() {
+        int stopHere = 0;
+        synchronized (waiter) {
+            try {
+                displayText("Stop here");
+                while (stopHere== 0) waiter.wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void startNewTask(int taskTime){
+        task = new Task(taskTime, waiter);
+        timer.schedule(task, 0, task.getSensibility());
+    }
+
+    private void startNewTask(int taskTime, int sensibility){
+        task = new Task(taskTime, sensibility, waiter);
+        timer.schedule(task, 0, task.getSensibility());
+    }
+
+    private void deleteTask() {
+        timer.purge();
+        timer.cancel();
+        task = null;
     }
 
     //---------------------------- External methods ----------------------------
@@ -100,7 +131,9 @@ public class CliView implements Observer, NotificationHandler {
     }
 
 
-
+    //Restituisce true se è riuscito a trovare una partita, altrimenti false
+    //Inoltre setta 'isGameFull' a true se la partita ha raggiunto il numero di giocatori necessario,
+    //a false altrimenti
     private boolean findGamePhase(){
         String response;
         int numPlayers;
@@ -110,13 +143,13 @@ public class CliView implements Observer, NotificationHandler {
             response = userInput();
             try {
                 numPlayers = Integer.parseInt(response);
-                try {
-                    isGameFull = controller.findGame(numPlayers);
-                    return true;
-                } catch (Exception e){
+                int i = controller.findGame(numPlayers);
+                if (i < 0){
                     displayText("Impossibile trovare partita. Riprovare più tardi");
-                    e.printStackTrace();
                     return false;
+                } else {
+                    isGameFull = (i == 1);
+                    return true;
                 }
             } catch (NumberFormatException e){
                 displayText("Perfavore inserire un numero intero");
@@ -129,26 +162,19 @@ public class CliView implements Observer, NotificationHandler {
         waitForWpc();
         chooseWpcPhase();
 
-
-        int stopHere = 0;
-        while (stopHere == 0){
-
-        };
+        stopHere();
     }
 
+    //Attende che tutti i giocatori entrino in partita
     private void waitPlayers() {
-        Thread waitingPlayers = new Thread(
-                () -> {
-                    if (!isGameFull) displayText("In attesa di altri giocatori...");
-                    while (!gameStarted){
-                        try {
-                            Thread.sleep(500);
-                        } catch (InterruptedException e){
-
-                        }
-                    };
-                }
-        );
+        Thread waitingPlayers = new Thread(() -> {
+            if (!isGameFull) displayText("In attesa di altri giocatori...");
+            while (!gameStarted) {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) { }
+            };
+        });
 
         waitingPlayers.start();
 
@@ -159,24 +185,20 @@ public class CliView implements Observer, NotificationHandler {
         }
     }
 
+    //Attende che arrivi la notifica contenente le wpc che sono proposte ai giocatori
     private void waitForWpc() {
-        Thread waitingWPC = new Thread(
-                () -> {
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e){
+        Thread waitingWPC = new Thread(() -> {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) { }
 
-                    }
-                    if (!wpcExtracted) displayText("In attesa delle wpc...");
-                    while (!wpcExtracted){
-                        try {
-                            Thread.sleep(500);
-                        } catch (InterruptedException e){
-
-                        }
-                    };
-                }
-        );
+            if (!wpcExtracted) displayText("In attesa delle wpc...");
+            while (!wpcExtracted) {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) { }
+            };
+        });
 
         waitingWPC.start();
 
@@ -188,12 +210,43 @@ public class CliView implements Observer, NotificationHandler {
     }
 
     private void chooseWpcPhase() {
-        boolean ok;
-        do {
-            displayText("Seleziona la wpc che vuoi utilizzare");
-            String wpcID = userInput();
-            ok = controller.pickWpc(wpcID);
-        } while (!ok);
+        wpcExtracted = false;
+
+        Thread requestWpcThread = new Thread(() -> {
+            boolean myWpcExtracted;
+            do {
+                displayText("Seleziona la wpc che vuoi utilizzare");
+                String wpcID = userInput();
+                myWpcExtracted = controller.pickWpc(wpcID);
+                if (!wpcExtracted) displayText("Attendo che gli altri giocatori selezionino la wpc");
+            } while (!myWpcExtracted);
+        });
+        requestWpcThread.start();
+
+        synchronized (waiter){
+            try {
+                int lastTimeLeft = task.timeLeft();
+                int nextStep = 50;
+
+                while (!wpcExtracted) {
+                    if (nextStep >= 0 && task.timeLeft() <= nextStep && lastTimeLeft > nextStep) {
+                        displayText("Rimangono " + nextStep + " secondi per scegliere le wpc");
+                        lastTimeLeft = nextStep;
+                        if (nextStep == 0) displayText("Tempo scaduto");
+                        if (nextStep <= 5) nextStep = 0;
+                        if (nextStep == 15) nextStep = 5;
+                        if (nextStep == 30) nextStep = 15;
+                        if (nextStep == 50) nextStep = 30;
+                    }
+                    waiter.wait();
+                }
+
+                requestWpcThread.interrupt();
+                deleteTask();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     //-------------------------------------- Observer ------------------------------------------
@@ -244,19 +297,28 @@ public class CliView implements Observer, NotificationHandler {
     public void handle(WpcsExtractedNotification notification) {
         ArrayList<String> userWpcs = notification.wpcsByUser.get(notification.username);
         StringBuilder str = new StringBuilder();
-        str.append("Le tue wpc sono: ");
+        str.append("Le tue wpc sono:\n\n");
 
         for (String wpcID : userWpcs){
-            str.append(wpcID + "\t");
+            WPC wpc = controller.getWpcByID(wpcID);
+            str.append("ID: " + wpcID + "\tFavours: " + wpc.getFavours() + "\n");
+            str.append(cliRender.renderWpc(controller.getWpcByID(wpcID)));
         }
+
+        startNewTask(notification.timeToCompleteTask);
 
         wpcExtracted = true;
         displayText(str.toString());
+        displayText("Tempo rimanente per scegliere la wpc: " + task.timeLeft() + " secondi.");
     }
 
     @Override
     public void handle(UserPickedWpcNotification notification) {
         displayText(notification.username + " ha scelto la wpc: " + notification.wpcID);
+        if (controller.areAllWpcsReceived()){
+            wpcExtracted = true;
+            displayText("Tutti i giocatori hanno scelto la wpc");
+        }
     }
 
 
