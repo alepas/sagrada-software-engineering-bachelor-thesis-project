@@ -32,4 +32,6 @@ public class CliConstants {
     public static final String SELECT_NUM_PLAYERS = "Seleziona numero giocatori:";
 
     public static final String NUM_PLAYERS_ERROR = "Perfavore inserire un numero compreso tra 1 e 4";
+
+    public static final int WpcSpacing = 10;
 }

@@ -296,20 +296,20 @@ public class CliView implements Observer, NotificationHandler {
     @Override
     public void handle(WpcsExtractedNotification notification) {
         ArrayList<String> userWpcs = notification.wpcsByUser.get(notification.username);
-        StringBuilder str = new StringBuilder();
-        str.append("Le tue wpc sono:\n\n");
+        displayText("Le tue wpc sono:\n\n");
 
-        for (String wpcID : userWpcs){
-            WPC wpc = controller.getWpcByID(wpcID);
-            str.append("ID: " + wpcID + "\tFavours: " + wpc.getFavours() + "\n");
-            str.append(cliRender.renderWpc(controller.getWpcByID(wpcID)));
+        WPC[] wpcs = new WPC[2];
+        int num;
+
+        for(int i = 0; i < userWpcs.size(); i++){
+            num = i%2;
+            wpcs[num] = controller.getWpcByID(userWpcs.get(i));
+            if ( (i == userWpcs.size()-1) && (num == 0) ) System.out.println(cliRender.renderWpc(wpcs[num]));
+            if (num == 1) System.out.println(cliRender.renderWpcs(wpcs, CliConstants.WpcSpacing));;
         }
 
         startNewTask(notification.timeToCompleteTask);
-
         wpcExtracted = true;
-        displayText(str.toString());
-        displayText("Tempo rimanente per scegliere la wpc: " + task.timeLeft() + " secondi.");
     }
 
     @Override

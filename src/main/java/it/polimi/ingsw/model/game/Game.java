@@ -190,7 +190,7 @@ public abstract class Game extends Observable implements Runnable {
             if (player.getWPC() == null) {
                 try {
                     Random r = new Random();
-                    setPlayerWpc(player, wpcsByUser.get(player.getUser()).get(r.nextInt(GameConstants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER+1)));
+                    setPlayerWpc(player, wpcsByUser.get(player.getUser()).get(r.nextInt(GameConstants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER)));
                 } catch (NotYourWpcException e) {
                     e.printStackTrace();
                 }

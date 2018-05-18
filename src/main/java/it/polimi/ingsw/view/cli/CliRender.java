@@ -12,6 +12,10 @@ import java.util.HashMap;
 
 public class CliRender {
     private final int cellHeight = 3;
+    private final int wpcHeight = (cellHeight+1)*WpcConstants.ROWS_NUMBER + 1;
+    private final int wpcLenght = 8*WpcConstants.COLS_NUMBER+1;
+
+
     //Colors
     // Reset
     private final String RESET = "\033[0m";  // Text Reset
@@ -80,7 +84,7 @@ public class CliRender {
 
 
     //Dices
-    private final String wpcLine = WPC_BORDER + "+-------+-------+-------+-------+-------+\n";
+    private final String wpcLine = WPC_BORDER + "+-------+-------+-------+-------+-------+";
     private final String colSeparator = WPC_BORDER + "|";
 
     private final String[] emptyDice = {"       ",
@@ -89,28 +93,28 @@ public class CliRender {
 
 
     private final String[] dice1 = {"       ",
-                                    "   X   ",
+                                    "   O   ",
                                     "       "};
 
-    private final String[] dice2 = {" X     ",
+    private final String[] dice2 = {" O     ",
                                     "       ",
-                                    "     X "};
+                                    "     O "};
 
-    private final String[] dice3 = {" X     ",
-                                    "   X   ",
-                                    "     X "};
+    private final String[] dice3 = {" O     ",
+                                    "   O   ",
+                                    "     O "};
 
-    private final String[] dice4 = {" X   X ",
+    private final String[] dice4 = {" O   O ",
                                     "       ",
-                                    " X   X "};
+                                    " O   O "};
 
-    private final String[] dice5 = {" X   X ",
-                                    "   X   ",
-                                    " X   X "};
+    private final String[] dice5 = {" O   O ",
+                                    "   O   ",
+                                    " O   O "};
 
-    private final String[] dice6 = {" X   X ",
-                                    " X   X ",
-                                    " X   X "};
+    private final String[] dice6 = {" O   O ",
+                                    " O   O ",
+                                    " O   O "};
 
     private final String[][] dices = {emptyDice, dice1, dice2, dice3, dice4, dice5, dice6};
 
@@ -124,7 +128,63 @@ public class CliRender {
 
     public String renderWpc(WPC wpc){
         StringBuilder wpcRendered = new StringBuilder();
-        wpcRendered.append(wpcLine);
+        String[] stringWpc = convertWpcToString(wpc);
+
+        wpcRendered.append("ID:" + wpc.getWpcID() + "\tFavours: " + wpc.getFavours() + "\n");
+        for (String row : stringWpc){
+            wpcRendered.append(row + "\n");
+        }
+
+        return wpcRendered.append(RESET + "\n").toString();
+    }
+
+    public String renderWpcs(WPC[] wpcs, int distance){
+        StringBuilder wpcsRendered = new StringBuilder();
+        String[][] stringWpcs = new String[wpcs.length][];
+
+        String wpcSpacing = calculateSpace(distance, null);
+        String titleSpacing;
+        String title;
+
+        for(int i = 0; i < wpcs.length; i++){
+            stringWpcs[i] = convertWpcToString(wpcs[i]);
+            title = "ID: " + wpcs[i].getWpcID() + "    Favours: " + wpcs[i].getFavours();
+            titleSpacing = calculateSpace(distance, title);
+            wpcsRendered.append(title + titleSpacing);
+        }
+        wpcsRendered.append("\n");
+
+        for(int row = 0; row < wpcHeight; row++){
+            for(int numWpc = 0; numWpc < wpcs.length; numWpc++){
+                wpcsRendered.append(stringWpcs[numWpc][row]);
+                wpcsRendered.append(wpcSpacing);
+            }
+            wpcsRendered.append("\n");
+        }
+
+        return wpcsRendered.append(RESET + "\n").toString();
+    }
+
+    private String calculateSpace(int distance, String title){
+        StringBuilder spacing = new StringBuilder();
+
+        int stringSpace;
+        if (title != null) stringSpace = wpcLenght - title.length() + distance;
+        else stringSpace = distance;
+
+        for(int i = 0; i < stringSpace; i++){
+            spacing.append(" ");
+        }
+
+        return spacing.toString();
+    }
+
+    private String[] convertWpcToString(WPC wpc){
+        String[] stringWpc = new String[wpcHeight];
+        StringBuilder str;
+        int i = 0;
+
+        stringWpc[i++] = wpcLine;
 
         ArrayList<Cell> allCells = wpc.schema;
 
@@ -133,17 +193,19 @@ public class CliRender {
             String[][] stringsCells = convertCellsToString(rowCells);
 
             for(int cellRow = 0; cellRow < cellHeight; cellRow++){
+                str = new StringBuilder();
                 for(String[] cell : stringsCells){
-                    wpcRendered.append(colSeparator);
-                    wpcRendered.append(cell[cellRow]);
+                    str.append(colSeparator);
+                    str.append(cell[cellRow]);
                 }
-                wpcRendered.append(colSeparator + "\n");
+                str.append(colSeparator);
+                stringWpc[i++] = str.toString();
             }
 
-            wpcRendered.append(wpcLine);
+            stringWpc[i++] = wpcLine;
         }
 
-        return wpcRendered.append(RESET + "\n").toString();
+        return stringWpc;
     }
 
     private Cell[] getRowCells(ArrayList<Cell> allCells, int row){
