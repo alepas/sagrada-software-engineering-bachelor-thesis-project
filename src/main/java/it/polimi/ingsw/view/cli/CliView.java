@@ -3,6 +3,8 @@ package it.polimi.ingsw.view.cli;
 import it.polimi.ingsw.control.CliController;
 import it.polimi.ingsw.control.network.commands.NotificationHandler;
 import it.polimi.ingsw.control.network.commands.responses.notifications.*;
+import it.polimi.ingsw.model.cards.PublicObjectiveCard;
+import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.constants.CliConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
@@ -16,6 +18,8 @@ public class CliView implements Observer, NotificationHandler {
 
     private boolean gameStarted = false;
     private boolean wpcExtracted = false;
+    private boolean toolExtracted = false;
+    private boolean pocExtracted = false;
     private boolean isGameFull = false;
 
     private Timer timer = new Timer();
@@ -167,6 +171,8 @@ public class CliView implements Observer, NotificationHandler {
         waitPlayers();
         waitForWpc();
         chooseWpcPhase();
+        waitForToolcards();
+        waitForPoc();
 
         stopHere();
     }
@@ -187,7 +193,7 @@ public class CliView implements Observer, NotificationHandler {
         try {
             waitingPlayers.join();
         } catch (InterruptedException e){
-            displayText("Ho smesso di aspettare la partita");
+            displayText("Ho smesso di aspettare");
         }
     }
 
@@ -211,7 +217,55 @@ public class CliView implements Observer, NotificationHandler {
         try {
             waitingWPC.join();
         } catch (InterruptedException e){
-            displayText("Ho smesso di aspettare la partita");
+            displayText("Ho smesso di aspettare");
+        }
+    }
+
+    //Attende che arrivi la notifica contenente le toolcard
+    private void waitForToolcards() {
+        Thread waitingToolcards = new Thread(() -> {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) { }
+
+            if (!toolExtracted) displayText("In attesa delle toolcard...");
+            while (!toolExtracted) {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) { }
+            };
+        });
+
+        waitingToolcards.start();
+
+        try {
+            waitingToolcards.join();
+        } catch (InterruptedException e){
+            displayText("Ho smesso di aspettare");
+        }
+    }
+
+    //Attende che arrivi la notifica contenente gli obbiettivi pubblici
+    private void waitForPoc() {
+        Thread waitingPoc = new Thread(() -> {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) { }
+
+            if (!pocExtracted) displayText("In attesa degli obbiettivi pubblici...");
+            while (!pocExtracted) {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) { }
+            };
+        });
+
+        waitingPoc.start();
+
+        try {
+            waitingPoc.join();
+        } catch (InterruptedException e){
+            displayText("Ho smesso di aspettare");
         }
     }
 
@@ -324,6 +378,30 @@ public class CliView implements Observer, NotificationHandler {
         if (controller.areAllWpcsReceived()){
             wpcExtracted = true;
             displayText("Tutti i giocatori hanno scelto la wpc");
+        }
+    }
+
+    @Override
+    public void handle(ToolcardsExtractedNotification notification) {
+        ArrayList<ToolCard> toolCards = controller.getToolcard();
+        displayText("Le toolcards della partita sono:\n");
+
+        for (ToolCard card : toolCards){
+            displayText("ID: " + card.getID());
+            displayText("Nome: " + card.getName());
+            displayText("Descrizione: " + card.getDescription() + "\n");
+        }
+    }
+
+    @Override
+    public void handle(PocsExtractedNotification notification) {
+        ArrayList<PublicObjectiveCard> pocCards = controller.getPublicObjectiveCards();
+        displayText("Gli obbiettivi pubblici della partita sono:\n");
+
+        for (PublicObjectiveCard card : pocCards){
+            displayText("ID: " + card.getID());
+            displayText("Nome: " + card.getName());
+            displayText("Descrizione: " + card.getDescription() + "\n");
         }
     }
 

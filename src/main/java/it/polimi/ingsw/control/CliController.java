@@ -1,6 +1,8 @@
 package it.polimi.ingsw.control;
 
 import it.polimi.ingsw.control.network.NetworkClient;
+import it.polimi.ingsw.model.cards.PublicObjectiveCard;
+import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.clientModel.ClientModel;
 import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
@@ -8,6 +10,8 @@ import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
 import it.polimi.ingsw.model.wpc.WPC;
 import it.polimi.ingsw.view.cli.CliView;
+
+import java.util.ArrayList;
 
 public class CliController {
     // reference to networking layer
@@ -105,5 +109,13 @@ public class CliController {
 
     public WPC getWpcByID(String id){
         return clientModel.getWpcByID(id);
+    }
+
+    public ArrayList<ToolCard> getToolcard(){
+        return clientModel.getGameToolCards();
+    }
+
+    public ArrayList<PublicObjectiveCard> getPublicObjectiveCards(){
+        return clientModel.getGamePublicObjectiveCards();
     }
 }

@@ -92,14 +92,14 @@ public class MultiplayerGame extends Game {
     @Override
     public void initializeGame() {
         extractPrivateObjectives();
-        extractWPCs();              //Genera delle eccezioni?
-//        extractToolCards();
-//        extractPublicObjectives();
-//        shufflePlayers();
-//
-//        turnPlayer = 0;
-//        roundPlayer = 0;
-//        currentTurn = 1;
+        extractWPCs();
+        extractToolCards();
+        extractPublicObjectives();
+        shufflePlayers();
+
+        turnPlayer = 0;
+        roundPlayer = 0;
+        currentTurn = 1;
     }
 
     private void shufflePlayers(){

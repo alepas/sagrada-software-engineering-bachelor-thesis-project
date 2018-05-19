@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model.game;
 
-import it.polimi.ingsw.control.network.commands.responses.notifications.UserPickedWpcNotification;
-import it.polimi.ingsw.control.network.commands.responses.notifications.WpcsExtractedNotification;
+import it.polimi.ingsw.control.network.commands.responses.notifications.*;
 import it.polimi.ingsw.model.constants.GameConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
@@ -9,7 +8,6 @@ import it.polimi.ingsw.model.dicebag.DiceBag;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;
 
-import it.polimi.ingsw.control.network.commands.responses.notifications.PrivateObjExtractedNotification;
 import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 import it.polimi.ingsw.model.wpc.WpcDB;
@@ -212,6 +210,8 @@ public abstract class Game extends Observable implements Runnable {
         for (String id : toolCardsExtracted){
             toolCards.add(ToolCard.getCardByID(id));
         }
+
+        changeAndNotifyObservers(new ToolcardsExtractedNotification(toolCardsExtracted));
     }
 
     void extractPublicObjectives(){
@@ -221,6 +221,8 @@ public abstract class Game extends Observable implements Runnable {
         for (String id : publicCardsExtracted){
             publicObjectiveCards.add(PublicObjectiveCard.getCardByID(id));
         }
+
+        changeAndNotifyObservers(new PocsExtractedNotification(publicCardsExtracted));
     }
 
     public DiceBag getDiceBag() {

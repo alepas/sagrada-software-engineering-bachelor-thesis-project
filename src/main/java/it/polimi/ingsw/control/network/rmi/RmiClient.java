@@ -7,6 +7,8 @@ import it.polimi.ingsw.control.network.commands.responses.FindGameResponse;
 import it.polimi.ingsw.control.network.commands.responses.LoginResponse;
 import it.polimi.ingsw.control.network.commands.responses.PickWpcResponse;
 import it.polimi.ingsw.control.network.commands.responses.notifications.*;
+import it.polimi.ingsw.model.cards.PublicObjectiveCard;
+import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.clientModel.ClientModel;
 import it.polimi.ingsw.model.constants.NetworkConstants;
 import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
@@ -18,6 +20,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.ArrayList;
 import java.util.Observer;
 
 public class RmiClient extends NetworkClient implements ResponseHandler {
@@ -147,6 +150,26 @@ public class RmiClient extends NetworkClient implements ResponseHandler {
     @Override
     public void handle(UserPickedWpcNotification notification) {
         clientModel.wpcByUsername.put(notification.username, notification.wpcID);
+        observer.update(null, notification);
+    }
+
+    @Override
+    public void handle(ToolcardsExtractedNotification notification) {
+        ArrayList<ToolCard> toolCards = new ArrayList<>();
+        for (String id : notification.toolcardsIDs){
+            toolCards.add(ToolCard.getCardByID(id));
+        }
+        clientModel.setGameToolCards(toolCards);
+        observer.update(null, notification);
+    }
+
+    @Override
+    public void handle(PocsExtractedNotification notification) {
+        ArrayList<PublicObjectiveCard> cards = new ArrayList<>();
+        for (String id : notification.pocIDs){
+            cards.add(PublicObjectiveCard.getCardByID(id));
+        }
+        clientModel.setGamePublicObjectiveCards(cards);
         observer.update(null, notification);
     }
 }

@@ -4,6 +4,8 @@ import it.polimi.ingsw.control.CliController;
 import it.polimi.ingsw.control.network.NetworkClient;
 import it.polimi.ingsw.control.network.rmi.RmiClient;
 import it.polimi.ingsw.control.network.socket.SocketClient;
+import it.polimi.ingsw.model.cards.PublicObjectiveCard;
+import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.constants.NetworkConstants;
 
 import java.io.IOException;
@@ -18,6 +20,9 @@ public class LaunchCli {
     public static void main(String[] args) throws IOException {
         String answer;
         Tecnology tecnology = null;
+
+        ToolCard.loadCards();
+        PublicObjectiveCard.loadCards();
 
         do {
             System.out.println(">>> Quale tecnologia vuoi usare? socket/rmi");

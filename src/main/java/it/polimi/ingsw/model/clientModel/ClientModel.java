@@ -1,9 +1,12 @@
 package it.polimi.ingsw.model.clientModel;
 
+import it.polimi.ingsw.model.cards.PublicObjectiveCard;
+import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.wpc.WPC;
 import it.polimi.ingsw.model.wpc.WpcDB;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
@@ -23,6 +26,8 @@ public class ClientModel implements Observer {
     private int gameNumPlayers;
     private Color[] privateObjectives;
     public HashMap<String, String> wpcByUsername;
+    private ArrayList<ToolCard> gameToolCards;
+    private ArrayList<PublicObjectiveCard> gamePublicObjectiveCards;
 
     private ClientModel() { }
 
@@ -43,6 +48,7 @@ public class ClientModel implements Observer {
         gameNumPlayers = 0;
         privateObjectives = null;
         this.wpcByUsername = new HashMap<>();
+        this.gameToolCards = new ArrayList<>();
     }
 
     public void setObserver(Observer observer) {
@@ -99,6 +105,22 @@ public class ClientModel implements Observer {
 
     public WPC getWpcByID(String id){
         return WpcDB.getWpcByID(id);
+    }
+
+    public ArrayList<ToolCard> getGameToolCards() {
+        return gameToolCards;
+    }
+
+    public void setGameToolCards(ArrayList<ToolCard> gameToolCards) {
+        this.gameToolCards = gameToolCards;
+    }
+
+    public ArrayList<PublicObjectiveCard> getGamePublicObjectiveCards() {
+        return gamePublicObjectiveCards;
+    }
+
+    public void setGamePublicObjectiveCards(ArrayList<PublicObjectiveCard> gamePublicObjectiveCards) {
+        this.gamePublicObjectiveCards = gamePublicObjectiveCards;
     }
 
     @Override

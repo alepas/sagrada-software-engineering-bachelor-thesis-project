@@ -12,4 +12,8 @@ public interface NotificationHandler {
     void handle(WpcsExtractedNotification notification);
 
     void handle(UserPickedWpcNotification notification);
+
+    void handle(ToolcardsExtractedNotification notification);
+
+    void handle(PocsExtractedNotification notification);
 }
