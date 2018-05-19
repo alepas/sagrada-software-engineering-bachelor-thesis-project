@@ -7,6 +7,9 @@ import java.util.ArrayList;
 
 public abstract class ToolCard {
     protected String id;
+    protected String name;
+    protected String description;
+
     private Boolean used = false;
 
     public static ArrayList<ToolCard> toolCards = new ArrayList<>();
@@ -44,6 +47,14 @@ public abstract class ToolCard {
     }
 
     public String getID(){ return id; }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
 
     public Boolean isUsed() { return used; }
 

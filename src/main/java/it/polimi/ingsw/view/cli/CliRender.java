@@ -80,12 +80,13 @@ public class CliRender {
     private final String CYAN_BACKGROUND_BRIGHT = "\033[0;106m";  // CYAN
     private final String WHITE_BACKGROUND_BRIGHT = "\033[0;107m";   // WHITE
 
-    private final String WPC_BORDER = BLACK;
+    private final String WPC_BORDER_COLOR = BLACK;
+    private final String NULL_COLOR_CELL = BLACK_BRIGHT;
 
 
     //Dices
-    private final String wpcLine = WPC_BORDER + "+-------+-------+-------+-------+-------+";
-    private final String colSeparator = WPC_BORDER + "|";
+    private final String wpcLine = WPC_BORDER_COLOR + "+-------+-------+-------+-------+-------+";
+    private final String colSeparator = WPC_BORDER_COLOR + "|";
 
     private final String[] emptyDice = {"       ",
                                         "       ",
@@ -116,16 +117,19 @@ public class CliRender {
                                     " O   O ",
                                     " O   O "};
 
-    private final String[][] dices = {emptyDice, dice1, dice2, dice3, dice4, dice5, dice6};
+    private final String[] cellColorRestricted =   {"XXXXXXX",
+                                                    "XXXXXXX",
+                                                    "XXXXXXX"};
+//    private final String[] cellColorRestricted =   {"       ",
+//                                                    "       ",
+//                                                    "       "};
 
-    private final String[] cellColorRestricted =   {" +---+ ",
-                                                    " |   | ",
-                                                    " +---+ "};
+    private final String[][] dices = {emptyDice, dice1, dice2, dice3, dice4, dice5, dice6};
 
 
     public CliRender() { }
 
-
+    //Restiusce la stringa che rappresenta la wpc su cli
     public String renderWpc(WPC wpc){
         StringBuilder wpcRendered = new StringBuilder();
         String[] stringWpc = convertWpcToString(wpc);
@@ -138,6 +142,7 @@ public class CliRender {
         return wpcRendered.append(RESET + "\n").toString();
     }
 
+    //Restituisce la stringa che rappresenta le wpc passate su cli, distanziate di distance carattateri
     public String renderWpcs(WPC[] wpcs, int distance){
         StringBuilder wpcsRendered = new StringBuilder();
         String[][] stringWpcs = new String[wpcs.length][];
@@ -179,6 +184,8 @@ public class CliRender {
         return spacing.toString();
     }
 
+    //Converte la wpc in un array di stringhe dove ogni elemento dell'array rappresenta una riga
+    //della wpc convertita in stringa
     private String[] convertWpcToString(WPC wpc){
         String[] stringWpc = new String[wpcHeight];
         StringBuilder str;
@@ -208,6 +215,7 @@ public class CliRender {
         return stringWpc;
     }
 
+    //Restituisce le celle nella wpc della riga passata ordinate
     private Cell[] getRowCells(ArrayList<Cell> allCells, int row){
         HashMap<Integer, Cell> rowCellsByCol = new HashMap<>();
 
@@ -226,6 +234,7 @@ public class CliRender {
         return rowCells;
     }
 
+    //Converte le celle passate in stringhe
     private String[][] convertCellsToString(Cell[] rowCells) {
         int colNumber = WpcConstants.COLS_NUMBER;
 
@@ -236,37 +245,44 @@ public class CliRender {
         return cell;
     }
 
+    //Converte la cella passata in un array di stringhe, dove ogni elemento rappresenta una riga
+    //della cella in formato stringa
     private String[] convertCellToString(Cell rowCell) {
         String color;
         Color cellColor = cellColor(rowCell);
 
-        if (cellColor != null) {
-            switch (cellColor(rowCell)) {
-                case GREEN:
-                    color = GREEN_BACKGROUND_BRIGHT;
-                    break;
-                case RED:
-                    color = RED_BACKGROUND_BRIGHT;
-                    break;
-                case YELLOW:
-                    color = YELLOW_BACKGROUND_BRIGHT;
-                    break;
-                case BLUE:
-                    color = BLUE_BACKGROUND_BRIGHT;
-                    break;
-                case VIOLET:
-                    color = PURPLE_BACKGROUND_BRIGHT;
-                    break;
-                default:
-                    color = BLACK_BRIGHT;
-                    break;
-            }
-        } else { color = BLACK_BRIGHT; }
-        
         int num;
         if (rowCell.getCellDice() != null) num = rowCell.getCellDice().getDiceNumber();
         else if (rowCell.getCellNumber() != 0) num = rowCell.getCellNumber();
         else num = 0;
+
+        if (cellColor != null) {
+            switch (cellColor(rowCell)) {
+                case GREEN:
+                    if (num == 0) color = GREEN;
+                    else color = GREEN_BACKGROUND + WHITE_BRIGHT;
+                    break;
+                case RED:
+                    if (num == 0) color = RED;
+                    else color = RED_BACKGROUND_BRIGHT + WHITE_BRIGHT;
+                    break;
+                case YELLOW:
+                    if (num == 0) color = YELLOW;
+                    else color = YELLOW_BACKGROUND_BRIGHT + WHITE_BRIGHT;
+                    break;
+                case BLUE:
+                    if (num == 0) color = BLUE;
+                    else color = BLUE_BACKGROUND_BRIGHT + WHITE_BRIGHT;
+                    break;
+                case VIOLET:
+                    if (num == 0) color = PURPLE;
+                    else color = PURPLE_BACKGROUND + WHITE_BRIGHT;
+                    break;
+                default:
+                    color = NULL_COLOR_CELL;
+                    break;
+            }
+        } else { color = NULL_COLOR_CELL; }
         
         return renderCell(num, color);
     }
@@ -279,8 +295,12 @@ public class CliRender {
         }
     }
 
+    //Genera la stringa che rappresenta una cella con numero e colori passati
     private String[] renderCell(int num, String color) {
-        String[] diceRows = Arrays.copyOf(dices[num], cellHeight);
+        String[] diceRows;
+
+        if (num == 0 && !color.equals(NULL_COLOR_CELL)) diceRows = Arrays.copyOf(cellColorRestricted, cellColorRestricted.length);
+        else diceRows= Arrays.copyOf(dices[num], cellHeight);
         
         for(int row = 0; row < diceRows.length; row++){
             diceRows[row] = color + diceRows[row] + RESET;

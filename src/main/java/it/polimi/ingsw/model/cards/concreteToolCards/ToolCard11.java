@@ -6,7 +6,11 @@ import it.polimi.ingsw.model.usersdb.PlayerInGame;
 
 public class ToolCard11 extends ToolCard {
 
-    public ToolCard11() { this.id = ToolCardConstants.TOOLCARD11_ID; }
+    public ToolCard11() {
+        this.id = ToolCardConstants.TOOLCARD11_ID;
+        this.name = ToolCardConstants.TOOL11_NAME;
+        this.description = ToolCardConstants.TOOL11_DESCRIPTION;
+    }
 
     @Override
     public void use(PlayerInGame player) {

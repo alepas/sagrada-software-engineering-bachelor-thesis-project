@@ -11,7 +11,11 @@ import java.util.ArrayList;
 public class PublicObjectiveCard3  extends PublicObjectiveCard {
     //SFUMATURE DIVERSE - RIGA
 
-    public PublicObjectiveCard3(){ this.id = POCConstants.POC3_ID; }
+    public PublicObjectiveCard3(){
+        this.id = POCConstants.POC3_ID;
+        this.name = POCConstants.POC3_NAME;
+        this.description = POCConstants.POC3_DESCRIPTION;
+    }
 
     @Override
     public int calculateScore(WPC wpc) {

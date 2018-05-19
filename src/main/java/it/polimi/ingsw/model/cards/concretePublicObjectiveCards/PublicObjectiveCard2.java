@@ -12,7 +12,11 @@ import java.util.ArrayList;
 public class PublicObjectiveCard2 extends PublicObjectiveCard {
     //COLORI DIVERSI - COLONNA
 
-    public PublicObjectiveCard2() { this.id = POCConstants.POC2_ID; }
+    public PublicObjectiveCard2() {
+        this.id = POCConstants.POC2_ID;
+        this.name = POCConstants.POC2_NAME;
+        this.description = POCConstants.POC2_DESCRIPTION;
+    }
 
     @Override
     public int calculateScore(WPC wpc) {

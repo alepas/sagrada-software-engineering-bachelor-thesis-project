@@ -9,7 +9,11 @@ import it.polimi.ingsw.model.dicebag.Color;
 public class PublicObjectiveCard10  extends PublicObjectiveCard {
     //VARIETA' DI COLORE
 
-    public PublicObjectiveCard10(){ this.id = POCConstants.POC10_ID; }
+    public PublicObjectiveCard10(){
+        this.id = POCConstants.POC10_ID;
+        this.name = POCConstants.POC10_NAME;
+        this.description = POCConstants.POC10_DESCRIPTION;
+    }
 
     @Override
     public int calculateScore(WPC wpc) {

@@ -7,7 +7,11 @@ import it.polimi.ingsw.model.constants.POCConstants;
 public class PublicObjectiveCard7  extends PublicObjectiveCard {
     //SFUMATURE SCURE
 
-    public PublicObjectiveCard7(){ this.id = POCConstants.POC7_ID; }
+    public PublicObjectiveCard7(){
+        this.id = POCConstants.POC7_ID;
+        this.name = POCConstants.POC7_NAME;
+        this.description = POCConstants.POC7_DESCRIPTION;
+    }
 
     @Override
     public int calculateScore(WPC wpc) {

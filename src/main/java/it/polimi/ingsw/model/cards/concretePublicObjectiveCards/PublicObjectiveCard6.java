@@ -9,6 +9,8 @@ public class PublicObjectiveCard6  extends PublicObjectiveCard {
 
     public PublicObjectiveCard6() {
         this.id = POCConstants.POC6_ID;
+        this.name = POCConstants.POC6_NAME;
+        this.description = POCConstants.POC6_DESCRIPTION;
     }
 
 

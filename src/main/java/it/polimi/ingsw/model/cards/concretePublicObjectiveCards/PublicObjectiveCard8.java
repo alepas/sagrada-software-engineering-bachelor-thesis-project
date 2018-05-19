@@ -8,7 +8,11 @@ import it.polimi.ingsw.model.constants.WpcConstants;
 public class PublicObjectiveCard8  extends PublicObjectiveCard {
     //SFUMATURE DIVERSE
 
-    public PublicObjectiveCard8(){ this.id = POCConstants.POC8_ID; }
+    public PublicObjectiveCard8(){
+        this.id = POCConstants.POC8_ID;
+        this.name = POCConstants.POC8_NAME;
+        this.description = POCConstants.POC8_DESCRIPTION;
+    }
 
     @Override
     public int calculateScore(WPC wpc) {

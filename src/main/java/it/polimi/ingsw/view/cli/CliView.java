@@ -5,6 +5,7 @@ import it.polimi.ingsw.control.network.commands.NotificationHandler;
 import it.polimi.ingsw.control.network.commands.responses.notifications.*;
 import it.polimi.ingsw.model.constants.CliConstants;
 import it.polimi.ingsw.model.dicebag.Color;
+import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.wpc.WPC;
 
 import java.util.*;
@@ -69,6 +70,11 @@ public class CliView implements Observer, NotificationHandler {
     //---------------------------- External methods ----------------------------
 
     public boolean logPhase(){
+//        WPC wpc = controller.getWpcByID("5");
+//        Dice dice = new Dice(Color.RED, 2);
+//        wpc.addDice(dice, wpc.getSchema().get(2), 4);
+//        System.out.println(cliRender.renderWpc(wpc));
+//        return true;
         while (true) {
             displayText(CliConstants.CHOOSE_LOG_TYPE);
             String answer = userInput();

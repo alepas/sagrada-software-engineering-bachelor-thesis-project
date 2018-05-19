@@ -12,7 +12,11 @@ import java.util.ArrayList;
 public class PublicObjectiveCard9  extends PublicObjectiveCard {
     //DIAGONALI COLORATE
 
-    public PublicObjectiveCard9(){ this.id = POCConstants.POC9_ID; }
+    public PublicObjectiveCard9(){
+        this.id = POCConstants.POC9_ID;
+        this.name = POCConstants.POC9_NAME;
+        this.description = POCConstants.POC9_DESCRIPTION;
+    }
 
     @Override
     public int calculateScore(WPC wpc){
