@@ -51,13 +51,13 @@ public class SignInController {
                 if (!password.equals("") && !username.equals("")) {
 
                     loginUser(username, password);
-                    System.out.println(clientModel.getUserToken());
+
                     if (clientModel.getUsername() == null) {
                         signInErrorLabel.setVisible(true);
                         signInUsername.clear();
                         signInPassword.clear();
                     } else
-                        changeSceneHendle(event, "/it/polimi/ingsw/view/gui/guiview/entranceTotheGame.fxml");
+                        changeSceneHendle(event, "/it/polimi/ingsw/view/gui/guiview/SetNewGameScene.fxml");
                 } else signInErrorLabel.setVisible(true);
 
         });
@@ -83,10 +83,10 @@ public class SignInController {
     private void loginUser(String username, String password) {
         Platform.runLater(()-> {
             try {
-                clientModel.setUsername(username);
+
                 networkClient.login(username, password);
             } catch (CannotLoginUserException e) {
-                clientModel.setUsername(null);
+
                 e.printStackTrace();
                 //TODO
             }

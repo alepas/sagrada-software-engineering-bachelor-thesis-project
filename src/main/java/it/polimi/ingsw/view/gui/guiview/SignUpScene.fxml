@@ -13,7 +13,7 @@
 <AnchorPane styleClass="Window" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.control.guicontroller.SignUpController">
 
     <ImageView fitHeight="705.0" fitWidth="900.0">
-        <Image url="@vetrate.jpg" />
+        <Image url="@../images/vetrate.jpg" />
     </ImageView>
 
 
@@ -26,7 +26,7 @@
             </DropShadow>
         </effect>
         <ImageView fitHeight="550.0" fitWidth="500.0">
-            <Image url="@FirstSettings.JPG" />
+            <Image url="@../images/FirstSettings.JPG" />
         </ImageView>
 
 

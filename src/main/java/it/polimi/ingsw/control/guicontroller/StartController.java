@@ -3,7 +3,6 @@ package it.polimi.ingsw.control.guicontroller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
@@ -14,16 +13,16 @@ import javafx.scene.Node;
 import java.io.IOException;
 
 
-public class Controller {
+public class StartController {
     @FXML public Button button1;
 
     @FXML public Button button2;
 
 
     public void initialize() {
-        button1.setOnAction(event -> changeSceneHendle(event, "/it/polimi/ingsw/view/gui/guiview/signUp.fxml"));
+        button1.setOnAction(event -> changeSceneHendle(event, "/it/polimi/ingsw/view/gui/guiview/SignUpScene.fxml"));
 
-        button2.setOnAction(event -> changeSceneHendle(event, "/it/polimi/ingsw/view/gui/guiview/signIn.fxml"));
+        button2.setOnAction(event -> changeSceneHendle(event, "/it/polimi/ingsw/view/gui/guiview/SignInScene.fxml"));
     }
 
     private void changeSceneHendle(ActionEvent event, String path) {

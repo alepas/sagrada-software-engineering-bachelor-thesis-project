@@ -8,10 +8,10 @@
 
 
 <AnchorPane styleClass="Window" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.control.guicontroller.UserArea">
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.control.guicontroller.PersonalAreaController">
 
     <ImageView blendMode="DARKEN" fitHeight="705.0" fitWidth="900.0">
-        <Image url="@ladrainstagram2.jpg"/>
+        <Image url="/it/polimi/ingsw/view/gui/images/ladrainstagram2.jpg"/>
     </ImageView>
 
     <AnchorPane layoutX="209.0" layoutY="106.0" prefHeight="525.0" prefWidth="483.0" styleClass="Scene">
@@ -24,7 +24,7 @@
         </effect>
 
         <ImageView fitHeight="550.0" fitWidth="500.0">
-            <Image url="@FirstSettings.JPG"/>
+            <Image url="@../images/FirstSettings.JPG"/>
         </ImageView>
 
         <GridPane layoutX="150.0" layoutY="201.0">

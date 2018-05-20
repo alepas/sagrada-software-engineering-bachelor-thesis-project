@@ -67,14 +67,13 @@ public class GuiMain extends Application {
         }
 
         private static void startSocketClient() throws IOException{
-            SocketClient client = new SocketClient(
-                    NetworkConstants.SERVER_ADDRESS, NetworkConstants.SOCKET_SERVER_PORT);
+            NetworkClient networkClient = NetworkClient.getNewSocketInstance(NetworkConstants.SERVER_ADDRESS,
+                    NetworkConstants.SOCKET_SERVER_PORT);
 
-            client.init();
-            NetworkClient networkClient = NetworkClient.getNewSocketInstance(NetworkConstants.SERVER_ADDRESS, NetworkConstants.SOCKET_SERVER_PORT);
+            ((SocketClient) networkClient).init();
             Application.launch(GuiMain.class, null);
 
-            client.close();
+            ((SocketClient) networkClient).close();
         }
 
 
@@ -92,7 +91,7 @@ public class GuiMain extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
-        Parent root = FXMLLoader.load(getClass().getResource("/it/polimi/ingsw/view/gui/guiview/gui.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/it/polimi/ingsw/view/gui/guiview/StartingScene.fxml"));
         stage.setTitle("Sagrada");
         stage.setScene(new Scene(root));
         stage.setResizable(false);

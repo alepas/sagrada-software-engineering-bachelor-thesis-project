@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class UserArea {
+public class PersonalAreaController {
 
     private ClientModel clientModel;
 
@@ -41,7 +41,7 @@ public class UserArea {
         personalAreaLost.setText("0");
         personalAreaScore.setText("0");
 
-        newGameButton.setOnAction(event -> changeSceneHendle(event, "/it/polimi/ingsw/view/gui/guiview/entrancetothegame.fxml"));
+        newGameButton.setOnAction(event -> changeSceneHendle(event, "/it/polimi/ingsw/view/gui/guiview/SetNewGameScene.fxml"));
     }
 
 

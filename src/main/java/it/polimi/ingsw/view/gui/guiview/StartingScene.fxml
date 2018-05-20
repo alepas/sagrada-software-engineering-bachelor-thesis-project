@@ -7,13 +7,13 @@
 <?import javafx.scene.control.Button?>
 
 <AnchorPane styleClass="Window" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.control.guicontroller.Controller">
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.control.guicontroller.StartController">
 
     <ImageView blendMode="MULTIPLY" fitHeight="705.0" fitWidth="900.0">
         <viewport>
             <Rectangle2D />
         </viewport>
-        <Image url="@SagradaFirstScene.jpg" />
+        <Image url="@../images/SagradaFirstScene.jpg" />
     </ImageView>
 
     <Button fx:id="button1" styleClass="FirstSceneButton" layoutX="391.0" layoutY="475.0" text="Sign up"/>
