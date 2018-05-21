@@ -12,7 +12,7 @@ public enum Color implements Serializable {
     }
 
     public static Color parseColor(String stringColor) {
-        Color color = null;
+        Color color;
         switch (stringColor){
             case "violet":
                 color = VIOLET;
@@ -30,6 +30,7 @@ public enum Color implements Serializable {
                 color = YELLOW;
                 break;
             default:
+                color = null;
                 break;
         }
         return color;

@@ -52,7 +52,7 @@ public class SignUpController {
                         signUpErrorLabel.setVisible(true);
                         signUpUsername.clear();
                         signUpPassword.clear();
-                    } else changeSceneHendle(event, "/it/polimi/ingsw/view/gui/guiview/entranceTotheGame.fxml");
+                    } else changeSceneHendle(event, "/it/polimi/ingsw/view/gui/guiview/SetNewGameScene.fxml");
 
                 } else signUpErrorLabel.setVisible(true);
 
