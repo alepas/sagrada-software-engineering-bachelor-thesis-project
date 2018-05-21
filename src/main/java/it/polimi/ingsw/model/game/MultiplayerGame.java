@@ -86,7 +86,7 @@ public class MultiplayerGame extends Game {
     }
 
     private void playGame() {
-        
+
     }
 
     private void waitPlayers(int time){

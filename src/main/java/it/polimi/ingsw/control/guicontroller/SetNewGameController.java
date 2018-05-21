@@ -2,7 +2,7 @@ package it.polimi.ingsw.control.guicontroller;
 
 import it.polimi.ingsw.control.network.NetworkClient;
 import it.polimi.ingsw.control.network.commands.NotificationHandler;
-import it.polimi.ingsw.control.network.commands.responses.notifications.*;
+import it.polimi.ingsw.control.network.commands.notifications.*;
 import it.polimi.ingsw.model.clientModel.ClientModel;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
