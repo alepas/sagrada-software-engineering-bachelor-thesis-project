@@ -104,7 +104,7 @@ public class CliController {
     //---------------------------------- Request to cli model ----------------------------------
 
     public boolean areAllWpcsReceived(){
-        return clientModel.wpcByUsername.size() == clientModel.getGameNumPlayers();
+        return clientModel.getWpcByUsername().size() == clientModel.getGameNumPlayers();
     }
 
     public WPC getWpcByID(String id){

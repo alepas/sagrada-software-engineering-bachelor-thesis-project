@@ -20,7 +20,7 @@ public class FindGameResponse implements Response {
     }
 
     @Override
-    public void handle(ResponseHandler handler) throws InvalidNumOfPlayersException, CannotFindUserInDBException, CannotCreatePlayerException {
+    public void handle(ResponseHandler handler) {
         handler.handle(this);
     }
 }

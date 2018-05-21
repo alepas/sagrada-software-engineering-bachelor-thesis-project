@@ -6,9 +6,6 @@ import it.polimi.ingsw.control.network.commands.responses.CreateUserResponse;
 import it.polimi.ingsw.control.network.commands.responses.FindGameResponse;
 import it.polimi.ingsw.control.network.commands.responses.LoginResponse;
 import it.polimi.ingsw.control.network.commands.responses.PickWpcResponse;
-import it.polimi.ingsw.control.network.commands.responses.notifications.*;
-import it.polimi.ingsw.model.cards.PublicObjectiveCard;
-import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.clientModel.ClientModel;
 import it.polimi.ingsw.model.constants.NetworkConstants;
 import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
@@ -20,14 +17,9 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.ArrayList;
-import java.util.Observer;
 
-public class RmiClient extends NetworkClient implements ResponseHandler {
+public class RmiClient extends NetworkClient {
     private final RemoteServer remoteServer;
-
-    private ClientModel clientModel = ClientModel.getInstance();
-    private Observer observer = ClientModel.getInstance();
 
     public RmiClient() throws NotBoundException, RemoteException{
         Registry registry = LocateRegistry.getRegistry(NetworkConstants.SERVER_ADDRESS, Registry.REGISTRY_PORT);
@@ -59,7 +51,7 @@ public class RmiClient extends NetworkClient implements ResponseHandler {
     @Override
     public void findGame(String token, int numPlayers) throws CannotFindUserInDBException, InvalidNumOfPlayersException, CannotCreatePlayerException {
         try {
-            RemoteObserver remoteObserver = new RmiRemoteObserver(this);
+            RemoteObserver remoteObserver = new RmiRemoteObserver();
             ((FindGameResponse) remoteServer.findGame(token, numPlayers, remoteObserver)).handle(this);
         } catch (RemoteException e){
 
@@ -73,103 +65,5 @@ public class RmiClient extends NetworkClient implements ResponseHandler {
         } catch (RemoteException e){
 
         }
-    }
-
-
-    //-------------------------------- Response Handler --------------------------------
-
-    @Override
-    public void handle(CreateUserResponse response) {
-        if(response.userToken == null){
-            clientModel.clean();
-//            view.displayText(response.exception);         //TODO: fare exception
-            return;
-        }
-        clientModel.setUsername(response.username);
-        clientModel.setUserToken(response.userToken);
-    }
-
-    @Override
-    public void handle(LoginResponse response) {
-        if(response.userToken == null){
-            clientModel.clean();
-//            view.displayText(response.exception);
-            return;
-        }
-        clientModel.setUsername(response.username);
-        clientModel.setUserToken(response.userToken);
-    }
-
-    @Override
-    public void handle(FindGameResponse response) {
-        String gameID = response.gameID;
-        if (gameID != null) {
-            clientModel.setGameID(gameID);
-            clientModel.setGameActualPlayers(response.actualPlayers);
-            clientModel.setGameNumPlayers(response.numPlayers);
-//            startReceiving();
-        } else {
-//            view.displayText(response.exception);
-        }
-    }
-
-    @Override
-    public void handle(PickWpcResponse response) throws CannotFindPlayerInDatabaseException, NotYourWpcException {
-        Exception e = response.exception;
-        if (e != null){
-            if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
-            if (e instanceof NotYourWpcException) throw (NotYourWpcException) e;
-        }
-    }
-
-
-    //------------------------------- Notification Handler ------------------------------
-
-    @Override
-    public void handle(GameStartedNotification notification) {
-        observer.update(null, notification);
-    }
-
-    @Override
-    public void handle(PlayersChangedNotification notification) {
-        observer.update(null, notification);
-    }
-
-    @Override
-    public void handle(PrivateObjExtractedNotification notification) {
-        notification.username = clientModel.getUsername();
-        observer.update(null, notification);
-    }
-
-    @Override
-    public void handle(WpcsExtractedNotification notification) {
-        notification.username = clientModel.getUsername();
-        observer.update(null, notification);
-    }
-
-    @Override
-    public void handle(UserPickedWpcNotification notification) {
-        clientModel.wpcByUsername.put(notification.username, notification.wpcID);
-        observer.update(null, notification);
-    }
-
-    @Override
-    public void handle(ToolcardsExtractedNotification notification) {
-        ArrayList<ToolCard> toolCards = new ArrayList<>();
-        for (String id : notification.toolcardsIDs){
-            toolCards.add(ToolCard.getCardByID(id));
-        }
-        clientModel.setGameToolCards(toolCards);
-        observer.update(null, notification);
-    }
-
-    @Override
-    public void handle(PocsExtractedNotification notification) {
-        ArrayList<PublicObjectiveCard> cards = new ArrayList<>();
-        for (String id : notification.pocIDs){
-            cards.add(PublicObjectiveCard.getCardByID(id));
-        }
-        clientModel.setGamePublicObjectiveCards(cards);
-        observer.update(null, notification);
     }
 }

@@ -4,8 +4,8 @@ import it.polimi.ingsw.model.constants.GameConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.exceptions.gameExceptions.*;
-import it.polimi.ingsw.control.network.commands.responses.notifications.GameStartedNotification;
-import it.polimi.ingsw.control.network.commands.responses.notifications.PlayersChangedNotification;
+import it.polimi.ingsw.control.network.commands.notifications.GameStartedNotification;
+import it.polimi.ingsw.control.network.commands.notifications.PlayersChangedNotification;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotAddPlayerInDatabaseException;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 
@@ -73,20 +73,28 @@ public class MultiplayerGame extends Game {
     @Override
     public void run() {
         //Codice che regola il funzionamento della partita
-        try {
-            Thread.sleep(3000); //Aspetta 3 secondi che i giocatori si connettano tutti
+        waitPlayers(3000);//Aspetta 3 secondi che i giocatori si connettano tutti
             /* Quando l'ultimo giocatore si connette il thread della partita viene avviato immediatamente,
                ma l'ultimo giocatore, di fatto, non è ancora in partita: lo è solo il suo playerInGame lato
                server. Occorre aspettare che l'ultimo utente riceva la partita in cui è entrato e che si metta
                in ascolto di eventuali cambiamenti. Ecco il perchè di questa attesa*/
-        } catch (InterruptedException e){
-            //TODO: La partita è stata sospesa forzatamente
-        }
-
         changeAndNotifyObservers(new GameStartedNotification());
 
         System.out.println("La partità è iniziata");
         initializeGame();
+        playGame();
+    }
+
+    private void playGame() {
+        
+    }
+
+    private void waitPlayers(int time){
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e){
+            //TODO: La partita è stata sospesa forzatamente
+        }
     }
 
     @Override
@@ -103,19 +111,9 @@ public class MultiplayerGame extends Game {
     }
 
     private void shufflePlayers(){
-        System.out.println("\nPrima dello shuffle");
-        for (PlayerInGame player : players){
-            System.out.println(player.getUser());
-        }
-
         ArrayList<PlayerInGame> playersList = new ArrayList<>(Arrays.asList(players));
         Collections.shuffle(playersList);
-        players = (PlayerInGame[]) playersList.toArray();
-
-        System.out.println("\nDopo lo shuffle");
-        for (PlayerInGame player : players){
-            System.out.println(player.getUser());
-        }
+        players = (PlayerInGame[]) playersList.toArray(players);
     }
 
 

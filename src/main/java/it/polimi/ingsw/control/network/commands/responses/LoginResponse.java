@@ -16,7 +16,7 @@ public class LoginResponse implements Response {
     }
 
     @Override
-    public void handle(ResponseHandler handler) throws CannotLoginUserException {
+    public void handle(ResponseHandler handler){
         handler.handle(this);
     }
 }

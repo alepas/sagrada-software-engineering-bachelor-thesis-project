@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.clientModel;
 
+import it.polimi.ingsw.control.network.commands.NotificationHandler;
+import it.polimi.ingsw.control.network.commands.notifications.*;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.dicebag.Color;
@@ -11,7 +13,7 @@ import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 
-public class ClientModel implements Observer {
+public class ClientModel implements Observer, NotificationHandler {
     private static ClientModel instance;
     private Observer observer;
     private WpcDB wpcDB = WpcDB.getInstance();
@@ -25,7 +27,7 @@ public class ClientModel implements Observer {
     private int gameActualPlayers;
     private int gameNumPlayers;
     private Color[] privateObjectives;
-    public HashMap<String, String> wpcByUsername;
+    private HashMap<String, String> wpcByUsername;
     private ArrayList<ToolCard> gameToolCards;
     private ArrayList<PublicObjectiveCard> gamePublicObjectiveCards;
 
@@ -49,6 +51,7 @@ public class ClientModel implements Observer {
         privateObjectives = null;
         this.wpcByUsername = new HashMap<>();
         this.gameToolCards = new ArrayList<>();
+        this.gamePublicObjectiveCards = new ArrayList<>();
     }
 
     public void setObserver(Observer observer) {
@@ -123,8 +126,48 @@ public class ClientModel implements Observer {
         this.gamePublicObjectiveCards = gamePublicObjectiveCards;
     }
 
+    public HashMap<String, String> getWpcByUsername() {
+        return wpcByUsername;
+    }
+
     @Override
     public void update(Observable o, Object arg) {
+        ((Notification) arg).handle(this);
         observer.update(o, arg);
+    }
+
+    @Override
+    public void handle(GameStartedNotification notification) { }
+
+    @Override
+    public void handle(PlayersChangedNotification notification) { }
+
+    @Override
+    public void handle(PrivateObjExtractedNotification notification) {
+        notification.username = username;
+    }
+
+    @Override
+    public void handle(WpcsExtractedNotification notification) {
+        notification.username = username;
+    }
+
+    @Override
+    public void handle(UserPickedWpcNotification notification) {
+        wpcByUsername.put(notification.username, notification.wpcID);
+    }
+
+    @Override
+    public void handle(ToolcardsExtractedNotification notification) {
+        for (String id : notification.toolcardsIDs){
+            gameToolCards.add(ToolCard.getCardByID(id));
+        }
+    }
+
+    @Override
+    public void handle(PocsExtractedNotification notification) {
+        for (String id : notification.pocIDs){
+            gamePublicObjectiveCards.add(PublicObjectiveCard.getCardByID(id));
+        }
     }
 }

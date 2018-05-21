@@ -4,6 +4,7 @@ import it.polimi.ingsw.control.ServerController;
 import it.polimi.ingsw.control.network.commands.Request;
 import it.polimi.ingsw.control.network.commands.RequestHandler;
 import it.polimi.ingsw.control.network.commands.Response;
+import it.polimi.ingsw.control.network.commands.notifications.Notification;
 import it.polimi.ingsw.control.network.commands.requests.CreateUserRequest;
 import it.polimi.ingsw.control.network.commands.requests.FindGameRequest;
 import it.polimi.ingsw.control.network.commands.requests.LoginRequest;
@@ -45,7 +46,7 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
         return socket;
     }
 
-    public void respond(Response response) {
+    public void respond(Object response) {
         try {
             out.writeObject(response);
         } catch (IOException e) {
@@ -146,6 +147,6 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
 
     @Override
     public void update(Observable o, Object arg) {
-        respond((Response) arg);
+        respond(arg);
     }
 }

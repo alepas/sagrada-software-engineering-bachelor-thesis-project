@@ -13,7 +13,7 @@ public class PickWpcResponse implements Response {
     }
 
     @Override
-    public void handle(ResponseHandler handler) throws CannotFindPlayerInDatabaseException, NotYourWpcException {
+    public void handle(ResponseHandler handler) {
         handler.handle(this);
     }
 }

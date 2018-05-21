@@ -9,14 +9,14 @@ import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersExcept
 import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
 
-public interface ResponseHandler extends NotificationHandler{
+public interface ResponseHandler{
 
-    void handle(CreateUserResponse response) throws CannotRegisterUserException;
+    void handle(CreateUserResponse response);
 
-    void handle(LoginResponse response) throws CannotLoginUserException;
+    void handle(LoginResponse response);
 
-    void handle(FindGameResponse response) throws InvalidNumOfPlayersException, CannotFindUserInDBException, CannotCreatePlayerException;
+    void handle(FindGameResponse response);
 
-    void handle(PickWpcResponse response) throws CannotFindPlayerInDatabaseException, NotYourWpcException;
+    void handle(PickWpcResponse response);
 
 }

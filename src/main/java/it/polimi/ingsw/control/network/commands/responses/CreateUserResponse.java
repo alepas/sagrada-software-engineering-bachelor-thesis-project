@@ -16,7 +16,7 @@ public class CreateUserResponse implements Response {
     }
 
     @Override
-    public void handle(ResponseHandler handler) throws CannotRegisterUserException {
+    public void handle(ResponseHandler handler) {
         handler.handle(this);
     }
 }

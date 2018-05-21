@@ -1,9 +1,11 @@
-package it.polimi.ingsw.control.network.commands.responses.notifications;
+package it.polimi.ingsw.control.network.commands.notifications;
 
 import it.polimi.ingsw.control.network.commands.NotificationHandler;
 import it.polimi.ingsw.control.network.commands.Response;
 
-public interface Notification {
+import java.io.Serializable;
+
+public interface Notification extends Serializable {
 
     public void handle(NotificationHandler handler);
 

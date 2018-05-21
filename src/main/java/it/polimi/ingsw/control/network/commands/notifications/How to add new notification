@@ -1,7 +1,7 @@
 1)  Crea la notifica.
     Esempio di notifica:
 
-    public class PlayersChangedNotification implements Response, Notification {
+    public class PlayersChangedNotification implements Notification {
         public final String username;
         public final boolean joined;
         public final int actualPlayers;
@@ -12,11 +12,6 @@
             this.joined = joined;
             this.actualPlayers = actualPlayers;
             this.numPlayers = numPlayers;
-        }
-
-        @Override
-        public void handle(ResponseHandler handler) {
-            handler.handle(this);
         }
 
         @Override

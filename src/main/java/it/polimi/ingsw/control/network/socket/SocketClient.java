@@ -12,9 +12,6 @@ import it.polimi.ingsw.control.network.commands.responses.CreateUserResponse;
 import it.polimi.ingsw.control.network.commands.responses.FindGameResponse;
 import it.polimi.ingsw.control.network.commands.responses.LoginResponse;
 import it.polimi.ingsw.control.network.commands.responses.PickWpcResponse;
-import it.polimi.ingsw.control.network.commands.responses.notifications.*;
-import it.polimi.ingsw.model.cards.PublicObjectiveCard;
-import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.clientModel.ClientModel;
 import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
@@ -26,7 +23,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.Observer;
 
 public class SocketClient extends NetworkClient implements ResponseHandler {
@@ -36,7 +32,6 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
     private ObjectInputStream in;
     private ObjectOutputStream out;
 
-    private ClientModel clientModel = ClientModel.getInstance();
     private Observer observer = ClientModel.getInstance();
 
     private Thread receiver;
@@ -71,19 +66,20 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
         }
     }
     
-    public void startReceiving() {
+    private void startReceiving() {
         receiver = new Thread(
                 () -> {
                     Response response = null;
                     do {
                         try {
-                            response = (Response) in.readObject();
-                            if (response != null) {
+                            Object obj = in.readObject();
+                            if (obj instanceof Response){
+                                response = (Response) obj;
                                 response.handle(this);
-                                if (!(response instanceof Notification)) {
-                                    lastResponse = response;
-                                    notifyResponse();
-                                }
+                                lastResponse = response;
+                                notifyResponse();
+                            } else if (obj != null){
+                                observer.update(null, obj);
                             }
                         } catch (Exception e){
                             e.printStackTrace();
@@ -164,89 +160,5 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
             if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
             if (e instanceof NotYourWpcException) throw (NotYourWpcException) e;
         }
-    }
-
-
-    //-------------------------------- Response Handler --------------------------------
-
-    @Override
-    public void handle(CreateUserResponse response){
-        if (response.exception == null) {
-            clientModel.setUsername(response.username);
-            clientModel.setUserToken(response.userToken);
-        }
-    }
-
-    @Override
-    public void handle(LoginResponse response){
-        if (response.exception == null) {
-            clientModel.setUsername(response.username);
-            clientModel.setUserToken(response.userToken);
-        }
-    }
-
-    @Override
-    public void handle(FindGameResponse response){
-        if (response.exception == null) {
-            clientModel.setGameID(response.gameID);
-            clientModel.setGameActualPlayers(response.actualPlayers);
-            clientModel.setGameNumPlayers(response.numPlayers);
-        }
-    }
-
-    @Override
-    public void handle(PickWpcResponse response){
-
-    }
-
-
-    //------------------------------- Notification Handler ------------------------------
-
-    @Override
-    public void handle(GameStartedNotification notification) {
-        clientModel.update(null, notification);
-    }
-
-    @Override
-    public void handle(PlayersChangedNotification notification) {
-        clientModel.update(null, notification);
-    }
-
-    @Override
-    public void handle(PrivateObjExtractedNotification notification) {
-        notification.username = clientModel.getUsername();
-        clientModel.update(null, notification);
-    }
-
-    @Override
-    public void handle(WpcsExtractedNotification notification) {
-        notification.username = clientModel.getUsername();
-        clientModel.update(null, notification);
-    }
-
-    @Override
-    public void handle(UserPickedWpcNotification notification) {
-        clientModel.wpcByUsername.put(notification.username, notification.wpcID);
-        clientModel.update(null, notification);
-    }
-
-    @Override
-    public void handle(ToolcardsExtractedNotification notification) {
-        ArrayList<ToolCard> toolCards = new ArrayList<>();
-        for (String id : notification.toolcardsIDs){
-            toolCards.add(ToolCard.getCardByID(id));
-        }
-        clientModel.setGameToolCards(toolCards);
-        clientModel.update(null, notification);
-    }
-
-    @Override
-    public void handle(PocsExtractedNotification notification) {
-        ArrayList<PublicObjectiveCard> cards = new ArrayList<>();
-        for (String id : notification.pocIDs){
-            cards.add(PublicObjectiveCard.getCardByID(id));
-        }
-        clientModel.setGamePublicObjectiveCards(cards);
-        observer.update(null, notification);
     }
 }
