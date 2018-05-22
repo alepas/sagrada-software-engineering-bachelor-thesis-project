@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class CellTest {
     private Cell cell;
@@ -32,25 +31,25 @@ public class CellTest {
 
     @Test
     public void checkCellConstructor(){
-        Assert.assertEquals(cellNumber, cell.getCellNumber());
-        Assert.assertEquals(cellColor, cell.getCellColor());
+        Assert.assertEquals(cellNumber, cell.getNumber());
+        Assert.assertEquals(cellColor, cell.getColor());
         Assert.assertEquals(position, cell.getCellPosition());
-        Assert.assertNull(cell.getCellDice());
+        Assert.assertNull(cell.getDice());
     }
 
     @Test
     public void check2ndCellConstructor(){
-        Assert.assertEquals(cell.getCellNumber(), cell1.getCellNumber());
-        Assert.assertEquals(cell.getCellColor(), cell1.getCellColor());
+        Assert.assertEquals(cell.getNumber(), cell1.getNumber());
+        Assert.assertEquals(cell.getColor(), cell1.getColor());
         Assert.assertEquals(cell.getCellPosition(), cell1.getCellPosition());
-        Assert.assertNull(cell1.getCellDice());
+        Assert.assertNull(cell1.getDice());
     }
 
     @Test
     public void checkSetAndRemoveDice(){
         cell.setDice(dice);
-        Assert.assertEquals( dice, cell.getCellDice());
+        Assert.assertEquals( dice, cell.getDice());
         cell.removeDice();
-        Assert.assertEquals(null, cell.getCellDice());
+        Assert.assertEquals(null, cell.getDice());
     }
 }

@@ -48,7 +48,7 @@ public class WPCTest {
         when(pos01.getRow()).thenReturn(0);
         when(pos01.getColumn()).thenReturn(1);
         when(cell01.getCellPosition()).thenReturn(pos01);
-        when(cell01.getCellDice()).thenReturn(dice1);
+        when(cell01.getDice()).thenReturn(dice1);
         schema1.add(cell01);
 
         Dice dice2 = mock(Dice.class);
@@ -59,7 +59,7 @@ public class WPCTest {
         when(pos02.getRow()).thenReturn(0);
         when(pos02.getColumn()).thenReturn(2);
         when(cell02.getCellPosition()).thenReturn(pos02);
-        when(cell02.getCellDice()).thenReturn(dice2);
+        when(cell02.getDice()).thenReturn(dice2);
         schema1.add(cell02);
 
         Dice dice3 = mock(Dice.class);
@@ -70,7 +70,7 @@ public class WPCTest {
         when(pos03.getRow()).thenReturn(0);
         when(pos03.getColumn()).thenReturn(3);
         when(cell03.getCellPosition()).thenReturn(pos03);
-        when(cell03.getCellDice()).thenReturn(dice3);
+        when(cell03.getDice()).thenReturn(dice3);
         schema1.add(cell03);
 
         Cell cell04 = mock(Cell.class);
@@ -78,7 +78,7 @@ public class WPCTest {
         when(pos04.getRow()).thenReturn(0);
         when(pos04.getColumn()).thenReturn(4);
         when(cell04.getCellPosition()).thenReturn(pos04);
-        when(cell04.getCellColor()).thenReturn(Color.GREEN);
+        when(cell04.getColor()).thenReturn(Color.GREEN);
         schema1.add(cell04);
 
 
@@ -141,7 +141,7 @@ public class WPCTest {
         when(pos22.getRow()).thenReturn(2);
         when(pos22.getColumn()).thenReturn(2);
         when(cell22.getCellPosition()).thenReturn(pos22);
-        when(cell22.getCellColor()).thenReturn(Color.BLUE);
+        when(cell22.getColor()).thenReturn(Color.BLUE);
         schema1.add(cell22);
 
         Cell cell23 = mock(Cell.class);
@@ -156,7 +156,7 @@ public class WPCTest {
         when(pos24.getRow()).thenReturn(2);
         when(pos24.getColumn()).thenReturn(4);
         when(cell24.getCellPosition()).thenReturn(pos24);
-        when(cell24.getCellNumber()).thenReturn(6);
+        when(cell24.getNumber()).thenReturn(6);
         schema1.add(cell24);
 
 
@@ -170,7 +170,7 @@ public class WPCTest {
         when(pos30.getRow()).thenReturn(3);
         when(pos30.getColumn()).thenReturn(0);
         when(cell30.getCellPosition()).thenReturn(pos30);
-        when(cell30.getCellDice()).thenReturn(dice15);
+        when(cell30.getDice()).thenReturn(dice15);
         schema1.add(cell30);
 
         Dice dice16 = mock(Dice.class);
@@ -181,7 +181,7 @@ public class WPCTest {
         when(pos31.getRow()).thenReturn(3);
         when(pos31.getColumn()).thenReturn(1);
         when(cell31.getCellPosition()).thenReturn(pos31);
-        when(cell31.getCellDice()).thenReturn(dice16);
+        when(cell31.getDice()).thenReturn(dice16);
         schema1.add(cell31);
 
         cell32 = mock(Cell.class);
@@ -196,7 +196,7 @@ public class WPCTest {
         when(pos33.getRow()).thenReturn(3);
         when(pos33.getColumn()).thenReturn(3);
         when(cell33.getCellPosition()).thenReturn(pos33);
-        when(cell33.getCellColor()).thenReturn(Color.BLUE);
+        when(cell33.getColor()).thenReturn(Color.BLUE);
         schema1.add(cell33);
 
         Cell cell34 = mock(Cell.class);
@@ -212,11 +212,11 @@ public class WPCTest {
 
     @Test
     public void wpcConstructor(){
-        Assert.assertEquals("1", wpc0.getWpcID());
+        Assert.assertEquals("1", wpc0.getId());
         Assert.assertEquals(4, wpc0.getFavours());
         Assert.assertEquals(0, wpc0.schema.size());
 
-        Assert.assertEquals("1", wpc2.getWpcID());
+        Assert.assertEquals("1", wpc2.getId());
         Assert.assertEquals(4, wpc2.getFavours());
         Assert.assertEquals(20, wpc2.schema.size());
     }
@@ -225,7 +225,7 @@ public class WPCTest {
     @Test
     public void copyWpcTest(){
         WPC wpc1 = wpc0.copyWpc();
-        Assert.assertEquals(wpc1.getWpcID(), wpc0.getWpcID());
+        Assert.assertEquals(wpc1.getId(), wpc0.getId());
         Assert.assertEquals(wpc1.getFavours(), wpc0.getFavours());
         Assert.assertEquals(wpc1.schema, wpc0.schema);
     }
@@ -248,7 +248,7 @@ public class WPCTest {
     @Test
     public void columnDicesTest(){
         for(Cell cell: schema1)
-            System.out.println(cell.getCellDice());
+            System.out.println(cell.getDice());
         Assert.assertEquals(0, wpc2.getColDices(0).size());
         Assert.assertEquals(0, wpc2.getColDices(1).size());
         Assert.assertEquals(0, wpc2.getColDices(2).size());

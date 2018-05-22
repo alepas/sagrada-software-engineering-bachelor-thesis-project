@@ -229,7 +229,7 @@ public class MultiplayerGameTest {
 //            Assert.assertNotNull(playerWPC);
 //
 //            for (WPC wpc : wpcExtracted){
-//                Assert.assertNotEquals(playerWPC.getWpcID(), wpc.getWpcID());
+//                Assert.assertNotEquals(playerWPC.getId(), wpc.getId());
 //            }
 //
 //            wpcExtracted.add(playerWPC);

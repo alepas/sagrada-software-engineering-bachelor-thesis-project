@@ -9,13 +9,13 @@ import java.util.Random;
 public class Dice implements Serializable {
     private Color color;
     private int number;
-    private int diceID;
+    private int id;
 
 
     public Dice(Color color, int diceId) {
         this.color = color;
         number = rollDice();
-        this.diceID = diceId;
+        this.id = diceId;
     }
 
 
@@ -35,7 +35,7 @@ public class Dice implements Serializable {
         return number;
     }
 
-    public int getDiceID( ){ return diceID ;}
+    public int getId( ){ return id;}
 
     public void setNumber(int number) throws IncorrectNumberException {
         if (number < 0 || number > 6 )
@@ -44,7 +44,7 @@ public class Dice implements Serializable {
     }
 
     public ClientDice getClientDice(){
-        return new ClientDice(Color.getClientColor(color), number, diceID);
+        return new ClientDice(Color.getClientColor(color), number, id);
     }
 
 }

@@ -13,13 +13,13 @@ import static it.polimi.ingsw.model.constants.WpcConstants.ROWS_NUMBER;
 
 
 public class WPC {
-    private  String wpcID;
+    private  String id;
     private  int favours;
     public ArrayList<Cell> schema = new ArrayList<>();
 
 
-    WPC(String wpcID, int favours, ArrayList<Cell> schema) {
-        this.wpcID = wpcID;
+    WPC(String id, int favours, ArrayList<Cell> schema) {
+        this.id = id;
         this.favours = favours;
         for(Cell cell: schema)
             this.schema.add(new Cell(cell));
@@ -27,32 +27,32 @@ public class WPC {
 
 
     public WPC copyWpc(){
-        return new WPC(wpcID,favours,schema);
+        return new WPC(id,favours,schema);
     }
 
     public ClientWpc getClientWpc(){
         ArrayList<ClientCell> cells = new ArrayList<>();
         for(Cell cell : schema){
-            Dice dice = cell.getCellDice();
+            Dice dice = cell.getDice();
             ClientDice clientDice;
             if (dice != null) clientDice = dice.getClientDice();
             else clientDice = null;
 
-            cells.add(new ClientCell(clientDice, Color.getClientColor(cell.getCellColor()),
-                    cell.getCellNumber(), cell.getCellPosition().getClientPosition()));
+            cells.add(new ClientCell(clientDice, Color.getClientColor(cell.getColor()),
+                    cell.getNumber(), cell.getCellPosition().getClientPosition()));
         }
-        return new ClientWpc(wpcID, favours, cells);
+        return new ClientWpc(id, favours, cells);
     }
 
     public int getFavours(){ return favours; }
 
     public ArrayList<Cell> getSchema() { return schema; }
 
-    public String getWpcID(){ return wpcID; }
+    public String getId(){ return id; }
 
     public boolean addDiceWithAllRestrictions(Dice dice, Position pos, int globalTurn) {
         Cell cell=getCellFromPosition(pos);
-        if(cell.getCellDice()!=null)
+        if(cell.getDice()!=null)
             return false;
         if (globalTurn == 1) {
             if (checkFirstTurnRestriction(cell)&&checkAdjacentRestriction(cell,dice)&&checkCellRestriction(cell,dice))
@@ -101,19 +101,19 @@ public class WPC {
     public Dice removeDice(Position position){
         Dice dice=null;
         Cell cell=getCellFromPosition(position);
-        dice=cell.getCellDice();
+        dice=cell.getDice();
         cell.removeDice();
         return dice;
     }
 
 
     public Dice getDiceFromPosition(Position pos){
-        return getCellFromPosition(pos).getCellDice();
+        return getCellFromPosition(pos).getDice();
     }
 
     public Position getPositionFromDice(int diceID){
         for(Cell cell: schema) {
-            if (cell.getCellDice().getDiceID() == diceID)
+            if (cell.getDice().getId() == diceID)
                 return cell.getCellPosition();
         }
         return null;
@@ -143,13 +143,13 @@ public class WPC {
 
     private boolean checkCellRestriction(Cell cell, Dice dice){
         //controllo che il dado possa essere inserito nella cella selezionata secondo le restrizioni di questa
-        if (cell.getCellDice()== null) {
-            if (cell.getCellNumber() == 0 && cell.getCellColor()!=null)
-                return (cell.getCellColor().equals(dice.getDiceColor()));
-            else if (cell.getCellColor()== null && cell.getCellNumber()== 0)
+        if (cell.getDice()== null) {
+            if (cell.getNumber() == 0 && cell.getColor()!=null)
+                return (cell.getColor().equals(dice.getDiceColor()));
+            else if (cell.getColor()== null && cell.getNumber()== 0)
                 return true;
             else
-                return (cell.getCellNumber() == dice.getDiceNumber());
+                return (cell.getNumber() == dice.getDiceNumber());
         }
         else
             return false;
@@ -158,19 +158,19 @@ public class WPC {
 
     private boolean checkOnlyNumberCellRestriction(Cell cell, Dice dice){
         //pennello per eglomise: impone che sia considerata sulla cella solo la restrizione di numero e non quella di colore
-        if (cell.getCellDice()!= null)
+        if (cell.getDice()!= null)
             return false;
 
-        return cell.getCellNumber() == dice.getDiceNumber();
+        return cell.getNumber() == dice.getDiceNumber();
     }
 
 
     private boolean checkOnlyColorCellRestriction(Cell cell, Dice dice){
         //Alesatore per lamine di rame: impone che sia considerata sulla cella solo la restrizione di colore e non quella di numero
-        if (cell.getCellDice()!= null)
+        if (cell.getDice()!= null)
             return false;
 
-        return cell.getCellColor().equals(dice.getDiceColor());
+        return cell.getColor().equals(dice.getDiceColor());
     }
 
 
@@ -180,8 +180,8 @@ public class WPC {
         int column= cell.getCellPosition().getColumn();
 
         for(Cell schemaCell: this.schema) {
-            if (isAnAdjacentCell(schemaCell, row, column) && cell.getCellDice()!= null)
-                return checkDiceEquivalence(schemaCell.getCellDice(), dice);
+            if (isAnAdjacentCell(schemaCell, row, column) && cell.getDice()!= null)
+                return checkDiceEquivalence(schemaCell.getDice(), dice);
         }
         return true;
     }
@@ -201,7 +201,7 @@ public class WPC {
         int column= cell.getCellPosition().getColumn();
 
         for(Cell schemaCell: this.schema) {
-            if (isAnAdjacentCell(schemaCell, row, column) && cell.getCellDice()!= null)
+            if (isAnAdjacentCell(schemaCell, row, column) && cell.getDice()!= null)
                return true;
         }
         return false;
@@ -219,8 +219,8 @@ public class WPC {
         ArrayList<Dice> rowDices = new ArrayList<>();
 
         for(Cell cell: schema){
-            if (cell.getCellPosition().getRow() == row && cell.getCellDice() != null)
-                rowDices.add(cell.getCellDice());
+            if (cell.getCellPosition().getRow() == row && cell.getDice() != null)
+                rowDices.add(cell.getDice());
         }
 
         return rowDices;
@@ -232,8 +232,8 @@ public class WPC {
         ArrayList<Dice> columnDices = new ArrayList<>();
 
         for(Cell cell: schema) {
-            if (cell.getCellPosition().getColumn() == column && cell.getCellDice() != null)
-                columnDices.add(cell.getCellDice());
+            if (cell.getCellPosition().getColumn() == column && cell.getDice() != null)
+                columnDices.add(cell.getDice());
         }
 
         return columnDices;
@@ -245,7 +245,7 @@ public class WPC {
         ArrayList<Dice>  WPCDices = new ArrayList<>();
 
         for(Cell cell: schema){
-            if(cell.getCellDice()!= null) WPCDices.add(cell.getCellDice());
+            if(cell.getDice()!= null) WPCDices.add(cell.getDice());
         }
 
         return WPCDices;
@@ -281,7 +281,7 @@ public class WPC {
         int count = 0;
 
         for (Cell cell : schema){
-            if (cell.getCellDice() == null) count++;
+            if (cell.getDice() == null) count++;
         }
 
         return count;

@@ -11,8 +11,6 @@ import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.game.Game;
 import it.polimi.ingsw.model.wpc.WpcDB;
 
-import java.util.ArrayList;
-
 
 public class PlayerInGame {
     private String username;
@@ -196,7 +194,7 @@ public class PlayerInGame {
             switch (where) {
                 case "extracted": {
                     for(Dice tempDice:game.getExtractedDices()){
-                        if(tempDice.getDiceID()==diceId){
+                        if(tempDice.getId()==diceId){
                             foundDice=true;
                             dice=tempDice;
                             break;
@@ -209,7 +207,7 @@ public class PlayerInGame {
                 }
                 case "wpc": {
                     for(Dice tempDice:wpc.getWpcDices()){
-                        if(tempDice.getDiceID()==diceId){
+                        if(tempDice.getId()==diceId){
                             foundDice=true;
                             dice=tempDice;
                             break;
@@ -222,7 +220,7 @@ public class PlayerInGame {
                 }
                 case "roundTrack": {
                     for(Dice tempDice:game.getRoundTrack().getDicesNotUsed()){
-                        if(tempDice.getDiceID()==diceId){
+                        if(tempDice.getId()==diceId){
                             foundDice=true;
                             dice=tempDice;
                             break;
@@ -250,7 +248,7 @@ public class PlayerInGame {
         boolean foundDice=false;
         Dice dice=null;
         for(Dice tempDice:game.getExtractedDices()){
-            if(tempDice.getDiceID()==diceId){
+            if(tempDice.getId()==diceId){
                 foundDice=true;
                 dice=tempDice;
                 break;

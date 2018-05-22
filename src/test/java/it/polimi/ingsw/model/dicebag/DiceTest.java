@@ -17,7 +17,7 @@ public class DiceTest {
     @Test
     public void checkDiceConstructor() {
         Assert.assertEquals(Color.VIOLET, dice.getDiceColor());
-        Assert.assertEquals(1 , dice.getDiceID());
+        Assert.assertEquals(1 , dice.getId());
         Assert.assertTrue(dice.getDiceNumber() >= 0 && dice.getDiceNumber()<= 6);
     }
 

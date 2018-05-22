@@ -154,8 +154,8 @@ public class WpcDB {
        /* for(Cell cell: originalWpc.schema){
             System.out.println("riga: "+ cell.getCellPosition().getRow());
             System.out.println("colonna: "+ cell.getCellPosition().getColumn());
-            System.out.println("colore: "+ cell.getCellColor());
-            System.out.println("numero: "+ cell.getCellNumber());
+            System.out.println("colore: "+ cell.getColor());
+            System.out.println("numero: "+ cell.getNumber());
             System.out.println("---------");
         }*/
 
