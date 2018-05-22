@@ -2,9 +2,10 @@ package it.polimi.ingsw.model.dicebag;
 
 import it.polimi.ingsw.model.exceptions.dicebagExceptions.IncorrectNumberException;
 
+import java.io.Serializable;
 import java.util.Random;
 
-public class Dice {
+public class Dice implements Serializable {
     private Color color;
     private int number;
     private int diceID;
