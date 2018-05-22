@@ -1,4 +1,6 @@
 package it.polimi.ingsw.model.dicebag;
+import it.polimi.ingsw.model.clientModel.ClientColor;
+
 import java.io.Serializable;
 import java.util.Random;
 
@@ -36,4 +38,20 @@ public enum Color implements Serializable {
         return color;
     }
 
+    public static ClientColor getClientColor(Color color){
+        if (color == null) return null;
+        switch (color){
+            case VIOLET:
+                return ClientColor.VIOLET;
+            case BLUE:
+                return ClientColor.BLUE;
+            case YELLOW:
+                return ClientColor.YELLOW;
+            case RED:
+                return ClientColor.RED;
+            case GREEN:
+                return ClientColor.GREEN;
+        }
+        return null;
+    }
 }

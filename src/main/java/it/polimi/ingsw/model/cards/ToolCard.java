@@ -1,12 +1,10 @@
 package it.polimi.ingsw.model.cards;
 
-import it.polimi.ingsw.model.cards.concreteToolCards.*;
+import it.polimi.ingsw.model.clientModel.ClientToolCard;
 import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotCancelToolCardException;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 import it.polimi.ingsw.model.wpc.Position;
-
-import java.util.ArrayList;
 
 public abstract class ToolCard implements Cloneable{
     protected PlayerInGame currentPlayer=null;
@@ -44,5 +42,8 @@ public abstract class ToolCard implements Cloneable{
         else throw new CannotCancelToolCardException(id,0);
     }
 
+    public ClientToolCard getClientToolcard(){
+        return new ClientToolCard(id, name, description, used);
+    }
 
 }

@@ -29,12 +29,12 @@ public class ClientModel implements Observer, NotificationHandler {
     private String gameID;
     private int gameActualPlayers;
     private int gameNumPlayers;
-    private Color[] privateObjectives;
+    private ClientColor[] privateObjectives;
     private HashMap<String, String> wpcByUsername;
-    private ArrayList<ToolCard> gameToolCards;
-    private ArrayList<PublicObjectiveCard> gamePublicObjectiveCards;
+    private ArrayList<ClientToolCard> gameToolCards;
+    private ArrayList<ClientPoc> gamePublicObjectiveCards;
     private int currentRound;
-    private ArrayList<Dice> extractedDices;
+    private ArrayList<ClientDice> extractedDices;
     private int currentTurn;
 
     private ClientModel() { }
@@ -105,31 +105,31 @@ public class ClientModel implements Observer, NotificationHandler {
         this.gameNumPlayers = gameNumPlayers;
     }
 
-    public Color[] getPrivateObjectives() {
+    public ClientColor[] getPrivateObjectives() {
         return privateObjectives;
     }
 
-    public void setPrivateObjectives(Color[] privateObjectives) {
+    public void setPrivateObjectives(ClientColor[] privateObjectives) {
         this.privateObjectives = privateObjectives;
     }
 
     public WPC getWpcByID(String id){
-        return WpcDB.getWpcByID(id);
+        return WpcDB.getInstance().getWpcByID(id);
     }
 
-    public ArrayList<ToolCard> getGameToolCards() {
+    public ArrayList<ClientToolCard> getGameToolCards() {
         return gameToolCards;
     }
 
-    public void setGameToolCards(ArrayList<ToolCard> gameToolCards) {
+    public void setGameToolCards(ArrayList<ClientToolCard> gameToolCards) {
         this.gameToolCards = gameToolCards;
     }
 
-    public ArrayList<PublicObjectiveCard> getGamePublicObjectiveCards() {
+    public ArrayList<ClientPoc> getGamePublicObjectiveCards() {
         return gamePublicObjectiveCards;
     }
 
-    public void setGamePublicObjectiveCards(ArrayList<PublicObjectiveCard> gamePublicObjectiveCards) {
+    public void setGamePublicObjectiveCards(ArrayList<ClientPoc> gamePublicObjectiveCards) {
         this.gamePublicObjectiveCards = gamePublicObjectiveCards;
     }
 
@@ -145,7 +145,7 @@ public class ClientModel implements Observer, NotificationHandler {
         return currentTurn;
     }
 
-    public ArrayList<Dice> getExtractedDices() {
+    public ArrayList<ClientDice> getExtractedDices() {
         return extractedDices;
     }
 
@@ -164,12 +164,12 @@ public class ClientModel implements Observer, NotificationHandler {
 
     @Override
     public void handle(PrivateObjExtractedNotification notification) {
-        notification.username = username;
+
     }
 
     @Override
     public void handle(WpcsExtractedNotification notification) {
-        notification.username = username;
+
     }
 
     @Override
@@ -179,16 +179,12 @@ public class ClientModel implements Observer, NotificationHandler {
 
     @Override
     public void handle(ToolcardsExtractedNotification notification) {
-        for (String id : notification.ids){
-            gameToolCards.add(ToolCardDB.getInstance().getCardByID(id));
-        }
+        gameToolCards = notification.cards;
     }
 
     @Override
     public void handle(PocsExtractedNotification notification) {
-        for (String id : notification.ids){
-            gamePublicObjectiveCards.add(PocDB.getInstance().getCardByID(id));
-        }
+        gamePublicObjectiveCards = notification.cards;
     }
 
     @Override

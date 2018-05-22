@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.wpc;
 import java.util.ArrayList;
 
+import it.polimi.ingsw.model.clientModel.*;
 import it.polimi.ingsw.model.constants.WpcConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
@@ -20,7 +21,7 @@ public class WPC {
     WPC(String wpcID, int favours, ArrayList<Cell> schema) {
         this.wpcID = wpcID;
         this.favours = favours;
-        for( Cell cell: schema)
+        for(Cell cell: schema)
             this.schema.add(new Cell(cell));
     }
 
@@ -29,6 +30,19 @@ public class WPC {
         return new WPC(wpcID,favours,schema);
     }
 
+    public ClientWpc getClientWpc(){
+        ArrayList<ClientCell> cells = new ArrayList<>();
+        for(Cell cell : schema){
+            Dice dice = cell.getCellDice();
+            ClientDice clientDice;
+            if (dice != null) clientDice = dice.getClientDice();
+            else clientDice = null;
+
+            cells.add(new ClientCell(clientDice, Color.getClientColor(cell.getCellColor()),
+                    cell.getCellNumber(), cell.getCellPosition().getClientPosition()));
+        }
+        return new ClientWpc(wpcID, favours, cells);
+    }
 
     public int getFavours(){ return favours; }
 
@@ -271,16 +285,5 @@ public class WPC {
         }
 
         return count;
-    }
-
-
-    public int countTotalPrivateObjective(Color color){
-        int score = 0;
-
-        for (Dice dice : getWpcDices()){
-            if ( dice.getDiceColor().equals(color)) score += dice.getDiceNumber();
-        }
-
-        return score;
     }
 }

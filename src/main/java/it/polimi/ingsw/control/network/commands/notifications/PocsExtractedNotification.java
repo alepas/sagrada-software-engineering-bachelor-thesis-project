@@ -1,16 +1,15 @@
 package it.polimi.ingsw.control.network.commands.notifications;
 
 import it.polimi.ingsw.control.network.commands.NotificationHandler;
-import it.polimi.ingsw.model.cards.PocDB;
-import it.polimi.ingsw.model.cards.PublicObjectiveCard;
+import it.polimi.ingsw.model.clientModel.ClientPoc;
 
 import java.util.ArrayList;
 
 public class PocsExtractedNotification implements Notification {
-    public final ArrayList<String> ids;
+    public final ArrayList<ClientPoc> cards;
 
-    public PocsExtractedNotification(ArrayList<String> ids) {
-        this.ids = ids;
+    public PocsExtractedNotification(ArrayList<ClientPoc> cards) {
+        this.cards = cards;
     }
 
     @Override

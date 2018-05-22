@@ -4,7 +4,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import static java.lang.Integer.sum;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -33,11 +32,11 @@ public class DiceBagTest {
     public void checkDicesExtraction(){
         int numplayer = 1;
         int numplayers = 3;
-        diceBag.DicesExtraction(numplayer);
-        Assert.assertEquals(4, diceBag.DicesExtraction(numplayer).size());
+        diceBag.extractDices(numplayer);
+        Assert.assertEquals(4, diceBag.extractDices(numplayer).size());
         //Assert.assertEquals(86, (diceBag.getBlueDices() + diceBag.getGreenDices()+ diceBag.getRedDices() + diceBag.getVioletDices() + diceBag.getYellowDices()));
-        diceBag.DicesExtraction(numplayers);
-        Assert.assertEquals(7, diceBag.DicesExtraction(numplayers).size());
+        diceBag.extractDices(numplayers);
+        Assert.assertEquals(7, diceBag.extractDices(numplayers).size());
         int i = diceBag.getVioletDices();
         diceBag.reInsertDice(dice);
         Assert.assertEquals(i+1, diceBag.getVioletDices());

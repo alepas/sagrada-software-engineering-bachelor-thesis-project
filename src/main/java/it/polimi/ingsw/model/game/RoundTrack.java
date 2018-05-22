@@ -31,6 +31,7 @@ public class RoundTrack implements Serializable {
         return dicesNotUsed[row][column]!= null;
     }
 
+    //TODO: Ricerca per id
     private Dice getDice(int row, int column){
         return dicesNotUsed[row][column];    
     }
@@ -50,7 +51,7 @@ public class RoundTrack implements Serializable {
     }
 
     void nextRound( ){
-        currentRound = currentRound ++;
+        currentRound++;
     }
 
     public void addDice( Dice dice){

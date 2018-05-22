@@ -1,16 +1,15 @@
 package it.polimi.ingsw.control.network.commands.notifications;
 
 import it.polimi.ingsw.control.network.commands.NotificationHandler;
-import it.polimi.ingsw.model.cards.ToolCard;
-import it.polimi.ingsw.model.cards.ToolCardDB;
+import it.polimi.ingsw.model.clientModel.ClientToolCard;
 
 import java.util.ArrayList;
 
 public class ToolcardsExtractedNotification implements Notification {
-    public final ArrayList<String> ids;
+    public final ArrayList<ClientToolCard> cards;
 
-    public ToolcardsExtractedNotification(ArrayList<String> ids) {
-        this.ids = ids;
+    public ToolcardsExtractedNotification(ArrayList<ClientToolCard> cards) {
+        this.cards = cards;
     }
 
     @Override

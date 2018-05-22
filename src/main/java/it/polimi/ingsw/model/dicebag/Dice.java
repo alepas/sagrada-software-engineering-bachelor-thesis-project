@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.dicebag;
 
+import it.polimi.ingsw.model.clientModel.ClientDice;
 import it.polimi.ingsw.model.exceptions.dicebagExceptions.IncorrectNumberException;
 
 import java.io.Serializable;
@@ -40,6 +41,10 @@ public class Dice implements Serializable {
         if (number < 0 || number > 6 )
             throw new IncorrectNumberException(number);
         this.number = number;
+    }
+
+    public ClientDice getClientDice(){
+        return new ClientDice(Color.getClientColor(color), number, diceID);
     }
 
 }

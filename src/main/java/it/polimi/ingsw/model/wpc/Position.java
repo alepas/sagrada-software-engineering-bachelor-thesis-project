@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.wpc;
 
+import it.polimi.ingsw.model.clientModel.ClientPosition;
+
 public class Position {
     int row;
     int column;
@@ -16,5 +18,9 @@ public class Position {
 
     public int getColumn( ){
         return column;
+    }
+
+    public ClientPosition getClientPosition(){
+        return new ClientPosition(row, column);
     }
 }

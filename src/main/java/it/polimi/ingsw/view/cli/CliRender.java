@@ -1,5 +1,9 @@
 package it.polimi.ingsw.view.cli;
 
+import it.polimi.ingsw.model.clientModel.ClientCell;
+import it.polimi.ingsw.model.clientModel.ClientColor;
+import it.polimi.ingsw.model.clientModel.ClientPosition;
+import it.polimi.ingsw.model.clientModel.ClientWpc;
 import it.polimi.ingsw.model.constants.WpcConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.wpc.Cell;
@@ -130,7 +134,7 @@ public class CliRender {
     public CliRender() { }
 
     //Restiusce la stringa che rappresenta la wpc su cli
-    public String renderWpc(WPC wpc){
+    public String renderWpc(ClientWpc wpc){
         StringBuilder wpcRendered = new StringBuilder();
         String[] stringWpc = convertWpcToString(wpc);
 
@@ -143,7 +147,7 @@ public class CliRender {
     }
 
     //Restituisce la stringa che rappresenta le wpc passate su cli, distanziate di distance carattateri
-    public String renderWpcs(WPC[] wpcs, int distance){
+    public String renderWpcs(ClientWpc[] wpcs, int distance){
         StringBuilder wpcsRendered = new StringBuilder();
         String[][] stringWpcs = new String[wpcs.length][];
 
@@ -186,17 +190,17 @@ public class CliRender {
 
     //Converte la wpc in un array di stringhe dove ogni elemento dell'array rappresenta una riga
     //della wpc convertita in stringa
-    private String[] convertWpcToString(WPC wpc){
+    private String[] convertWpcToString(ClientWpc wpc){
         String[] stringWpc = new String[wpcHeight];
         StringBuilder str;
         int i = 0;
 
         stringWpc[i++] = wpcLine;
 
-        ArrayList<Cell> allCells = wpc.schema;
+        ArrayList<ClientCell> allCells = wpc.getSchema();
 
         for(int row = 0; row < WpcConstants.ROWS_NUMBER; row++){
-            Cell[] rowCells = getRowCells(allCells, row);
+            ClientCell[] rowCells = getRowCells(allCells, row);
             String[][] stringsCells = convertCellsToString(rowCells);
 
             for(int cellRow = 0; cellRow < cellHeight; cellRow++){
@@ -216,16 +220,16 @@ public class CliRender {
     }
 
     //Restituisce le celle nella wpc della riga passata ordinate
-    private Cell[] getRowCells(ArrayList<Cell> allCells, int row){
-        HashMap<Integer, Cell> rowCellsByCol = new HashMap<>();
+    private ClientCell[] getRowCells(ArrayList<ClientCell> allCells, int row){
+        HashMap<Integer, ClientCell> rowCellsByCol = new HashMap<>();
 
-        for(Cell cell : allCells){
-            Position pos = cell.getCellPosition();
+        for(ClientCell cell : allCells){
+            ClientPosition pos = cell.getCellPosition();
             if (pos.getRow() == row) rowCellsByCol.put(pos.getColumn(), cell);
         }
 
         int colNumber = WpcConstants.COLS_NUMBER;
-        Cell[] rowCells = new Cell[colNumber];
+        ClientCell[] rowCells = new ClientCell[colNumber];
 
         for(int i = 0; i < colNumber; i++){
             rowCells[i] = rowCellsByCol.get(i);
@@ -235,7 +239,7 @@ public class CliRender {
     }
 
     //Converte le celle passate in stringhe
-    private String[][] convertCellsToString(Cell[] rowCells) {
+    private String[][] convertCellsToString(ClientCell[] rowCells) {
         int colNumber = WpcConstants.COLS_NUMBER;
 
         String[][] cell = new String[colNumber][];
@@ -247,9 +251,9 @@ public class CliRender {
 
     //Converte la cella passata in un array di stringhe, dove ogni elemento rappresenta una riga
     //della cella in formato stringa
-    private String[] convertCellToString(Cell rowCell) {
+    private String[] convertCellToString(ClientCell rowCell) {
         String color;
-        Color cellColor = cellColor(rowCell);
+        ClientColor cellColor = cellColor(rowCell);
 
         int num;
         if (rowCell.getCellDice() != null) num = rowCell.getCellDice().getDiceNumber();
@@ -287,7 +291,7 @@ public class CliRender {
         return renderCell(num, color);
     }
 
-    private Color cellColor(Cell rowCell) {
+    private ClientColor cellColor(ClientCell rowCell) {
         if (rowCell.getCellDice() != null){
             return rowCell.getCellDice().getDiceColor();
         } else {

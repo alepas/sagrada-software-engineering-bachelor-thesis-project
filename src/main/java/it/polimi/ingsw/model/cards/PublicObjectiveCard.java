@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.cards;
 
+import it.polimi.ingsw.model.clientModel.ClientPoc;
 import it.polimi.ingsw.model.wpc.WPC;
 import it.polimi.ingsw.model.cards.concretePublicObjectiveCards.*;
 
@@ -19,4 +20,8 @@ public abstract class PublicObjectiveCard {
     public String getDescription() { return description; }
 
     public abstract int calculateScore(WPC wpc);
+
+    public ClientPoc getClientPoc(){
+        return new ClientPoc(id, name, description);
+    }
 }

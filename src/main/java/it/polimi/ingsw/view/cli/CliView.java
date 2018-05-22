@@ -6,6 +6,7 @@ import it.polimi.ingsw.control.network.commands.notifications.*;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.cards.ToolCardDB;
+import it.polimi.ingsw.model.clientModel.*;
 import it.polimi.ingsw.model.constants.CliConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
@@ -341,13 +342,13 @@ public class CliView implements Observer, NotificationHandler {
 
     @Override
     public void handle(PrivateObjExtractedNotification notification) {
-        Color[] colors = notification.colorsByUser.get(notification.username);
+        ClientColor[] colors = notification.colorsByUser.get(controller.getUser());
         StringBuilder str = new StringBuilder();
 
         if (colors.length > 1) str.append("I tuoi private objective sono: ");
         else str.append("Il tuo private objective è: ");
 
-        for (Color color : colors){
+        for (ClientColor color : colors){
             str.append(color + "\t");
         }
 
@@ -356,15 +357,15 @@ public class CliView implements Observer, NotificationHandler {
 
     @Override
     public void handle(WpcsExtractedNotification notification) {
-        ArrayList<String> userWpcs = notification.wpcsByUser.get(notification.username);
+        ArrayList<ClientWpc> userWpcs = notification.wpcsByUser.get(controller.getUser());
         displayText("Le tue wpc sono:\n\n");
 
-        WPC[] wpcs = new WPC[2];
+        ClientWpc[] wpcs = new ClientWpc[2];
         int num;
 
         for(int i = 0; i < userWpcs.size(); i++){
             num = i%2;
-            wpcs[num] = controller.getWpcByID(userWpcs.get(i));
+            wpcs[num] = userWpcs.get(i);
             if ( (i == userWpcs.size()-1) && (num == 0) ) System.out.println(cliRender.renderWpc(wpcs[num]));
             if (num == 1) System.out.println(cliRender.renderWpcs(wpcs, CliConstants.WpcSpacing));;
         }
@@ -384,11 +385,11 @@ public class CliView implements Observer, NotificationHandler {
 
     @Override
     public void handle(ToolcardsExtractedNotification notification) {
-        ArrayList<ToolCard> cards = controller.getToolcards();
+        ArrayList<ClientToolCard> cards = controller.getToolcards();
         displayText("Le toolcards della partita sono:\n");
 
-        for (ToolCard card : cards) {
-            displayText("ID: " + card.getID());
+        for (ClientToolCard card : cards) {
+            displayText("ID: " + card.getId());
             displayText("Nome: " + card.getName());
             displayText("Descrizione: " + card.getDescription() + "\n");
         }
@@ -398,11 +399,11 @@ public class CliView implements Observer, NotificationHandler {
 
     @Override
     public void handle(PocsExtractedNotification notification) {
-        ArrayList<PublicObjectiveCard> cards = controller.getPOC();
+        ArrayList<ClientPoc> cards = controller.getPOC();
         displayText("Gli obbiettivi pubblici della partita sono:\n");
 
-        for (PublicObjectiveCard card : cards) {
-            displayText("ID: " + card.getID());
+        for (ClientPoc card : cards) {
+            displayText("ID: " + card.getId());
             displayText("Nome: " + card.getName());
             displayText("Descrizione: " + card.getDescription() + "\n");
         }
@@ -414,7 +415,7 @@ public class CliView implements Observer, NotificationHandler {
     public void handle(NewRoundNotification notification) {
         displayText("Round: " + notification.roundNumber);
         displayText("Dadi estratti: ");
-        for (Dice dice : notification.extractedDices){
+        for (ClientDice dice : notification.extractedDices){
             displayText("ID: " + dice.getDiceID() + "\t" + dice.getDiceNumber() + " " + dice.getDiceColor());
         }
     }
@@ -425,7 +426,7 @@ public class CliView implements Observer, NotificationHandler {
         displayText("Turno: " + notification.turnNumber + "\tRound: " + controller.getCurrentRound());
         displayText("Turno di " + notification.activeUser);
         displayText("Dadi presenti: ");
-        for (Dice dice : controller.getExtractedDices()){
+        for (ClientDice dice : controller.getExtractedDices()){
             displayText("ID: " + dice.getDiceID() + "\t" + dice.getDiceNumber() + " " + dice.getDiceColor());
         }
     }

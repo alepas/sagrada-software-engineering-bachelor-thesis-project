@@ -3,6 +3,10 @@ package it.polimi.ingsw.model.game;
 import it.polimi.ingsw.control.network.commands.notifications.*;
 import it.polimi.ingsw.model.cards.PocDB;
 import it.polimi.ingsw.model.cards.ToolCardDB;
+import it.polimi.ingsw.model.clientModel.ClientColor;
+import it.polimi.ingsw.model.clientModel.ClientPoc;
+import it.polimi.ingsw.model.clientModel.ClientToolCard;
+import it.polimi.ingsw.model.clientModel.ClientWpc;
 import it.polimi.ingsw.model.constants.GameConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
@@ -131,7 +135,7 @@ public abstract class Game extends Observable implements Runnable {
     void extractPrivateObjectives() {
         ArrayList<Color> colorsExtracted = new ArrayList<>();
         Color color;
-        HashMap<String, Color[]> colorsByUser = new HashMap<>();
+        HashMap<String, ClientColor[]> colorsByUser = new HashMap<>();
 
 
         for (PlayerInGame player : players){
@@ -144,7 +148,15 @@ public abstract class Game extends Observable implements Runnable {
                 player.setPrivateObjs(color, i);
             }
 
-            colorsByUser.put(player.getUser(), player.getPrivateObjs());
+            Color[] playerColors = player.getPrivateObjs();
+            int numPrivateObjs = playerColors.length;
+            ClientColor[] playerClientColors = new ClientColor[numPrivateObjs];
+
+            for(int j = 0; j < numPrivateObjs; j++){
+                playerClientColors[j] = Color.getClientColor(playerColors[j]);
+            }
+
+            colorsByUser.put(player.getUser(), playerClientColors);
         }
 
 
@@ -153,12 +165,25 @@ public abstract class Game extends Observable implements Runnable {
 
     void extractWPCs(){
         wpcsByUser = extractRandomWpcsForUser();
-        changeAndNotifyObservers(new WpcsExtractedNotification(wpcsByUser));
+        HashMap<String, ArrayList<ClientWpc>> clientWpcByUser = new HashMap<>();
+
+        for(PlayerInGame player : players){
+            ArrayList<String> wpcIDs = wpcsByUser.get(player.getUser());
+            ArrayList<ClientWpc> userClientWpcs = new ArrayList<>();
+
+            for(String id : wpcIDs){
+                userClientWpcs.add(WpcDB.getInstance().getWpcByID(id).getClientWpc());
+            }
+
+            clientWpcByUser.put(player.getUser(), new ArrayList<>(userClientWpcs));
+        }
+
+        changeAndNotifyObservers(new WpcsExtractedNotification(clientWpcByUser));
         waitForWpcResponse();
     }
 
     private HashMap<String, ArrayList<String>> extractRandomWpcsForUser(){
-        ArrayList<String> ids = WpcDB.getWpcIDs();
+        ArrayList<String> ids = WpcDB.getInstance().getWpcIDs();
         Collections.shuffle(ids);
         HashMap<String, ArrayList<String>> wpcsByUser = new HashMap<>();
 
@@ -214,22 +239,32 @@ public abstract class Game extends Observable implements Runnable {
         ArrayList<String> ids = ToolCardDB.getInstance().getCardsIDs();
         Collections.shuffle(ids);
         ArrayList<String> toolCardsExtracted = new ArrayList<>(ids.subList(0, numOfToolCards));
+        ArrayList<ClientToolCard> clientToolCards = new ArrayList<>();
+
+
+        //Toolcard sono nulle??
         for (String id : toolCardsExtracted){
-            toolCards.add(ToolCardDB.getInstance().getCardByID(id));
+            ToolCard card = ToolCardDB.getInstance().getCardByID(id);
+            toolCards.add(card);
+            clientToolCards.add(card.getClientToolcard());
         }
 
-        changeAndNotifyObservers(new ToolcardsExtractedNotification(toolCardsExtracted));
+        changeAndNotifyObservers(new ToolcardsExtractedNotification(clientToolCards));
     }
 
     void extractPublicObjectives(){
         ArrayList<String> ids = PocDB.getInstance().getCardsIDs();
         Collections.shuffle(ids);
         ArrayList<String> publicCardsExtracted = new ArrayList<>(ids.subList(0, numOfPublicObjectiveCards));
+        ArrayList<ClientPoc> clientPocs = new ArrayList<>();
+
         for (String id : publicCardsExtracted){
-            publicObjectiveCards.add(PocDB.getInstance().getCardByID(id));
+            PublicObjectiveCard card = PocDB.getInstance().getCardByID(id);
+            publicObjectiveCards.add(card);
+            clientPocs.add(card.getClientPoc());
         }
 
-        changeAndNotifyObservers(new PocsExtractedNotification(publicCardsExtracted));
+        changeAndNotifyObservers(new PocsExtractedNotification(clientPocs));
     }
 
     public DiceBag getDiceBag() {

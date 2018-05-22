@@ -1,15 +1,15 @@
 package it.polimi.ingsw.control.network.commands.notifications;
 
 import it.polimi.ingsw.control.network.commands.NotificationHandler;
-import it.polimi.ingsw.model.dicebag.Dice;
+import it.polimi.ingsw.model.clientModel.ClientDice;
 
 import java.util.ArrayList;
 
 public class NewRoundNotification implements Notification {
     public final int roundNumber;
-    public final ArrayList<Dice> extractedDices;
+    public final ArrayList<ClientDice> extractedDices;
 
-    public NewRoundNotification(int roundNumber, ArrayList<Dice> extractedDices) {
+    public NewRoundNotification(int roundNumber, ArrayList<ClientDice> extractedDices) {
         this.roundNumber = roundNumber;
         this.extractedDices = extractedDices;
     }

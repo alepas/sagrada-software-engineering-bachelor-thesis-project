@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.cards;
 
 import it.polimi.ingsw.model.cards.concreteToolCards.*;
+import it.polimi.ingsw.model.clientModel.ClientToolCard;
 import it.polimi.ingsw.model.constants.ToolCardConstants;
 
 import java.util.ArrayList;

@@ -17,33 +17,21 @@ import java.util.HashMap;
 
 public class WpcDB {
     private static WpcDB instance;
-    private static String pathFile;
-    private static HashMap<String, WPC> map;
+    private HashMap<String, WPC> map;
 
     public static WpcDB getInstance(){
-        if (instance==null) {
-
-            pathFile="src/main/resources/wpc/wpc_schema";
-            map = new HashMap<String, WPC>();
-            instance = new WpcDB();
-
-        }
+        if (instance==null) instance = new WpcDB("src/main/resources/wpc/wpc_schema");
         return instance;
 
     }
 
     public static WpcDB getInstance(String pathOfWpcFile){
-        if (instance==null) {
-
-            pathFile=pathOfWpcFile;
-            map = new HashMap<String, WPC >();
-            instance = new WpcDB();
-
-        }
+        if (instance==null) instance = new WpcDB(pathOfWpcFile);
         return instance;
     }
 
-    private WpcDB(){
+    private WpcDB(String pathFile){
+        map = new HashMap<String, WPC>();
 
         NodeList wpcList;
         NodeList wpcRow;
@@ -160,7 +148,7 @@ public class WpcDB {
     }
 
 
-    public static WPC getWpcByID(String ID){
+    public WPC getWpcByID(String ID){
         //dato l'id selezionato dal giocatore si chiama il costruttore che genera una copia della wpc
         WPC originalWpc=map.get(ID);
        /* for(Cell cell: originalWpc.schema){
@@ -174,7 +162,7 @@ public class WpcDB {
         return originalWpc.copyWpc();
     }
 
-    public static ArrayList<String> getWpcIDs() {
+    public ArrayList<String> getWpcIDs() {
         ArrayList<String> ids= new ArrayList(map.keySet());
        /* for(String s: a)
             System.out.println(s);*/

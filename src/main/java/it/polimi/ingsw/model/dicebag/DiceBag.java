@@ -25,7 +25,7 @@ public class DiceBag {
         violetDices = INITIAL_DICE_NUMBER;
     }
 
-    public ArrayList<Dice> DicesExtraction(int numPlayers){
+    public ArrayList<Dice> extractDices(int numPlayers){
         int numOfDices;
         ArrayList<Dice> extractedDices = new ArrayList<>();
         if(numPlayers == 1)

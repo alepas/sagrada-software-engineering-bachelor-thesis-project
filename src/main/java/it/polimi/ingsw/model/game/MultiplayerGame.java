@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.game;
 
 import it.polimi.ingsw.control.network.commands.notifications.NewRoundNotification;
 import it.polimi.ingsw.control.network.commands.notifications.NextTurnNotification;
+import it.polimi.ingsw.model.clientModel.ClientDice;
 import it.polimi.ingsw.model.constants.GameConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
@@ -129,8 +130,12 @@ public class MultiplayerGame extends Game {
         for (Dice dice : extractedDices) roundTrack.addDice(dice);
 
         roundTrack.nextRound();
-        extractedDices = diceBag.DicesExtraction(numPlayers);
-        changeAndNotifyObservers(new NewRoundNotification(roundTrack.getCurrentRound(), extractedDices));
+        extractedDices = diceBag.extractDices(numPlayers);
+        ArrayList<ClientDice> extractedClientDices = new ArrayList<>();
+
+        for (Dice dice : extractedDices) extractedClientDices.add(dice.getClientDice());
+
+        changeAndNotifyObservers(new NewRoundNotification(roundTrack.getCurrentRound(), extractedClientDices));
 
         currentTurn = 0;
         nextTurn();
