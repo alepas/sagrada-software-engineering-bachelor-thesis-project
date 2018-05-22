@@ -111,11 +111,25 @@ public class CliController {
         return clientModel.getWpcByID(id);
     }
 
-    public ArrayList<ToolCard> getToolcard(){
-        return clientModel.getGameToolCards();
+    public ArrayList<String> getToolcardIds(){
+        return clientModel.getGameToolCardsIds();
+    }
+    public ArrayList<String> getToolcardNames(){
+        return clientModel.getGameToolCardsNames();
+    }
+    public ArrayList<String> getToolcardDesc(){
+        return clientModel.getGameToolCardsDesc();
     }
 
-    public ArrayList<PublicObjectiveCard> getPublicObjectiveCards(){
-        return clientModel.getGamePublicObjectiveCards();
+
+    public ArrayList<String> getPublicObjectiveCardsIds(){
+        return clientModel.getGamePOCIds();
     }
+    public ArrayList<String> getPublicObjectiveCardsNames(){
+        return clientModel.getGamePOCNames();
+    }
+    public ArrayList<String> getPublicObjectiveCardsDesc(){
+        return clientModel.getGamePOCDesc();
+    }
+
 }

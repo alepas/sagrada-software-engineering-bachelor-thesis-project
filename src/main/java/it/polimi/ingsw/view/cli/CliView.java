@@ -5,6 +5,7 @@ import it.polimi.ingsw.control.network.commands.NotificationHandler;
 import it.polimi.ingsw.control.network.commands.notifications.*;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;
+import it.polimi.ingsw.model.cards.ToolCardDB;
 import it.polimi.ingsw.model.constants.CliConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.wpc.WPC;
@@ -75,7 +76,7 @@ public class CliView implements Observer, NotificationHandler {
     public boolean logPhase(){
 //        WPC wpc = controller.getWpcByID("5");
 //        Dice dice = new Dice(Color.RED, 2);
-//        wpc.addDice(dice, wpc.getSchema().get(2), 4);
+//        wpc.addDiceWithAllRestrictions(dice, wpc.getSchema().get(2), 4);
 //        System.out.println(cliRender.renderWpc(wpc));
 //        return true;
         while (true) {
@@ -382,13 +383,16 @@ public class CliView implements Observer, NotificationHandler {
 
     @Override
     public void handle(ToolcardsExtractedNotification notification) {
-        ArrayList<ToolCard> toolCards = controller.getToolcard();
+        ArrayList<String> toolCards = controller.getToolcardIds();
+        ArrayList<String> toolCardsNames = controller.getToolcardNames();
+        ArrayList<String> toolCardsDesc = controller.getToolcardDesc();
+
         displayText("Le toolcards della partita sono:\n");
 
-        for (ToolCard card : toolCards){
-            displayText("ID: " + card.getID());
-            displayText("Nome: " + card.getName());
-            displayText("Descrizione: " + card.getDescription() + "\n");
+        for (int i=0; i<toolCards.size();i++){
+            displayText("ID: " + toolCards.get(i));
+            displayText("Nome: " + toolCardsNames.get(i));
+            displayText("Descrizione: " + toolCardsDesc.get(i) + "\n");
         }
 
         toolExtracted = true;
@@ -396,13 +400,15 @@ public class CliView implements Observer, NotificationHandler {
 
     @Override
     public void handle(PocsExtractedNotification notification) {
-        ArrayList<PublicObjectiveCard> pocCards = controller.getPublicObjectiveCards();
+        ArrayList<String> pocCards = controller.getPublicObjectiveCardsIds();
+        ArrayList<String> pocNames = controller.getPublicObjectiveCardsNames();
+        ArrayList<String> pocDesc = controller.getPublicObjectiveCardsDesc();
         displayText("Gli obbiettivi pubblici della partita sono:\n");
 
-        for (PublicObjectiveCard card : pocCards){
-            displayText("ID: " + card.getID());
-            displayText("Nome: " + card.getName());
-            displayText("Descrizione: " + card.getDescription() + "\n");
+        for (int i=0; i<pocCards.size();i++){
+            displayText("ID: " + pocCards.get(i));
+            displayText("Nome: " + pocNames.get(i));
+            displayText("Descrizione: " + pocDesc.get(i) + "\n");
         }
 
         pocExtracted = true;

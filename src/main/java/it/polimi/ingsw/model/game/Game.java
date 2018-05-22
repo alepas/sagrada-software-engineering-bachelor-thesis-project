@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.game;
 
+import it.polimi.ingsw.model.cards.PocDB;
+import it.polimi.ingsw.model.cards.ToolCardDB;
 import it.polimi.ingsw.control.network.commands.notifications.*;
 import it.polimi.ingsw.model.constants.GameConstants;
 import it.polimi.ingsw.model.dicebag.Color;
@@ -20,6 +22,7 @@ public abstract class Game extends Observable implements Runnable {
     private String id;
     private ArrayList<Dice> extractedDices;
     private DiceBag diceBag;
+
 
     RoundTrack roundTrack;
     int numPlayers;
@@ -46,6 +49,7 @@ public abstract class Game extends Observable implements Runnable {
 
 
 
+    public abstract int getCurrentTurn();
 
     public ArrayList<ToolCard> getToolCards() {
         return toolCards;
@@ -204,25 +208,27 @@ public abstract class Game extends Observable implements Runnable {
     }
 
     void extractToolCards() {
-        ArrayList<String> ids = ToolCard.getCardsIDs();
+        ToolCardDB cardDB=ToolCardDB.getInstance();
+        ArrayList<String> ids = cardDB.getCardsIDs();
         Collections.shuffle(ids);
         ArrayList<String> toolCardsExtracted = new ArrayList<>(ids.subList(0, numOfToolCards));
         for (String id : toolCardsExtracted){
-            toolCards.add(ToolCard.getCardByID(id));
+                toolCards.add((ToolCard) cardDB.getCardByID(id).getToolCardCopy());
         }
 
-        changeAndNotifyObservers(new ToolcardsExtractedNotification(toolCardsExtracted));
+        changeAndNotifyObservers(new ToolcardsExtractedNotification(toolCardsExtracted,cardDB));
     }
 
     void extractPublicObjectives(){
-        ArrayList<String> ids = PublicObjectiveCard.getCardsIDs();
+        PocDB pocdb=PocDB.getInstance();
+        ArrayList<String> ids = pocdb.getCardsIDs();
         Collections.shuffle(ids);
         ArrayList<String> publicCardsExtracted = new ArrayList<>(ids.subList(0, numOfPublicObjectiveCards));
         for (String id : publicCardsExtracted){
-            publicObjectiveCards.add(PublicObjectiveCard.getCardByID(id));
+            publicObjectiveCards.add(pocdb.getCardByID(id));
         }
 
-        changeAndNotifyObservers(new PocsExtractedNotification(publicCardsExtracted));
+        changeAndNotifyObservers(new PocsExtractedNotification(publicCardsExtracted, pocdb));
     }
 
     public DiceBag getDiceBag() {

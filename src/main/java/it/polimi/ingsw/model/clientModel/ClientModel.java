@@ -28,8 +28,12 @@ public class ClientModel implements Observer, NotificationHandler {
     private int gameNumPlayers;
     private Color[] privateObjectives;
     private HashMap<String, String> wpcByUsername;
-    private ArrayList<ToolCard> gameToolCards;
-    private ArrayList<PublicObjectiveCard> gamePublicObjectiveCards;
+    private ArrayList<String> gameToolCardsIds;
+    private ArrayList<String> gameToolCardsNames;
+    private ArrayList<String> gameToolCardsDesc;
+    private ArrayList<String> gamePOCIds;
+    private ArrayList<String> gamePOCNames;
+    private ArrayList<String> gamePOCDesc;
 
     private ClientModel() { }
 
@@ -50,8 +54,12 @@ public class ClientModel implements Observer, NotificationHandler {
         gameNumPlayers = 0;
         privateObjectives = null;
         this.wpcByUsername = new HashMap<>();
-        this.gameToolCards = new ArrayList<>();
-        this.gamePublicObjectiveCards = new ArrayList<>();
+        this.gameToolCardsIds = new ArrayList<>();
+        this.gameToolCardsNames = new ArrayList<>();
+        this.gameToolCardsDesc = new ArrayList<>();
+        this.gamePOCIds = new ArrayList<>();
+        this.gamePOCNames = new ArrayList<>();
+        this.gamePOCDesc = new ArrayList<>();
     }
 
     public void setObserver(Observer observer) {
@@ -94,6 +102,14 @@ public class ClientModel implements Observer, NotificationHandler {
         return gameNumPlayers;
     }
 
+    public ArrayList<String> getGameToolCardsNames() {
+        return gameToolCardsNames;
+    }
+
+    public ArrayList<String> getGameToolCardsDesc() {
+        return gameToolCardsDesc;
+    }
+
     public void setGameNumPlayers(int gameNumPlayers) {
         this.gameNumPlayers = gameNumPlayers;
     }
@@ -110,20 +126,24 @@ public class ClientModel implements Observer, NotificationHandler {
         return WpcDB.getWpcByID(id);
     }
 
-    public ArrayList<ToolCard> getGameToolCards() {
-        return gameToolCards;
+    public ArrayList<String> getGameToolCardsIds() {
+        return gameToolCardsIds;
     }
 
-    public void setGameToolCards(ArrayList<ToolCard> gameToolCards) {
-        this.gameToolCards = gameToolCards;
+    public void setGameToolCards(ArrayList<String> gameToolCardsIds) {
+        this.gameToolCardsIds = gameToolCardsIds;
     }
 
-    public ArrayList<PublicObjectiveCard> getGamePublicObjectiveCards() {
-        return gamePublicObjectiveCards;
+    public ArrayList<String> getGamePOCIds() {
+        return gamePOCIds;
     }
 
-    public void setGamePublicObjectiveCards(ArrayList<PublicObjectiveCard> gamePublicObjectiveCards) {
-        this.gamePublicObjectiveCards = gamePublicObjectiveCards;
+    public ArrayList<String> getGamePOCNames() {
+        return gamePOCNames;
+    }
+
+    public ArrayList<String> getGamePOCDesc() {
+        return gamePOCDesc;
     }
 
     public HashMap<String, String> getWpcByUsername() {
@@ -159,15 +179,15 @@ public class ClientModel implements Observer, NotificationHandler {
 
     @Override
     public void handle(ToolcardsExtractedNotification notification) {
-        for (String id : notification.toolcardsIDs){
-            gameToolCards.add(ToolCard.getCardByID(id));
-        }
+        gameToolCardsIds=notification.toolcardsIDs;
+        gameToolCardsNames=notification.toolcardsNames;
+        gameToolCardsDesc=notification.toolcardsDescrip;
     }
 
     @Override
     public void handle(PocsExtractedNotification notification) {
-        for (String id : notification.pocIDs){
-            gamePublicObjectiveCards.add(PublicObjectiveCard.getCardByID(id));
-        }
+       gamePOCIds=notification.pocIDs;
+       gamePOCNames=notification.pocNames;
+       gamePOCDesc=notification.pocsDescrip;
     }
 }

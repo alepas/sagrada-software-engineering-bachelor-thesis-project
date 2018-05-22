@@ -23,6 +23,9 @@ public class PlayerInGame {
     private boolean active=false;
     private WPC wpc;
     private int actionsForTurn=0;
+    private ToolCard toolCardInUse=null;
+    private Dice pickedDice=null;
+    private Dice tempDice=null;
 
 
 
@@ -117,6 +120,7 @@ public class PlayerInGame {
 
 
 
+
     public Color[] getPrivateObjs() {
         return privateObjs;
     }
@@ -131,14 +135,6 @@ public class PlayerInGame {
             throw new PlayerNotAuthorizedException(username);
         game.nextTurn();
     }
-
-    public void chooseWPC(ArrayList<String> cards){
-
-        //da implementare select carta e poi
-        String ab="123";
-        //this.wpc= wpc.getWpcByID(id); // id è una stringa
-    }
-
 
     public void useToolCard(String cardID) throws CannotUseToolCardException, PlayerNotAuthorizedException {
         if (!active)
@@ -166,31 +162,18 @@ public class PlayerInGame {
                 card.use(this);
             } else throw new CannotUseToolCardException(cardID, 1);
         }
-        incrementActionsForTurn();
 
     }
 
 
-    public void placeDice(int diceId, Position pos) throws PlayerNotAuthorizedException, CannotPlaceDiceException {
-        if (!active)
-            throw new PlayerNotAuthorizedException(username);
-        boolean foundDice=false;
-        Dice dice=null;
-        for(Dice tempDice:game.getExtractedDices()){
-            if(tempDice.getDiceID()==diceId){
-                foundDice=true;
-                dice=tempDice;
-                break;
-            }
-        }
-        if (!foundDice)
-            throw new CannotPlaceDiceException(username,0);
-        //wpc.addDice(dice,pos)
+    public void placeDice(Position pos) throws PlayerNotAuthorizedException, CannotPlaceDiceException {
+/*        if (!active)
+            throw new PlayerNotAuthorizedException(username);*/
 
 
-//finire aggiungendo eccezioni per cannotplacedice
+        if ( wpc.addDiceWithAllRestrictions(pickedDice,pos,game.getCurrentTurn())==false)
+            throw new CannotPlaceDiceException(username, 0);
         incrementActionsForTurn();
-
     }
 
 
@@ -204,6 +187,93 @@ public class PlayerInGame {
             game.nextTurn();
         }
     }
+
+        // to use for toolCards interaction
+    public void pickDiceforToolCard(int diceId, String where) throws CannotChooseDiceException {
+        boolean foundDice=false;
+        Dice dice=null;
+        if (toolCardInUse != null) {
+            switch (where) {
+                case "extracted": {
+                    for(Dice tempDice:game.getExtractedDices()){
+                        if(tempDice.getDiceID()==diceId){
+                            foundDice=true;
+                            dice=tempDice;
+                            break;
+                        }
+                    }
+                    if (!foundDice)
+                        throw new CannotChooseDiceException(username,dice.getDiceNumber(),dice.getDiceColor());
+                    toolCardInUse.use(this, dice);
+
+                }
+                case "wpc": {
+                    for(Dice tempDice:wpc.getWpcDices()){
+                        if(tempDice.getDiceID()==diceId){
+                            foundDice=true;
+                            dice=tempDice;
+                            break;
+                        }
+                    }
+                    if (!foundDice)
+                        throw new CannotChooseDiceException(username,dice.getDiceNumber(),dice.getDiceColor());
+                    toolCardInUse.use(this, dice);
+
+                }
+                case "roundTrack": {
+                    for(Dice tempDice:game.getRoundTrack().getDicesNotUsed()){
+                        if(tempDice.getDiceID()==diceId){
+                            foundDice=true;
+                            dice=tempDice;
+                            break;
+                        }
+                    }
+                    if (!foundDice)
+                        throw new CannotChooseDiceException(username,dice.getDiceNumber(),dice.getDiceColor());
+                    toolCardInUse.use(this, dice);
+
+                }
+            }
+
+        }
+    }
+
+    public void pickPositionForToolCard(Position pos) throws CannotPickpositionForToolCardException {
+        if (toolCardInUse==null)
+            throw new CannotPickpositionForToolCardException(username,pos);
+        toolCardInUse.use(this,pos);
+    }
+
+    public void pickDice(int diceId) throws CannotChooseDiceException {
+        if (pickedDice!=null)
+            throw new CannotChooseDiceException(username, pickedDice.getDiceNumber(), pickedDice.getDiceColor());
+        boolean foundDice=false;
+        Dice dice=null;
+        for(Dice tempDice:game.getExtractedDices()){
+            if(tempDice.getDiceID()==diceId){
+                foundDice=true;
+                dice=tempDice;
+                break;
+            }
+        }
+        if (!foundDice)
+            throw new CannotChooseDiceException(username,dice.getDiceNumber(),dice.getDiceColor());
+        pickedDice=dice;
+    }
+
+    public boolean cancelAction() throws CannotCancelToolCardException {
+        if (toolCardInUse!=null){
+            toolCardInUse.cancel(this);
+            return true;
+        }
+        else if (pickedDice!=null) {
+            pickedDice = null;
+            return true;
+        }
+        return false;
+    }
+
+
 
     public Game getGame() {
         return game;

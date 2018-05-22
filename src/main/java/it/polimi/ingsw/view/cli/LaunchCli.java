@@ -21,9 +21,6 @@ public class LaunchCli {
         String answer;
         Tecnology tecnology = null;
 
-        ToolCard.loadCards();
-        PublicObjectiveCard.loadCards();
-
         do {
             System.out.println(">>> Quale tecnologia vuoi usare? socket/rmi");
             System.out.println(">>> Digita \"quit\" per uscire");

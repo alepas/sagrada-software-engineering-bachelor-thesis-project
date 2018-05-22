@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.wpc;
 import java.util.ArrayList;
 
+import it.polimi.ingsw.model.constants.WpcConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
 
@@ -35,13 +36,15 @@ public class WPC {
 
     public String getWpcID(){ return wpcID; }
 
-    public boolean addDice(Dice dice, Cell cell, int turn) {
-        //checkCellExistence(cell);
-        if (turn == 1) {
-            if (!checkFirstTurnRestriction(cell))
-                return false;
+    public boolean addDiceWithAllRestrictions(Dice dice, Position pos, int globalTurn) {
+        Cell cell=getCellFromPosition(pos);
+        if(cell.getCellDice()!=null)
+            return false;
+        if (globalTurn == 1) {
+            if (checkFirstTurnRestriction(cell)&&checkAdjacentRestriction(cell,dice)&&checkCellRestriction(cell,dice))
+                return true;
         }
-        if (checkCellRestriction(cell, dice) && checkAdjacentRestriction(cell, dice) && IsThereAtLeastADice(cell))
+        else if (checkCellRestriction(cell, dice) && checkAdjacentRestriction(cell, dice) && isThereAtLeastADiceNear(cell))
         {
             cell.setDice(dice);
             return true;
@@ -49,6 +52,62 @@ public class WPC {
         return false;
     }
 
+    public boolean addDicePersonalizedRestrictions(Dice dice, Position pos, int globalTurn, boolean ColorRestr, boolean ValueRestr, boolean PlacementRestr, boolean atLeastADiceNear){
+        Cell cell=getCellFromPosition(pos);
+        boolean condition=true;
+
+        if (ColorRestr==true){
+            condition&=checkOnlyColorCellRestriction(cell,dice);
+            if (condition==false)
+                return false;}
+        if (ValueRestr==true){
+            condition&=checkOnlyNumberCellRestriction(cell,dice);
+        if (condition==false)
+            return false;}
+        if (PlacementRestr==true){
+            if (globalTurn == 1) {
+                if (checkFirstTurnRestriction(cell)==false)
+                    return false;
+            }
+            condition&= (checkAdjacentRestriction(cell, dice));
+            if (condition==false)
+                return false;
+        }
+
+        if (atLeastADiceNear==true){
+            condition&=isThereAtLeastADiceNear(cell);
+            if (condition==false)
+                return false;
+        }
+        cell.setDice(dice);
+        return true;
+    }
+
+
+    public Dice removeDice(Position position){
+        Dice dice=null;
+        Cell cell=getCellFromPosition(position);
+        dice=cell.getCellDice();
+        cell.removeDice();
+        return dice;
+    }
+
+
+    public Dice getDiceFromPosition(Position pos){
+        return getCellFromPosition(pos).getCellDice();
+    }
+
+    public Position getPositionFromDice(int diceID){
+        for(Cell cell: schema) {
+            if (cell.getCellDice().getDiceID() == diceID)
+                return cell.getCellPosition();
+        }
+        return null;
+    }
+
+    private Cell getCellFromPosition(Position pos){
+        return schema.get(pos.getRow()*WpcConstants.COLS_NUMBER+pos.getColumn());
+    }
 
     private void checkCellExistence(Cell cell) throws NotExistingCellException {
         //controllo se la cella esiste
@@ -123,8 +182,15 @@ public class WPC {
     }
 
     //manca il controllo che ci sia almeno un dado attorno alla cella selezionata
-    private boolean IsThereAtLeastADice(Cell cell) {
-        return true;
+    private boolean isThereAtLeastADiceNear(Cell cell) {
+        int row= cell.getCellPosition().getRow();
+        int column= cell.getCellPosition().getColumn();
+
+        for(Cell schemaCell: this.schema) {
+            if (isAnAdjacentCell(schemaCell, row, column) && cell.getCellDice()!= null)
+               return true;
+        }
+        return false;
     }
 
 

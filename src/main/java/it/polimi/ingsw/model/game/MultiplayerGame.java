@@ -18,6 +18,7 @@ public class MultiplayerGame extends Game {
     private int roundPlayer;
     private int currentTurn;
 
+
     public MultiplayerGame(int numPlayers) throws InvalidMultiplayerGamePlayersException {
         super(numPlayers);
 
@@ -30,13 +31,14 @@ public class MultiplayerGame extends Game {
     }
 
 
+
+
     //----------------------------- Metodi validi per entrambi i lati -----------------------------
 
     public int getTurnPlayer() { return turnPlayer; }
 
     public int getRoundPlayer() { return roundPlayer; }
 
-    public int getCurrentTurn() { return currentTurn; }
 
     public synchronized boolean addPlayer(String user) throws MaxPlayersExceededException, UserAlreadyInThisGameException, CannotCreatePlayerException {
         //Return true if, after adding the player, the game is complete
@@ -55,6 +57,11 @@ public class MultiplayerGame extends Game {
         changeAndNotifyObservers(new PlayersChangedNotification(user, true, numActualPlayers(), numPlayers));
 
         return this.isFull();
+    }
+
+    @Override
+    public int getCurrentTurn() {
+        return currentTurn;
     }
 
     public synchronized void removePlayer(String user) throws UserNotInThisGameException {
