@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.game;
 
+import it.polimi.ingsw.control.network.commands.notifications.NewRoundNotification;
+import it.polimi.ingsw.control.network.commands.notifications.NextTurnNotification;
 import it.polimi.ingsw.model.constants.GameConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
@@ -16,7 +18,6 @@ import java.util.Collections;
 public class MultiplayerGame extends Game {
     private int turnPlayer;
     private int roundPlayer;
-    private int currentTurn;
 
     public MultiplayerGame(int numPlayers) throws InvalidMultiplayerGamePlayersException {
         super(numPlayers);
@@ -30,13 +31,14 @@ public class MultiplayerGame extends Game {
     }
 
 
+
+
     //----------------------------- Metodi validi per entrambi i lati -----------------------------
 
     public int getTurnPlayer() { return turnPlayer; }
 
     public int getRoundPlayer() { return roundPlayer; }
 
-    public int getCurrentTurn() { return currentTurn; }
 
     public synchronized boolean addPlayer(String user) throws MaxPlayersExceededException, UserAlreadyInThisGameException, CannotCreatePlayerException {
         //Return true if, after adding the player, the game is complete
@@ -86,7 +88,7 @@ public class MultiplayerGame extends Game {
     }
 
     private void playGame() {
-
+        nextRound();
     }
 
     private void waitPlayers(int time){
@@ -124,26 +126,30 @@ public class MultiplayerGame extends Game {
 
     @Override
     public void nextRound() {
+        for (Dice dice : extractedDices) roundTrack.addDice(dice);
 
+        roundTrack.nextRound();
+        extractedDices = diceBag.DicesExtraction(numPlayers);
+        changeAndNotifyObservers(new NewRoundNotification(roundTrack.getCurrentRound(), extractedDices));
+
+        currentTurn = 0;
+        nextTurn();
     }
 
     @Override
     public void nextTurn() {
-//        colorsByUser.get(turnPlayer).setNotActive();
-//        if (currentTurn < GameConstants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME*getNumPlayers()) {
-//            turnPlayer = nextPlayer();
-//            colorsByUser.get(turnPlayer).setActive();
-//            currentTurn++;
-//        } else {
-////            nextRound();
-//        }
+        players[turnPlayer].setNotActive();
+        if (currentTurn < GameConstants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME*numPlayers) {
+            turnPlayer = nextPlayer();
+            players[turnPlayer].setActive();
+            currentTurn++;
+            changeAndNotifyObservers(new NextTurnNotification(currentTurn, players[turnPlayer].getUser()));
+        } else {
+            nextRound();
+        }
     }
 
-    protected int nextPlayer() throws MaxNumberOfTurnsPlayedExeption {
-        if (currentTurn == numPlayers*GameConstants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME) {
-            throw new MaxNumberOfTurnsPlayedExeption(this);
-        }
-
+    protected int nextPlayer(){
         if (currentTurn % numPlayers == 0) {
             return turnPlayer;
         } else if ((currentTurn / numPlayers) % 2 == 0){

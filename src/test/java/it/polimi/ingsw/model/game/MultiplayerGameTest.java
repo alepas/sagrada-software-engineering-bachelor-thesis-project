@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.game;
 
+import it.polimi.ingsw.model.cards.ToolCardDB;
 import it.polimi.ingsw.model.constants.GameConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
@@ -235,9 +236,9 @@ public class MultiplayerGameTest {
 //        }
 //    }
 
-    @Test
+  /*  @Test
     public void extractToolCardsTest(){
-        ToolCard.loadCards();
+        ToolCardDB toolCardDB=ToolCardDB.getInstance();
         game.extractToolCards();
 
         Assert.assertEquals(GameConstants.NUM_TOOL_CARDS_IN_MULTIPLAYER_GAME, game.getToolCards().size());
@@ -253,8 +254,8 @@ public class MultiplayerGameTest {
 
             cardsExtracted.add(gameCard);
         }
-    }
-
+    }*/
+/*
     @Test       //Prima di eseguirlo assicurarsi che loadCards(), getCardByID() e getCardsIDs() siano testati
     public void extractPublicObjectivesTest(){
         PublicObjectiveCard.loadCards();
@@ -273,7 +274,7 @@ public class MultiplayerGameTest {
 
             cardsExtracted.add(gameCard);
         }
-    }
+    }*/
 
     @Test
     public void initializeGameTest() throws Exception {
@@ -366,16 +367,6 @@ public class MultiplayerGameTest {
         game.setCurrentTurn(game.getCurrentTurn()+1);
 
         Assert.assertEquals(2, game.nextPlayer());
-    }
-
-    @Test(expected = MaxNumberOfTurnsPlayedExeption.class)
-    public void nextPlayerIllegalTest() throws Exception {
-        game.addPlayer(username1);
-        game.addPlayer(username2);
-
-        game.setCurrentTurn(game.getNumPlayers()*GameConstants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME);
-
-        game.nextPlayer();
     }
 
     //TODO

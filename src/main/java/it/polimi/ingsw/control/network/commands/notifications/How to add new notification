@@ -28,7 +28,7 @@
     void handle(GameStartedNotification notification);
 
 3)  Fai in modo che i NotificationHandler gestiscano la notifica.
-    NotificationHandler attuali: RmiClient, SocketClient, CliView, Gui?
+    NotificationHandler attuali: ClientModel, CliView, Gui?
 
 4)  Fai in modo che l'oggetto observed invii la notifica.
     changeAndNotifyObservers(new Notification)

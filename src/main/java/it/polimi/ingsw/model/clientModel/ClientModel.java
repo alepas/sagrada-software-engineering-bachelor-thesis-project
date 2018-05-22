@@ -2,9 +2,12 @@ package it.polimi.ingsw.model.clientModel;
 
 import it.polimi.ingsw.control.network.commands.NotificationHandler;
 import it.polimi.ingsw.control.network.commands.notifications.*;
+import it.polimi.ingsw.model.cards.PocDB;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;
+import it.polimi.ingsw.model.cards.ToolCardDB;
 import it.polimi.ingsw.model.dicebag.Color;
+import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.wpc.WPC;
 import it.polimi.ingsw.model.wpc.WpcDB;
 
@@ -30,6 +33,9 @@ public class ClientModel implements Observer, NotificationHandler {
     private HashMap<String, String> wpcByUsername;
     private ArrayList<ToolCard> gameToolCards;
     private ArrayList<PublicObjectiveCard> gamePublicObjectiveCards;
+    private int currentRound;
+    private ArrayList<Dice> extractedDices;
+    private int currentTurn;
 
     private ClientModel() { }
 
@@ -52,6 +58,7 @@ public class ClientModel implements Observer, NotificationHandler {
         this.wpcByUsername = new HashMap<>();
         this.gameToolCards = new ArrayList<>();
         this.gamePublicObjectiveCards = new ArrayList<>();
+        this.extractedDices = new ArrayList<>();
     }
 
     public void setObserver(Observer observer) {
@@ -130,6 +137,19 @@ public class ClientModel implements Observer, NotificationHandler {
         return wpcByUsername;
     }
 
+    public int getCurrentRound() {
+        return currentRound;
+    }
+
+    public int getCurrentTurn() {
+        return currentTurn;
+    }
+
+    public ArrayList<Dice> getExtractedDices() {
+        return extractedDices;
+    }
+
+    //----------------------------------- Notification Handler -------------------------------------
     @Override
     public void update(Observable o, Object arg) {
         ((Notification) arg).handle(this);
@@ -159,15 +179,26 @@ public class ClientModel implements Observer, NotificationHandler {
 
     @Override
     public void handle(ToolcardsExtractedNotification notification) {
-        for (String id : notification.toolcardsIDs){
-            gameToolCards.add(ToolCard.getCardByID(id));
+        for (String id : notification.ids){
+            gameToolCards.add(ToolCardDB.getInstance().getCardByID(id));
         }
     }
 
     @Override
     public void handle(PocsExtractedNotification notification) {
-        for (String id : notification.pocIDs){
-            gamePublicObjectiveCards.add(PublicObjectiveCard.getCardByID(id));
+        for (String id : notification.ids){
+            gamePublicObjectiveCards.add(PocDB.getInstance().getCardByID(id));
         }
+    }
+
+    @Override
+    public void handle(NewRoundNotification notification) {
+        currentRound = notification.roundNumber;
+        extractedDices = notification.extractedDices;
+    }
+
+    @Override
+    public void handle(NextTurnNotification notification) {
+        currentTurn = notification.turnNumber;
     }
 }

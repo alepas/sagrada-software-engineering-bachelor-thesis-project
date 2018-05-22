@@ -5,8 +5,10 @@ import it.polimi.ingsw.control.network.commands.NotificationHandler;
 import it.polimi.ingsw.control.network.commands.notifications.*;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;
+import it.polimi.ingsw.model.cards.ToolCardDB;
 import it.polimi.ingsw.model.constants.CliConstants;
 import it.polimi.ingsw.model.dicebag.Color;
+import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.wpc.WPC;
 
 import java.util.*;
@@ -75,7 +77,7 @@ public class CliView implements Observer, NotificationHandler {
     public boolean logPhase(){
 //        WPC wpc = controller.getWpcByID("5");
 //        Dice dice = new Dice(Color.RED, 2);
-//        wpc.addDice(dice, wpc.getSchema().get(2), 4);
+//        wpc.addDiceWithAllRestrictions(dice, wpc.getSchema().get(2), 4);
 //        System.out.println(cliRender.renderWpc(wpc));
 //        return true;
         while (true) {
@@ -382,10 +384,10 @@ public class CliView implements Observer, NotificationHandler {
 
     @Override
     public void handle(ToolcardsExtractedNotification notification) {
-        ArrayList<ToolCard> toolCards = controller.getToolcard();
+        ArrayList<ToolCard> cards = controller.getToolcards();
         displayText("Le toolcards della partita sono:\n");
 
-        for (ToolCard card : toolCards){
+        for (ToolCard card : cards) {
             displayText("ID: " + card.getID());
             displayText("Nome: " + card.getName());
             displayText("Descrizione: " + card.getDescription() + "\n");
@@ -396,16 +398,36 @@ public class CliView implements Observer, NotificationHandler {
 
     @Override
     public void handle(PocsExtractedNotification notification) {
-        ArrayList<PublicObjectiveCard> pocCards = controller.getPublicObjectiveCards();
+        ArrayList<PublicObjectiveCard> cards = controller.getPOC();
         displayText("Gli obbiettivi pubblici della partita sono:\n");
 
-        for (PublicObjectiveCard card : pocCards){
+        for (PublicObjectiveCard card : cards) {
             displayText("ID: " + card.getID());
             displayText("Nome: " + card.getName());
             displayText("Descrizione: " + card.getDescription() + "\n");
         }
 
         pocExtracted = true;
+    }
+
+    @Override
+    public void handle(NewRoundNotification notification) {
+        displayText("Round: " + notification.roundNumber);
+        displayText("Dadi estratti: ");
+        for (Dice dice : notification.extractedDices){
+            displayText("ID: " + dice.getDiceID() + "\t" + dice.getDiceNumber() + " " + dice.getDiceColor());
+        }
+    }
+
+    @Override
+    public void handle(NextTurnNotification notification) {
+        displayText("\n");
+        displayText("Turno: " + notification.turnNumber + "\tRound: " + controller.getCurrentRound());
+        displayText("Turno di " + notification.activeUser);
+        displayText("Dadi presenti: ");
+        for (Dice dice : controller.getExtractedDices()){
+            displayText("ID: " + dice.getDiceID() + "\t" + dice.getDiceNumber() + " " + dice.getDiceColor());
+        }
     }
 
 

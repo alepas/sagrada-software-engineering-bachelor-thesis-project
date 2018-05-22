@@ -1,12 +1,10 @@
 package it.polimi.ingsw.control.network.rmi;
 
 import it.polimi.ingsw.control.network.NetworkClient;
-import it.polimi.ingsw.control.network.commands.ResponseHandler;
 import it.polimi.ingsw.control.network.commands.responses.CreateUserResponse;
 import it.polimi.ingsw.control.network.commands.responses.FindGameResponse;
 import it.polimi.ingsw.control.network.commands.responses.LoginResponse;
 import it.polimi.ingsw.control.network.commands.responses.PickWpcResponse;
-import it.polimi.ingsw.model.clientModel.ClientModel;
 import it.polimi.ingsw.model.constants.NetworkConstants;
 import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;

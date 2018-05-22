@@ -16,4 +16,8 @@ public interface NotificationHandler {
     void handle(ToolcardsExtractedNotification notification);
 
     void handle(PocsExtractedNotification notification);
+
+    void handle(NewRoundNotification notification);
+
+    void handle(NextTurnNotification notification);
 }

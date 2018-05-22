@@ -1,50 +1,24 @@
 package it.polimi.ingsw.model.cards;
 
 import it.polimi.ingsw.model.cards.concreteToolCards.*;
+import it.polimi.ingsw.model.dicebag.Dice;
+import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotCancelToolCardException;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
+import it.polimi.ingsw.model.wpc.Position;
 
 import java.util.ArrayList;
 
-public abstract class ToolCard {
+public abstract class ToolCard implements Cloneable{
+    protected PlayerInGame currentPlayer=null;
     protected String id;
     protected String name;
     protected String description;
+    protected Boolean used;
+    protected int currentStatus;
 
-    private Boolean used = false;
 
-    public static ArrayList<ToolCard> toolCards = new ArrayList<>();
+    public abstract ToolCard getToolCardCopy();
 
-    public static void loadCards(){
-        toolCards.add(new ToolCard1());
-        toolCards.add(new ToolCard2());
-        toolCards.add(new ToolCard3());
-        toolCards.add(new ToolCard4());
-        toolCards.add(new ToolCard5());
-        toolCards.add(new ToolCard6());
-        toolCards.add(new ToolCard7());
-        toolCards.add(new ToolCard8());
-        toolCards.add(new ToolCard9());
-        toolCards.add(new ToolCard10());
-        toolCards.add(new ToolCard11());
-        toolCards.add(new ToolCard12());
-    }
-
-    public static ArrayList<String> getCardsIDs() {
-        ArrayList<String> ids = new ArrayList<>();
-
-        for (ToolCard card : toolCards){
-            ids.add(card.getID());
-        }
-
-        return ids;
-    }
-
-    public static ToolCard getCardByID(String id){
-        for(ToolCard card : toolCards){
-            if(card.getID().equals(id)) return card;
-        }
-        return null;
-    }
 
     public String getID(){ return id; }
 
@@ -59,5 +33,16 @@ public abstract class ToolCard {
     public Boolean isUsed() { return used; }
 
     public abstract void use(PlayerInGame player);
+    public abstract void use(PlayerInGame player, Position pos);
+    public abstract void use(PlayerInGame player, Dice dice);
+
+    public void cancel(PlayerInGame player) throws CannotCancelToolCardException {
+        if (currentPlayer==player) {
+            currentPlayer = null;
+            currentStatus = 0;
+        }
+        else throw new CannotCancelToolCardException(id,0);
+    }
+
 
 }

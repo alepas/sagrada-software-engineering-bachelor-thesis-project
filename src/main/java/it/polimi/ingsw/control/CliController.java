@@ -4,6 +4,7 @@ import it.polimi.ingsw.control.network.NetworkClient;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.clientModel.ClientModel;
+import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
@@ -107,15 +108,27 @@ public class CliController {
         return clientModel.getWpcByUsername().size() == clientModel.getGameNumPlayers();
     }
 
+    public ArrayList<ToolCard> getToolcards(){
+        return clientModel.getGameToolCards();
+    }
+
+    public ArrayList<PublicObjectiveCard> getPOC(){
+        return clientModel.getGamePublicObjectiveCards();
+    }
+
     public WPC getWpcByID(String id){
         return clientModel.getWpcByID(id);
     }
 
-    public ArrayList<ToolCard> getToolcard(){
-        return clientModel.getGameToolCards();
+    public int getCurrentRound(){
+        return clientModel.getCurrentRound();
     }
 
-    public ArrayList<PublicObjectiveCard> getPublicObjectiveCards(){
-        return clientModel.getGamePublicObjectiveCards();
+    public int getCurrentTurn(){
+        return clientModel.getCurrentTurn();
+    }
+
+    public ArrayList<Dice> getExtractedDices(){
+        return clientModel.getExtractedDices();
     }
 }
