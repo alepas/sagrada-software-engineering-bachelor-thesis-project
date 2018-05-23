@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wpcs>
-    <wpc wpcID= "1" >
+    <wpc id= "1" >
         <favour>5</favour>
         <row x="0">
             <column y="0">
@@ -91,7 +91,7 @@
             </column>
         </row>
     </wpc>
-    <wpc wpcID="2">
+    <wpc id="2">
         <favour>4</favour>
         <row x="0">
             <column y="0">
@@ -182,7 +182,7 @@
             </column>
         </row>
     </wpc>
-    <wpc wpcID="3">
+    <wpc id="3">
         <favour>4</favour>
         <row x="0">
             <column y="0">
@@ -273,7 +273,7 @@
             </column>
         </row>
     </wpc>
-    <wpc wpcID="4">
+    <wpc id="4">
         <favour>5</favour>
         <row x="0">
             <column y="0">
@@ -364,7 +364,7 @@
             </column>
         </row>
     </wpc>
-    <wpc wpcID="5">
+    <wpc id="5">
         <favour>3</favour>
         <row x="0">
             <column y="0">
@@ -455,7 +455,7 @@
             </column>
         </row>
     </wpc>
-    <wpc wpcID="6">
+    <wpc id="6">
         <favour>3</favour>
         <row x="0">
             <column y="0">
@@ -546,7 +546,7 @@
             </column>
         </row>
     </wpc>
-    <wpc wpcID="7">
+    <wpc id="7">
         <favour>6</favour>
         <row x="0">
             <column y="0">
@@ -637,7 +637,7 @@
             </column>
         </row>
     </wpc>
-    <wpc wpcID="8">
+    <wpc id="8">
         <favour>5</favour>
         <row x="0">
             <column y="0">
@@ -728,7 +728,7 @@
             </column>
         </row>
     </wpc>
-    <wpc wpcID="9">
+    <wpc id="9">
         <favour>5</favour>
         <row x="0">
             <column y="0">
@@ -819,7 +819,7 @@
             </column>
         </row>
     </wpc>
-    <wpc wpcID="10">
+    <wpc id="10">
         <favour>4</favour>
         <row x="0">
             <column y="0">
@@ -910,7 +910,7 @@
             </column>
         </row>
     </wpc>
-    <wpc wpcID="11">
+    <wpc id="11">
         <favour>5</favour>
         <row x="0">
             <column y="0">
@@ -1001,7 +1001,7 @@
             </column>
         </row>
     </wpc>
-    <wpc wpcID="12">
+    <wpc id="12">
         <favour>5</favour>
         <row x="0">
             <column y="0">
@@ -1092,7 +1092,7 @@
             </column>
         </row>
     </wpc>
-    <wpc wpcID="13">
+    <wpc id="13">
         <favour>3</favour>
         <row x="0">
             <column y="0">
@@ -1183,7 +1183,7 @@
             </column>
         </row>
     </wpc>
-    <wpc wpcID="14">
+    <wpc id="14">
         <favour>5</favour>
         <row x="0">
             <column y="0">
@@ -1274,7 +1274,7 @@
             </column>
         </row>
     </wpc>
-    <wpc wpcID="15">
+    <wpc id="15">
         <favour>4</favour>
         <row x="0">
             <column y="0">
@@ -1365,7 +1365,7 @@
             </column>
         </row>
     </wpc>
-    <wpc wpcID="16">
+    <wpc id="16">
         <favour>5</favour>
         <row x="0">
             <column y="0">
@@ -1456,7 +1456,7 @@
             </column>
         </row>
     </wpc>
-    <wpc wpcID="17">
+    <wpc id="17">
         <favour>3</favour>
         <row x="0">
             <column y="0">
@@ -1547,7 +1547,7 @@
             </column>
         </row>
     </wpc>
-    <wpc wpcID="18">
+    <wpc id="18">
         <favour>5</favour>
         <row x="0">
             <column y="0">
@@ -1638,7 +1638,7 @@
             </column>
         </row>
     </wpc>
-    <wpc wpcID="19">
+    <wpc id="19">
         <favour>5</favour>
         <row x="0">
             <column y="0">
@@ -1729,7 +1729,7 @@
             </column>
         </row>
     </wpc>
-    <wpc wpcID="20">
+    <wpc id="20">
         <favour>6</favour>
         <row x="0">
             <column y="0">
@@ -1820,7 +1820,7 @@
             </column>
         </row>
     </wpc>
-    <wpc wpcID="21">
+    <wpc id="21">
         <favour>5</favour>
         <row x="0">
             <column y="0">
@@ -1911,7 +1911,7 @@
             </column>
         </row>
     </wpc>
-    <wpc wpcID="22">
+    <wpc id="22">
         <favour>6</favour>
         <row x="0">
             <column y="0">
@@ -2002,7 +2002,7 @@
             </column>
         </row>
     </wpc>
-    <wpc wpcID="23">
+    <wpc id="23">
         <favour>5</favour>
         <row x="0">
             <column y="0">
@@ -2093,7 +2093,7 @@
             </column>
         </row>
     </wpc>
-    <wpc wpcID="24">
+    <wpc id="24">
         <favour>6</favour>
         <row x="0">
             <column y="0">

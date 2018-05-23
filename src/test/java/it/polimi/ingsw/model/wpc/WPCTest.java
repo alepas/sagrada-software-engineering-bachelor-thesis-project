@@ -292,12 +292,4 @@ public class WPCTest {
         Assert.assertEquals(20, wpc2.getNumFreeCells());
     }
 
-    @Test
-    public void scorePrivateObjectiveTest(){
-        Assert.assertEquals(0,  wpc2.countTotalPrivateObjective(Color.BLUE));
-        Assert.assertEquals(0, wpc2.countTotalPrivateObjective(Color.VIOLET));
-        Assert.assertEquals(0,  wpc2.countTotalPrivateObjective(Color.RED));
-        Assert.assertEquals(0,  wpc2.countTotalPrivateObjective(Color.YELLOW));
-        Assert.assertEquals(0, wpc2.countTotalPrivateObjective(Color.GREEN));
-    }
 }

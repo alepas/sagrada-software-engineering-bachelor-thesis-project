@@ -77,7 +77,7 @@ public class WpcDB {
 
                 if (wpcNode.getNodeType() == Node.ELEMENT_NODE) {
                     eElementID = (Element) wpcNode;
-                    wpcID = eElementID.getAttribute("wpcID");
+                    wpcID = eElementID.getAttribute("id");
 
                     wpcRow = eElementID.getElementsByTagName("row");
                     //scorro tutti i nodi con tagname row
