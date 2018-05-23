@@ -1,16 +1,10 @@
 package it.polimi.ingsw.view.cli;
 
 import it.polimi.ingsw.control.CliController;
-import it.polimi.ingsw.control.network.commands.NotificationHandler;
+import it.polimi.ingsw.control.network.commands.notifications.NotificationHandler;
 import it.polimi.ingsw.control.network.commands.notifications.*;
-import it.polimi.ingsw.model.cards.PublicObjectiveCard;
-import it.polimi.ingsw.model.cards.ToolCard;
-import it.polimi.ingsw.model.cards.ToolCardDB;
 import it.polimi.ingsw.model.clientModel.*;
 import it.polimi.ingsw.model.constants.CliConstants;
-import it.polimi.ingsw.model.dicebag.Color;
-import it.polimi.ingsw.model.dicebag.Dice;
-import it.polimi.ingsw.model.wpc.WPC;
 
 import java.util.*;
 

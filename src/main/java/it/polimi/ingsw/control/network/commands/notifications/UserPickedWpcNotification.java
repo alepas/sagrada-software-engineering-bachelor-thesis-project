@@ -1,7 +1,5 @@
 package it.polimi.ingsw.control.network.commands.notifications;
 
-import it.polimi.ingsw.control.network.commands.NotificationHandler;
-
 public class UserPickedWpcNotification implements Notification {
     public final String username;
     public final String wpcID;

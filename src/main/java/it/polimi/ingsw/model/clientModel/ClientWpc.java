@@ -4,10 +4,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class ClientWpc implements Serializable {
-    private  String wpcID;
-    private  int favours;
+    private String wpcID;
+    private int favours;
     private ArrayList<ClientCell> schema;
-
 
     public ClientWpc(String wpcID, int favours, ArrayList<ClientCell> schema) {
         this.wpcID = wpcID;

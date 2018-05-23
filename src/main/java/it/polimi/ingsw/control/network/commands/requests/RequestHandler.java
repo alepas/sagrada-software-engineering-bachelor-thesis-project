@@ -1,9 +1,6 @@
-package it.polimi.ingsw.control.network.commands;
+package it.polimi.ingsw.control.network.commands.requests;
 
-import it.polimi.ingsw.control.network.commands.requests.CreateUserRequest;
-import it.polimi.ingsw.control.network.commands.requests.FindGameRequest;
-import it.polimi.ingsw.control.network.commands.requests.LoginRequest;
-import it.polimi.ingsw.control.network.commands.requests.PickWpcRequest;
+import it.polimi.ingsw.control.network.commands.responses.Response;
 
 public interface RequestHandler {
 

@@ -1,6 +1,5 @@
 package it.polimi.ingsw.control.network.commands.notifications;
 
-import it.polimi.ingsw.control.network.commands.NotificationHandler;
 import it.polimi.ingsw.model.clientModel.ClientPoc;
 
 import java.util.ArrayList;

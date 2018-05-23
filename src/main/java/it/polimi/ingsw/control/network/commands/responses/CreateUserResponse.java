@@ -1,9 +1,5 @@
 package it.polimi.ingsw.control.network.commands.responses;
 
-import it.polimi.ingsw.control.network.commands.Response;
-import it.polimi.ingsw.control.network.commands.ResponseHandler;
-import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotRegisterUserException;
-
 public class CreateUserResponse implements Response {
     public final String username;
     public final String userToken;

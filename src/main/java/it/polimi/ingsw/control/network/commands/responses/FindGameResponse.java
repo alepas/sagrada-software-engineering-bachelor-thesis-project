@@ -1,11 +1,5 @@
 package it.polimi.ingsw.control.network.commands.responses;
 
-import it.polimi.ingsw.control.network.commands.Response;
-import it.polimi.ingsw.control.network.commands.ResponseHandler;
-import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
-import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
-import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotFindUserInDBException;
-
 public class FindGameResponse implements Response {
     public final String gameID;
     public final int actualPlayers;

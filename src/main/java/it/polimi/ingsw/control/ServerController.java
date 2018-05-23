@@ -1,7 +1,7 @@
 package it.polimi.ingsw.control;
 
 import it.polimi.ingsw.control.network.commands.responses.FindGameResponse;
-import it.polimi.ingsw.control.network.commands.Response;
+import it.polimi.ingsw.control.network.commands.responses.Response;
 import it.polimi.ingsw.control.network.commands.responses.CreateUserResponse;
 import it.polimi.ingsw.control.network.commands.responses.LoginResponse;
 import it.polimi.ingsw.control.network.commands.responses.PickWpcResponse;

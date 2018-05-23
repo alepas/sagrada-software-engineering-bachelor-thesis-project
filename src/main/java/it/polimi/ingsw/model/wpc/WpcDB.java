@@ -31,7 +31,7 @@ public class WpcDB {
     }
 
     private WpcDB(String pathFile){
-        map = new HashMap<String, WPC>();
+        map = new HashMap<>();
 
         NodeList wpcList;
         NodeList wpcRow;

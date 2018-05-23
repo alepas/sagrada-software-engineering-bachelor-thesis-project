@@ -1,4 +1,4 @@
-package it.polimi.ingsw.control.network.commands;
+package it.polimi.ingsw.control.network.commands.responses;
 
 import it.polimi.ingsw.control.network.commands.responses.CreateUserResponse;
 import it.polimi.ingsw.control.network.commands.responses.FindGameResponse;

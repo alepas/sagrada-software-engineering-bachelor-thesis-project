@@ -1,7 +1,7 @@
 package it.polimi.ingsw.control.network.rmi;
 
 import it.polimi.ingsw.control.ServerController;
-import it.polimi.ingsw.control.network.commands.Response;
+import it.polimi.ingsw.control.network.commands.responses.Response;
 import it.polimi.ingsw.control.network.commands.responses.FindGameResponse;
 import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;

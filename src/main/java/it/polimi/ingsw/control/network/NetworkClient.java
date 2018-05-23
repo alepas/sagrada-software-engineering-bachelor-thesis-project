@@ -1,6 +1,6 @@
 package it.polimi.ingsw.control.network;
 
-import it.polimi.ingsw.control.network.commands.ResponseHandler;
+import it.polimi.ingsw.control.network.commands.responses.ResponseHandler;
 import it.polimi.ingsw.control.network.commands.responses.CreateUserResponse;
 import it.polimi.ingsw.control.network.commands.responses.FindGameResponse;
 import it.polimi.ingsw.control.network.commands.responses.LoginResponse;

@@ -1,8 +1,6 @@
 package it.polimi.ingsw.control.network.commands.requests;
 
-import it.polimi.ingsw.control.network.commands.Request;
-import it.polimi.ingsw.control.network.commands.RequestHandler;
-import it.polimi.ingsw.control.network.commands.Response;
+import it.polimi.ingsw.control.network.commands.responses.Response;
 
 public class FindGameRequest implements Request {
     public final String token;

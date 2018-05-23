@@ -1,4 +1,4 @@
-package it.polimi.ingsw.control.network.commands;
+package it.polimi.ingsw.control.network.commands.notifications;
 
 import it.polimi.ingsw.control.network.commands.notifications.*;
 

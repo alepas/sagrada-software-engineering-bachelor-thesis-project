@@ -1,6 +1,5 @@
 package it.polimi.ingsw.control.network.commands.notifications;
 
-import it.polimi.ingsw.control.network.commands.NotificationHandler;
 import it.polimi.ingsw.model.clientModel.ClientColor;
 
 import java.util.HashMap;

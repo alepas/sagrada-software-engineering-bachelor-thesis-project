@@ -1,7 +1,5 @@
 package it.polimi.ingsw.control.network.commands.notifications;
 
-import it.polimi.ingsw.control.network.commands.NotificationHandler;
-
 public class NextTurnNotification implements Notification {
     public final int turnNumber;
     public final String activeUser;

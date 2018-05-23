@@ -1,7 +1,5 @@
 package it.polimi.ingsw.control.network.commands.notifications;
 
-import it.polimi.ingsw.control.network.commands.NotificationHandler;
-
 public class PlayersChangedNotification implements Notification {
     public final String username;
     public final boolean joined;

@@ -1,10 +1,9 @@
 package it.polimi.ingsw.control.network.socket;
 
 import it.polimi.ingsw.control.ServerController;
-import it.polimi.ingsw.control.network.commands.Request;
-import it.polimi.ingsw.control.network.commands.RequestHandler;
-import it.polimi.ingsw.control.network.commands.Response;
-import it.polimi.ingsw.control.network.commands.notifications.Notification;
+import it.polimi.ingsw.control.network.commands.requests.Request;
+import it.polimi.ingsw.control.network.commands.requests.RequestHandler;
+import it.polimi.ingsw.control.network.commands.responses.Response;
 import it.polimi.ingsw.control.network.commands.requests.CreateUserRequest;
 import it.polimi.ingsw.control.network.commands.requests.FindGameRequest;
 import it.polimi.ingsw.control.network.commands.requests.LoginRequest;
