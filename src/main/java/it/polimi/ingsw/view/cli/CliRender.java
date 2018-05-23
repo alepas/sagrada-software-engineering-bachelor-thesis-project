@@ -134,11 +134,11 @@ public class CliRender {
     public CliRender() { }
 
     //Restiusce la stringa che rappresenta la wpc su cli
-    public String renderWpc(ClientWpc wpc){
+    public String renderWpc(ClientWpc wpc, boolean withID){
         StringBuilder wpcRendered = new StringBuilder();
         String[] stringWpc = convertWpcToString(wpc);
 
-        wpcRendered.append("ID:" + wpc.getWpcID() + "\tFavours: " + wpc.getFavours() + "\n");
+        if (withID) wpcRendered.append("ID:" + wpc.getWpcID() + "\tFavours: " + wpc.getFavours() + "\n");
         for (String row : stringWpc){
             wpcRendered.append(row + "\n");
         }

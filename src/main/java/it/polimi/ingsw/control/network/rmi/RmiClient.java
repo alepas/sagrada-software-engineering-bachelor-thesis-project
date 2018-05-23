@@ -1,10 +1,7 @@
 package it.polimi.ingsw.control.network.rmi;
 
 import it.polimi.ingsw.control.network.NetworkClient;
-import it.polimi.ingsw.control.network.commands.responses.CreateUserResponse;
-import it.polimi.ingsw.control.network.commands.responses.FindGameResponse;
-import it.polimi.ingsw.control.network.commands.responses.LoginResponse;
-import it.polimi.ingsw.control.network.commands.responses.PickWpcResponse;
+import it.polimi.ingsw.control.network.commands.responses.*;
 import it.polimi.ingsw.model.constants.NetworkConstants;
 import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
@@ -62,6 +59,15 @@ public class RmiClient extends NetworkClient {
             ((PickWpcResponse) remoteServer.pickWpc(userToken, wpcID)).handle(this);
         } catch (RemoteException e){
 
+        }
+    }
+
+    @Override
+    public void passTurn(String userToken) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException {
+        try {
+            remoteServer.passTurn(userToken).handle(this);
+        } catch (RemoteException e) {
+            e.printStackTrace();
         }
     }
 }

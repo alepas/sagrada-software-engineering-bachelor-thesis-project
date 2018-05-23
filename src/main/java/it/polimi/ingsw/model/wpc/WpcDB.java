@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.wpc;
 
+import it.polimi.ingsw.model.clientModel.ClientWpc;
 import it.polimi.ingsw.model.dicebag.Color;
 
 import org.w3c.dom.Document;
@@ -160,6 +161,10 @@ public class WpcDB {
         }*/
 
         return originalWpc.copyWpc();
+    }
+
+    public ClientWpc getClientWpcByID(String id){
+        return getWpcByID(id).getClientWpc();
     }
 
     public ArrayList<String> getWpcIDs() {

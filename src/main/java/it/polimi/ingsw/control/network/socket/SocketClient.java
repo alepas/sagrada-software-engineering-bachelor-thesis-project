@@ -1,17 +1,8 @@
 package it.polimi.ingsw.control.network.socket;
 
 import it.polimi.ingsw.control.network.NetworkClient;
-import it.polimi.ingsw.control.network.commands.requests.Request;
-import it.polimi.ingsw.control.network.commands.responses.Response;
-import it.polimi.ingsw.control.network.commands.responses.ResponseHandler;
-import it.polimi.ingsw.control.network.commands.requests.CreateUserRequest;
-import it.polimi.ingsw.control.network.commands.requests.FindGameRequest;
-import it.polimi.ingsw.control.network.commands.requests.LoginRequest;
-import it.polimi.ingsw.control.network.commands.requests.PickWpcRequest;
-import it.polimi.ingsw.control.network.commands.responses.CreateUserResponse;
-import it.polimi.ingsw.control.network.commands.responses.FindGameResponse;
-import it.polimi.ingsw.control.network.commands.responses.LoginResponse;
-import it.polimi.ingsw.control.network.commands.responses.PickWpcResponse;
+import it.polimi.ingsw.control.network.commands.requests.*;
+import it.polimi.ingsw.control.network.commands.responses.*;
 import it.polimi.ingsw.model.clientModel.ClientModel;
 import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
@@ -159,6 +150,18 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
         if (e != null){
             if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
             if (e instanceof NotYourWpcException) throw (NotYourWpcException) e;
+        }
+    }
+
+    @Override
+    public void passTurn(String userToken) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException {
+        request(new PassTurnRequest(userToken));
+
+        Exception e = ((PassTurnResponse) waitResponse()).exception;
+
+        if (e != null){
+            if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
+            if (e instanceof PlayerNotAuthorizedException) throw (PlayerNotAuthorizedException) e;
         }
     }
 }

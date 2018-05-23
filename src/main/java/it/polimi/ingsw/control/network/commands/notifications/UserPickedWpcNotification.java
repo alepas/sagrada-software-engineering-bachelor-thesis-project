@@ -1,12 +1,14 @@
 package it.polimi.ingsw.control.network.commands.notifications;
 
+import it.polimi.ingsw.model.clientModel.ClientWpc;
+
 public class UserPickedWpcNotification implements Notification {
     public final String username;
-    public final String wpcID;
+    public final ClientWpc wpc;
 
-    public UserPickedWpcNotification(String username, String wpcID) {
+    public UserPickedWpcNotification(String username, ClientWpc wpc) {
         this.username = username;
-        this.wpcID = wpcID;
+        this.wpc = wpc;
     }
 
     @Override

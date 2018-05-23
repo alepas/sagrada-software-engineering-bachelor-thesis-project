@@ -1,17 +1,8 @@
 package it.polimi.ingsw.control.network.socket;
 
 import it.polimi.ingsw.control.ServerController;
-import it.polimi.ingsw.control.network.commands.requests.Request;
-import it.polimi.ingsw.control.network.commands.requests.RequestHandler;
-import it.polimi.ingsw.control.network.commands.responses.Response;
-import it.polimi.ingsw.control.network.commands.requests.CreateUserRequest;
-import it.polimi.ingsw.control.network.commands.requests.FindGameRequest;
-import it.polimi.ingsw.control.network.commands.requests.LoginRequest;
-import it.polimi.ingsw.control.network.commands.requests.PickWpcRequest;
-import it.polimi.ingsw.control.network.commands.responses.CreateUserResponse;
-import it.polimi.ingsw.control.network.commands.responses.FindGameResponse;
-import it.polimi.ingsw.control.network.commands.responses.LoginResponse;
-import it.polimi.ingsw.control.network.commands.responses.PickWpcResponse;
+import it.polimi.ingsw.control.network.commands.requests.*;
+import it.polimi.ingsw.control.network.commands.responses.*;
 import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
@@ -134,10 +125,18 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
     @Override
     public Response handle(PickWpcRequest request) {
         try {
-            Response response = controller.pickWpc(request.userToken, request.wpcID);
-            return response;
+            return controller.pickWpc(request.userToken, request.wpcID);
         } catch (CannotFindPlayerInDatabaseException |NotYourWpcException e) {
             return new PickWpcResponse(e);
+        }
+    }
+
+    @Override
+    public Response handle(PassTurnRequest request) {
+        try {
+            return controller.passTurn(request.userToken);
+        } catch (CannotFindPlayerInDatabaseException|PlayerNotAuthorizedException e) {
+            return new PassTurnResponse(e);
         }
     }
 

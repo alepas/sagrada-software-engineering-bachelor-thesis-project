@@ -19,4 +19,5 @@ public interface ResponseHandler{
 
     void handle(PickWpcResponse response);
 
+    void handle(PassTurnResponse response);
 }

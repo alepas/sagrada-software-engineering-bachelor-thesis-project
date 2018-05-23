@@ -3,10 +3,7 @@ package it.polimi.ingsw.control;
 import it.polimi.ingsw.control.network.NetworkClient;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;
-import it.polimi.ingsw.model.clientModel.ClientDice;
-import it.polimi.ingsw.model.clientModel.ClientModel;
-import it.polimi.ingsw.model.clientModel.ClientPoc;
-import it.polimi.ingsw.model.clientModel.ClientToolCard;
+import it.polimi.ingsw.model.clientModel.*;
 import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
@@ -102,6 +99,18 @@ public class CliController {
         return false;
     }
 
+    public boolean passTurn(){
+        try {
+            client.passTurn(clientModel.getUserToken());
+            return true;
+        } catch (PlayerNotAuthorizedException e) {
+            view.displayText("Non puoi eseguire questo comando poichè non è il turno");
+        } catch (CannotFindPlayerInDatabaseException e) {
+            e.printStackTrace();
+            //TODO
+        }
+        return false;
+    }
 
 
 
@@ -137,5 +146,21 @@ public class CliController {
 
     public ArrayList<ClientDice> getExtractedDices(){
         return clientModel.getExtractedDices();
+    }
+
+    public boolean isInGame(){
+        return clientModel.getGameID() != null;
+    }
+
+    public boolean isActive(){
+        return clientModel.isActive();
+    }
+
+    public ClientWpc getMyWpc(){
+        return clientModel.getMyWpc();
+    }
+
+    public int getFavour(){
+        return clientModel.getFavour();
     }
 }

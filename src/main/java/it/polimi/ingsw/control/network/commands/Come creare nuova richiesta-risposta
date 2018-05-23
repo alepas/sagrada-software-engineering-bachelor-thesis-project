@@ -21,7 +21,7 @@
 
     Response handle(CreateUserRequest request);
 
-3)  Creare la relativa response per il momento SENZA eccezioni.
+3)  Creare la relativa response.
     Esempio di response:
 
     public class CreateUserResponse implements Response {
@@ -36,31 +36,28 @@
         }
 
         @Override
-        public void handle(ResponseHandler handler) throws CannotRegisterUserException {
+        public void handle(ResponseHandler handler){
             handler.handle(this);
         }
     }
 
-4)  Fare la handle della richiesta nel ResponseHandler per il momento SENZA eccezioni.
+4)  Fare la handle della risposta nel ResponseHandler.
     Esempio:
 
-    void handle(CreateUserResponse response) throws CannotRegisterUserException;
+    void handle(CreateUserResponse response);
 
 5)  Creare e implementare il metodo che verrà invocato nel Server Controller.
 
-6)  Inserire le eccezioni lanciate dal metodo del ServerController nella signature del ResponseHandler e
-    e nel metodo handle() della response.
-
-7)  Scrivi la signature nel RemoteServer del metodo per fare la richiesta al ServerController
+6)  Scrivi la signature nel RemoteServer del metodo per fare la richiesta al ServerController
     e implementa il metodo nell'Rmi Server.
 
-8)  Implementa il metodo nel SocketClientHandler.
+7)  Implementa il metodo nel SocketClientHandler.
 
-9)  Crea il metodo per fare la richiesta nel NetworkClient
+8)  Crea il metodo per fare la richiesta nel NetworkClient e implementa la handle della risposta
 
-10) Implementa il metodo nell'RmiClient e la handle della risposta.
-    Fai lo stesso per il SocketClient.
+9) Implementa il metodo nell'RmiClient.
+   Fai lo stesso per il SocketClient.
 
-11) Crea e implementa il metodo nel controller
+10) Crea e implementa il metodo nel controller
 
-12) Chiama il metodo dalla view
+11) Chiama il metodo dalla view

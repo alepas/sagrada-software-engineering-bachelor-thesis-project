@@ -1,10 +1,6 @@
 package it.polimi.ingsw.control;
 
-import it.polimi.ingsw.control.network.commands.responses.FindGameResponse;
-import it.polimi.ingsw.control.network.commands.responses.Response;
-import it.polimi.ingsw.control.network.commands.responses.CreateUserResponse;
-import it.polimi.ingsw.control.network.commands.responses.LoginResponse;
-import it.polimi.ingsw.control.network.commands.responses.PickWpcResponse;
+import it.polimi.ingsw.control.network.commands.responses.*;
 import it.polimi.ingsw.control.network.socket.SocketClientHandler;
 import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
@@ -59,5 +55,10 @@ public class ServerController {
         game.setPlayerWpc(player, wpcID);
 
         return new PickWpcResponse(null);
+    }
+
+    public Response passTurn(String userToken) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException {
+        databaseUsers.getPlayerInGameFromToken(userToken).endTurn();
+        return new PassTurnResponse(null);
     }
 }

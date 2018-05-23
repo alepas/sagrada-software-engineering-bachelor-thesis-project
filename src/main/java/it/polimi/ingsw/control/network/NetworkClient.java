@@ -1,10 +1,6 @@
 package it.polimi.ingsw.control.network;
 
-import it.polimi.ingsw.control.network.commands.responses.ResponseHandler;
-import it.polimi.ingsw.control.network.commands.responses.CreateUserResponse;
-import it.polimi.ingsw.control.network.commands.responses.FindGameResponse;
-import it.polimi.ingsw.control.network.commands.responses.LoginResponse;
-import it.polimi.ingsw.control.network.commands.responses.PickWpcResponse;
+import it.polimi.ingsw.control.network.commands.responses.*;
 import it.polimi.ingsw.control.network.rmi.RmiClient;
 import it.polimi.ingsw.control.network.socket.SocketClient;
 import it.polimi.ingsw.model.clientModel.ClientModel;
@@ -46,7 +42,7 @@ public abstract class NetworkClient implements ResponseHandler {
 
     public abstract void pickWpc(String userToken, String wpcID) throws CannotFindPlayerInDatabaseException, NotYourWpcException;
 
-
+    public abstract void passTurn(String userToken) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException;
 
 
     //-------------------------------- Response Handler --------------------------------
@@ -78,6 +74,11 @@ public abstract class NetworkClient implements ResponseHandler {
 
     @Override
     public void handle(PickWpcResponse response){
+
+    }
+
+    @Override
+    public void handle(PassTurnResponse response){
 
     }
 }

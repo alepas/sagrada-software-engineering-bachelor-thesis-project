@@ -21,6 +21,7 @@ public class CliView implements Observer, NotificationHandler {
     private Timer timer = new Timer();
     private Task task = null;
     private final Object waiter = new Object();
+    private final Object prova = new Object();
 
     // ----- The view is composed with the controller (strategy)
     private final CliController controller;
@@ -41,10 +42,10 @@ public class CliView implements Observer, NotificationHandler {
 
     private void stopHere() {
         int stopHere = 0;
-        synchronized (waiter) {
+        synchronized (prova) {
             try {
                 displayText("Stop here");
-                while (stopHere== 0) waiter.wait();
+                while (stopHere==0) prova.wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -62,19 +63,15 @@ public class CliView implements Observer, NotificationHandler {
     }
 
     private void deleteTask() {
-        timer.purge();
+        task.stop();
         timer.cancel();
+        timer.purge();
         task = null;
     }
 
     //---------------------------- External methods ----------------------------
 
     public boolean logPhase(){
-//        WPC wpc = controller.getWpcByID("5");
-//        Dice dice = new Dice(Color.RED, 2);
-//        wpc.addDiceWithAllRestrictions(dice, wpc.getSchema().get(2), 4);
-//        System.out.println(cliRender.renderWpc(wpc));
-//        return true;
         while (true) {
             displayText(CliConstants.CHOOSE_LOG_TYPE);
             String answer = userInput();
@@ -170,7 +167,59 @@ public class CliView implements Observer, NotificationHandler {
         waitForToolcards();
         waitForPoc();
 
+        while (controller.isInGame()){
+            waitForTurn();
+            playTurn();
+        }
+
         stopHere();
+    }
+
+    private void waitForTurn() {
+        synchronized (waiter){
+            while (!controller.isActive()) {
+                try {
+                    displayText("In attesa del mio turno...");
+                    waiter.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void playTurn() {
+        displayText("\n");
+        displayText("Questa è la tua wpc");
+        displayText("Favours rimasti: " + controller.getFavour() + "\n"
+            + cliRender.renderWpc(controller.getMyWpc(), false));
+
+        String response;
+        loop: do{
+            displayText("Cosa vuoi fare?");
+            displayText("1) posiziona dado");
+            displayText("2) usa toolcard");
+            displayText("3) passa turno");
+            response = userInput();
+            try {
+                int action = Integer.parseInt(response);
+                switch (action){
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        if (controller.passTurn()) break loop;
+                        break;
+                    default:
+                        displayText("Comando non riconosciuto");
+                }
+            } catch (NumberFormatException e){
+                displayText("Perfavore inserire il numero dell'azione che si vuole eseguire");
+            }
+        } while (true);
+
+
     }
 
     //Attende che tutti i giocatori entrino in partita
@@ -360,7 +409,7 @@ public class CliView implements Observer, NotificationHandler {
         for(int i = 0; i < userWpcs.size(); i++){
             num = i%2;
             wpcs[num] = userWpcs.get(i);
-            if ( (i == userWpcs.size()-1) && (num == 0) ) System.out.println(cliRender.renderWpc(wpcs[num]));
+            if ( (i == userWpcs.size()-1) && (num == 0) ) System.out.println(cliRender.renderWpc(wpcs[num], true));
             if (num == 1) System.out.println(cliRender.renderWpcs(wpcs, CliConstants.WpcSpacing));;
         }
 
@@ -370,7 +419,7 @@ public class CliView implements Observer, NotificationHandler {
 
     @Override
     public void handle(UserPickedWpcNotification notification) {
-        displayText(notification.username + " ha scelto la wpc: " + notification.wpcID);
+        displayText(notification.username + " ha scelto la wpc: " + notification.wpc.getWpcID());
         if (controller.areAllWpcsReceived()){
             wpcExtracted = true;
             displayText("Tutti i giocatori hanno scelto la wpc");
@@ -422,6 +471,10 @@ public class CliView implements Observer, NotificationHandler {
         displayText("Dadi presenti: ");
         for (ClientDice dice : controller.getExtractedDices()){
             displayText("ID: " + dice.getDiceID() + "\t" + dice.getDiceNumber() + " " + dice.getDiceColor());
+        }
+
+        synchronized (waiter){
+            if (controller.isActive()) waiter.notifyAll();
         }
     }
 

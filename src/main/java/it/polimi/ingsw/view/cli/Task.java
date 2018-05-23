@@ -6,6 +6,7 @@ public class Task extends TimerTask {
     private int taskTime;
     private final int sensibility;
     private final Object waiter;
+    private boolean run = true;
 
     public Task(int taskTime, Object waiter) {
         this(taskTime, 1000, waiter);
@@ -19,18 +20,16 @@ public class Task extends TimerTask {
 
     @Override
     public void run() {
-        boolean a = true;
-        synchronized (waiter) {
-            try {
-                while (a){
-                    waiter.wait(sensibility);
-                    taskTime -= sensibility;
-                    waiter.notifyAll();
-                }
-            } catch (InterruptedException e){
-                e.printStackTrace();
+        if (run) {
+            synchronized (waiter) {
+                taskTime -= sensibility;
+                waiter.notifyAll();
             }
         }
+    }
+
+    public void stop(){
+        run = false;
     }
 
     public int timeLeft() {

@@ -24,12 +24,14 @@ public class ClientModel implements Observer, NotificationHandler {
     private int gameActualPlayers;
     private int gameNumPlayers;
     private ClientColor[] privateObjectives;
-    private HashMap<String, String> wpcByUsername;
+    private HashMap<String, ClientWpc> wpcByUsername;
     private ArrayList<ClientToolCard> gameToolCards;
     private ArrayList<ClientPoc> gamePublicObjectiveCards;
     private int currentRound;
     private ArrayList<ClientDice> extractedDices;
     private int currentTurn;
+    private boolean active = false;
+    private int favour;
 
     private ClientModel() { }
 
@@ -42,17 +44,22 @@ public class ClientModel implements Observer, NotificationHandler {
         return instance;
     }
 
-    public void clean(){
-        this.username = null;
-        this.userToken = null;
+    public void exitGame(){
         this.gameID = null;
         gameActualPlayers = 0;
         gameNumPlayers = 0;
+        favour = 0;
         privateObjectives = null;
         this.wpcByUsername = new HashMap<>();
         this.gameToolCards = new ArrayList<>();
         this.gamePublicObjectiveCards = new ArrayList<>();
         this.extractedDices = new ArrayList<>();
+    }
+
+    public void clean(){
+        this.username = null;
+        this.userToken = null;
+        exitGame();
     }
 
     public void setObserver(Observer observer) {
@@ -127,7 +134,11 @@ public class ClientModel implements Observer, NotificationHandler {
         this.gamePublicObjectiveCards = gamePublicObjectiveCards;
     }
 
-    public HashMap<String, String> getWpcByUsername() {
+    public ClientWpc getMyWpc(){
+        return wpcByUsername.get(username);
+    }
+
+    public HashMap<String, ClientWpc> getWpcByUsername() {
         return wpcByUsername;
     }
 
@@ -141,6 +152,14 @@ public class ClientModel implements Observer, NotificationHandler {
 
     public ArrayList<ClientDice> getExtractedDices() {
         return extractedDices;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public int getFavour() {
+        return favour;
     }
 
     //----------------------------------- Notification Handler -------------------------------------
@@ -168,7 +187,8 @@ public class ClientModel implements Observer, NotificationHandler {
 
     @Override
     public void handle(UserPickedWpcNotification notification) {
-        wpcByUsername.put(notification.username, notification.wpcID);
+        wpcByUsername.put(notification.username, notification.wpc);
+        if (notification.username.equals(username)) favour = notification.wpc.getFavours();
     }
 
     @Override
@@ -190,5 +210,6 @@ public class ClientModel implements Observer, NotificationHandler {
     @Override
     public void handle(NextTurnNotification notification) {
         currentTurn = notification.turnNumber;
+        active = notification.activeUser.equals(username);
     }
 }

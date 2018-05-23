@@ -55,6 +55,11 @@ public class RmiServer extends UnicastRemoteObject implements RemoteServer, Obse
         return controller.pickWpc(userToken, wpcID);
     }
 
+    @Override
+    public Response passTurn(String userToken) throws RemoteException, CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException {
+        return controller.passTurn(userToken);
+    }
+
 
     @Override
     public void update(Observable o, Object arg) {

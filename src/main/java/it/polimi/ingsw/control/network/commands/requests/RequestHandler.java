@@ -11,4 +11,6 @@ public interface RequestHandler {
     Response handle(FindGameRequest request);
 
     Response handle(PickWpcRequest request);
+
+    Response handle(PassTurnRequest request);
 }
