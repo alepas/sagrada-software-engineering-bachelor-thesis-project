@@ -54,4 +54,21 @@ public enum Color implements Serializable {
         }
         return null;
     }
+
+    public static Color getColorFromClientColor(ClientColor color){
+        if (color == null) return null;
+        switch (color){
+            case VIOLET:
+                return Color.VIOLET;
+            case BLUE:
+                return Color.BLUE;
+            case YELLOW:
+                return Color.YELLOW;
+            case RED:
+                return Color.RED;
+            case GREEN:
+                return Color.GREEN;
+        }
+        return null;
+    }
 }

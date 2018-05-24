@@ -3,6 +3,10 @@ package it.polimi.ingsw.control.network.rmi;
 import it.polimi.ingsw.control.ServerController;
 import it.polimi.ingsw.control.network.commands.responses.Response;
 import it.polimi.ingsw.control.network.commands.responses.FindGameResponse;
+import it.polimi.ingsw.model.clientModel.ClientColor;
+import it.polimi.ingsw.model.clientModel.ClientDiceLocations;
+import it.polimi.ingsw.model.clientModel.ClientPosition;
+import it.polimi.ingsw.model.clientModel.ClientToolCardModes;
 import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
@@ -58,6 +62,41 @@ public class RmiServer extends UnicastRemoteObject implements RemoteServer, Obse
     @Override
     public Response passTurn(String userToken) throws RemoteException, CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException {
         return controller.passTurn(userToken);
+    }
+
+    @Override
+    public Response pickDice(String userToken, int diceId) throws CannotPickDiceException, CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException {
+        return controller.pickDice(userToken, diceId);
+    }
+
+    @Override
+    public Response pickPosition(String userToken, ClientPosition position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, CannotPickPositionException {
+        return controller.pickPosition(userToken, position);
+    }
+
+    @Override
+    public Response useToolCard(String userToken, String cardId) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotUseToolCardException {
+        return controller.setToolCard(userToken, cardId);
+    }
+
+    @Override
+    public Response pickDiceForToolCard(String userToken, int diceId, ClientDiceLocations where) throws CannotFindPlayerInDatabaseException, CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException {
+        return controller.pickDiceForToolCard(userToken, diceId, where);
+    }
+
+    @Override
+    public Response pickPositionForToolCard(String userToken, ClientPosition position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, NoToolCardInUseException {
+        return controller.pickPositionForToolCard(userToken, position);
+    }
+
+    @Override
+    public Response pickColorForToolCard(String userToken, ClientColor color) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotPickColorException, NoToolCardInUseException {
+        return controller.pickColorForToolCard(userToken, color);
+    }
+
+    @Override
+    public Response pickNumberForToolCard(String userToken, int number) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPickNumberException {
+        return controller.pickNumberForToolCard(userToken,number);
     }
 
 

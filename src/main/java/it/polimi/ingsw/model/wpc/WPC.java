@@ -66,7 +66,7 @@ public class WPC {
         return false;
     }
 
-    public boolean addDicePersonalizedRestrictions(Dice dice, Position pos, int globalTurn, boolean ColorRestr, boolean ValueRestr, boolean PlacementRestr, boolean atLeastADiceNear){
+    public boolean addDicePersonalizedRestrictions(Dice dice, Position pos, int globalTurn, boolean ColorRestr, boolean ValueRestr, boolean PlacementRestr, boolean atLeastADiceNear, boolean noDicesNear){
         Cell cell=getCellFromPosition(pos);
         boolean condition=true;
 
@@ -90,6 +90,11 @@ public class WPC {
 
         if (atLeastADiceNear==true){
             condition&=isThereAtLeastADiceNear(cell);
+            if (condition==false)
+                return false;
+        }
+        if (noDicesNear==true){
+            condition&=!isThereAtLeastADiceNear(cell);
             if (condition==false)
                 return false;
         }

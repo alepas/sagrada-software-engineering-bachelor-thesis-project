@@ -141,6 +141,52 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
     }
 
 
+
+    @Override
+    public Response handle(PickDiceRequest request) {
+        try{
+            return controller.pickDice(request.userToken,request.diceId);
+        } catch (PlayerNotAuthorizedException | CannotFindPlayerInDatabaseException | CannotPickDiceException e) {
+            return new PickDiceResponse(e);
+        }
+    }
+
+    @Override
+    public Response handle(PickPositionRequest request) {
+        try {
+            return controller.pickPosition(request.userToken, request.position);
+        } catch (PlayerNotAuthorizedException | CannotFindPlayerInDatabaseException | CannotPickPositionException e) {
+            return new PickDiceResponse(e);
+        }
+    }
+
+    @Override
+    public Response handle(UseToolCardRequest request) {
+        return null;
+    }
+
+
+    @Override
+    public Response handle(ToolCardPickColorRequest request) {
+        return null;
+    }
+
+    @Override
+    public Response handle(ToolCardPickDiceRequest request) {
+        return null;
+    }
+
+    @Override
+    public Response handle(ToolCardPickNumberRequest request) {
+        return null;
+    }
+
+    @Override
+    public Response handle(ToolCardPickPositionRequest request) {
+        return null;
+    }
+
+
     //------------------------------ Game observer ------------------------------
 
     @Override

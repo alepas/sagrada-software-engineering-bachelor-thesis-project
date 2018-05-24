@@ -3,7 +3,7 @@ package it.polimi.ingsw.control.network.socket;
 import it.polimi.ingsw.control.network.NetworkClient;
 import it.polimi.ingsw.control.network.commands.requests.*;
 import it.polimi.ingsw.control.network.commands.responses.*;
-import it.polimi.ingsw.model.clientModel.ClientModel;
+import it.polimi.ingsw.model.clientModel.*;
 import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
@@ -163,5 +163,107 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
             if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
             if (e instanceof PlayerNotAuthorizedException) throw (PlayerNotAuthorizedException) e;
         }
+    }
+
+    @Override
+    public void useToolCard(String userToken, String cardId) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotUseToolCardException {
+        request(new UseToolCardRequest(userToken, cardId));
+
+        Exception e = ((ToolCardResponse) waitResponse()).exception;
+
+        if (e != null){
+            if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
+            if (e instanceof PlayerNotAuthorizedException) throw (PlayerNotAuthorizedException) e;
+            if (e instanceof CannotUseToolCardException ) throw  (CannotUseToolCardException) e;
+        }
+    }
+
+    @Override
+    public void pickDiceForToolCard(String userToken, int diceId, ClientDiceLocations where) throws CannotFindPlayerInDatabaseException, CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException {
+        request(new ToolCardPickDiceRequest(userToken, diceId,where));
+
+        Exception e = ((ToolCardResponse) waitResponse()).exception;
+
+        if (e != null){
+            if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
+            if (e instanceof PlayerNotAuthorizedException) throw (PlayerNotAuthorizedException) e;
+            if (e instanceof CannotPickDiceException ) throw  (CannotPickDiceException) e;
+            if (e instanceof NoToolCardInUseException ) throw  (NoToolCardInUseException) e;
+        }
+    }
+
+    @Override
+    public void pickPositionForToolCard(String userToken, ClientPosition position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, NoToolCardInUseException {
+        request(new ToolCardPickPositionRequest(userToken, position));
+
+        Exception e = ((ToolCardResponse) waitResponse()).exception;
+
+        if (e != null){
+            if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
+            if (e instanceof PlayerNotAuthorizedException) throw (PlayerNotAuthorizedException) e;
+            if (e instanceof CannotPickPositionException ) throw  (CannotPickPositionException) e;
+            if (e instanceof NoToolCardInUseException ) throw  (NoToolCardInUseException) e;
+        }
+    }
+
+    @Override
+    public void pickColorForToolCard(String userToken, ClientColor color) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotPickColorException, NoToolCardInUseException {
+        request(new ToolCardPickColorRequest(userToken, color));
+
+        Exception e = ((ToolCardResponse) waitResponse()).exception;
+
+        if (e != null){
+            if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
+            if (e instanceof PlayerNotAuthorizedException) throw (PlayerNotAuthorizedException) e;
+            if (e instanceof CannotPickColorException ) throw  (CannotPickColorException) e;
+            if (e instanceof NoToolCardInUseException ) throw  (NoToolCardInUseException) e;
+        }
+    }
+
+    @Override
+    public void pickNumberForToolCard(String userToken, int number) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPickNumberException {
+        request(new ToolCardPickNumberRequest(userToken, number));
+
+        Exception e = ((ToolCardResponse) waitResponse()).exception;
+
+        if (e != null){
+            if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
+            if (e instanceof PlayerNotAuthorizedException) throw (PlayerNotAuthorizedException) e;
+            if (e instanceof CannotPickNumberException ) throw  (CannotPickNumberException) e;
+            if (e instanceof NoToolCardInUseException ) throw  (NoToolCardInUseException) e;
+        }
+    }
+
+
+    @Override
+    public void pickDice(String userToken, int diceId) throws CannotPickDiceException, CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException {
+        request(new PickDiceRequest(userToken, diceId));
+
+        Exception e = ((ToolCardResponse) waitResponse()).exception;
+
+        if (e != null){
+            if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
+            if (e instanceof PlayerNotAuthorizedException) throw (PlayerNotAuthorizedException) e;
+            if (e instanceof CannotPickDiceException ) throw  (CannotPickDiceException) e;
+        }
+
+    }
+
+    @Override
+    public void pickPosition(String userToken, ClientPosition position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException {
+        request(new PickPositionRequest(userToken, position));
+
+        Exception e = ((ToolCardResponse) waitResponse()).exception;
+
+        if (e != null){
+            if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
+            if (e instanceof PlayerNotAuthorizedException) throw (PlayerNotAuthorizedException) e;
+            if (e instanceof CannotPickPositionException ) throw  (CannotPickPositionException) e;
+        }
+    }
+
+    @Override
+    public void handle(PassTurnResponse response) {
+
     }
 }

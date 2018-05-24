@@ -1,7 +1,9 @@
 package it.polimi.ingsw.model.cards.concreteToolCards;
 
+import it.polimi.ingsw.control.network.commands.responses.ToolCardResponse;
 import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.constants.ToolCardConstants;
+import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 import it.polimi.ingsw.model.wpc.Position;
@@ -16,25 +18,33 @@ public class ToolCard5 extends ToolCard {
         this.currentStatus=0;
     }
 
+
     @Override
-    public ToolCard5 getToolCardCopy(){
-        return new ToolCard5();
+    public ToolCard getToolCardCopy() {
+        return new ToolCard5() ;
     }
-
-
     @Override
-    public void use(PlayerInGame player) {
-
-
-    }
-
-    @Override
-    public void use(PlayerInGame player, Position pos) {
-
+    public ToolCardResponse use(PlayerInGame player) {
+        return new ToolCardResponse(null);
     }
 
     @Override
-    public void use(PlayerInGame player, Dice dice) {
+    public ToolCardResponse use(PlayerInGame player, Position pos) {
+        return new ToolCardResponse(null);
+    }
 
+    @Override
+    public ToolCardResponse use(PlayerInGame player, Dice dice) {
+        return new ToolCardResponse(null);
+    }
+
+    @Override
+    public ToolCardResponse use(PlayerInGame player, Color color) {
+        return new ToolCardResponse(null);
+    }
+
+    @Override
+    public ToolCardResponse use(PlayerInGame player, int number) {
+        return new ToolCardResponse(null);
     }
 }
