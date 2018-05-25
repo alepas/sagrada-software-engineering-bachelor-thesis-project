@@ -96,6 +96,7 @@ public class GuiMain extends Application {
         stage.setScene(new Scene(root));
         stage.setResizable(false);
         stage.show();
+
     }
 
 

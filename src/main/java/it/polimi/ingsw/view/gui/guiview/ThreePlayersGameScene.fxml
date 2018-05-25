@@ -3,244 +3,258 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.image.*?>
-<?import javafx.scene.paint.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
+<?import javafx.scene.layout.GridPane.*?>
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
 
-<AnchorPane prefHeight="705.0" prefWidth="1280.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.control.guicontroller.ThreePlayersGameController">
-   <children>
-   
-       <ImageView fitHeight="705.0" fitWidth="1280.0">
-      <image>
-              <Image url="@../images/vetrate.jpg" />
-      </image>
-       </ImageView>
-   
-       <GridPane fx:id="firstWPC" hgap="5.0" layoutX="504.0" layoutY="90.0" prefHeight="311.0" prefWidth="395.0" style="-fx-background-color: black;" styleClass="Grid" vgap="5.0">
-           <columnConstraints>
-               <ColumnConstraints prefWidth="100.0" />
-               <ColumnConstraints prefWidth="100.0" />
-               <ColumnConstraints prefWidth="100.0" />
-               <ColumnConstraints prefWidth="100.0" />
-               <ColumnConstraints prefWidth="100.0" />
-           </columnConstraints>
-           <rowConstraints>
-               <RowConstraints prefHeight="100.0" />
-               <RowConstraints prefHeight="100.0" />
-               <RowConstraints prefHeight="100.0" />
-               <RowConstraints prefHeight="100.0" />
-               <RowConstraints prefHeight="50.0" />
-           </rowConstraints>
-      <effect>
-               <DropShadow blurType="GAUSSIAN" color="#c29300" />
-           </effect>
-         <padding>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-         </padding>
+<AnchorPane prefHeight="705.0" prefWidth="1280.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="it.polimi.ingsw.control.guicontroller.ThreePlayersGameController">
+
+    <ImageView fitHeight="705.0" fitWidth="1280.0">
+        <Image url="@../images/vetrate.jpg"/>
+    </ImageView>
+
+    <GridPane fx:id="firstWPC" hgap="5.0" layoutX="504.0" layoutY="90.0" prefHeight="311.0" prefWidth="395.0"
+              style="-fx-background-color: black;" styleClass="Grid" vgap="5.0">
+        <columnConstraints>
+            <ColumnConstraints prefWidth="100.0"/>
+            <ColumnConstraints prefWidth="100.0"/>
+            <ColumnConstraints prefWidth="100.0"/>
+            <ColumnConstraints prefWidth="100.0"/>
+            <ColumnConstraints prefWidth="100.0"/>
+        </columnConstraints>
+    <rowConstraints>
+        <RowConstraints prefHeight="100.0"/>
+        <RowConstraints prefHeight="100.0"/>
+        <RowConstraints prefHeight="100.0"/>
+        <RowConstraints prefHeight="100.0"/>
+        <RowConstraints prefHeight="50.0"/>
+    </rowConstraints>
+    <effect>
+        <DropShadow blurType="GAUSSIAN" color="#c29300"/>
+    </effect>
+    <padding>
+        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+    </padding>
 
 
-              <AnchorPane styleClass="Cell" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="1" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="2" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="3" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="4" />
+    <AnchorPane styleClass="Cell"/>
+    <AnchorPane styleClass="Cell" GridPane.columnIndex="1"/>
+    <AnchorPane styleClass="Cell" GridPane.columnIndex="2"/>
+    <AnchorPane styleClass="Cell" GridPane.columnIndex="3"/>
+    <AnchorPane styleClass="Cell" GridPane.columnIndex="4"/>
 
-              <AnchorPane styleClass="Cell" GridPane.rowIndex="1" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+    <AnchorPane styleClass="Cell" GridPane.rowIndex="1"/>
+    <AnchorPane styleClass="Cell" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+    <AnchorPane styleClass="Cell" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+    <AnchorPane styleClass="Cell" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+    <AnchorPane styleClass="Cell" GridPane.columnIndex="4" GridPane.rowIndex="1"/>
 
-              <AnchorPane styleClass="Cell" GridPane.rowIndex="2" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+    <AnchorPane styleClass="Cell" GridPane.rowIndex="2"/>
+    <AnchorPane styleClass="Cell" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+    <AnchorPane styleClass="Cell" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+    <AnchorPane styleClass="Cell" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+    <AnchorPane styleClass="Cell" GridPane.columnIndex="4" GridPane.rowIndex="2"/>
 
-              <AnchorPane styleClass="Cell" GridPane.rowIndex="3" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+    <AnchorPane styleClass="Cell" GridPane.rowIndex="3"/>
+    <AnchorPane styleClass="Cell" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+    <AnchorPane styleClass="Cell" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+    <AnchorPane styleClass="Cell" GridPane.columnIndex="3" GridPane.rowIndex="3"/>
+    <AnchorPane styleClass="Cell" GridPane.columnIndex="4" GridPane.rowIndex="3"/>
 
-              <Label contentDisplay="TOP" prefHeight="17.0" prefWidth="224.0" styleClass="Label" text="nome della wpc" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" />
+    <Label contentDisplay="TOP" prefHeight="17.0" prefWidth="224.0" styleClass="Label" text="nome della wpc"
+           textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="1" GridPane.columnSpan="3"
+           GridPane.rowIndex="4"/>
 
-              <AnchorPane prefHeight="15.0" prefWidth="65.0" style="-fx-background-color: black;" GridPane.columnIndex="4" GridPane.rowIndex="4">x
+    <AnchorPane prefHeight="15.0" prefWidth="65.0" style="-fx-background-color: black;" GridPane.columnIndex="4"
+                GridPane.rowIndex="4">x
 
-                     <Circle layoutX="30.0" layoutY="12.0" radius="6.0" styleClass="Favours" />
-                     <Circle layoutX="44.0" layoutY="12.0" radius="6.0" styleClass="Favours" />
-                     <Circle layoutX="58.0" layoutY="12.0" radius="6.0" styleClass="Favours" />
-                     <Circle layoutX="15.0" layoutY="12.0" radius="6.0" styleClass="Favours" />
-                     <Circle layoutY="12.0" radius="6.0" styleClass="Favours" />
-                     <Circle layoutX="-14.0" layoutY="12.0" radius="6.0" styleClass="Favours" />
-         </AnchorPane>
-      /GridPane>
-   
-       <GridPane fx:id="secondWPC" hgap="5.0" layoutX="57.0" layoutY="104.0" prefHeight="219.0" prefWidth="301.0" style="-fx-background-color: black;" vgap="5.0">
-           <columnConstraints>
-               <ColumnConstraints prefWidth="100.0" />
-               <ColumnConstraints prefWidth="100.0" />
-               <ColumnConstraints prefWidth="100.0" />
-               <ColumnConstraints prefWidth="100.0" />
-               <ColumnConstraints prefWidth="100.0" />
-           </columnConstraints>
-           <effect>
-               <DropShadow blurType="GAUSSIAN" color="#c29300" />
-           </effect>
-           <padding>
-               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-           </padding>
-           <rowConstraints>
-               <RowConstraints prefHeight="100.0" />
-               <RowConstraints prefHeight="100.0" />
-               <RowConstraints prefHeight="100.0" />
-               <RowConstraints prefHeight="100.0" />
-               <RowConstraints prefHeight="50.0" />
-           </rowConstraints>
-      <children>
-      
-              <AnchorPane styleClass="Cell" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="1" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="2" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="3" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="4" />
-      
-              <AnchorPane styleClass="Cell" GridPane.rowIndex="1" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-      
-              <AnchorPane styleClass="Cell" GridPane.rowIndex="2" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="4" GridPane.rowIndex="2" />
-      
-              <AnchorPane styleClass="Cell" GridPane.rowIndex="3" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="4" GridPane.rowIndex="3" />
-      
-              <Label contentDisplay="TOP" prefHeight="17.0" prefWidth="224.0" styleClass="Label" text="nome della wpc" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" />
-      
-              <AnchorPane prefHeight="20.0" prefWidth="54.0" style="-fx-background-color: black;" GridPane.columnIndex="4" GridPane.rowIndex="4">
-         <children>
-                     <Circle layoutX="7.0" layoutY="11.0" radius="6.0" styleClass="Favours" />
-                     <Circle layoutX="24.0" layoutY="11.0" radius="6.0" styleClass="Favours" />
-                     <Circle layoutX="42.0" layoutY="11.0" radius="6.0" styleClass="Favours" />
-         </children>
-              </AnchorPane>
-      
-              <AnchorPane prefHeight="6.0" prefWidth="53.0" style="-fx-background-color: black;" GridPane.columnIndex="3" GridPane.rowIndex="4">
-         <children>
-                     <Circle layoutX="31.0" layoutY="11.0" radius="6.0" styleClass="Favours" />
-                     <Circle layoutX="15.0" layoutY="11.0" radius="6.0" styleClass="Favours" />
-                     <Circle layoutX="48.0" layoutY="11.0" radius="6.0" styleClass="Favours" />
-         </children>
-              </AnchorPane>
-      </children>
-       </GridPane>
-   
-       <GridPane fx:id="thirdWPC" hgap="5.0" layoutX="57.0" layoutY="394.0" prefHeight="219.0" prefWidth="301.0" style="-fx-background-color: black;" vgap="5.0">
-           <columnConstraints>
-               <ColumnConstraints prefWidth="100.0" />
-               <ColumnConstraints prefWidth="100.0" />
-               <ColumnConstraints prefWidth="100.0" />
-               <ColumnConstraints prefWidth="100.0" />
-               <ColumnConstraints prefWidth="100.0" />
-           </columnConstraints>
-           <effect>
-               <DropShadow blurType="GAUSSIAN" color="#c29300" />
-           </effect>
-           <padding>
-               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-           </padding>
-           <rowConstraints>
-               <RowConstraints prefHeight="100.0" />
-               <RowConstraints prefHeight="100.0" />
-               <RowConstraints prefHeight="100.0" />
-               <RowConstraints prefHeight="100.0" />
-               <RowConstraints prefHeight="50.0" />
-           </rowConstraints>
-      <children>
-      
-              <AnchorPane styleClass="Cell" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="1" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="2" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="3" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="4" />
-      
-              <AnchorPane styleClass="Cell" GridPane.rowIndex="1" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-      
-              <AnchorPane styleClass="Cell" GridPane.rowIndex="2" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="4" GridPane.rowIndex="2" />
-      
-              <AnchorPane styleClass="Cell" GridPane.rowIndex="3" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-              <AnchorPane styleClass="Cell" GridPane.columnIndex="4" GridPane.rowIndex="3" />
-      
-              <Label contentDisplay="TOP" prefHeight="17.0" prefWidth="224.0" styleClass="Label" text="nome della wpc" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" />
-      
-              <AnchorPane prefHeight="6.0" prefWidth="53.0" style="-fx-background-color: black;" GridPane.columnIndex="3" GridPane.rowIndex="4">
-         <children>
-                     <Circle layoutX="31.0" layoutY="11.0" radius="6.0" styleClass="Favours" />
-                     <Circle layoutX="15.0" layoutY="11.0" radius="6.0" styleClass="Favours" />
-                     <Circle layoutX="48.0" layoutY="11.0" radius="6.0" styleClass="Favours" />
-         </children>
-              </AnchorPane>
-      
-              <AnchorPane prefHeight="20.0" prefWidth="54.0" style="-fx-background-color: black;" GridPane.columnIndex="4" GridPane.rowIndex="4">
-         <children>
-                     <Circle layoutX="7.0" layoutY="11.0" radius="6.0" styleClass="Favours" />
-                     <Circle layoutX="24.0" layoutY="11.0" radius="6.0" styleClass="Favours" />
-                     <Circle layoutX="42.0" layoutY="11.0" radius="6.0" styleClass="Favours" />
-         </children>
-              </AnchorPane>
-      </children>
-       </GridPane>
-   
-       <Label layoutX="672.0" layoutY="58.0" text="First Player" textFill="WHITE" />
-       <Label layoutX="170.0" layoutY="73.0" text="Second Player" textFill="WHITE" />
-       <Label layoutX="176.0" layoutY="370.0" text="Third Player" textFill="WHITE" />
-       <AnchorPane layoutX="1007.0" layoutY="73.0" opacity="0.5" prefHeight="599.0" prefWidth="229.0" style="-fx-background-color: white; -fx-border-color: black;">
-           <effect>
-               <DropShadow blurType="GAUSSIAN" spread="0.64" />
-           </effect>
-           <opaqueInsets>
-               <Insets />
-           </opaqueInsets>
-          <children>
-              <MenuButton layoutX="1.0" layoutY="2.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="229.0" style="-fx-background-color: white;" text="MenuButton">
-                  <items>
-                      <MenuItem mnemonicParsing="false" text="Tool cards" />
-                      <MenuItem mnemonicParsing="false" text="RoundTrack" />
-                      <MenuItem mnemonicParsing="false" text="Public Objective Cards" />
-                  </items>
-                  <font>
-                      <Font name="Bauhaus 93" size="20.0" />
-                  </font>
-              </MenuButton>
-      
-              <AnchorPane layoutY="39.0" prefHeight="557.0" prefWidth="229.0" />
-          </children>
-       </AnchorPane>
-       <ProgressIndicator layoutX="1061.0" layoutY="26.0" progress="0.0" />
-      <Ellipse fill="WHITE" layoutX="693.0" layoutY="551.0" opacity="0.5" radiusX="262.0" radiusY="121.0" stroke="BLACK" strokeType="INSIDE" />
-   </children>
+        <Circle layoutX="30.0" layoutY="12.0" radius="6.0" styleClass="Favours"/>
+        <Circle layoutX="44.0" layoutY="12.0" radius="6.0" styleClass="Favours"/>
+        <Circle layoutX="58.0" layoutY="12.0" radius="6.0" styleClass="Favours"/>
+        <Circle layoutX="15.0" layoutY="12.0" radius="6.0" styleClass="Favours"/>
+        <Circle layoutY="12.0" radius="6.0" styleClass="Favours"/>
+        <Circle layoutX="-14.0" layoutY="12.0" radius="6.0" styleClass="Favours"/>
+    </AnchorPane>
+    </GridPane>
 
+    <GridPane fx:id="secondWPC" hgap="5.0" layoutX="57.0" layoutY="104.0" prefHeight="219.0" prefWidth="301.0"
+              style="-fx-background-color: black;" vgap="5.0">
+        <columnConstraints>
+            <ColumnConstraints prefWidth="100.0"/>
+            <ColumnConstraints prefWidth="100.0"/>
+            <ColumnConstraints prefWidth="100.0"/>
+            <ColumnConstraints prefWidth="100.0"/>
+            <ColumnConstraints prefWidth="100.0"/>
+        </columnConstraints>
+        <effect>
+            <DropShadow blurType="GAUSSIAN" color="#c29300"/>
+        </effect>
+        <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+        </padding>
+        <rowConstraints>
+            <RowConstraints prefHeight="100.0"/>
+            <RowConstraints prefHeight="100.0"/>
+            <RowConstraints prefHeight="100.0"/>
+            <RowConstraints prefHeight="100.0"/>
+            <RowConstraints prefHeight="50.0"/>
+        </rowConstraints>
+        <children>
+
+            <AnchorPane styleClass="Cell"/>
+            <AnchorPane styleClass="Cell" GridPane.columnIndex="1"/>
+            <AnchorPane styleClass="Cell" GridPane.columnIndex="2"/>
+            <AnchorPane styleClass="Cell" GridPane.columnIndex="3"/>
+            <AnchorPane styleClass="Cell" GridPane.columnIndex="4"/>
+
+            <AnchorPane styleClass="Cell" GridPane.rowIndex="1"/>
+            <AnchorPane styleClass="Cell" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            <AnchorPane styleClass="Cell" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+            <AnchorPane styleClass="Cell" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+            <AnchorPane styleClass="Cell" GridPane.columnIndex="4" GridPane.rowIndex="1"/>
+
+            <AnchorPane styleClass="Cell" GridPane.rowIndex="2"/>
+            <AnchorPane styleClass="Cell" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            <AnchorPane styleClass="Cell" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+            <AnchorPane styleClass="Cell" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+            <AnchorPane styleClass="Cell" GridPane.columnIndex="4" GridPane.rowIndex="2"/>
+
+            <AnchorPane styleClass="Cell" GridPane.rowIndex="3"/>
+            <AnchorPane styleClass="Cell" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+            <AnchorPane styleClass="Cell" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+            <AnchorPane styleClass="Cell" GridPane.columnIndex="3" GridPane.rowIndex="3"/>
+            <AnchorPane styleClass="Cell" GridPane.columnIndex="4" GridPane.rowIndex="3"/>
+
+            <Label contentDisplay="TOP" prefHeight="17.0" prefWidth="224.0" styleClass="Label" text="nome della wpc"
+                   textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="1" GridPane.columnSpan="3"
+                   GridPane.rowIndex="4"/>
+
+            <AnchorPane prefHeight="20.0" prefWidth="54.0" style="-fx-background-color: black;" GridPane.columnIndex="4"
+                        GridPane.rowIndex="4">
+                <children>
+                    <Circle layoutX="7.0" layoutY="11.0" radius="6.0" styleClass="Favours"/>
+                    <Circle layoutX="24.0" layoutY="11.0" radius="6.0" styleClass="Favours"/>
+                    <Circle layoutX="42.0" layoutY="11.0" radius="6.0" styleClass="Favours"/>
+                </children>
+            </AnchorPane>
+
+            <AnchorPane prefHeight="6.0" prefWidth="53.0" style="-fx-background-color: black;" GridPane.columnIndex="3"
+                        GridPane.rowIndex="4">
+                <children>
+                    <Circle layoutX="31.0" layoutY="11.0" radius="6.0" styleClass="Favours"/>
+                    <Circle layoutX="15.0" layoutY="11.0" radius="6.0" styleClass="Favours"/>
+                    <Circle layoutX="48.0" layoutY="11.0" radius="6.0" styleClass="Favours"/>
+                </children>
+            </AnchorPane>
+        </children>
+    </GridPane>
+
+    <GridPane fx:id="thirdWPC" hgap="5.0" layoutX="57.0" layoutY="394.0" prefHeight="219.0" prefWidth="301.0"
+              style="-fx-background-color: black;" vgap="5.0">
+        <columnConstraints>
+            <ColumnConstraints prefWidth="100.0"/>
+            <ColumnConstraints prefWidth="100.0"/>
+            <ColumnConstraints prefWidth="100.0"/>
+            <ColumnConstraints prefWidth="100.0"/>
+            <ColumnConstraints prefWidth="100.0"/>
+        </columnConstraints>
+        <effect>
+            <DropShadow blurType="GAUSSIAN" color="#c29300"/>
+        </effect>
+        <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+        </padding>
+        <rowConstraints>
+            <RowConstraints prefHeight="100.0"/>
+            <RowConstraints prefHeight="100.0"/>
+            <RowConstraints prefHeight="100.0"/>
+            <RowConstraints prefHeight="100.0"/>
+            <RowConstraints prefHeight="50.0"/>
+        </rowConstraints>
+        <children>
+
+            <AnchorPane styleClass="Cell"/>
+            <AnchorPane styleClass="Cell" GridPane.columnIndex="1"/>
+            <AnchorPane styleClass="Cell" GridPane.columnIndex="2"/>
+            <AnchorPane styleClass="Cell" GridPane.columnIndex="3"/>
+            <AnchorPane styleClass="Cell" GridPane.columnIndex="4"/>
+
+            <AnchorPane styleClass="Cell" GridPane.rowIndex="1"/>
+            <AnchorPane styleClass="Cell" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            <AnchorPane styleClass="Cell" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+            <AnchorPane styleClass="Cell" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+            <AnchorPane styleClass="Cell" GridPane.columnIndex="4" GridPane.rowIndex="1"/>
+
+            <AnchorPane styleClass="Cell" GridPane.rowIndex="2"/>
+            <AnchorPane styleClass="Cell" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            <AnchorPane styleClass="Cell" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+            <AnchorPane styleClass="Cell" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+            <AnchorPane styleClass="Cell" GridPane.columnIndex="4" GridPane.rowIndex="2"/>
+
+            <AnchorPane styleClass="Cell" GridPane.rowIndex="3"/>
+            <AnchorPane styleClass="Cell" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+            <AnchorPane styleClass="Cell" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+            <AnchorPane styleClass="Cell" GridPane.columnIndex="3" GridPane.rowIndex="3"/>
+            <AnchorPane styleClass="Cell" GridPane.columnIndex="4" GridPane.rowIndex="3"/>
+
+            <Label contentDisplay="TOP" prefHeight="17.0" prefWidth="224.0" styleClass="Label" text="nome della wpc"
+                   textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="1" GridPane.columnSpan="3"
+                   GridPane.rowIndex="4"/>
+
+            <AnchorPane prefHeight="6.0" prefWidth="53.0" style="-fx-background-color: black;" GridPane.columnIndex="3"
+                        GridPane.rowIndex="4">
+                <children>
+                    <Circle layoutX="31.0" layoutY="11.0" radius="6.0" styleClass="Favours"/>
+                    <Circle layoutX="15.0" layoutY="11.0" radius="6.0" styleClass="Favours"/>
+                    <Circle layoutX="48.0" layoutY="11.0" radius="6.0" styleClass="Favours"/>
+                </children>
+            </AnchorPane>
+
+            <AnchorPane prefHeight="20.0" prefWidth="54.0" style="-fx-background-color: black;" GridPane.columnIndex="4"
+                        GridPane.rowIndex="4">
+                <children>
+                    <Circle layoutX="7.0" layoutY="11.0" radius="6.0" styleClass="Favours"/>
+                    <Circle layoutX="24.0" layoutY="11.0" radius="6.0" styleClass="Favours"/>
+                    <Circle layoutX="42.0" layoutY="11.0" radius="6.0" styleClass="Favours"/>
+                </children>
+            </AnchorPane>
+        </children>
+    </GridPane>
+
+    <Label layoutX="672.0" layoutY="58.0" text="First Player" textFill="WHITE"/>
+    <Label layoutX="170.0" layoutY="73.0" text="Second Player" textFill="WHITE"/>
+    <Label layoutX="176.0" layoutY="370.0" text="Third Player" textFill="WHITE"/>
+    <AnchorPane layoutX="1007.0" layoutY="73.0" opacity="0.5" prefHeight="599.0" prefWidth="229.0"
+                style="-fx-background-color: white; -fx-border-color: black;">
+        <effect>
+            <DropShadow blurType="GAUSSIAN" spread="0.64"/>
+        </effect>
+        <opaqueInsets>
+            <Insets/>
+        </opaqueInsets>
+        <children>
+            <MenuButton layoutX="1.0" layoutY="2.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="229.0"
+                        style="-fx-background-color: white;" text="MenuButton">
+                <items>
+                    <MenuItem mnemonicParsing="false" text="Tool cards"/>
+                    <MenuItem mnemonicParsing="false" text="RoundTrack"/>
+                    <MenuItem mnemonicParsing="false" text="Public Objective Cards"/>
+                </items>
+                <font>
+                    <Font name="Bauhaus 93" size="20.0"/>
+                </font>
+            </MenuButton>
+
+            <AnchorPane layoutY="39.0" prefHeight="557.0" prefWidth="229.0"/>
+        </children>
+    </AnchorPane>
+    <ProgressIndicator layoutX="1061.0" layoutY="26.0" progress="0.0"/>
+    <Ellipse fill="WHITE" layoutX="693.0" layoutY="551.0" opacity="0.5" radiusX="262.0" radiusY="121.0" stroke="BLACK"
+             strokeType="INSIDE"/>
 </AnchorPane>

@@ -20,13 +20,13 @@ public class StartController {
 
 
     public void initialize() {
-        button1.setOnAction(event -> changeSceneHendle(event, "/it/polimi/ingsw/view/gui/guiview/SignUpScene.fxml"));
+        button1.setOnAction(event -> changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/SignUpScene.fxml"));
 
-        button2.setOnAction(event -> changeSceneHendle(event, "/it/polimi/ingsw/view/gui/guiview/SignInScene.fxml"));
+        button2.setOnAction(event -> changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/SignInScene.fxml"));
     }
 
-    private void changeSceneHendle(ActionEvent event, String path) {
-        AnchorPane nextNode = null;
+    private void changeSceneHandle(ActionEvent event, String path) {
+        AnchorPane nextNode = new AnchorPane();
         try {
             nextNode = FXMLLoader.load(getClass().getResource(path));
         } catch (IOException e) {

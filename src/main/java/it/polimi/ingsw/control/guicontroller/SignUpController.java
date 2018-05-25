@@ -26,10 +26,13 @@ import java.io.IOException;
   errorlabel.showMessageDialog(null, "Error", "ERRORE",  JOptionPane.ERROR_MESSAGE);*/
 
 public class SignUpController {
+
     private NetworkClient networkClient;
     private ClientModel clientModel;
 
     @FXML private PasswordField signUpPassword;
+
+    @FXML private Button backButton;
 
     @FXML private Button signUpButton;
 
@@ -45,25 +48,19 @@ public class SignUpController {
                 String username = signUpUsername.getText();
                 String password = signUpPassword.getText();
 
-                if (!password.equals("") && !username.equals("")) {
-                    createAccount(username, password);
-
-                    if (clientModel.getUsername() == null) {
-                        signUpErrorLabel.setVisible(true);
-                        signUpUsername.clear();
-                        signUpPassword.clear();
-                    } else changeSceneHendle(event, "/it/polimi/ingsw/view/gui/guiview/SetNewGameScene.fxml");
-
-                } else signUpErrorLabel.setVisible(true);
-
+                if (!password.equals("") && !username.equals(""))
+                    createAccount(username, password, event);
+                else signUpErrorLabel.setVisible(true);
             });
 
         signUpUsername.setOnMouseClicked(event -> signUpErrorLabel.setVisible(false));
+
+        backButton.setOnAction(event -> changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/StartingScene.fxml"));
     }
 
 
-    private void changeSceneHendle(ActionEvent event, String path) {
-        AnchorPane nextNode = null;
+    private void changeSceneHandle(ActionEvent event, String path) {
+        AnchorPane nextNode = new AnchorPane();
         try {
             nextNode = FXMLLoader.load(getClass().getResource(path));
         } catch (IOException e) {
@@ -76,16 +73,28 @@ public class SignUpController {
     }
 
 
-    private void createAccount(String username, String password) {
+    private void createAccount(String username, String password, ActionEvent event) {
+        Thread signUp = new Thread(()->{
+            try {
+                networkClient.createUser(username, password);
+            } catch (CannotRegisterUserException e) {
+                e.printStackTrace();
+            }
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                //TODO
+            }
 
             Platform.runLater(() -> {
-                try {
-                    clientModel.setUsername(username);
-                    networkClient.createUser(username, password);
-                } catch (CannotRegisterUserException e) {
-                    clientModel.setUsername(null);
-                    e.printStackTrace();
+                if (clientModel.getUsername() == null) {
+                    signUpErrorLabel.setVisible(true);
+                    signUpUsername.clear();
+                    signUpPassword.clear();
                 }
+                else changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/SetNewGameScene.fxml");
             });
-        }
+        });
+        signUp.start();
+    }
 }

@@ -41,12 +41,12 @@ public class PersonalAreaController {
         personalAreaLost.setText("0");
         personalAreaScore.setText("0");
 
-        newGameButton.setOnAction(event -> changeSceneHendle(event, "/it/polimi/ingsw/view/gui/guiview/SetNewGameScene.fxml"));
+        newGameButton.setOnAction(event -> changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/SetNewGameScene.fxml"));
     }
 
 
-    private void changeSceneHendle(ActionEvent event, String path) {
-        AnchorPane nextNode = null;
+    private void changeSceneHandle(ActionEvent event, String path) {
+        AnchorPane nextNode = new AnchorPane();
         try {
             nextNode = FXMLLoader.load(getClass().getResource(path));
         } catch (IOException e) {

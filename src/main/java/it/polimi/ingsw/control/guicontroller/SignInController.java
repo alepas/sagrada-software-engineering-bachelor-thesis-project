@@ -27,6 +27,7 @@ import java.io.IOException;
 
 
 public class SignInController {
+
     private NetworkClient networkClient;
     private ClientModel clientModel;
 
@@ -35,6 +36,8 @@ public class SignInController {
     @FXML private PasswordField signInPassword;
 
     @FXML private Button signInButton;
+
+    @FXML private Button backButton;
 
     @FXML private Label signInErrorLabel;
 
@@ -48,26 +51,19 @@ public class SignInController {
                 String username = signInUsername.getText();
                 String password = signInPassword.getText();
 
-                if (!password.equals("") && !username.equals("")) {
-
-                    loginUser(username, password);
-
-                    if (clientModel.getUsername() == null) {
-                        signInErrorLabel.setVisible(true);
-                        signInUsername.clear();
-                        signInPassword.clear();
-                    } else
-                        changeSceneHendle(event, "/it/polimi/ingsw/view/gui/guiview/SetNewGameScene.fxml");
-                } else signInErrorLabel.setVisible(true);
-
+                if (!password.equals("") && !username.equals(""))
+                    loginUser(username, password, event);
+                else signInErrorLabel.setVisible(true);
         });
 
         signInUsername.setOnMouseClicked(event -> signInErrorLabel.setVisible(false));
+
+        backButton.setOnAction(event -> changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/StartingScene.fxml"));
     }
 
 
-    private void changeSceneHendle(ActionEvent event, String path) {
-        AnchorPane nextNode = null;
+    private void changeSceneHandle(ActionEvent event, String path) {
+        AnchorPane nextNode = new AnchorPane();
         try {
             nextNode = FXMLLoader.load(getClass().getResource(path));
         } catch (IOException e) {
@@ -80,17 +76,28 @@ public class SignInController {
     }
 
 
-    private void loginUser(String username, String password) {
-        Platform.runLater(()-> {
+    private void loginUser(String username, String password, ActionEvent event) {
+        Thread signIn = new Thread(()->{
             try {
-
                 networkClient.login(username, password);
             } catch (CannotLoginUserException e) {
-
                 e.printStackTrace();
+            //TODO
+            }
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
                 //TODO
             }
+            Platform.runLater(()->{
+                if (clientModel.getUsername() == null) {
+                    signInErrorLabel.setVisible(true);
+                    signInUsername.clear();
+                    signInPassword.clear();
+                } else
+                    changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/SetNewGameScene.fxml");
+            });
         });
+        signIn.start();
     }
-
 }

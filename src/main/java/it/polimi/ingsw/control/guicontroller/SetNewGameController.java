@@ -1,26 +1,26 @@
 package it.polimi.ingsw.control.guicontroller;
 
 import it.polimi.ingsw.control.network.NetworkClient;
-import it.polimi.ingsw.control.network.commands.NotificationHandler;
 import it.polimi.ingsw.control.network.commands.notifications.*;
-import it.polimi.ingsw.model.clientModel.ClientModel;
-import it.polimi.ingsw.model.dicebag.Color;
+
+import it.polimi.ingsw.model.clientModel.*;
+
 import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
+
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotFindPlayerInDatabaseException;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotFindUserInDBException;
 
-import it.polimi.ingsw.model.wpc.Cell;
-import it.polimi.ingsw.model.wpc.WPC;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -33,12 +33,15 @@ import static java.lang.Thread.sleep;
 
 public class SetNewGameController implements Observer, NotificationHandler {
 
-    @FXML
-    private AnchorPane selectionArea;
     private boolean gameStarted = false;
-
     private boolean areWpcExtracted = false;
-    private ArrayList<String> userWpcs;
+    private boolean pocExtracted = false;
+    private boolean privateObjExtractd = false;
+    private boolean toolExtracted = false;
+    private boolean dicesExtracted = false;
+
+    private ClientColor[] colors;
+    private ArrayList<ClientWpc> userWpcs = new ArrayList<>();
 
     private NetworkClient networkClient;
     private ClientModel clientModel;
@@ -46,13 +49,90 @@ public class SetNewGameController implements Observer, NotificationHandler {
     private Label lab = new Label();
     private Label lab1 = new Label();
     private Label lab2 = new Label();
+    private Label lab3 = new Label();
+
     private String newPlayer = null;
+
+    @FXML
+    private AnchorPane selectionArea;
 
     @FXML
     private Button createGameButton;
 
     @FXML
     private Button personalAreaButton;
+
+    @FXML
+    private Circle fourthWpcCirlce1;
+
+    @FXML
+    private Circle fourthWpcCirlce2;
+
+    @FXML
+    private Circle fourthWpcCirlce3;
+
+    @FXML
+    private Circle fourthWpcCirlce4;
+
+    @FXML
+    private Circle fourthWpcCirlce5;
+
+    @FXML
+    private Circle fourthWpcCirlce6;
+
+    @FXML
+    private Circle thirdWpcCirlce1;
+
+    @FXML
+    private Circle thirdWpcCirlce2;
+
+    @FXML
+    private Circle thirdWpcCirlce3;
+
+    @FXML
+    private Circle thirdWpcCirlce4;
+
+    @FXML
+    private Circle thirdWpcCirlce5;
+
+    @FXML
+    private Circle thirdWpcCirlce6;
+
+    @FXML
+    private Circle secondWpcCirlce1;
+
+    @FXML
+    private Circle secondWpcCirlce2;
+
+    @FXML
+    private Circle secondWpcCirlce3;
+
+    @FXML
+    private Circle secondWpcCirlce4;
+
+    @FXML
+    private Circle secondWpcCirlce5;
+
+    @FXML
+    private Circle secondWpcCirlce6;
+
+    @FXML
+    private Circle firstWpcCirlce1;
+
+    @FXML
+    private Circle firstWpcCirlce2;
+
+    @FXML
+    private Circle firstWpcCirlce3;
+
+    @FXML
+    private Circle firstWpcCirlce4;
+
+    @FXML
+    private Circle firstWpcCirlce5;
+
+    @FXML
+    private Circle firstWpcCirlce6;
 
     @FXML
     private Label errorLabel;
@@ -65,6 +145,9 @@ public class SetNewGameController implements Observer, NotificationHandler {
 
     @FXML
     private Label numOfPlayersLabel;
+
+    @FXML
+    private Label SelectionWpcsLabel;
 
     @FXML
     private Label startGameLabel;
@@ -81,21 +164,30 @@ public class SetNewGameController implements Observer, NotificationHandler {
     @FXML
     private RadioButton fourPlayersBox;
 
-    @FXML private Label wpc1;
+    @FXML
+    private Label wpc0Name;
 
-    @FXML private Label wpc2;
+    @FXML
+    private Label wpc1Name;
 
-    @FXML private Label wpc3;
+    @FXML
+    private Label wpc2Name;
 
-    @FXML private Label wpc4;
+    @FXML
+    private Label wpc3Name;
 
-    @FXML private GridPane fourthWPC;
+    @FXML
+    private GridPane fourthWPC;
 
-    @FXML private GridPane firstWPC;
+    @FXML
+    private GridPane firstWPC;
 
-    @FXML private GridPane thirdWPC;
+    @FXML
+    private GridPane thirdWPC;
 
-    @FXML private GridPane secondWPC;
+    @FXML
+    private GridPane secondWPC;
+
 
 
     @FXML
@@ -112,11 +204,9 @@ public class SetNewGameController implements Observer, NotificationHandler {
         fourPlayersBox.setToggleGroup(group);
 
         createGameButton.setOnAction(event -> {
-
-
             if (soloPlayerBox.isSelected()) {
                 disableAll();
-                changeSceneHendle(event, "/it/polimi/ingsw/view/gui/guiview/SelectWPC.fxml");
+                changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/SelectWPC.fxml");
             } else if (twoPlayersBox.isSelected()) {
                 disableAll();
                 findGame(2);
@@ -140,17 +230,22 @@ public class SetNewGameController implements Observer, NotificationHandler {
 
         fourPlayersBox.setOnMouseClicked(event -> errorLabel.setVisible(false));
 
-        personalAreaButton.setOnAction(event -> changeSceneHendle(event, "/it/polimi/ingsw/view/gui/guiview/PersonalAreaScene.fxml"));
+        personalAreaButton.setOnAction(event -> changeSceneHandle(event,
+                "/it/polimi/ingsw/view/gui/guiview/PersonalAreaScene.fxml"));
 
-        firstWPC.setOnMouseClicked(event -> pickWpc(wpc1.getText()));
+        firstWPC.setOnMouseClicked(event -> pickWpc(event, wpc0Name.getText()));
 
-        secondWPC.setOnMouseClicked(event-> pickWpc(wpc2.getText()));
+        secondWPC.setOnMouseClicked(event -> pickWpc(event, wpc1Name.getText()));
 
-        thirdWPC.setOnMouseClicked( event-> pickWpc(wpc3.getText()));
+        thirdWPC.setOnMouseClicked(event -> pickWpc(event, wpc2Name.getText()));
 
-        fourthWPC.setOnMouseClicked(event-> pickWpc(wpc4.getText()));
+        fourthWPC.setOnMouseClicked(event -> pickWpc(event, wpc3Name.getText()));
     }
 
+
+    /**
+     * This method set few javafx elements invisible
+     */
     private void disableAll() {
         numPlayersInGameLabel.setVisible(false);
         createGameButton.setVisible(false);
@@ -190,14 +285,17 @@ public class SetNewGameController implements Observer, NotificationHandler {
                 lab1.setLayoutX(100);
                 lab1.setLayoutY(340);
                 selectionArea.getChildren().addAll(lab, lab1);
-                playGame();
+                SettingOfGame();
             }
         });
     }
 
-    private void playGame() {
+
+    private void SettingOfGame() {
         waitPlayers();
         waitWPC();
+        waitForToolCards();
+        waitForPoc();
     }
 
 
@@ -211,11 +309,12 @@ public class SetNewGameController implements Observer, NotificationHandler {
 
             while (!gameStarted) {
                 if (newPlayer != null) {
-                    System.out.println("ehi");
-                    Platform.runLater(()->{
+
+                    Platform.runLater(() -> {
                         lab2.setText(" é entrato in partita " + newPlayer);
                         lab2.setLayoutX(100);
                         lab2.setLayoutY(360);
+                        lab1.setVisible(false);
                         selectionArea.getChildren().add(lab2);
                         newPlayer = null;
                         //TODO: devo fare il caso di uscita da partita e modificare lab1
@@ -231,15 +330,14 @@ public class SetNewGameController implements Observer, NotificationHandler {
         waitPlayers.start();
     }
 
-    private void waitWPC() {
 
+    private void waitWPC() {
         Thread waitingWPC = new Thread(() -> {
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
+                //TODO
             }
-
-            if (!areWpcExtracted) System.out.println("In attesa delle wpc...");
             while (!areWpcExtracted) {
                 try {
                     Thread.sleep(500);
@@ -247,48 +345,37 @@ public class SetNewGameController implements Observer, NotificationHandler {
                     //TODO
                 }
             }
-            Platform.runLater(()->{
+            Platform.runLater(() -> {
                 selectionArea.setVisible(false);
-                for(int i= 0; i< userWpcs.size(); i++) {
+                for (int i = 0; i < userWpcs.size(); i++) {
+                    ClientWpc wpc = userWpcs.get(i);
                     switch (i) {
                         case 0:
-                            WPC wpc = clientModel.getWpcByID(userWpcs.get(i));
-                            wpc1.setText(wpc.getWpcID());
-                            for (it.polimi.ingsw.model.wpc.Cell cell : wpc.schema) {
-                                int row = cell.getCellPosition().getRow();
-                                int column = cell.getCellPosition().getColumn();
-                                fillCell(firstWPC, cell, row, column);
-                            }
+                            wpc0Name.setText(wpc.getWpcID());
+                            setWpc(firstWPC, wpc);
+                            setFirstWpcFavours(wpc.getFavours());
                             break;
+
                         case 1:
-                            WPC wpc1 = clientModel.getWpcByID(userWpcs.get(i));
-                            wpc2.setText(wpc1.getWpcID());
-                            for (it.polimi.ingsw.model.wpc.Cell cell : wpc1.schema) {
-                                int row = cell.getCellPosition().getRow();
-                                int column = cell.getCellPosition().getColumn();
-                                fillCell(secondWPC, cell, row, column);
-                            }
+                            wpc1Name.setText(wpc.getWpcID());
+                            setWpc(secondWPC, wpc);
+                            setSecondWpcFavours(wpc.getFavours());
                             break;
+
                         case 2:
-                            WPC wpc2 = clientModel.getWpcByID(userWpcs.get(i));
-                            wpc3.setText(wpc2.getWpcID());
-                            for (it.polimi.ingsw.model.wpc.Cell cell : wpc2.schema) {
-                                int row = cell.getCellPosition().getRow();
-                                int column = cell.getCellPosition().getColumn();
-                                fillCell(thirdWPC, cell, row, column);
-                            }
+                            wpc2Name.setText(wpc.getWpcID());
+                            setWpc(thirdWPC, wpc);
+                            setThirdWpcFavours(wpc.getFavours());
                             break;
+
                         case 3:
-                            WPC wpc3 = clientModel.getWpcByID(userWpcs.get(i));
-                            wpc4.setText(wpc3.getWpcID());
-                            for (Cell cell : wpc3.schema) {
-                                int row = cell.getCellPosition().getRow();
-                                int column = cell.getCellPosition().getColumn();
-                                fillCell(fourthWPC, cell, row, column);
-                            }
+                            wpc3Name.setText(wpc.getWpcID());
+                            setWpc(fourthWPC, wpc);
+                            setFourthWpcFavours(wpc.getFavours());
                             break;
                     }
                 }
+                SelectionWpcsLabel.setVisible(true);
                 firstWPC.setVisible(true);
                 secondWPC.setVisible(true);
                 thirdWPC.setVisible(true);
@@ -299,78 +386,322 @@ public class SetNewGameController implements Observer, NotificationHandler {
     }
 
 
-    private void fillCell(GridPane gridPane, Cell cell, int row, int column) {
-        AnchorPane cellXY = new AnchorPane();
-        gridPane.add(cellXY, column, row);
-        Color color = cell.getCellColor();
-        if(color != null) {
+    private void waitForPoc() {
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            //TODO
+        }
+        Thread waitingPoc = new Thread(() -> {
+            if (!pocExtracted) System.out.println("In attesa degli obbiettivi pubblici...");
+            while (!pocExtracted) {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    //TODO
+                }
+            }
+        });
+
+        waitingPoc.start();
+    }
+
+
+    private void waitForToolCards() {
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            //TODO
+        }
+        Thread waitingToolcards = new Thread(() -> {
+            if (!toolExtracted) System.out.println("In attesa delle toolcard...");
+            while (!toolExtracted) {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    //TODO
+                }
+            }
+        });
+        waitingToolcards.start();
+    }
+
+
+    private void setFourthWpcFavours(int favours) {
+        switch (favours) {
+            case 3:
+                fourthWpcCirlce1.setVisible(true);
+                fourthWpcCirlce2.setVisible(true);
+                fourthWpcCirlce3.setVisible(true);
+                fourthWpcCirlce4.setVisible(true);
+                break;
+            case 4:
+                fourthWpcCirlce1.setVisible(true);
+                fourthWpcCirlce2.setVisible(true);
+                fourthWpcCirlce3.setVisible(true);
+                fourthWpcCirlce4.setVisible(true);
+                break;
+            case 5:
+                fourthWpcCirlce1.setVisible(true);
+                fourthWpcCirlce2.setVisible(true);
+                fourthWpcCirlce3.setVisible(true);
+                fourthWpcCirlce4.setVisible(true);
+                fourthWpcCirlce5.setVisible(true);
+                break;
+            case 6:
+                fourthWpcCirlce1.setVisible(true);
+                fourthWpcCirlce2.setVisible(true);
+                fourthWpcCirlce3.setVisible(true);
+                fourthWpcCirlce4.setVisible(true);
+                fourthWpcCirlce5.setVisible(true);
+                fourthWpcCirlce6.setVisible(true);
+                break;
+        }
+    }
+
+
+    private void setThirdWpcFavours(int favours) {
+        switch (favours) {
+            case 3:
+                thirdWpcCirlce1.setVisible(true);
+                thirdWpcCirlce2.setVisible(true);
+                thirdWpcCirlce3.setVisible(true);
+                break;
+            case 4:
+                thirdWpcCirlce1.setVisible(true);
+                thirdWpcCirlce2.setVisible(true);
+                thirdWpcCirlce3.setVisible(true);
+                thirdWpcCirlce4.setVisible(true);
+                break;
+            case 5:
+                thirdWpcCirlce1.setVisible(true);
+                thirdWpcCirlce2.setVisible(true);
+                thirdWpcCirlce3.setVisible(true);
+                thirdWpcCirlce4.setVisible(true);
+                thirdWpcCirlce5.setVisible(true);
+                break;
+            case 6:
+                thirdWpcCirlce1.setVisible(true);
+                thirdWpcCirlce2.setVisible(true);
+                thirdWpcCirlce3.setVisible(true);
+                thirdWpcCirlce4.setVisible(true);
+                thirdWpcCirlce5.setVisible(true);
+                thirdWpcCirlce6.setVisible(true);
+                break;
+        }
+    }
+
+
+    private void setSecondWpcFavours(int favours) {
+        switch (favours) {
+            case 3:
+                secondWpcCirlce1.setVisible(true);
+                secondWpcCirlce2.setVisible(true);
+                secondWpcCirlce3.setVisible(true);
+                break;
+            case 4:
+                secondWpcCirlce1.setVisible(true);
+                secondWpcCirlce2.setVisible(true);
+                secondWpcCirlce3.setVisible(true);
+                secondWpcCirlce4.setVisible(true);
+                break;
+            case 5:
+                secondWpcCirlce1.setVisible(true);
+                secondWpcCirlce2.setVisible(true);
+                secondWpcCirlce3.setVisible(true);
+                secondWpcCirlce4.setVisible(true);
+                secondWpcCirlce5.setVisible(true);
+                break;
+            case 6:
+                secondWpcCirlce1.setVisible(true);
+                secondWpcCirlce2.setVisible(true);
+                secondWpcCirlce3.setVisible(true);
+                secondWpcCirlce4.setVisible(true);
+                secondWpcCirlce5.setVisible(true);
+                secondWpcCirlce6.setVisible(true);
+                break;
+        }
+    }
+
+
+    private void setFirstWpcFavours(int favours) {
+        switch (favours) {
+            case 3:
+                firstWpcCirlce1.setVisible(true);
+                firstWpcCirlce2.setVisible(true);
+                firstWpcCirlce3.setVisible(true);
+                break;
+            case 4:
+                firstWpcCirlce1.setVisible(true);
+                firstWpcCirlce2.setVisible(true);
+                firstWpcCirlce3.setVisible(true);
+                firstWpcCirlce4.setVisible(true);
+                break;
+            case 5:
+                firstWpcCirlce1.setVisible(true);
+                firstWpcCirlce2.setVisible(true);
+                firstWpcCirlce3.setVisible(true);
+                firstWpcCirlce4.setVisible(true);
+                firstWpcCirlce5.setVisible(true);
+                break;
+            case 6:
+                firstWpcCirlce1.setVisible(true);
+                firstWpcCirlce2.setVisible(true);
+                firstWpcCirlce3.setVisible(true);
+                firstWpcCirlce4.setVisible(true);
+                firstWpcCirlce5.setVisible(true);
+                firstWpcCirlce6.setVisible(true);
+                break;
+        }
+    }
+
+
+    /**
+     * @param gridPane  //todo
+     * @param wpc  //todo
+     */
+    private void setWpc(GridPane gridPane, ClientWpc wpc) {
+
+        for (ClientCell cell : wpc.getSchema()) {
+            int row = cell.getCellPosition().getRow();
+            int column = cell.getCellPosition().getColumn();
+
+            AnchorPane cellXY = new AnchorPane();
+            gridPane.add(cellXY, column, row);
+
+            ClientColor color = cell.getCellColor();
+            fillColor(cellXY, color);
+
+            int number = cell.getCellNumber();
+            fillNumber(cellXY, number);
+        }
+    }
+
+
+    /**
+     * @param cell //todo
+     * @param number is the number restriction
+     */
+    private void fillNumber(AnchorPane cell, int number) {
+        switch (number) {
+            case 0:
+                cell.getStyleClass().add("white");
+                break;
+            case 1:
+                cell.getStyleClass().add("num1");
+                break;
+            case 2:
+                cell.getStyleClass().add("num2");
+                break;
+            case 3:
+                cell.getStyleClass().add("num3");
+                break;
+            case 4:
+                cell.getStyleClass().add("num4");
+                break;
+            case 5:
+                cell.getStyleClass().add("num5");
+                break;
+            case 6:
+                cell.getStyleClass().add("num6");
+                break;
+        }
+    }
+
+
+    /**
+     * @param cell is a cell
+     * @param color is the filling color of a schema's cell
+     */
+    private void fillColor(AnchorPane cell, ClientColor color) {
+        if (color != null) {
             switch (color) {
                 case YELLOW:
-                    cellXY.setStyle("-fx-background-color: #dfd207;");
+                    cell.getStyleClass().add("yellow");
                     break;
                 case GREEN:
-                    cellXY.setStyle("-fx-background-color: #30a35e;");
+                    cell.getStyleClass().add("green");
                     break;
                 case RED:
-                    cellXY.setStyle("-fx-background-color: #d41d22;");
+                    cell.getStyleClass().add("red");
                     break;
                 case BLUE:
-                    cellXY.setStyle("-fx-background-color: #5cc7d8;");
+                    cell.getStyleClass().add("blue");
                     break;
                 case VIOLET:
-                    cellXY.setStyle("-fx-background-color: #98258d;");
+                    cell.getStyleClass().add("violet");
                     break;
             }
         }
-        else
-            cellXY.setStyle("-fx-background-color: #ffffff;");
-        int number = cell.getCellNumber();
-        switch (number) {
-            case 1:
-                cellXY.setStyle("-fx-background-image: url(view/wpc/pos1.png);"+"-fx-background-size: cover");
-                break;
-            case 2:
-                cellXY.setStyle("-fx-background-image: url(view/wpc/pos2.png);"+"-fx-background-size: cover");
-                break;
-            case 3:
-                cellXY.setStyle("-fx-background-image: url(view/wpc/pos3.png);"+"-fx-background-size: cover");
-                break;
-            case 4:
-                cellXY.setStyle("-fx-background-image: url(view/wpc/pos4.png);" +
-                        "-fx-background-size: cover");
-                break;
-            case 5:
-                cellXY.setStyle("-fx-background-image: url(view/wpc/pos5.png);"+"-fx-background-size: cover");
-
-                break;
-            case 6:
-                cellXY.setStyle("-fx-background-image: url(view/wpc/pos6.png);"+"-fx-background-size: cover");
-                break;
-        }
+        else cell.getStyleClass().add("white");
     }
 
-    public void pickWpc(String wpcID) {
-        try {
-            networkClient.pickWpc(clientModel.getUserToken(), wpcID);
-        } catch (NotYourWpcException e) {
-        } catch (CannotFindPlayerInDatabaseException e) {
-            e.printStackTrace();
-            //TODO
-        }
+
+    /**
+     * @param event  //todo
+     * @param wpcID  //todo
+     */
+    public void pickWpc(Event event, String wpcID) {
+        Platform.runLater(()-> {
+            try {
+                networkClient.pickWpc(clientModel.getUserToken(), wpcID);
+            } catch (NotYourWpcException e) {
+                //TODO
+            } catch (CannotFindPlayerInDatabaseException e) {
+                e.printStackTrace();
+                //TODO
+            }
+            Label lab4 = new Label("La tua WPC è"+wpcID);
+            lab4.setLayoutY(400);
+            lab4.setLayoutX(100);
+            firstWPC.setDisable(true);
+            secondWPC.setDisable(true);
+            thirdWPC.setDisable(true);
+            fourthWPC.setDisable(true);
+        });
+        playGame(event);
     }
 
-    private void changeSceneHendle(ActionEvent event, String path) {
-            AnchorPane nextNode = null;
+
+    private void playGame(Event event) {
+        Thread startGame = new Thread(() -> {
+            while (!pocExtracted || !toolExtracted || !(clientModel.getWpcByUsername().size() == clientModel.getGameNumPlayers())) {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    //TODO
+                }
+            }
+            Platform.runLater(()->{
+                switch (clientModel.getGameNumPlayers()){
+                    case 1:
+                        changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/SoloPlayerGameScene.fxml");
+                        break;
+                    case 2:
+                        changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/TwoPlayersGameScene.fxml");
+                        break;
+                    case 3:
+                        changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/ThreePlayersGameScene.fxml");
+                        break;
+                    case 4:
+                        changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/FourPlayersGameScene.fxml");
+                        break;
+                }
+            });
+        });
+        startGame.start();
+    }
+
+
+
+    private void changeSceneHandle(Event event, String path) {
+            AnchorPane nextNode = new AnchorPane();
             try {
                 nextNode = FXMLLoader.load(getClass().getResource(path));
             } catch (IOException e) {
                 e.printStackTrace();
             }
             Scene scene = new Scene(nextNode);
-            if(areWpcExtracted){
-                for(String ID: userWpcs) {
-                }
-            }
             Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
             window.setScene(scene);
             window.show();
@@ -406,37 +737,65 @@ public class SetNewGameController implements Observer, NotificationHandler {
 
     @Override
     public void handle(WpcsExtractedNotification notification) {
-        userWpcs = notification.wpcsByUser.get(notification.username);
-        //clientModel.setWpcIDs(userWpcs);
-        System.out.println("Le tue wpc sono:\n\n");
+        userWpcs = notification.wpcsByUser.get(clientModel.getUsername());
         areWpcExtracted = true;
     }
 
     @Override
     public void handle(PrivateObjExtractedNotification notification) {
-        Color[] colors = notification.colorsByUser.get(notification.username);
-        StringBuilder str = new StringBuilder();
+        colors = notification.colorsByUser.get(clientModel.getUsername());
+        privateObjExtractd = true;
+    }
 
-        if (colors.length > 1) str.append("I tuoi private objective sono: ");
-        else str.append("Il tuo private objective è: ");
+    @Override
+    public void handle(UserPickedWpcNotification notification) {
+        System.out.println(notification.username + " ha scelto la wpc: " + notification.wpc);
+    }
 
-        for (Color color : colors){
-            str.append(color + "\t");
+    @Override
+    public void handle(ToolcardsExtractedNotification notification) { toolExtracted = true; }
+
+    @Override
+    public void handle(PocsExtractedNotification notification) { pocExtracted = true; }
+
+    @Override
+    public void handle(NewRoundNotification notification) {
+        dicesExtracted = true;
+        System.out.println("Round: " + notification.roundNumber);
+        System.out.println("Dadi estratti: ");
+        for (ClientDice dice : notification.extractedDices){
+            System.out.println("ID: " + dice.getDiceID() + "\t" + dice.getDiceNumber() + " " + dice.getDiceColor());
         }
-
-        System.out.println(str.toString());
     }
 
     @Override
-    public void handle(UserPickedWpcNotification notification) {}
+    public void handle(NextTurnNotification notification) {
+        System.out.println("Turno: " + notification.turnNumber + "\tRound: " + clientModel.getCurrentRound());
+        System.out.println("Turno di " + notification.activeUser);
+    }
 
     @Override
-    public void handle(ToolcardsExtractedNotification notification) {
+    public void handle(DiceChangedNotification notification) {
 
     }
 
     @Override
-    public void handle(PocsExtractedNotification notification) {
+    public void handle(DicePlacedNotification notification) {
+
+    }
+
+    @Override
+    public void handle(ToolCardCanceledNotification notification) {
+
+    }
+
+    @Override
+    public void handle(ToolCardUsedNotification notification) {
+
+    }
+
+    @Override
+    public void handle(PlayerSkipTurnNotification notification) {
 
     }
 
