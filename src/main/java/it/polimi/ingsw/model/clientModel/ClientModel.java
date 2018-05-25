@@ -72,12 +72,40 @@ public class ClientModel implements Observer, NotificationHandler {
         return username;
     }
 
+    public ClientRoundTrack getRoundTrack() {
+        return roundTrack;
+    }
+
+    public void setRoundTrack(ClientRoundTrack roundTrack) {
+        this.roundTrack = roundTrack;
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }
 
     public String getUserToken() {
         return userToken;
+    }
+
+    public void setWpcByUsername(HashMap<String, ClientWpc> wpcByUsername) {
+        this.wpcByUsername = wpcByUsername;
+    }
+
+    public void setCurrentRound(int currentRound) {
+        this.currentRound = currentRound;
+    }
+
+    public void setCurrentTurn(int currentTurn) {
+        this.currentTurn = currentTurn;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public void setFavour(int favour) {
+        this.favour = favour;
     }
 
     public void setUserToken(String userToken) {
@@ -102,6 +130,10 @@ public class ClientModel implements Observer, NotificationHandler {
 
     public int getGameNumPlayers() {
         return gameNumPlayers;
+    }
+
+    public void setExtractedDices(ArrayList<ClientDice> extractedDices) {
+        this.extractedDices = extractedDices;
     }
 
     public void setGameNumPlayers(int gameNumPlayers) {

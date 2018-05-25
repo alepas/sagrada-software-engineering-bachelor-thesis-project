@@ -28,15 +28,15 @@ public interface RequestHandler {
 
     Response handle (UseToolCardRequest request);
 
-    Response handle(UpdatedRoundTrackRequest updatedRoundTrackRequest);
+    Response handle(UpdatedRoundTrackRequest request);
 
-    Response handle(UpdatedExtractedDicesRequest updatedExtractedDicesRequest);
+    Response handle(UpdatedExtractedDicesRequest request);
 
-    Response handle(UpdatedPOCsRequest updatedPOCsRequest);
+    Response handle(UpdatedPOCsRequest request);
 
-    Response handle(UpdatedToolCardsRequest updatedToolCardsRequest);
+    Response handle(UpdatedToolCardsRequest request);
 
-    Response handle(UpdatedWPCRequest updatedWPCRequest);
+    Response handle(UpdatedWPCRequest request);
 
-    Response handle(UpdatedGameRequest updatedGameRequest);
+    Response handle(UpdatedGameRequest request);
 }

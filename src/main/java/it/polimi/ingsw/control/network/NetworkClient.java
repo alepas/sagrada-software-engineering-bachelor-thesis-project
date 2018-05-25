@@ -113,6 +113,11 @@ public abstract class NetworkClient implements ResponseHandler {
     }
 
     @Override
+    public void handle(PassTurnResponse response){
+
+    }
+
+    @Override
     public void handle(ToolCardResponse response){
 
     }
@@ -125,40 +130,63 @@ public abstract class NetworkClient implements ResponseHandler {
     @Override
     public void handle(PickPositionResponse response){
 
-    }
-
-    @Override
-    public void handle(PassTurnResponse response){
 
     }
+
+
 
     @Override
     public void handle(UpdatedExtractedDicesResponse response){
-
+        if (response.exception == null) {
+            clientModel.setExtractedDices(response.extractedDices);
+        }
     }
 
     @Override
     public void handle(UpdatedGameResponse response){
-
+        if (response.exception == null) {
+            clientModel.setGamePublicObjectiveCards(response.gamePublicObjectiveCards);
+            clientModel.setGameToolCards(response.gameToolCards);
+            clientModel.setRoundTrack(response.roundTrack);
+            clientModel.setExtractedDices(response.extractedDices);
+            clientModel.setWpcByUsername(response.wpcByUsername);
+            clientModel.setGameActualPlayers(response.gameActualPlayers);
+            clientModel.setGameID(response.gameID);
+            clientModel.setGameNumPlayers(response.gameNumPlayers);
+            clientModel.setCurrentRound(response.currentRound);
+            clientModel.setCurrentTurn(response.currentTurn);
+            clientModel.setPrivateObjectives(response.privateObjectives);
+            clientModel.setActive(response.active);
+            clientModel.setFavour(response.favour);
+        }
     }
 
     @Override
     public void handle(UpdatedPOCsResponse response){
-
+        if (response.exception == null) {
+            clientModel.setGamePublicObjectiveCards(response.pocs);
+        }
     }
 
     @Override
     public void handle(UpdatedRoundTrackResponse response){
-
+        if (response.exception == null) {
+            clientModel.setRoundTrack(response.roundTrack);
+        }
     }
 
     @Override
     public void handle(UpdatedToolCardsResponse response){
-
+        if (response.exception == null) {
+            clientModel.setGameToolCards(response.toolCards);
+        }
     }
 
     @Override
     public void handle(UpdatedWPCResponse response){
+        if (response.exception == null) {
+            clientModel.getWpcByUsername().put(response.user,response.wpc);
+        }
 
     }
 

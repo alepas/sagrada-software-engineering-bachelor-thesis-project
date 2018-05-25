@@ -6,6 +6,7 @@ import it.polimi.ingsw.control.network.commands.responses.*;
 import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
+import it.polimi.ingsw.model.exceptions.gameExceptions.UserNotInThisGameException;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
 
 import java.io.IOException;
@@ -162,59 +163,106 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
 
     @Override
     public Response handle(UseToolCardRequest request) {
-        return null;
+        try {
+            return controller.setToolCard(request.userToken,request.toolCardId);
+        } catch (CannotFindPlayerInDatabaseException | PlayerNotAuthorizedException | CannotPerformThisMoveException | CannotUseToolCardException e) {
+            return new ToolCardResponse(e);
+        }
     }
-
-    @Override
-    public Response handle(UpdatedRoundTrackRequest updatedRoundTrackRequest) {
-        return null;
-    }
-
-    @Override
-    public Response handle(UpdatedExtractedDicesRequest updatedExtractedDicesRequest) {
-        return null;
-    }
-
-    @Override
-    public Response handle(UpdatedPOCsRequest updatedPOCsRequest) {
-        return null;
-    }
-
-    @Override
-    public Response handle(UpdatedToolCardsRequest updatedToolCardsRequest) {
-        return null;
-    }
-
-    @Override
-    public Response handle(UpdatedWPCRequest updatedWPCRequest) {
-        return null;
-    }
-
-    @Override
-    public Response handle(UpdatedGameRequest updatedGameRequest) {
-        return null;
-    }
-
 
     @Override
     public Response handle(ToolCardPickColorRequest request) {
-        return null;
+        try {
+            return controller.pickColorForToolCard(request.userToken,request.color);
+        } catch (CannotFindPlayerInDatabaseException | CannotPickColorException | NoToolCardInUseException | PlayerNotAuthorizedException e) {
+            return new ToolCardResponse(e);
+        }
     }
 
     @Override
     public Response handle(ToolCardPickDiceRequest request) {
-        return null;
+        try {
+            return controller.pickDiceForToolCard(request.userToken,request.diceId,request.where);
+        } catch (CannotFindPlayerInDatabaseException | CannotPickDiceException | PlayerNotAuthorizedException | NoToolCardInUseException e) {
+            return new ToolCardResponse(e);
+        }
     }
 
     @Override
     public Response handle(ToolCardPickNumberRequest request) {
-        return null;
+        try {
+            return controller.pickNumberForToolCard(request.userToken,request.number);
+        } catch (CannotFindPlayerInDatabaseException | CannotPickNumberException | PlayerNotAuthorizedException | NoToolCardInUseException e) {
+            return new ToolCardResponse(e);
+        }
     }
 
     @Override
     public Response handle(ToolCardPickPositionRequest request) {
-        return null;
+        try {
+            return controller.pickPositionForToolCard(request.userToken,request.position);
+        } catch (CannotFindPlayerInDatabaseException | CannotPickPositionException | PlayerNotAuthorizedException | NoToolCardInUseException e) {
+            return new ToolCardResponse(e);
+        }
     }
+
+
+    @Override
+    public Response handle(UpdatedRoundTrackRequest request) {
+        try {
+            return controller.getUpdatedRoundTrack(request.userToken);
+        } catch (CannotFindPlayerInDatabaseException e) {
+            return new UpdatedRoundTrackResponse(e);
+        }
+    }
+
+    @Override
+    public Response handle(UpdatedExtractedDicesRequest request) {
+        try {
+            return controller.getUpdatedExtractedDices(request.userToken);
+        } catch (CannotFindPlayerInDatabaseException e) {
+            return new UpdatedExtractedDicesResponse(e);
+        }
+    }
+
+    @Override
+    public Response handle(UpdatedPOCsRequest request) {
+        try {
+            return controller.getUpdatedPOCs(request.userToken);
+        } catch (CannotFindPlayerInDatabaseException e) {
+            return new UpdatedPOCsResponse(e);
+        }
+    }
+
+    @Override
+    public Response handle(UpdatedToolCardsRequest request) {
+        try {
+            return controller.getUpdatedToolCards(request.userToken);
+        } catch (CannotFindPlayerInDatabaseException e) {
+            return new UpdatedToolCardsResponse(e);
+        }
+    }
+
+    @Override
+    public Response handle(UpdatedWPCRequest request) {
+        try {
+            return controller.getUpdatedWPC(request.userToken,request.username);
+        } catch (CannotFindPlayerInDatabaseException | UserNotInThisGameException e) {
+            return new UpdatedWPCResponse(e);
+        }
+    }
+
+    @Override
+    public Response handle(UpdatedGameRequest request) {
+        try {
+            return controller.getUpdatedGame(request.userToken);
+        } catch (CannotFindPlayerInDatabaseException e) {
+            return new UpdatedGameResponse(e);
+        }
+    }
+
+
+
 
 
     //------------------------------ Game observer ------------------------------

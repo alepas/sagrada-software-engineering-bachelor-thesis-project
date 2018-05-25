@@ -167,6 +167,35 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
         }
     }
 
+
+    @Override
+    public void pickDice(String userToken, int diceId) throws CannotPickDiceException, CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException {
+        request(new PickDiceRequest(userToken, diceId));
+
+        Exception e = ((PickDiceResponse) waitResponse()).exception;
+
+        if (e != null){
+            if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
+            if (e instanceof PlayerNotAuthorizedException) throw (PlayerNotAuthorizedException) e;
+            if (e instanceof CannotPickDiceException ) throw  (CannotPickDiceException) e;
+        }
+
+    }
+
+    @Override
+    public void pickPosition(String userToken, ClientPosition position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException {
+        request(new PickPositionRequest(userToken, position));
+
+        Exception e = ((PickPositionResponse) waitResponse()).exception;
+
+        if (e != null){
+            if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
+            if (e instanceof PlayerNotAuthorizedException) throw (PlayerNotAuthorizedException) e;
+            if (e instanceof CannotPickPositionException ) throw  (CannotPickPositionException) e;
+        }
+    }
+
+
     @Override
     public void useToolCard(String userToken, String cardId) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotUseToolCardException {
         request(new UseToolCardRequest(userToken, cardId));
@@ -238,37 +267,10 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
 
 
     @Override
-    public void pickDice(String userToken, int diceId) throws CannotPickDiceException, CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException {
-        request(new PickDiceRequest(userToken, diceId));
-
-        Exception e = ((PickDiceResponse) waitResponse()).exception;
-
-        if (e != null){
-            if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
-            if (e instanceof PlayerNotAuthorizedException) throw (PlayerNotAuthorizedException) e;
-            if (e instanceof CannotPickDiceException ) throw  (CannotPickDiceException) e;
-        }
-
-    }
-
-    @Override
-    public void pickPosition(String userToken, ClientPosition position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException {
-        request(new PickPositionRequest(userToken, position));
-
-        Exception e = ((PickPositionResponse) waitResponse()).exception;
-
-        if (e != null){
-            if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
-            if (e instanceof PlayerNotAuthorizedException) throw (PlayerNotAuthorizedException) e;
-            if (e instanceof CannotPickPositionException ) throw  (CannotPickPositionException) e;
-        }
-    }
-
-    @Override
     public void getUpdatedExtractedDices(String userToken) throws CannotFindPlayerInDatabaseException {
         request(new UpdatedExtractedDicesRequest(userToken));
 
-        Exception e = ((ToolCardResponse) waitResponse()).exception;
+        Exception e = ((UpdatedExtractedDicesResponse) waitResponse()).exception;
 
         if (e != null){
             if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
@@ -279,27 +281,48 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
 
     @Override
     public void getUpdatedPOCs(String userToken) throws CannotFindPlayerInDatabaseException {
-
+        request(new UpdatedPOCsRequest(userToken));
+        Exception e = ((UpdatedPOCsResponse) waitResponse()).exception;
+        if (e != null) {
+            if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
+        }
     }
 
     @Override
     public void getUpdatedRoundTrack(String userToken) throws CannotFindPlayerInDatabaseException {
-
+        request(new UpdatedRoundTrackRequest(userToken));
+        Exception e = ((UpdatedRoundTrackResponse) waitResponse()).exception;
+        if (e != null) {
+            if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
+        }
     }
 
     @Override
     public void getUpdatedToolCards(String userToken) throws CannotFindPlayerInDatabaseException {
-
+        request(new UpdatedToolCardsRequest(userToken));
+        Exception e = ((UpdatedToolCardsResponse) waitResponse()).exception;
+        if (e != null) {
+            if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
+        }
     }
 
     @Override
     public void getUpdatedWPC(String userToken, String username) throws CannotFindPlayerInDatabaseException, UserNotInThisGameException {
-
+        request(new UpdatedWPCRequest(userToken, username));
+        Exception e = ((UpdatedWPCResponse) waitResponse()).exception;
+        if (e != null) {
+            if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
+            if (e instanceof UserNotInThisGameException) throw (UserNotInThisGameException) e;
+        }
     }
 
     @Override
     public void getUpdatedGame(String userToken) throws CannotFindPlayerInDatabaseException {
-
+        request(new UpdatedGameRequest(userToken));
+        Exception e = ((UpdatedGameResponse) waitResponse()).exception;
+        if (e != null) {
+            if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
+        }
     }
 
 }
