@@ -135,7 +135,7 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
     public Response handle(PassTurnRequest request) {
         try {
             return controller.passTurn(request.userToken);
-        } catch (CannotFindPlayerInDatabaseException|PlayerNotAuthorizedException e) {
+        } catch (CannotFindPlayerInDatabaseException | PlayerNotAuthorizedException | CannotPerformThisMoveException e) {
             return new PassTurnResponse(e);
         }
     }
@@ -146,7 +146,7 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
     public Response handle(PickDiceRequest request) {
         try{
             return controller.pickDice(request.userToken,request.diceId);
-        } catch (PlayerNotAuthorizedException | CannotFindPlayerInDatabaseException | CannotPickDiceException e) {
+        } catch (PlayerNotAuthorizedException | CannotFindPlayerInDatabaseException | CannotPickDiceException |CannotPerformThisMoveException e) {
             return new PickDiceResponse(e);
         }
     }
@@ -155,13 +155,43 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
     public Response handle(PickPositionRequest request) {
         try {
             return controller.pickPosition(request.userToken, request.position);
-        } catch (PlayerNotAuthorizedException | CannotFindPlayerInDatabaseException | CannotPickPositionException e) {
-            return new PickDiceResponse(e);
+        } catch (PlayerNotAuthorizedException | CannotFindPlayerInDatabaseException | CannotPickPositionException|CannotPerformThisMoveException e) {
+            return new PickPositionResponse(e);
         }
     }
 
     @Override
     public Response handle(UseToolCardRequest request) {
+        return null;
+    }
+
+    @Override
+    public Response handle(UpdatedRoundTrackRequest updatedRoundTrackRequest) {
+        return null;
+    }
+
+    @Override
+    public Response handle(UpdatedExtractedDicesRequest updatedExtractedDicesRequest) {
+        return null;
+    }
+
+    @Override
+    public Response handle(UpdatedPOCsRequest updatedPOCsRequest) {
+        return null;
+    }
+
+    @Override
+    public Response handle(UpdatedToolCardsRequest updatedToolCardsRequest) {
+        return null;
+    }
+
+    @Override
+    public Response handle(UpdatedWPCRequest updatedWPCRequest) {
+        return null;
+    }
+
+    @Override
+    public Response handle(UpdatedGameRequest updatedGameRequest) {
         return null;
     }
 

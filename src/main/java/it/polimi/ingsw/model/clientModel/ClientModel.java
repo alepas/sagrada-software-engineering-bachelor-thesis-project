@@ -32,6 +32,7 @@ public class ClientModel implements Observer, NotificationHandler {
     private int currentTurn;
     private boolean active = false;
     private int favour;
+    private ClientRoundTrack roundTrack;
 
     private ClientModel() { }
 
@@ -54,6 +55,7 @@ public class ClientModel implements Observer, NotificationHandler {
         this.gameToolCards = new ArrayList<>();
         this.gamePublicObjectiveCards = new ArrayList<>();
         this.extractedDices = new ArrayList<>();
+        this.roundTrack=null;
     }
 
     public void clean(){
@@ -211,5 +213,30 @@ public class ClientModel implements Observer, NotificationHandler {
     public void handle(NextTurnNotification notification) {
         currentTurn = notification.turnNumber;
         active = notification.activeUser.equals(username);
+    }
+
+    @Override
+    public void handle(DiceChangedNotification notification) {
+
+    }
+
+    @Override
+    public void handle(DicePlacedNotification notification) {
+
+    }
+
+    @Override
+    public void handle(ToolCardCanceledNotification notification) {
+
+    }
+
+    @Override
+    public void handle(ToolCardUsedNotification notification) {
+
+    }
+
+    @Override
+    public void handle(PlayerSkipTurnNotification notification) {
+
     }
 }

@@ -20,4 +20,17 @@ public interface NotificationHandler {
     void handle(NewRoundNotification notification);
 
     void handle(NextTurnNotification notification);
+
+    void handle(DiceChangedNotification notification);
+
+    void handle(DicePlacedNotification notification);
+
+    void handle(ToolCardCanceledNotification notification);
+
+    void handle(ToolCardUsedNotification notification);
+
+    void handle(PlayerSkipTurnNotification notification);
+
+
+
 }

@@ -1,10 +1,10 @@
 package it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions;
 
-public class CannotCloseOldConnection extends Exception{
+public class CannotCloseOldConnectionException extends Exception{
     private int cause;
     private String user;
 
-    public CannotCloseOldConnection(String username, int errorId) {
+    public CannotCloseOldConnectionException(String username, int errorId) {
         cause=errorId;
         user = username;
     }

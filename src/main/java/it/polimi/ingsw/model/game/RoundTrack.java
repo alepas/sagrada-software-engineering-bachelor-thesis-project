@@ -1,4 +1,6 @@
 package it.polimi.ingsw.model.game;
+import it.polimi.ingsw.model.clientModel.ClientDice;
+import it.polimi.ingsw.model.clientModel.ClientRoundTrack;
 import it.polimi.ingsw.model.dicebag.Dice;
 
 import java.io.Serializable;
@@ -93,5 +95,15 @@ public class RoundTrack implements Serializable {
         }
         
         return roundNotUsedDices;
+    }
+
+    public ClientRoundTrack getClientRoundTrack(){
+        ClientDice[][] roundTrackTable=new ClientDice[NUM_OF_ROUND][HYPOTHETICAL_MAX_DICES_PER_ROUND];
+        for (int i=0; i<NUM_OF_ROUND; i++){
+            for (int j=0;j<HYPOTHETICAL_MAX_DICES_PER_ROUND;j++){
+                roundTrackTable[i][j]=dicesNotUsed[i][j].getClientDice();
+            }
+        }
+        return new ClientRoundTrack(roundTrackTable);
     }
 }

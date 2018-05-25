@@ -39,12 +39,13 @@ public abstract class ToolCard implements Cloneable{
     public abstract ToolCardResponse use(PlayerInGame player, Color color) throws CannotPickColorException;
     public abstract ToolCardResponse use(PlayerInGame player, int number)throws CannotPickNumberException;
 
-    public Response cancel(PlayerInGame player) throws CannotCancelToolCardException {
-        if (currentPlayer==player) {
+    public Response cancel(PlayerInGame player) throws CannotCancelActionException {
+        if ((currentPlayer==player)) {
             currentPlayer = null;
             currentStatus = 0;
         }
-        else throw new CannotCancelToolCardException(id,0);
+        else throw new CannotCancelActionException(player.getUser(),id);
+
         return new ToolCardResponse(null);
     }
 

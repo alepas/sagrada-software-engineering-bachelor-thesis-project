@@ -179,7 +179,7 @@ public class DatabaseUsers {
 
                 try {
                     removeSocketFromToken(oldtoken);
-                } catch (CannotCloseOldConnection e) {
+                } catch (CannotCloseOldConnectionException e) {
                     if (e.getErrorId()==0)
                         throw new CannotLoginUserException(username,3);
                 }
@@ -233,7 +233,7 @@ public class DatabaseUsers {
 
                     try {
                         removeSocketFromToken(oldtoken);
-                    } catch (CannotCloseOldConnection e) {
+                    } catch (CannotCloseOldConnectionException e) {
                         if (e.getErrorId()==0)
                             throw new CannotLoginUserException(username,3);
             }
@@ -448,36 +448,36 @@ public class DatabaseUsers {
     }
 
 
-    synchronized void removeSocketFromUsername (String user) throws CannotCloseOldConnection {
+    synchronized void removeSocketFromUsername (String user) throws CannotCloseOldConnectionException {
         Socket oldsocket;
         String token=tokenByUsername.get(user);
         if (token==null){
-            throw new CannotCloseOldConnection(user,1);
+            throw new CannotCloseOldConnectionException(user,1);
         }
         oldsocket=socketByToken.get(token);
         if (oldsocket==null)
-                throw new CannotCloseOldConnection(user,1);
+                throw new CannotCloseOldConnectionException(user,1);
         try {
             oldsocket.close();
             socketByToken.remove(token);
         } catch (IOException e) {
-            throw new CannotCloseOldConnection(user,0);
+            throw new CannotCloseOldConnectionException(user,0);
         }
     }
 
-    synchronized void removeSocketFromToken (String token) throws CannotCloseOldConnection {
+    synchronized void removeSocketFromToken (String token) throws CannotCloseOldConnectionException {
         Socket oldsocket;
         if (token==null){
-            throw new CannotCloseOldConnection("",1);
+            throw new CannotCloseOldConnectionException("",1);
         }
         oldsocket=socketByToken.get(token);
         if (oldsocket==null)
-            throw new CannotCloseOldConnection("",1);
+            throw new CannotCloseOldConnectionException("",1);
         try {
             oldsocket.close();
             socketByToken.remove(token);
         } catch (IOException e) {
-            throw new CannotCloseOldConnection("",0);
+            throw new CannotCloseOldConnectionException("",0);
         }
     }
 

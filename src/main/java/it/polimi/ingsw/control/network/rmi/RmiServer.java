@@ -6,10 +6,10 @@ import it.polimi.ingsw.control.network.commands.responses.FindGameResponse;
 import it.polimi.ingsw.model.clientModel.ClientColor;
 import it.polimi.ingsw.model.clientModel.ClientDiceLocations;
 import it.polimi.ingsw.model.clientModel.ClientPosition;
-import it.polimi.ingsw.model.clientModel.ClientToolCardModes;
 import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
+import it.polimi.ingsw.model.exceptions.gameExceptions.UserNotInThisGameException;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
 import it.polimi.ingsw.model.game.Game;
 
@@ -60,22 +60,22 @@ public class RmiServer extends UnicastRemoteObject implements RemoteServer, Obse
     }
 
     @Override
-    public Response passTurn(String userToken) throws RemoteException, CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException {
+    public Response passTurn(String userToken) throws RemoteException, CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException , CannotPerformThisMoveException {
         return controller.passTurn(userToken);
     }
 
     @Override
-    public Response pickDice(String userToken, int diceId) throws CannotPickDiceException, CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException {
+    public Response pickDice(String userToken, int diceId) throws CannotPickDiceException, CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotPerformThisMoveException {
         return controller.pickDice(userToken, diceId);
     }
 
     @Override
-    public Response pickPosition(String userToken, ClientPosition position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, CannotPickPositionException {
+    public Response pickPosition(String userToken, ClientPosition position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, CannotPickPositionException, CannotPerformThisMoveException {
         return controller.pickPosition(userToken, position);
     }
 
     @Override
-    public Response useToolCard(String userToken, String cardId) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotUseToolCardException {
+    public Response useToolCard(String userToken, String cardId) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotUseToolCardException, CannotPerformThisMoveException {
         return controller.setToolCard(userToken, cardId);
     }
 
@@ -97,6 +97,36 @@ public class RmiServer extends UnicastRemoteObject implements RemoteServer, Obse
     @Override
     public Response pickNumberForToolCard(String userToken, int number) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPickNumberException {
         return controller.pickNumberForToolCard(userToken,number);
+    }
+
+    @Override
+    public Response getUpdatedExtractedDices(String userToken) throws CannotFindPlayerInDatabaseException {
+        return controller.getUpdatedExtractedDices(userToken);
+    }
+
+    @Override
+    public Response getUpdatedPOCs(String userToken) throws CannotFindPlayerInDatabaseException {
+        return controller.getUpdatedPOCs(userToken);
+    }
+
+    @Override
+    public Response getUpdatedRoundTrack(String userToken) throws CannotFindPlayerInDatabaseException {
+        return controller.getUpdatedRoundTrack(userToken);
+    }
+
+    @Override
+    public Response getUpdatedToolCards(String userToken) throws CannotFindPlayerInDatabaseException {
+        return controller.getUpdatedToolCards(userToken);
+    }
+
+    @Override
+    public Response getUpdatedWPC(String userToken, String username) throws CannotFindPlayerInDatabaseException, UserNotInThisGameException {
+        return controller.getUpdatedWPC(userToken, username);
+    }
+
+    @Override
+    public Response getUpdatedGame(String userToken) throws CannotFindPlayerInDatabaseException {
+        return controller.getUpdatedGame(userToken);
     }
 
 

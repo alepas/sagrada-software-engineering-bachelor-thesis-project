@@ -147,6 +147,7 @@ public class MultiplayerGame extends Game {
         if (currentTurn < GameConstants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME*numPlayers) {
             turnPlayer = nextPlayer();
             players[turnPlayer].setActive();
+            players[turnPlayer].incrementTurnsForRound();
             currentTurn++;
             changeAndNotifyObservers(new NextTurnNotification(currentTurn, players[turnPlayer].getUser()));
         } else {

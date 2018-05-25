@@ -7,6 +7,7 @@ import it.polimi.ingsw.model.clientModel.*;
 import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
+import it.polimi.ingsw.model.exceptions.gameExceptions.UserNotInThisGameException;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
 
 import java.rmi.NotBoundException;
@@ -42,9 +43,9 @@ public abstract class NetworkClient implements ResponseHandler {
 
     public abstract void pickWpc(String userToken, String wpcID) throws CannotFindPlayerInDatabaseException, NotYourWpcException;
 
-    public abstract void passTurn(String userToken) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException;
+    public abstract void passTurn(String userToken) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotPerformThisMoveException;
 
-    public abstract void useToolCard(String userToken, String cardId) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotUseToolCardException;
+    public abstract void useToolCard(String userToken, String cardId) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotUseToolCardException, CannotPerformThisMoveException;
 
     public abstract void pickDiceForToolCard(String userToken, int diceId, ClientDiceLocations where) throws CannotFindPlayerInDatabaseException, CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException;
 
@@ -54,9 +55,21 @@ public abstract class NetworkClient implements ResponseHandler {
 
     public abstract void pickNumberForToolCard(String userToken, int number) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPickNumberException;
 
-    public abstract void pickDice(String userToken, int diceId) throws CannotPickDiceException, CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException;
+    public abstract void pickDice(String userToken, int diceId) throws CannotPickDiceException, CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotPerformThisMoveException;
 
-    public abstract void pickPosition(String userToken, ClientPosition position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException;
+    public abstract void pickPosition(String userToken, ClientPosition position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, CannotPerformThisMoveException;
+
+    public abstract void getUpdatedExtractedDices(String userToken) throws CannotFindPlayerInDatabaseException;
+
+    public abstract void getUpdatedPOCs(String userToken) throws CannotFindPlayerInDatabaseException;
+
+    public abstract void getUpdatedRoundTrack(String userToken) throws CannotFindPlayerInDatabaseException;
+
+    public abstract void getUpdatedToolCards(String userToken) throws CannotFindPlayerInDatabaseException;
+
+    public abstract void getUpdatedWPC(String userToken, String username) throws CannotFindPlayerInDatabaseException, UserNotInThisGameException;
+
+    public abstract void getUpdatedGame(String userToken) throws CannotFindPlayerInDatabaseException;
 
 
 
@@ -65,7 +78,9 @@ public abstract class NetworkClient implements ResponseHandler {
 
 
 
-        //-------------------------------- Response Handler --------------------------------
+
+
+    //-------------------------------- Response Handler --------------------------------
 
     @Override
     public void handle(CreateUserResponse response){
@@ -111,4 +126,40 @@ public abstract class NetworkClient implements ResponseHandler {
     public void handle(PickPositionResponse response){
 
     }
+
+    @Override
+    public void handle(PassTurnResponse response){
+
+    }
+
+    @Override
+    public void handle(UpdatedExtractedDicesResponse response){
+
+    }
+
+    @Override
+    public void handle(UpdatedGameResponse response){
+
+    }
+
+    @Override
+    public void handle(UpdatedPOCsResponse response){
+
+    }
+
+    @Override
+    public void handle(UpdatedRoundTrackResponse response){
+
+    }
+
+    @Override
+    public void handle(UpdatedToolCardsResponse response){
+
+    }
+
+    @Override
+    public void handle(UpdatedWPCResponse response){
+
+    }
+
 }

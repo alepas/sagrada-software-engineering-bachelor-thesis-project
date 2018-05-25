@@ -1,10 +1,7 @@
 package it.polimi.ingsw.control;
 
 import it.polimi.ingsw.control.network.NetworkClient;
-import it.polimi.ingsw.model.cards.PublicObjectiveCard;
-import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.clientModel.*;
-import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
@@ -108,6 +105,8 @@ public class CliController {
         } catch (CannotFindPlayerInDatabaseException e) {
             e.printStackTrace();
             //TODO
+        } catch (CannotPerformThisMoveException e) {
+           view.displayText(e.getMessage());
         }
         return false;
     }

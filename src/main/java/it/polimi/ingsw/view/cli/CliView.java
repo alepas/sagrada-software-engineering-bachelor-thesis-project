@@ -478,5 +478,30 @@ public class CliView implements Observer, NotificationHandler {
         }
     }
 
+    @Override
+    public void handle(DiceChangedNotification notification) {
+
+    }
+
+    @Override
+    public void handle(DicePlacedNotification notification) {
+
+    }
+
+    @Override
+    public void handle(ToolCardCanceledNotification notification) {
+
+    }
+
+    @Override
+    public void handle(ToolCardUsedNotification notification) {
+
+    }
+
+    @Override
+    public void handle(PlayerSkipTurnNotification notification) {
+
+    }
+
 
 }

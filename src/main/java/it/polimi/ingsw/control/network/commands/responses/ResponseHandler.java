@@ -18,4 +18,15 @@ public interface ResponseHandler{
 
     void handle(PickPositionResponse response);
 
+    void handle(UpdatedExtractedDicesResponse updatedExtractedDicesResponse);
+
+    void handle(UpdatedGameResponse updatedGameResponse);
+
+    void handle(UpdatedPOCsResponse updatedPOCsResponse);
+
+    void handle(UpdatedRoundTrackResponse updatedRoundTrackResponse);
+
+    void handle(UpdatedToolCardsResponse updatedToolCardsResponse);
+
+    void handle(UpdatedWPCResponse updatedWPCResponse);
 }
