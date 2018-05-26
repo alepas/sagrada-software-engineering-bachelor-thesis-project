@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
@@ -15,6 +16,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 
+import javax.swing.*;
 import java.util.*;
 
 public class TwoPlayersGameController implements Observer, NotificationHandler {
@@ -26,7 +28,6 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
     //TODO private ClientColor[] privateObjective;
     private ArrayList<ClientToolCard> toolCardsIDs = new ArrayList<>();
     private ArrayList<ClientPoc> pocIDs = new ArrayList<>();
-    private HashMap<String, ClientWpc> wpc = new HashMap<>();
     private String round;
     private ArrayList<ImageView> dices = new ArrayList<>();
 
@@ -53,6 +54,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
     @FXML private MenuItem pocButton;
 
     @FXML private MenuItem privateObjectiveButton;
+    private ArrayList<AnchorPane> schema = new ArrayList<>();
 
 
     @FXML
@@ -78,7 +80,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
             setPoc( id , poc);
         }
 
-        wpc = clientModel.getWpcByUsername();
+        HashMap<String, ClientWpc> wpc = clientModel.getWpcByUsername();
         for(String wpcUser: wpc.keySet()){
 
             if(wpcUser.equals(username)) {
@@ -139,7 +141,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
             });
         }
 
-        for(Node cell: firstWpcGrid.getChildren()) {
+        for(AnchorPane cell: schema) {
             cell.setOnDragOver(event -> {
                 if (event.getGestureSource() != cell)
                     event.acceptTransferModes(TransferMode.MOVE);
@@ -151,7 +153,14 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                 Dragboard db = event.getDragboard();
                 boolean success = false;
                 if (db.hasImage()) {
+                    Image image = db.getImage();
+                    ImageView dice = new ImageView(image);
+                    dice.setFitWidth(70);
+                    dice.setFitHeight(70);
+                    cell.getChildren().add(dice);
+
                     System.out.println(db.getImage());
+
                     success = true;
                 }
                 event.setDropCompleted(success);
@@ -314,14 +323,14 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
             int column = cell.getCellPosition().getColumn();
 
             AnchorPane cellXY = new AnchorPane();
-
             ClientColor color = cell.getCellColor();
             fillColor(cellXY, color);
 
             int number = cell.getCellNumber();
             fillNumber(cellXY, number);
-
+            cellXY.setId(String.valueOf(row)+String.valueOf(column));
             gridPane.add(cellXY, column, row);
+            schema.add(cellXY);
         }
     }
 
