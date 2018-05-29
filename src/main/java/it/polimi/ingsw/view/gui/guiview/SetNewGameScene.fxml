@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane styleClass="Window" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.121"
+<AnchorPane  stylesheets="@style.css" styleClass="Window" xmlns="http://javafx.com/javafx/8.0.121"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.control.guicontroller.SetNewGameController">
 
     <ImageView fitHeight="705.0" fitWidth="900.0">
@@ -36,7 +36,7 @@
             <Image url="@../images/FirstSettings.JPG"/>
         </ImageView>
 
-        <Button fx:id="createGameButton" layoutX="198.0" layoutY="398.0" styleClass="Button" text="Find Game" />
+        <Button fx:id="createGameButton" layoutX="198.0" layoutY="398.0" styleClass="Button" text="Cerca Partita" />
 
         <Label fx:id="numPlayersInGameLabel" layoutX="168.0" layoutY="211.0" styleClass="Label" text="Choose Number of Players" />
 
@@ -46,7 +46,7 @@
         <Label fx:id="startGameLabel" layoutX="165.0" layoutY="476.0" styleClass="Label" text="The game is starting." visible="false"/>
         <Label fx:id="numOfPlayersLabel" layoutX="165.0" layoutY="476.0" styleClass="Label" text="Waiting other players..." visible="false"/>
 
-        <Button fx:id="personalAreaButton" layoutX="42.0" layoutY="481.0" styleClass="Button" text="Personal Area" />
+        <Button fx:id="personalAreaButton" layoutX="42.0" layoutY="481.0" styleClass="Button" text="Area Personale" />
 
         <RadioButton fx:id="soloPlayerBox" layoutX="95.0" layoutY="275.0" styleClass="CheckBox" text="1 Player"/>
         <RadioButton fx:id="twoPlayersBox" layoutX="295.0" layoutY="275.0" styleClass="CheckBox" text="2 Players"  />

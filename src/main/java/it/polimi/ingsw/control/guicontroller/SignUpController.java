@@ -48,7 +48,7 @@ public class SignUpController {
                 String username = signUpUsername.getText();
                 String password = signUpPassword.getText();
 
-                if (!password.equals("") && !username.equals(""))
+                if (!password.equals("") || !username.equals(""))
                     createAccount(username, password, event);
                 else signUpErrorLabel.setVisible(true);
             });

@@ -51,7 +51,7 @@ public class SignInController {
                 String username = signInUsername.getText();
                 String password = signInPassword.getText();
 
-                if (!password.equals("") && !username.equals(""))
+                if (!password.equals("") || !username.equals(""))
                     loginUser(username, password, event);
                 else signInErrorLabel.setVisible(true);
         });

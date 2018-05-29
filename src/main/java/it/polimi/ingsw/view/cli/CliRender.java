@@ -1,9 +1,7 @@
 package it.polimi.ingsw.view.cli;
 
-import it.polimi.ingsw.model.clientModel.ClientCell;
-import it.polimi.ingsw.model.clientModel.ClientColor;
-import it.polimi.ingsw.model.clientModel.ClientPosition;
-import it.polimi.ingsw.model.clientModel.ClientWpc;
+import it.polimi.ingsw.model.clientModel.*;
+import it.polimi.ingsw.model.constants.CliConstants;
 import it.polimi.ingsw.model.constants.WpcConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.wpc.Cell;
@@ -16,9 +14,11 @@ import java.util.HashMap;
 
 public class CliRender {
     private final int cellHeight = 3;
+    private final int diceDistance = 5;
+    private final int diceLenght = 7;
     private final int wpcHeight = (cellHeight+1)*WpcConstants.ROWS_NUMBER + 1;
-    private final int wpcLenght = 8*WpcConstants.COLS_NUMBER+1;
-
+    private final int wpcLenght = (diceLenght+1)*WpcConstants.COLS_NUMBER+1;
+    private final int wpcDistance = CliConstants.WpcSpacing;
 
     //Colors
     // Reset
@@ -133,6 +133,47 @@ public class CliRender {
 
     public CliRender() { }
 
+    public String renderDice(ClientDice dice){
+        StringBuilder diceRendered = new StringBuilder();
+        String[] stringDice = renderCell(dice.getDiceNumber(), getStringColor(dice.getDiceColor(), dice.getDiceNumber()));
+
+        for(String str : stringDice){
+            diceRendered.append(str + "\n");
+        }
+        diceRendered.append("ID: " + dice.getDiceID() + "\n");
+
+        return diceRendered.toString();
+    }
+
+    public String renderDices(ArrayList<ClientDice> dices){
+        StringBuilder diceRendered = new StringBuilder();
+        String[][] stringDices = new String[dices.size()][cellHeight+1];
+
+        String diceSpacing = calculateSpace(diceDistance, null, diceLenght);
+        String titleSpacing;
+
+        for(int i = 0; i < dices.size(); i++){
+            String[] temp = renderCell(dices.get(i).getDiceNumber(), getStringColor(dices.get(i).getDiceColor(), dices.get(i).getDiceNumber()));
+            for(int j = 0; j < temp.length; j++){
+                stringDices[i][j] = temp[j];
+            }
+            stringDices[i][cellHeight] = "ID: " + dices.get(i).getDiceID();
+        }
+
+
+        for(int diceRow = 0; diceRow < cellHeight+1; diceRow++){
+            for(int dice = 0; dice < dices.size(); dice++){
+                if (diceRow != cellHeight) diceRendered.append(stringDices[dice][diceRow] + diceSpacing);
+                else {
+                    diceRendered.append(stringDices[dice][diceRow] + calculateSpace(diceDistance, stringDices[dice][diceRow], diceLenght));
+                }
+            }
+            diceRendered.append("\n");
+        }
+
+        return diceRendered.toString();
+    }
+
     //Restiusce la stringa che rappresenta la wpc su cli
     public String renderWpc(ClientWpc wpc, boolean withID){
         StringBuilder wpcRendered = new StringBuilder();
@@ -151,14 +192,14 @@ public class CliRender {
         StringBuilder wpcsRendered = new StringBuilder();
         String[][] stringWpcs = new String[wpcs.length][];
 
-        String wpcSpacing = calculateSpace(distance, null);
+        String wpcSpacing = calculateSpace(distance, null, wpcLenght);
         String titleSpacing;
         String title;
 
         for(int i = 0; i < wpcs.length; i++){
             stringWpcs[i] = convertWpcToString(wpcs[i]);
             title = "ID: " + wpcs[i].getWpcID() + "    Favours: " + wpcs[i].getFavours();
-            titleSpacing = calculateSpace(distance, title);
+            titleSpacing = calculateSpace(distance, title, wpcLenght);
             wpcsRendered.append(title + titleSpacing);
         }
         wpcsRendered.append("\n");
@@ -174,11 +215,11 @@ public class CliRender {
         return wpcsRendered.append(RESET + "\n").toString();
     }
 
-    private String calculateSpace(int distance, String title){
+    private String calculateSpace(int distance, String title, int width){
         StringBuilder spacing = new StringBuilder();
 
         int stringSpace;
-        if (title != null) stringSpace = wpcLenght - title.length() + distance;
+        if (title != null) stringSpace = width - title.length() + distance;
         else stringSpace = distance;
 
         for(int i = 0; i < stringSpace; i++){
@@ -260,33 +301,7 @@ public class CliRender {
         else if (rowCell.getCellNumber() != 0) num = rowCell.getCellNumber();
         else num = 0;
 
-        if (cellColor != null) {
-            switch (cellColor(rowCell)) {
-                case GREEN:
-                    if (num == 0) color = GREEN;
-                    else color = GREEN_BACKGROUND + WHITE_BRIGHT;
-                    break;
-                case RED:
-                    if (num == 0) color = RED;
-                    else color = RED_BACKGROUND_BRIGHT + WHITE_BRIGHT;
-                    break;
-                case YELLOW:
-                    if (num == 0) color = YELLOW;
-                    else color = YELLOW_BACKGROUND_BRIGHT + WHITE_BRIGHT;
-                    break;
-                case BLUE:
-                    if (num == 0) color = BLUE;
-                    else color = BLUE_BACKGROUND_BRIGHT + WHITE_BRIGHT;
-                    break;
-                case VIOLET:
-                    if (num == 0) color = PURPLE;
-                    else color = PURPLE_BACKGROUND + WHITE_BRIGHT;
-                    break;
-                default:
-                    color = NULL_COLOR_CELL;
-                    break;
-            }
-        } else { color = NULL_COLOR_CELL; }
+        color = getStringColor(cellColor, num);
         
         return renderCell(num, color);
     }
@@ -297,6 +312,30 @@ public class CliRender {
         } else {
             return rowCell.getCellColor();
         }
+    }
+    
+    private String getStringColor(ClientColor color, int num){
+        if (color != null) {
+            switch (color) {
+                case GREEN:
+                    if (num == 0) return GREEN;
+                    else return GREEN_BACKGROUND + WHITE_BRIGHT;
+                case RED:
+                    if (num == 0) return RED;
+                    else return RED_BACKGROUND_BRIGHT + WHITE_BRIGHT;
+                case YELLOW:
+                    if (num == 0) return YELLOW;
+                    else return YELLOW_BACKGROUND_BRIGHT + WHITE_BRIGHT;
+                case BLUE:
+                    if (num == 0) return BLUE;
+                    else return BLUE_BACKGROUND_BRIGHT + WHITE_BRIGHT;
+                case VIOLET:
+                    if (num == 0) return PURPLE;
+                    else return PURPLE_BACKGROUND + WHITE_BRIGHT;
+                default:
+                    return NULL_COLOR_CELL;
+            }
+        } else { return NULL_COLOR_CELL; }
     }
 
     //Genera la stringa che rappresenta una cella con numero e colori passati

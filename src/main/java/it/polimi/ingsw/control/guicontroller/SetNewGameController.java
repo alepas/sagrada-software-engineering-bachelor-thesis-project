@@ -26,6 +26,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -39,6 +40,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
     private boolean privateObjExtractd = false;
     private boolean toolExtracted = false;
     private boolean dicesExtracted = false;
+    private static final Object waiter = new Object();
 
     private ClientColor[] colors;
     private ArrayList<ClientWpc> userWpcs = new ArrayList<>();
@@ -306,7 +308,6 @@ public class SetNewGameController implements Observer, NotificationHandler {
                 findPlayersLabel.setVisible(false);
                 numOfPlayersLabel.setVisible(true);
             }
-
             while (!gameStarted) {
                 if (newPlayer != null) {
 
@@ -393,7 +394,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
             //TODO
         }
         Thread waitingPoc = new Thread(() -> {
-            if (!pocExtracted) System.out.println("In attesa degli obbiettivi pubblici...");
+            if (!pocExtracted) System.out.println("In attesa degli obiettivi pubblici...");
             while (!pocExtracted) {
                 try {
                     Thread.sleep(500);
@@ -587,23 +588,9 @@ public class SetNewGameController implements Observer, NotificationHandler {
             case 0:
                 cell.getStyleClass().add("white");
                 break;
-            case 1:
-                cell.getStyleClass().add("num1");
-                break;
-            case 2:
-                cell.getStyleClass().add("num2");
-                break;
-            case 3:
-                cell.getStyleClass().add("num3");
-                break;
-            case 4:
-                cell.getStyleClass().add("num4");
-                break;
-            case 5:
-                cell.getStyleClass().add("num5");
-                break;
-            case 6:
-                cell.getStyleClass().add("num6");
+            default:
+                String style = "num" + String.valueOf(number);
+                cell.getStyleClass().add(style);
                 break;
         }
     }
@@ -614,25 +601,8 @@ public class SetNewGameController implements Observer, NotificationHandler {
      * @param color is the filling color of a schema's cell
      */
     private void fillColor(AnchorPane cell, ClientColor color) {
-        if (color != null) {
-            switch (color) {
-                case YELLOW:
-                    cell.getStyleClass().add("yellow");
-                    break;
-                case GREEN:
-                    cell.getStyleClass().add("green");
-                    break;
-                case RED:
-                    cell.getStyleClass().add("red");
-                    break;
-                case BLUE:
-                    cell.getStyleClass().add("blue");
-                    break;
-                case VIOLET:
-                    cell.getStyleClass().add("violet");
-                    break;
-            }
-        }
+        if (color != null)
+            cell.getStyleClass().add(color.toString().toLowerCase());
         else cell.getStyleClass().add("white");
     }
 
@@ -744,7 +714,14 @@ public class SetNewGameController implements Observer, NotificationHandler {
     @Override
     public void handle(PrivateObjExtractedNotification notification) {
         colors = notification.colorsByUser.get(clientModel.getUsername());
-        privateObjExtractd = true;
+        //privateObjExtractd = true;
+        Platform.runLater(()->{
+            Label lab4 = new Label("Il tuo obiettivo privato è il colore: "+ Arrays.toString(colors));
+            lab4.setLayoutX(100);
+            lab4.setLayoutY(380);
+            lab4.setVisible(true);
+            selectionArea.getChildren().add(lab4);
+        });
     }
 
     @Override
@@ -762,21 +739,21 @@ public class SetNewGameController implements Observer, NotificationHandler {
     public void handle(NewRoundNotification notification) {
         dicesExtracted = true;
         System.out.println("Round: " + notification.roundNumber);
-        System.out.println("Dadi estratti: ");
-        for (ClientDice dice : notification.extractedDices){
-            System.out.println("ID: " + dice.getDiceID() + "\t" + dice.getDiceNumber() + " " + dice.getDiceColor());
-        }
     }
 
     @Override
     public void handle(NextTurnNotification notification) {
         System.out.println("Turno: " + notification.turnNumber + "\tRound: " + clientModel.getCurrentRound());
-        System.out.println("Turno di " + notification.activeUser);
+        System.out.println("utente Attivo " + notification.activeUser);
+        synchronized (waiter){
+            if (clientModel.isActive()) waiter.notifyAll();
+        }
+
     }
 
     @Override
     public void handle(DiceChangedNotification notification) {
-
+        System.out.println("ehi");
     }
 
     @Override

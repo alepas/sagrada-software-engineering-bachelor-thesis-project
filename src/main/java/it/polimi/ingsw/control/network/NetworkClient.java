@@ -195,8 +195,5 @@ public abstract class NetworkClient implements ResponseHandler {
         if (response.exception == null) {
             clientModel.getWpcByUsername().put(response.user,response.wpc);
         }
-
     }
-
-
 }
