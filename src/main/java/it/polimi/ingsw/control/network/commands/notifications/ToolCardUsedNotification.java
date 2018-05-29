@@ -1,8 +1,5 @@
 package it.polimi.ingsw.control.network.commands.notifications;
 
-import it.polimi.ingsw.model.clientModel.ClientDice;
-import it.polimi.ingsw.model.clientModel.ClientDiceLocations;
-
 public class ToolCardUsedNotification implements Notification {
     public final String username;
     public final String cardId;

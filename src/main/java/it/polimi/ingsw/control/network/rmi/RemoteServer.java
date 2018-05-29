@@ -30,13 +30,13 @@ public interface RemoteServer extends Remote {
 
     Response useToolCard(String userToken, String cardId) throws RemoteException, CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotUseToolCardException, CannotPerformThisMoveException;
 
-    Response pickDiceForToolCard(String userToken, int diceId, ClientDiceLocations where) throws RemoteException, CannotFindPlayerInDatabaseException, CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException;
+    Response pickDiceForToolCard(String userToken, int diceId, ClientDiceLocations where) throws RemoteException, CannotFindPlayerInDatabaseException, CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException;
 
-    Response pickPositionForToolCard(String userToken, ClientPosition position) throws RemoteException, CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, NoToolCardInUseException;
+    Response pickPositionForToolCard(String userToken, ClientPosition position) throws RemoteException, CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException;
 
-    Response pickColorForToolCard(String userToken, ClientColor color) throws RemoteException, CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotPickColorException, NoToolCardInUseException;
+    Response pickColorForToolCard(String userToken, ClientColor color) throws RemoteException, CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotPickColorException, NoToolCardInUseException, CannotPerformThisMoveException;
 
-    Response pickNumberForToolCard(String userToken, int number) throws RemoteException, CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPickNumberException;
+    Response pickNumberForToolCard(String userToken, int number) throws RemoteException, CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPickNumberException, CannotPerformThisMoveException;
 
     Response getUpdatedExtractedDices(String userToken) throws RemoteException, CannotFindPlayerInDatabaseException;
 
@@ -49,6 +49,10 @@ public interface RemoteServer extends Remote {
     Response getUpdatedWPC(String userToken, String username) throws RemoteException, CannotFindPlayerInDatabaseException, UserNotInThisGameException ;
 
     Response getUpdatedGame(String userToken) throws RemoteException, CannotFindPlayerInDatabaseException;
+
+    Response stopToolCard (String userToken) throws RemoteException, CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotStopToolCardException, NoToolCardInUseException;
+
+    Response cancelAction (String userToken) throws RemoteException, CannotCancelActionException, PlayerNotAuthorizedException, CannotFindPlayerInDatabaseException;
 
 
 

@@ -1,6 +1,5 @@
 package it.polimi.ingsw.control.network.commands.responses;
 
-import it.polimi.ingsw.model.clientModel.ClientDice;
 import it.polimi.ingsw.model.clientModel.ClientToolCard;
 
 import java.util.ArrayList;

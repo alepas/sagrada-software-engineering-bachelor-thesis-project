@@ -1,26 +1,36 @@
 package it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions;
 
 public class CannotCancelActionException extends Exception{
-    private boolean toolcard;
+    private int mode;
+    //0=action normale 1=azione dentro la toolcard 2=la toolcard stessa
     private String user ;
     private String cardID;
+
 
     public CannotCancelActionException(String user){
         this.user=user;
         this.cardID=null;
-        toolcard=false;
+        this.mode=0;
     }
-    public CannotCancelActionException(String user, String card) {
+    public CannotCancelActionException(String user, String card, int mode) {
         this.user=user;
         this.cardID = card;
-        toolcard=true;
+        this.mode=mode;
     }
+
     @Override
     public String getMessage() {
-        if (toolcard)
-        return "Can't cancel the use of the Tool Card " + cardID+" for the user "+user;
-        else return "Can't cancel the current action for user "+user;
+        String temp;
+        switch (mode) {
+            case 0:
+                return "Can't cancelCard the current action for user " + user;
+            case 1:
+                return "Can't cancelCard the current action for user " + user + " because you have to complete the action for this tool card: " + cardID;
+            case 2:
+                return "Can't cancelCard the setCard of the Tool Card " + cardID +" for the user " + user;
 
+        }
+        return null;
     }
 
 

@@ -12,7 +12,7 @@ public interface ResponseHandler{
 
     void handle(PassTurnResponse response);
 
-    void handle(ToolCardResponse response);
+    void handle(MoveResponse response);
 
     void handle(PickDiceResponse response);
 
@@ -29,4 +29,6 @@ public interface ResponseHandler{
     void handle(UpdatedToolCardsResponse updatedToolCardsResponse);
 
     void handle(UpdatedWPCResponse updatedWPCResponse);
+
+
 }

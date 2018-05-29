@@ -1,9 +1,6 @@
 package it.polimi.ingsw.control.network.commands.responses;
 
 import it.polimi.ingsw.model.clientModel.ClientRoundTrack;
-import it.polimi.ingsw.model.clientModel.ClientToolCard;
-
-import java.util.ArrayList;
 
 public class UpdatedRoundTrackResponse implements Response {
     public final ClientRoundTrack roundTrack;

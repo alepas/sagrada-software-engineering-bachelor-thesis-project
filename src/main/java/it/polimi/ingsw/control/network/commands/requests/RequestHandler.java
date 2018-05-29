@@ -39,4 +39,9 @@ public interface RequestHandler {
     Response handle(UpdatedWPCRequest request);
 
     Response handle(UpdatedGameRequest request);
+
+    Response handle(StopToolCardRequest stopToolCardRequest);
+
+    Response handle(CancelActionRequest cancelActionRequest);
+
 }

@@ -1,6 +1,5 @@
 package it.polimi.ingsw.control.network.socket;
 
-import it.polimi.ingsw.control.network.socket.SocketClientHandler;
 import it.polimi.ingsw.model.constants.NetworkConstants;
 
 import java.io.IOException;

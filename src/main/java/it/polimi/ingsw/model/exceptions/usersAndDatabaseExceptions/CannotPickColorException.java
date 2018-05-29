@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions;
 
 import it.polimi.ingsw.model.dicebag.Color;
-import it.polimi.ingsw.model.wpc.Position;
 
 public class CannotPickColorException extends Exception{
     private Color color;

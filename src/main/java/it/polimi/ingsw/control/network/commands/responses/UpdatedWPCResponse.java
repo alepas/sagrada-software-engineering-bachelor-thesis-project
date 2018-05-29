@@ -1,9 +1,6 @@
 package it.polimi.ingsw.control.network.commands.responses;
 
-import it.polimi.ingsw.model.clientModel.ClientToolCard;
 import it.polimi.ingsw.model.clientModel.ClientWpc;
-
-import java.util.ArrayList;
 
 public class UpdatedWPCResponse implements Response {
     public final String user;
