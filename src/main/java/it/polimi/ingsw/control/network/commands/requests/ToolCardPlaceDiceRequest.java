@@ -1,17 +1,20 @@
 package it.polimi.ingsw.control.network.commands.requests;
 
 import it.polimi.ingsw.control.network.commands.responses.Response;
-import it.polimi.ingsw.model.clientModel.ClientPosition;
+import it.polimi.ingsw.model.clientModel.*;
 
-public class ToolCardPickPositionRequest implements Request {
+public class ToolCardPlaceDiceRequest implements Request {
     public final String userToken;
     public final ClientPosition position;
+    public final int diceId;
+    public final ClientDiceLocations diceFrom;
 
 
-
-    public ToolCardPickPositionRequest(String userToken, ClientPosition position) {
+    public ToolCardPlaceDiceRequest(String userToken, int diceId, ClientDiceLocations diceFrom, ClientPosition position) {
         this.userToken = userToken;
         this.position=position;
+        this.diceId=diceId;
+        this.diceFrom=diceFrom;
 
     }
 

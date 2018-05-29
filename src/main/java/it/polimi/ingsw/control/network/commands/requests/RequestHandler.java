@@ -24,7 +24,7 @@ public interface RequestHandler {
 
     Response handle(ToolCardPickNumberRequest request);
 
-    Response handle(ToolCardPickPositionRequest request);
+    Response handle(ToolCardPlaceDiceRequest request);
 
     Response handle (UseToolCardRequest request);
 

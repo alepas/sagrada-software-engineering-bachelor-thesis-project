@@ -83,10 +83,10 @@ public class ServerController {
         return player.pickDiceforToolCard(diceId,where);
     }
 
-    public Response pickPositionForToolCard(String userToken, ClientPosition position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException {
+    public Response placeDiceForToolCard(String userToken, int diceId, ClientDiceLocations diceFrom, ClientPosition position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException, CannotPickDiceException {
         PlayerInGame player=databaseUsers.getPlayerInGameFromToken(userToken);
         Position pos=new Position(position.getRow(),position.getColumn());
-        return player.pickPositionForToolCard(pos);
+        return player.placeDiceForToolCard(diceId,diceFrom,pos);
     }
 
     public Response pickColorForToolCard(String userToken, ClientColor color) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotPickColorException, NoToolCardInUseException, CannotPerformThisMoveException {

@@ -94,9 +94,9 @@ public class RmiClient extends NetworkClient {
     }
 
     @Override
-    public void pickPositionForToolCard(String userToken, ClientPosition position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException {
+    public void placeDiceForToolCard(String userToken, int diceId, ClientDiceLocations diceFrom, ClientPosition position) throws CannotFindPlayerInDatabaseException, CannotPickDiceException, CannotPickPositionException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException {
         try {
-            ((MoveResponse) remoteServer.pickPositionForToolCard(userToken, position)).handle(this);
+            ((MoveResponse) remoteServer.placeDiceForToolCard(userToken, diceId,diceFrom,position)).handle(this);
         } catch (RemoteException e){
 
         }

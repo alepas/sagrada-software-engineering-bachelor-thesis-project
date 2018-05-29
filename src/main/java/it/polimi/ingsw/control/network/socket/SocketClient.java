@@ -234,8 +234,8 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
     }
 
     @Override
-    public void pickPositionForToolCard(String userToken, ClientPosition position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException {
-        request(new ToolCardPickPositionRequest(userToken, position));
+    public void placeDiceForToolCard(String userToken, int diceId, ClientDiceLocations diceFrom, ClientPosition position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException, CannotPickDiceException {
+        request(new ToolCardPlaceDiceRequest(userToken, diceId,diceFrom,position));
 
         Exception e = ((MoveResponse) waitResponse()).exception;
 
@@ -245,6 +245,8 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
             if (e instanceof CannotPickPositionException ) throw  (CannotPickPositionException) e;
             if (e instanceof NoToolCardInUseException ) throw  (NoToolCardInUseException) e;
             if (e instanceof CannotPerformThisMoveException ) throw  (CannotPerformThisMoveException) e;
+            if (e instanceof CannotPickDiceException ) throw  (CannotPickDiceException) e;
+
 
         }
     }

@@ -103,10 +103,10 @@ public class ToolCard1 extends ToolCard {
         this.dice=dice;
         currentStatus=2;
         tempExtractedDices=new ArrayList<>();
-        currentGame.getExtractedDices().remove(dice);
+        /*currentGame.getExtractedDices().remove(dice);
 
-        updateClientExtractedDices();
-        return new MoveResponse(ClientMoveModifiedThings.EXTRACTEDDICES,ClientNextActions.PICKNUMBER,null,numbers,tempExtractedDices, true, null,false);
+        updateClientExtractedDices();*/
+        return new MoveResponse(null,ClientNextActions.PICKNUMBER,null,numbers,(ArrayList)null, true, null,false);
     }
 
     @Override
@@ -126,7 +126,7 @@ public class ToolCard1 extends ToolCard {
         try {
             dice.setNumber(tempNum+number);
         } catch (IncorrectNumberException e) { }
-        currentGame.getExtractedDices().add(dice);
+        /*currentGame.getExtractedDices().add(dice);*/
         updateClientExtractedDices();
         currentGame.changeAndNotifyObservers(new DiceChangedNotification(username,oldDice.getClientDice(),dice.getClientDice(),ClientDiceLocations.EXTRACTED,ClientDiceLocations.EXTRACTED,tempExtractedDices));
         /*  player.setPickedDice(dice);*/
@@ -142,10 +142,13 @@ public class ToolCard1 extends ToolCard {
             throw new CannotPickPositionException(username, position);
         currentPlayer.getGame().changeAndNotifyObservers(new DiceChangedNotification(username,oldDice.getClientDice(),dice.getClientDice(),ClientDiceLocations.EXTRACTED,ClientDiceLocations.EXTRACTED,tempExtractedDices));
         /*  player.setPickedDice(dice);*/
+
+        updateClientExtractedDices();
         currentPlayer.setToolCardUsedInTurn(true);
-        cleanCard();
+                cleanCard();
         return new MoveResponse(ClientMoveModifiedThings.WINDOW, ClientNextActions.MOVEFINISHED, false, ClientToolCardStatus.FINISHEDCARD,false);
     }
+
 
 
     @Override

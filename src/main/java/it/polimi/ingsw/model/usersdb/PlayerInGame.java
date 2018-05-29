@@ -196,8 +196,46 @@ public class PlayerInGame {
         return null;
     }
 
+    public synchronized Response placeDice(int diceId, Position pos) throws CannotPickDiceException, CannotPerformThisMoveException, PlayerNotAuthorizedException, CannotPickPositionException {
+        if (!active)
+            throw new PlayerNotAuthorizedException(username);
+        if ((pickedDice != null)) {
+            throw new CannotPerformThisMoveException(username,0,false);
+        } else if ((toolCardInUse != null)) {
+            throw new CannotPerformThisMoveException(username,1,false);
+        }
+        if (placedDiceInTurn){
+            throw new CannotPerformThisMoveException(username,2,false);
+        }
+        Dice dice=null;
+        for(Dice tempDice:game.getExtractedDices()){
+            if(tempDice.getId()==diceId){
+                dice=tempDice;
+                break;
+            }
+        }
+        if (dice!=null)
+            throw new CannotPickDiceException(username,dice.getDiceNumber(),dice.getDiceColor(),ClientDiceLocations.EXTRACTED, 0);
+        pickedDice=dice;
+        game.getExtractedDices().remove(dice);
+        if ( wpc.addDiceWithAllRestrictions(pickedDice,pos,game.getCurrentTurn())==false)
+            throw new CannotPickPositionException(username, pos);
 
-    public synchronized Response pickDice(int diceId) throws CannotPickDiceException, PlayerNotAuthorizedException, CannotPerformThisMoveException {
+
+
+        ClientWpc clientWpc=wpc.getClientWpc();
+        game.changeAndNotifyObservers(new DicePlacedNotification(username,pos.getClientPosition(), false, clientWpc));
+        incrementActionInTurn(false);
+        MoveResponse tempResponse= new MoveResponse(ClientMoveModifiedThings.WINDOW,ClientNextActions.MOVEFINISHED,clientWpc);
+
+        if ((!placedDiceInTurn)&&(allowPlaceDiceAfterCard))
+            return new MoveResponse(tempResponse,ClientNextActions.MENU_ONLY_PICKDICE);
+        else return new MoveResponse(tempResponse,ClientNextActions.TURNFINISHED);
+
+
+    }
+
+    public  Response pickDice(int diceId) throws CannotPickDiceException, PlayerNotAuthorizedException, CannotPerformThisMoveException {
         if (!active)
             throw new PlayerNotAuthorizedException(username);
         if ((pickedDice != null)) {
@@ -223,7 +261,7 @@ public class PlayerInGame {
         return new MoveResponse(ClientMoveModifiedThings.EXTRACTEDDICES,ClientNextActions.PICKPOSITION,getClientExtractedDices(),dice.getClientDice());
     }
 
-    public synchronized Response pickPosition(Position pos) throws PlayerNotAuthorizedException, CannotPickPositionException, CannotPerformThisMoveException {
+    public Response pickPosition(Position pos) throws PlayerNotAuthorizedException, CannotPickPositionException, CannotPerformThisMoveException {
         if (!active)
             throw new PlayerNotAuthorizedException(username);
         if ((pickedDice == null)) {
@@ -414,11 +452,13 @@ public class PlayerInGame {
 
     }
 
-    public synchronized Response pickPositionForToolCard(Position pos) throws PlayerNotAuthorizedException, NoToolCardInUseException, CannotPickPositionException, CannotPerformThisMoveException {
+    public synchronized Response placeDiceForToolCard(int diceId, ClientDiceLocations diceFrom, Position pos) throws PlayerNotAuthorizedException, NoToolCardInUseException, CannotPickPositionException, CannotPerformThisMoveException, CannotPickDiceException {
         if (!active)
             throw new PlayerNotAuthorizedException(username);
         if (toolCardInUse==null)
             throw new NoToolCardInUseException(username);
+        if (diceId!=this.pickedDice.getId())
+            throw new CannotPickDiceException(username,diceId,null,diceFrom,0);
         MoveResponse tempResponse= toolCardInUse.use(pos);
         if (tempResponse.cardStatus==ClientToolCardStatus.FINISHEDCARD){
             incrementActionInTurn(true);

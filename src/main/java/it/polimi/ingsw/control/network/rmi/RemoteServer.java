@@ -32,7 +32,7 @@ public interface RemoteServer extends Remote {
 
     Response pickDiceForToolCard(String userToken, int diceId, ClientDiceLocations where) throws RemoteException, CannotFindPlayerInDatabaseException, CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException;
 
-    Response pickPositionForToolCard(String userToken, ClientPosition position) throws RemoteException, CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException;
+    Response placeDiceForToolCard(String userToken, int diceId, ClientDiceLocations diceFrom, ClientPosition position) throws RemoteException, CannotFindPlayerInDatabaseException, CannotPickPositionException,CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException;
 
     Response pickColorForToolCard(String userToken, ClientColor color) throws RemoteException, CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotPickColorException, NoToolCardInUseException, CannotPerformThisMoveException;
 
