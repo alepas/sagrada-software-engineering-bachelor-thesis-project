@@ -1,8 +1,8 @@
 package it.polimi.ingsw.control.network.rmi;
 
 import it.polimi.ingsw.control.ServerController;
-import it.polimi.ingsw.control.network.commands.responses.Response;
 import it.polimi.ingsw.control.network.commands.responses.FindGameResponse;
+import it.polimi.ingsw.control.network.commands.responses.Response;
 import it.polimi.ingsw.model.clientModel.ClientColor;
 import it.polimi.ingsw.model.clientModel.ClientDiceLocations;
 import it.polimi.ingsw.model.clientModel.ClientPosition;
@@ -80,22 +80,22 @@ public class RmiServer extends UnicastRemoteObject implements RemoteServer, Obse
     }
 
     @Override
-    public Response pickDiceForToolCard(String userToken, int diceId, ClientDiceLocations where) throws CannotFindPlayerInDatabaseException, CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException {
+    public Response pickDiceForToolCard(String userToken, int diceId, ClientDiceLocations where) throws CannotFindPlayerInDatabaseException, CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException {
         return controller.pickDiceForToolCard(userToken, diceId, where);
     }
 
     @Override
-    public Response pickPositionForToolCard(String userToken, ClientPosition position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, NoToolCardInUseException {
+    public Response pickPositionForToolCard(String userToken, ClientPosition position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException {
         return controller.pickPositionForToolCard(userToken, position);
     }
 
     @Override
-    public Response pickColorForToolCard(String userToken, ClientColor color) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotPickColorException, NoToolCardInUseException {
+    public Response pickColorForToolCard(String userToken, ClientColor color) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotPickColorException, NoToolCardInUseException, CannotPerformThisMoveException {
         return controller.pickColorForToolCard(userToken, color);
     }
 
     @Override
-    public Response pickNumberForToolCard(String userToken, int number) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPickNumberException {
+    public Response pickNumberForToolCard(String userToken, int number) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPickNumberException, CannotPerformThisMoveException {
         return controller.pickNumberForToolCard(userToken,number);
     }
 
@@ -127,6 +127,16 @@ public class RmiServer extends UnicastRemoteObject implements RemoteServer, Obse
     @Override
     public Response getUpdatedGame(String userToken) throws CannotFindPlayerInDatabaseException {
         return controller.getUpdatedGame(userToken);
+    }
+
+    @Override
+    public Response stopToolCard(String userToken) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotStopToolCardException, NoToolCardInUseException {
+        return controller.stopToolCard(userToken);
+    }
+
+    @Override
+    public Response cancelAction(String userToken) throws CannotCancelActionException, PlayerNotAuthorizedException, CannotFindPlayerInDatabaseException {
+        return controller.cancelAction(userToken);
     }
 
 

@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model.clientModel;
 
-import it.polimi.ingsw.control.network.commands.notifications.NotificationHandler;
 import it.polimi.ingsw.control.network.commands.notifications.*;
 import it.polimi.ingsw.model.wpc.WPC;
 import it.polimi.ingsw.model.wpc.WpcDB;

@@ -1,7 +1,5 @@
 package it.polimi.ingsw.control.network.commands.notifications;
 
-import it.polimi.ingsw.control.network.commands.notifications.*;
-
 public interface NotificationHandler {
     void handle(GameStartedNotification notification);
 

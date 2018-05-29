@@ -8,17 +8,25 @@ public class CannotPickDiceException extends Exception{
     private Color diceColor;
     private String user;
     private ClientDiceLocations where;
+    private int cause;
 
-    public CannotPickDiceException(String user, int num, Color color, ClientDiceLocations where) {
+    public CannotPickDiceException(String user, int num, Color color, ClientDiceLocations where, int cause) {
         this.diceNum=num;
         this.diceColor=color;
         this.user = user;
         this.where=where;
+        this.cause = cause;
     }
     @Override
     public String getMessage() {
-        return "Can't choose the dice "+diceColor+": "+diceNum+" because it isn't available in the "+where.name()+" set of dices";
+        if (cause==0)
+            return "Can't choose the dice "+diceColor+": "+diceNum+" because it isn't available in the "+where.name()+" set of dices";
+        if (cause==1)
+            return "Can't choose the dice "+diceColor+": "+diceNum+" because it does not match the color required by the tool card";
+        if (cause==2)
+            return "Can't choose the dice "+diceColor+": "+diceNum+" because it does not match the restrictions of the tool card";
 
+        return null;
     }
 
 

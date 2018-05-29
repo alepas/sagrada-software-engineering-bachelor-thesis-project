@@ -1,14 +1,14 @@
 package it.polimi.ingsw.model.game;
 
+import it.polimi.ingsw.control.network.commands.notifications.GameStartedNotification;
 import it.polimi.ingsw.control.network.commands.notifications.NewRoundNotification;
 import it.polimi.ingsw.control.network.commands.notifications.NextTurnNotification;
+import it.polimi.ingsw.control.network.commands.notifications.PlayersChangedNotification;
 import it.polimi.ingsw.model.clientModel.ClientDice;
 import it.polimi.ingsw.model.constants.GameConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.exceptions.gameExceptions.*;
-import it.polimi.ingsw.control.network.commands.notifications.GameStartedNotification;
-import it.polimi.ingsw.control.network.commands.notifications.PlayersChangedNotification;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotAddPlayerInDatabaseException;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 
@@ -16,11 +16,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
-public class MultiplayerGame extends Game {
+public class SinglePlayerGame extends Game {
     private int turnPlayer;
     private int roundPlayer;
 
-    public MultiplayerGame(int numPlayers) throws InvalidMultiplayerGamePlayersException {
+    public SinglePlayerGame(int numPlayers) throws InvalidMultiplayerGamePlayersException {
         super(numPlayers);
 
         if (numPlayers < GameConstants.MULTIPLAYER_MIN_NUM_PLAYERS || numPlayers > GameConstants.MAX_NUM_PLAYERS)

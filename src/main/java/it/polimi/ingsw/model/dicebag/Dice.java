@@ -47,4 +47,14 @@ public class Dice implements Serializable {
         return new ClientDice(Color.getClientColor(color), number, id);
     }
 
+    private Dice(Color color, int number, int id) {
+        this.color = color;
+        this.number = number;
+        this.id = id;
+    }
+
+    public Dice copyDice(){
+        return new Dice(color,number,id);
+    }
+
 }

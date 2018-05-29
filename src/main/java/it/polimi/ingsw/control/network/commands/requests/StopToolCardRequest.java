@@ -1,17 +1,13 @@
 package it.polimi.ingsw.control.network.commands.requests;
 
 import it.polimi.ingsw.control.network.commands.responses.Response;
-import it.polimi.ingsw.model.clientModel.ClientPosition;
 
-public class ToolCardPickPositionRequest implements Request {
+public class StopToolCardRequest implements Request {
     public final String userToken;
-    public final ClientPosition position;
 
 
-
-    public ToolCardPickPositionRequest(String userToken, ClientPosition position) {
+    public StopToolCardRequest(String userToken) {
         this.userToken = userToken;
-        this.position=position;
 
     }
 
@@ -23,4 +19,3 @@ public class ToolCardPickPositionRequest implements Request {
         return handler.handle(this);
     }
 }
-

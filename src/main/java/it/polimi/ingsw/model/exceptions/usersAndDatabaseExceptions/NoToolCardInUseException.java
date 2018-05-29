@@ -12,7 +12,7 @@ public class NoToolCardInUseException extends Exception{
     public String getMessage() {
 
 
-        return "No ToolCard in use";
+        return "No ToolCard in setCard";
     }
 
 

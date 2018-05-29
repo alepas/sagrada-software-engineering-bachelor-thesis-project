@@ -166,7 +166,7 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
         try {
             return controller.setToolCard(request.userToken,request.toolCardId);
         } catch (CannotFindPlayerInDatabaseException | PlayerNotAuthorizedException | CannotPerformThisMoveException | CannotUseToolCardException e) {
-            return new ToolCardResponse(e);
+            return new MoveResponse(e);
         }
     }
 
@@ -174,8 +174,8 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
     public Response handle(ToolCardPickColorRequest request) {
         try {
             return controller.pickColorForToolCard(request.userToken,request.color);
-        } catch (CannotFindPlayerInDatabaseException | CannotPickColorException | NoToolCardInUseException | PlayerNotAuthorizedException e) {
-            return new ToolCardResponse(e);
+        } catch (CannotFindPlayerInDatabaseException | CannotPickColorException | NoToolCardInUseException | PlayerNotAuthorizedException | CannotPerformThisMoveException e) {
+            return new MoveResponse(e);
         }
     }
 
@@ -183,8 +183,8 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
     public Response handle(ToolCardPickDiceRequest request) {
         try {
             return controller.pickDiceForToolCard(request.userToken,request.diceId,request.where);
-        } catch (CannotFindPlayerInDatabaseException | CannotPickDiceException | PlayerNotAuthorizedException | NoToolCardInUseException e) {
-            return new ToolCardResponse(e);
+        } catch (CannotFindPlayerInDatabaseException | CannotPickDiceException | PlayerNotAuthorizedException | NoToolCardInUseException | CannotPerformThisMoveException e) {
+            return new MoveResponse(e);
         }
     }
 
@@ -192,8 +192,8 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
     public Response handle(ToolCardPickNumberRequest request) {
         try {
             return controller.pickNumberForToolCard(request.userToken,request.number);
-        } catch (CannotFindPlayerInDatabaseException | CannotPickNumberException | PlayerNotAuthorizedException | NoToolCardInUseException e) {
-            return new ToolCardResponse(e);
+        } catch (CannotFindPlayerInDatabaseException | CannotPickNumberException | PlayerNotAuthorizedException | NoToolCardInUseException | CannotPerformThisMoveException e) {
+            return new MoveResponse(e);
         }
     }
 
@@ -201,8 +201,8 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
     public Response handle(ToolCardPickPositionRequest request) {
         try {
             return controller.pickPositionForToolCard(request.userToken,request.position);
-        } catch (CannotFindPlayerInDatabaseException | CannotPickPositionException | PlayerNotAuthorizedException | NoToolCardInUseException e) {
-            return new ToolCardResponse(e);
+        } catch (CannotFindPlayerInDatabaseException | CannotPickPositionException | PlayerNotAuthorizedException | NoToolCardInUseException | CannotPerformThisMoveException e) {
+            return new MoveResponse(e);
         }
     }
 
@@ -261,8 +261,23 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
         }
     }
 
+    @Override
+    public Response handle(StopToolCardRequest stopToolCardRequest) {
+        try {
+            return controller.stopToolCard(stopToolCardRequest.userToken);
+        } catch (CannotFindPlayerInDatabaseException | PlayerNotAuthorizedException | CannotStopToolCardException | NoToolCardInUseException e) {
+            return new MoveResponse(e);
+        }
+    }
 
-
+    @Override
+    public Response handle(CancelActionRequest cancelActionRequest) {
+        try {
+            return controller.cancelAction(cancelActionRequest.userToken);
+        } catch (CannotCancelActionException | PlayerNotAuthorizedException | CannotFindPlayerInDatabaseException e) {
+            return new MoveResponse(e);
+        }
+    }
 
 
     //------------------------------ Game observer ------------------------------

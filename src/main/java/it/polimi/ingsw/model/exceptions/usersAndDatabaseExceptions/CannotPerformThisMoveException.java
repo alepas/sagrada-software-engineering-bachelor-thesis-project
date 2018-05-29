@@ -20,12 +20,15 @@ public class CannotPerformThisMoveException extends Exception{
         else nameOfMove="perform this move";
 
         if (cause==0)
-            return "Can't "+nameOfMove+" for "+user+" because there is a move pending: placing a dice. Complete or cancel this move befor end the turn.";
+            return "Can't "+nameOfMove+" for "+user+" because there is a move pending: placing a dice. Complete or cancelCard this move befor end the turn.";
 
         else if (cause==1)
-            return "Can't "+nameOfMove+" for "+user+" because there is a move pending: using a card. Complete or cancel this move befor end the turn.";
+            return "Can't "+nameOfMove+" for "+user+" because there is a move pending: using a card. Complete or cancelCard this move befor end the turn.";
         else if (cause==2)
-            return "Can't perform this move because you need to do some other things before";
+            return "Can't perform this move because it's unavailable right now. Follow the steps on screen";
+
+        else if (cause==3)
+            return "Can't perform this move because you had already done it in this turn. Follow the steps on screen";
 
         return "Can't "+nameOfMove+" for "+user+" because it's impossible.";
     }
