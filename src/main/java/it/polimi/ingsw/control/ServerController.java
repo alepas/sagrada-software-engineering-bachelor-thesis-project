@@ -74,6 +74,13 @@ public class ServerController {
         return new PassTurnResponse(null);
     }
 
+
+
+
+
+    //----------------------------------------------- Toolcards --------------------------------------------------
+
+
     public Response setToolCard(String userToken, String cardId) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotUseToolCardException, CannotPerformThisMoveException {
         PlayerInGame player=databaseUsers.getPlayerInGameFromToken(userToken);
         return player.useToolCard(cardId);

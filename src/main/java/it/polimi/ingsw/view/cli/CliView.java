@@ -457,10 +457,8 @@ public class CliView implements Observer, NotificationHandler {
     @Override
     public void handle(NewRoundNotification notification) {
         displayText("Round: " + notification.roundNumber);
-        displayText("Dadi estratti: ");
-        for (ClientDice dice : notification.extractedDices){
-            displayText("ID: " + dice.getDiceID() + "\t" + dice.getDiceNumber() + " " + dice.getDiceColor());
-        }
+        displayText("Dadi estratti:");
+        System.out.println("\n" + cliRender.renderDices(notification.extractedDices) + "\n");
     }
 
     @Override
@@ -469,9 +467,7 @@ public class CliView implements Observer, NotificationHandler {
         displayText("Turno: " + notification.turnNumber + "\tRound: " + controller.getCurrentRound());
         displayText("Turno di " + notification.activeUser);
         displayText("Dadi presenti: ");
-        for (ClientDice dice : controller.getExtractedDices()){
-            displayText("ID: " + dice.getDiceID() + "\t" + dice.getDiceNumber() + " " + dice.getDiceColor());
-        }
+        System.out.println("\n" + cliRender.renderDices(controller.getExtractedDices()) + "\n");
 
         synchronized (waiter){
             if (controller.isActive()) waiter.notifyAll();

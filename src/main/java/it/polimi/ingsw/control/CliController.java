@@ -39,7 +39,6 @@ public class CliController {
     public String createUser(String username, String password){
         try {
             client.createUser(username, password);
-
         } catch (CannotRegisterUserException e){
             view.displayText(e.getMessage());
         }
