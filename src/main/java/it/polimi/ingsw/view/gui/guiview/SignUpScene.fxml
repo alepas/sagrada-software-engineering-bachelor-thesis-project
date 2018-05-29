@@ -34,7 +34,7 @@
         <PasswordField fx:id="signUpPassword" layoutX="140.0" layoutY="330.0" promptText="password" styleClass="InsertionField" />
 
         <Button fx:id="signUpButton" layoutX="201.0" layoutY="395.0" styleClass="Button" text="Sign Up" />
-        <Button fx:id="backButton" layoutX="201.0" layoutY="460.0" styleClass="Button" text="Main Menù" />
+        <Button fx:id="backButton" layoutX="42.0" layoutY="481.0" styleClass="Button" text="Main Menù" />
 
         <Label layoutX="189.0" layoutY="212.0" styleClass="Label" text="Create new account" />
 
