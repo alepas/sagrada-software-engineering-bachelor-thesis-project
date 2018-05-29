@@ -78,13 +78,7 @@ public abstract class NetworkClient implements ResponseHandler {
 
     public abstract void cancelAction (String userToken) throws CannotCancelActionException, PlayerNotAuthorizedException, CannotFindPlayerInDatabaseException;
 
-
-
-
-
-
-
-
+    public abstract void placeDice(String userToken, int id, ClientPosition position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, CannotPickDiceException, PlayerNotAuthorizedException, CannotPerformThisMoveException;
 
 
 

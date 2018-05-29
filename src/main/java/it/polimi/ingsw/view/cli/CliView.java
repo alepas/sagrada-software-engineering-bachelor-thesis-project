@@ -205,6 +205,7 @@ public class CliView implements Observer, NotificationHandler {
                 int action = Integer.parseInt(response);
                 switch (action){
                     case 1:
+                        pickDice();
                         break;
                     case 2:
                         break;
@@ -220,6 +221,16 @@ public class CliView implements Observer, NotificationHandler {
         } while (true);
 
 
+    }
+
+    private void pickDice() {
+        displayText("Inserisci l'ID del dado da posizionare");
+        int id = Integer.parseInt(userInput());
+        displayText("Inserisci la colonna in cui posizionarlo");
+        int col = Integer.parseInt(userInput());
+        displayText("Inserisci la riga in cui posizionarlo");
+        int row = Integer.parseInt(userInput());
+        controller.placeDice(id, col, row);
     }
 
     //Attende che tutti i giocatori entrino in partita
@@ -481,6 +492,13 @@ public class CliView implements Observer, NotificationHandler {
 
     @Override
     public void handle(DicePlacedNotification notification) {
+        displayText(notification.username + " ha posizionato il dado " + notification.dice.getDiceID() +
+            " in posizione " + notification.position.toString());
+        displayText("\n" + cliRender.renderWpc(notification.wpc, false));
+        if (notification.newExtractedDices != null) {
+            displayText("I dadi nella riserva sono: \n");
+            System.out.println(cliRender.renderDices(notification.newExtractedDices));
+        }
 
     }
 

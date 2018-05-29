@@ -44,4 +44,5 @@ public interface RequestHandler {
 
     Response handle(CancelActionRequest cancelActionRequest);
 
+    Response handle(PlaceDiceRequest placeDiceRequest);
 }

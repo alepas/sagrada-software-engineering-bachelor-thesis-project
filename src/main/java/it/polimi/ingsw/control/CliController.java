@@ -110,6 +110,22 @@ public class CliController {
         return false;
     }
 
+    public void placeDice(int id, int col, int row) {
+        try {
+            client.placeDice(clientModel.getUserToken(), id, new ClientPosition(row, col));
+        } catch (CannotFindPlayerInDatabaseException e) {
+            e.printStackTrace();
+        } catch (CannotPickPositionException e) {
+            e.printStackTrace();
+        } catch (CannotPickDiceException e) {
+            e.printStackTrace();
+        } catch (PlayerNotAuthorizedException e) {
+            e.printStackTrace();
+        } catch (CannotPerformThisMoveException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
     //---------------------------------- Request to cli model ----------------------------------

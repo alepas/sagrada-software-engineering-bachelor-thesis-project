@@ -367,4 +367,18 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
 
     }
 
+    @Override
+    public void placeDice(String userToken, int id, ClientPosition position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, CannotPickDiceException, PlayerNotAuthorizedException, CannotPerformThisMoveException {
+        request(new PlaceDiceRequest(userToken, id, position));
+
+        Exception e = ((MoveResponse) waitResponse()).exception;
+
+        if (e != null){
+            if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
+            if (e instanceof PlayerNotAuthorizedException) throw (PlayerNotAuthorizedException) e;
+            if (e instanceof CannotPickPositionException ) throw  (CannotPickPositionException) e;
+            if (e instanceof CannotPerformThisMoveException ) throw  (CannotPerformThisMoveException) e;
+            if (e instanceof CannotPickDiceException ) throw  (CannotPickDiceException) e;
+        }
+    }
 }

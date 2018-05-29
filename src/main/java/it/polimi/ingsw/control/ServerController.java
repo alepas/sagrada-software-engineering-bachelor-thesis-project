@@ -73,6 +73,12 @@ public class ServerController {
         return new PassTurnResponse(null);
     }
 
+    public Response placeDice(String userToken, int id, ClientPosition position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, CannotPickDiceException, PlayerNotAuthorizedException, CannotPerformThisMoveException {
+        PlayerInGame player = databaseUsers.getPlayerInGameFromToken(userToken);
+        Position pos = new Position(position.getRow(),position.getColumn());
+        return player.placeDice(id, pos);
+    }
+
 
 
 

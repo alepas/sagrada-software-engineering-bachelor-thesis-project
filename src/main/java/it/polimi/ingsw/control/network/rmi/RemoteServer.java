@@ -54,18 +54,7 @@ public interface RemoteServer extends Remote {
 
     Response cancelAction (String userToken) throws RemoteException, CannotCancelActionException, PlayerNotAuthorizedException, CannotFindPlayerInDatabaseException;
 
-
-
-
-
-
-
-
-
-
-
-
-
+    Response placeDice(String userToken, int id, ClientPosition position) throws RemoteException, CannotFindPlayerInDatabaseException, CannotPickPositionException, CannotPickDiceException, PlayerNotAuthorizedException, CannotPerformThisMoveException;
 
     }
 

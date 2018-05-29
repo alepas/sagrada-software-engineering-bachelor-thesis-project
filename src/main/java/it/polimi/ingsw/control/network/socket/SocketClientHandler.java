@@ -279,6 +279,15 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
         }
     }
 
+    @Override
+    public Response handle(PlaceDiceRequest request) {
+        try {
+            return controller.placeDice(request.userToken, request.diceId, request.position);
+        } catch (CannotPickDiceException | CannotPickPositionException | PlayerNotAuthorizedException | CannotPerformThisMoveException | CannotFindPlayerInDatabaseException e) {
+            return new MoveResponse(e);
+        }
+    }
+
 
     //------------------------------ Game observer ------------------------------
 

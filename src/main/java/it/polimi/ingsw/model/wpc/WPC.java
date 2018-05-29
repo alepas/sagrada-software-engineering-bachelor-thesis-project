@@ -54,12 +54,13 @@ public class WPC {
         Cell cell=getCellFromPosition(pos);
         if(cell.getDice()!=null)
             return false;
+        //TODO: se la wpc non contiene dadi allora checkFirstTurnRestriction
         if (globalTurn == 1) {
-            if (checkFirstTurnRestriction(cell)&&checkAdjacentRestriction(cell,dice)&&checkCellRestriction(cell,dice))
+            if (checkFirstTurnRestriction(cell)&&checkAdjacentRestriction(cell,dice)&&checkCellRestriction(cell,dice)) {
+                cell.setDice(dice);
                 return true;
-        }
-        else if (checkCellRestriction(cell, dice) && checkAdjacentRestriction(cell, dice) && isThereAtLeastADiceNear(cell))
-        {
+            }
+        } else if (checkCellRestriction(cell, dice)&& checkAdjacentRestriction(cell, dice)&& isThereAtLeastADiceNear(cell)) {
             cell.setDice(dice);
             return true;
         }
@@ -185,7 +186,7 @@ public class WPC {
         int column= cell.getCellPosition().getColumn();
 
         for(Cell schemaCell: this.schema) {
-            if (isAnAdjacentCell(schemaCell, row, column) && cell.getDice()!= null)
+            if (isAnAdjacentCell(schemaCell, row, column) && schemaCell.getDice()!= null)
                 return checkDiceEquivalence(schemaCell.getDice(), dice);
         }
         return true;

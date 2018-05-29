@@ -172,10 +172,9 @@ public class PlayerInGame {
         if (!active)
             throw new PlayerNotAuthorizedException(username);
         if (toolCardInUse == null) {
-            if (pickedDice == null) {
+
                 clearPlayerTurn();
                 game.nextTurn();
-            }else throw new CannotPerformThisMoveException(username,0,true);
         } else throw new CannotPerformThisMoveException(username,1,true);
     }
 
@@ -214,7 +213,7 @@ public class PlayerInGame {
                 break;
             }
         }
-        if (dice!=null)
+        if (dice==null)
             throw new CannotPickDiceException(username,dice.getDiceNumber(),dice.getDiceColor(),ClientDiceLocations.EXTRACTED, 0);
         pickedDice=dice;
         game.getExtractedDices().remove(dice);
@@ -224,7 +223,7 @@ public class PlayerInGame {
 
 
         ClientWpc clientWpc=wpc.getClientWpc();
-        game.changeAndNotifyObservers(new DicePlacedNotification(username,pos.getClientPosition(), false, clientWpc));
+        game.changeAndNotifyObservers(new DicePlacedNotification(username,dice.getClientDice(),pos.getClientPosition(),  clientWpc,getClientExtractedDices(),null));
         incrementActionInTurn(false);
         MoveResponse tempResponse= new MoveResponse(ClientMoveModifiedThings.WINDOW,ClientNextActions.MOVEFINISHED,clientWpc);
 
@@ -275,7 +274,7 @@ public class PlayerInGame {
 
 
         ClientWpc clientWpc=wpc.getClientWpc();
-        game.changeAndNotifyObservers(new DicePlacedNotification(username,pos.getClientPosition(), false, clientWpc));
+        game.changeAndNotifyObservers(new DicePlacedNotification(username,pickedDice.getClientDice(),pos.getClientPosition(),  clientWpc,getClientExtractedDices(),null));
         incrementActionInTurn(false);
         return new MoveResponse(ClientMoveModifiedThings.WINDOW,ClientNextActions.MOVEFINISHED,clientWpc);
 

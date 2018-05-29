@@ -5,20 +5,20 @@ import it.polimi.ingsw.model.clientModel.*;
 import java.util.ArrayList;
 
 public class MoveResponse implements Response {
-    public final ClientMoveModifiedThings modifiedElement;
+    public final ClientMoveModifiedThings modifiedElement;      //Eliminare
     public final ClientNextActions nextAction;
     public final ClientDiceLocations wherePickNewDices;
-    public final String otherUserForNextAction;
-    public final String otherUserForWpcModified;
+    public final String otherUserForNextAction;                 //Eliminare
+    public final String otherUserForWpcModified;                //Eliminare
     public final ClientWpc wpc;
-    public final ArrayList<ClientDice> extractedDices;
-    public final ClientRoundTrack roundTrack;
+    public final ArrayList<ClientDice> extractedDices;          //Da valutare
+    public final ClientRoundTrack roundTrack;                   //Da valutare
     public final ClientDice diceChosen;
-    public final ArrayList<ClientColor> colorsToChoose;
+    public final ArrayList<ClientColor> colorsToChoose;         //Eliminare
     public final ArrayList<Integer> numbersToChoose;
-    public final ClientToolCardStatus cardStatus;
-    public final boolean toolCardInUseForNextMove;
-    public final boolean stoppableCard;
+    public final ClientToolCardStatus cardStatus;               //Eliminare
+    public final boolean toolCardInUseForNextMove;              //Eliminare
+    public final boolean stoppableCard;                         //Eliminare: aggiungere STOPTOOLCARD a nextactione
     public final Exception exception;
 
     public MoveResponse(MoveResponse moveResponse, ClientNextActions newNextAction){

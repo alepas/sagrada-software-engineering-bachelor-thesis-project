@@ -211,5 +211,14 @@ public class RmiClient extends NetworkClient {
         }
     }
 
+    @Override
+    public void placeDice(String userToken, int id, ClientPosition position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, CannotPickDiceException, PlayerNotAuthorizedException, CannotPerformThisMoveException {
+        try {
+            ((MoveResponse) remoteServer.placeDice(userToken, id, position)).handle(this);
+        } catch (RemoteException e) {
+
+        }
+    }
+
 
 }
