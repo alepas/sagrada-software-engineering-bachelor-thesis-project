@@ -34,12 +34,12 @@ import static java.lang.Thread.sleep;
 
 public class SetNewGameController implements Observer, NotificationHandler {
 
+    public AnchorPane messagesArea;
     private boolean gameStarted = false;
     private boolean areWpcExtracted = false;
     private boolean pocExtracted = false;
     private boolean privateObjExtractd = false;
     private boolean toolExtracted = false;
-    private boolean dicesExtracted = false;
     private static final Object waiter = new Object();
 
     private ClientColor[] colors;
@@ -562,7 +562,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
      * @param wpc  //todo
      */
     private void setWpc(GridPane gridPane, ClientWpc wpc) {
-
+        Platform.runLater(()-> messagesArea.setVisible(true));
         for (ClientCell cell : wpc.getSchema()) {
             int row = cell.getCellPosition().getRow();
             int column = cell.getCellPosition().getColumn();
@@ -665,6 +665,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
 
 
     private void changeSceneHandle(Event event, String path) {
+            clientModel.setObserver(null);
             AnchorPane nextNode = new AnchorPane();
             try {
                 nextNode = FXMLLoader.load(getClass().getResource(path));
@@ -737,18 +738,10 @@ public class SetNewGameController implements Observer, NotificationHandler {
 
     @Override
     public void handle(NewRoundNotification notification) {
-        dicesExtracted = true;
-        System.out.println("Round: " + notification.roundNumber);
     }
 
     @Override
     public void handle(NextTurnNotification notification) {
-        System.out.println("Turno: " + notification.turnNumber + "\tRound: " + clientModel.getCurrentRound());
-        System.out.println("utente Attivo " + notification.activeUser);
-        synchronized (waiter){
-            if (clientModel.isActive()) waiter.notifyAll();
-        }
-
     }
 
     @Override
