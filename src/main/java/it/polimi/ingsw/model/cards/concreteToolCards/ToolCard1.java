@@ -123,7 +123,7 @@ public class ToolCard1 extends ToolCard {
         currentStatus=3;
         updateClientExtractedDices();
         currentGame.changeAndNotifyObservers(new DiceChangedNotification(username,oldDice.getClientDice(),dice.getClientDice(),ClientDiceLocations.EXTRACTED,ClientDiceLocations.EXTRACTED,tempExtractedDices));
-        return new MoveData(ClientNextActions.PLACE_DICE_TOOLCARD,ClientDiceLocations.EXTRACTED,ClientDiceLocations.WINDOW,null,tempExtractedDices,null,dice.getId());
+        return new MoveData(ClientNextActions.PLACE_DICE_TOOLCARD,ClientDiceLocations.EXTRACTED,ClientDiceLocations.WPC,null,tempExtractedDices,null,dice.getId());
     }
 
     @Override
@@ -217,7 +217,7 @@ public class ToolCard1 extends ToolCard {
             case 2: return new MoveData(ClientNextActions.PICK_NUMBER_TOOLCARD,null,null,null,this.dice.getId(),numbers,false);
 
 
-            case 3: return new MoveData(ClientNextActions.PLACE_DICE_TOOLCARD,ClientDiceLocations.EXTRACTED,ClientDiceLocations.WINDOW,null,tempExtractedDices,null,dice.getId());
+            case 3: return new MoveData(ClientNextActions.PLACE_DICE_TOOLCARD,ClientDiceLocations.EXTRACTED,ClientDiceLocations.WPC,null,tempExtractedDices,null,dice.getId());
 
         }
         return null;

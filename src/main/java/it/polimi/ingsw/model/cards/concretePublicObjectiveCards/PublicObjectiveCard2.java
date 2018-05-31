@@ -5,7 +5,7 @@ import it.polimi.ingsw.model.constants.POCConstants;
 import it.polimi.ingsw.model.constants.WpcConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
-import it.polimi.ingsw.model.wpc.WPC;
+import it.polimi.ingsw.model.wpc.Wpc;
 
 import java.util.ArrayList;
 
@@ -19,7 +19,7 @@ public class PublicObjectiveCard2 extends PublicObjectiveCard {
     }
 
     @Override
-    public int calculateScore(WPC wpc) {
+    public int calculateScore(Wpc wpc) {
         int score = 0;
 
         for (int column = 0; column < WpcConstants.COLS_NUMBER; column++){

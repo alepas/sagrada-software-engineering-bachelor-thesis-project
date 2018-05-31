@@ -623,7 +623,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
                 e.printStackTrace();
                 //TODO
             }
-            Label lab4 = new Label("La tua WPC è"+wpcID);
+            Label lab4 = new Label("La tua Wpc è"+wpcID);
             lab4.setLayoutY(400);
             lab4.setLayoutX(100);
             firstWPC.setDisable(true);

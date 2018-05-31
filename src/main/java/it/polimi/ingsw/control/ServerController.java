@@ -18,7 +18,7 @@ import it.polimi.ingsw.model.gamesdb.DatabaseGames;
 import it.polimi.ingsw.model.usersdb.DatabaseUsers;
 import it.polimi.ingsw.model.usersdb.MoveData;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
-import it.polimi.ingsw.model.wpc.WPC;
+import it.polimi.ingsw.model.wpc.Wpc;
 
 import java.net.Socket;
 import java.util.ArrayList;
@@ -159,7 +159,7 @@ public class ServerController {
 
     public Response getUpdatedWPC(String userToken, String username) throws CannotFindPlayerInDatabaseException, UserNotInThisGameException {
         PlayerInGame player=databaseUsers.getPlayerInGameFromToken(userToken);
-        WPC wpc= player.getUpdatedWpc(username);
+        Wpc wpc= player.getUpdatedWpc(username);
         return new UpdatedWPCResponse(username, wpc.getClientWpc());
     }
 

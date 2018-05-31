@@ -15,7 +15,7 @@ import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
 import it.polimi.ingsw.model.game.Game;
 import it.polimi.ingsw.model.game.MultiplayerGame;
 import it.polimi.ingsw.model.game.RoundTrack;
-import it.polimi.ingsw.model.wpc.WPC;
+import it.polimi.ingsw.model.wpc.Wpc;
 import it.polimi.ingsw.model.wpc.WpcDB;
 
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class PlayerInGame {
     private Color[] privateObjs;
     private int favours;
     private boolean active=false;
-    private WPC wpc;
+    private Wpc wpc;
     private int turnForRound;
     private ToolCard toolCardInUse=null;
     private int lastFavoursRemoved;
@@ -128,7 +128,7 @@ public class PlayerInGame {
 
     }
 
-    public WPC getWPC() {
+    public Wpc getWPC() {
         return wpc;
     }
 
@@ -376,7 +376,7 @@ public class PlayerInGame {
         return tempResponse;
     }
 
-    public WPC getUpdatedWpc(String username) throws UserNotInThisGameException {
+    public Wpc getUpdatedWpc(String username) throws UserNotInThisGameException {
         if (this.username.equals(username))
             return wpc;
         for (PlayerInGame player: game.getPlayers()) {
@@ -497,13 +497,13 @@ public class PlayerInGame {
                 }
             }
             throw new CannotPickDiceException(username, diceId, ClientDiceLocations.EXTRACTED, 0);
-        } else if (location == ClientDiceLocations.WINDOW) {
+        } else if (location == ClientDiceLocations.WPC) {
             for (Dice tempDice : wpc.getWpcDices()) {
                 if (tempDice.getId() == diceId) {
                     return tempDice;
                 }
             }
-            throw new CannotPickDiceException(username, diceId, ClientDiceLocations.WINDOW, 0);
+            throw new CannotPickDiceException(username, diceId, ClientDiceLocations.WPC, 0);
         } else if (location == ClientDiceLocations.ROUNDTRACK) {
             for (Dice tempDice : game.getRoundTrack().getDicesNotUsed()) {
                 if (tempDice.getId() == diceId) {

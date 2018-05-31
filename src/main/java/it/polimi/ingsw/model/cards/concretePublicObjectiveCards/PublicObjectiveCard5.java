@@ -2,7 +2,7 @@ package it.polimi.ingsw.model.cards.concretePublicObjectiveCards;
 
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.constants.POCConstants;
-import it.polimi.ingsw.model.wpc.WPC;
+import it.polimi.ingsw.model.wpc.Wpc;
 
 public class PublicObjectiveCard5  extends PublicObjectiveCard {
     //SFUMATURE CHIARE
@@ -14,7 +14,7 @@ public class PublicObjectiveCard5  extends PublicObjectiveCard {
     }
 
     @Override
-    public int calculateScore(WPC wpc) {
+    public int calculateScore(Wpc wpc) {
         int score = 0;
 
         int numOf1 = wpc.numDicesOfShade(1);

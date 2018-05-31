@@ -9,6 +9,6 @@ public class InvalidWpcIdException extends Exception {
 
     @Override
     public String getMessage() {
-        return "Non esiste una WPC con questo id:" + id;
+        return "Non esiste una Wpc con questo id:" + id;
     }
 }

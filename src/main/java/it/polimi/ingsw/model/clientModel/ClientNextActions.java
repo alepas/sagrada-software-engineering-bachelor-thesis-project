@@ -8,7 +8,6 @@ public enum ClientNextActions implements Serializable {
     STOP_TOOL_CARD_QUESTION,
     PICK_DICE_TOOLCARD,
     PICK_NUMBER_TOOLCARD,
-    MOVEFINISHED,
     MENU_ALL,
     MENU_ONLY_PICKDICE,
     MENU_ONLY_TOOLCARD,

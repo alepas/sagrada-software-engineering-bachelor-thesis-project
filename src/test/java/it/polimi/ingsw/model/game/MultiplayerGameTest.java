@@ -222,13 +222,13 @@ public class MultiplayerGameTest {
 //        game.addPlayer(username3);
 //        game.extractWPCs();
 //
-//        ArrayList<WPC> wpcExtracted = new ArrayList<>();
+//        ArrayList<Wpc> wpcExtracted = new ArrayList<>();
 //
 //        for (PlayerInGame player : game.getPlayers()){
-//            WPC playerWPC = player.getWPC();
+//            Wpc playerWPC = player.getWPC();
 //            Assert.assertNotNull(playerWPC);
 //
-//            for (WPC wpc : wpcExtracted){
+//            for (Wpc wpc : wpcExtracted){
 //                Assert.assertNotEquals(playerWPC.getId(), wpc.getId());
 //            }
 //

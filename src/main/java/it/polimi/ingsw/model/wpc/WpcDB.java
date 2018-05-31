@@ -18,7 +18,7 @@ import java.util.HashMap;
 
 public class WpcDB {
     private static WpcDB instance;
-    private HashMap<String, WPC> map;
+    private HashMap<String, Wpc> map;
 
     public static WpcDB getInstance(){
         if (instance==null) instance = new WpcDB("src/main/resources/wpc/wpc_schema");
@@ -56,7 +56,7 @@ public class WpcDB {
         Element eElementFavours;
 
         Position position;
-        WPC wpcTemp;
+        Wpc wpcTemp;
         int number = 0;
         int favours = 0;
         String wpcID;
@@ -134,7 +134,7 @@ public class WpcDB {
                         }
                     }
 
-                    wpcTemp = new WPC(wpcID, favours, schema);
+                    wpcTemp = new Wpc(wpcID, favours, schema);
                     map.put(wpcID,wpcTemp);
                     schema.clear();
                 }
@@ -149,9 +149,9 @@ public class WpcDB {
     }
 
 
-    public WPC getWpcByID(String ID){
+    public Wpc getWpcByID(String ID){
         //dato l'id selezionato dal giocatore si chiama il costruttore che genera una copia della wpc
-        WPC originalWpc=map.get(ID);
+        Wpc originalWpc=map.get(ID);
        /* for(Cell cell: originalWpc.schema){
             System.out.println("riga: "+ cell.getCellPosition().getRow());
             System.out.println("colonna: "+ cell.getCellPosition().getColumn());

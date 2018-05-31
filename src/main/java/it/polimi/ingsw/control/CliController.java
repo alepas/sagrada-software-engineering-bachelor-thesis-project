@@ -6,7 +6,7 @@ import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerExcepti
 import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
-import it.polimi.ingsw.model.wpc.WPC;
+import it.polimi.ingsw.model.wpc.Wpc;
 import it.polimi.ingsw.view.cli.CliView;
 
 import java.util.ArrayList;
@@ -146,7 +146,7 @@ public class CliController {
         return clientModel.getGamePublicObjectiveCards();
     }
 
-    public WPC getWpcByID(String id){
+    public Wpc getWpcByID(String id){
         return clientModel.getWpcByID(id);
     }
 

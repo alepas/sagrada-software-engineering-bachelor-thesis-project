@@ -15,14 +15,14 @@ import static it.polimi.ingsw.model.constants.WpcConstants.COLS_NUMBER;
 import static it.polimi.ingsw.model.constants.WpcConstants.ROWS_NUMBER;
 
 
-public class WPC {
+public class Wpc {
     private  String id;
     private  int favours;
     public ArrayList<Cell> schema = new ArrayList<>();
     boolean firstDicePutted=false;
 
 
-    WPC(String id, int favours, ArrayList<Cell> schema) {
+    Wpc(String id, int favours, ArrayList<Cell> schema) {
         this.id = id;
         this.favours = favours;
         for(Cell cell: schema)
@@ -30,8 +30,8 @@ public class WPC {
     }
 
 
-    public WPC copyWpc(){
-        return new WPC(id,favours,schema);
+    public Wpc copyWpc(){
+        return new Wpc(id,favours,schema);
     }
 
     public ClientWpc getClientWpc(){
