@@ -9,7 +9,7 @@ import org.junit.Test;
 
 public class WpcBDTest {
     static private WpcDB allWpc0, allWpc1;
-    private WPC wpc;
+    private Wpc wpc;
 
     @Before
     public void Before(){

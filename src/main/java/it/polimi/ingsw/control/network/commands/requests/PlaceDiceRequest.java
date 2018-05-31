@@ -1,15 +1,15 @@
 package it.polimi.ingsw.control.network.commands.requests;
 
 import it.polimi.ingsw.control.network.commands.responses.Response;
-import it.polimi.ingsw.model.clientModel.ClientPosition;
+import it.polimi.ingsw.model.clientModel.Position;
 
 public class PlaceDiceRequest implements Request {
     public final String userToken;
-    public final ClientPosition position;
+    public final Position position;
     public final int diceId;
 
 
-    public PlaceDiceRequest(String userToken, int diceId, ClientPosition position) {
+    public PlaceDiceRequest(String userToken, int diceId, Position position) {
         this.userToken = userToken;
         this.position=position;
         this.diceId=diceId;

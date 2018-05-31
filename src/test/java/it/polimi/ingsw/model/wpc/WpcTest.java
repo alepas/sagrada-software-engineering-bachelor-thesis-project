@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.wpc;
 
+import it.polimi.ingsw.model.clientModel.Position;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
 
@@ -12,9 +13,9 @@ import java.util.ArrayList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class WPCTest {
-    private WPC wpc0;
-    private WPC wpc2;
+public class WpcTest {
+    private Wpc wpc0;
+    private Wpc wpc2;
 
     private ArrayList<Cell> schema = new ArrayList<>();
     private ArrayList<Cell> schema1 = new ArrayList<>();
@@ -30,7 +31,7 @@ public class WPCTest {
     public void before(){
         int favour = 4;
         String wpcID = "1";
-        wpc0 = new WPC(wpcID, favour,schema);
+        wpc0 = new Wpc(wpcID, favour,schema);
 
 
         Cell cell00 = mock(Cell.class);
@@ -206,7 +207,7 @@ public class WPCTest {
         when(cell34.getCellPosition()).thenReturn(pos34);
         schema1.add(cell34);
 
-        wpc2 = new WPC(wpcID, favour, schema1);
+        wpc2 = new Wpc(wpcID, favour, schema1);
     }
 
 
@@ -224,7 +225,7 @@ public class WPCTest {
 
     @Test
     public void copyWpcTest(){
-        WPC wpc1 = wpc0.copyWpc();
+        Wpc wpc1 = wpc0.copyWpc();
         Assert.assertEquals(wpc1.getId(), wpc0.getId());
         Assert.assertEquals(wpc1.getFavours(), wpc0.getFavours());
         Assert.assertEquals(wpc1.schema, wpc0.schema);

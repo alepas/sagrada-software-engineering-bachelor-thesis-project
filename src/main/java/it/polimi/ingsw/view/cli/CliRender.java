@@ -3,10 +3,6 @@ package it.polimi.ingsw.view.cli;
 import it.polimi.ingsw.model.clientModel.*;
 import it.polimi.ingsw.model.constants.CliConstants;
 import it.polimi.ingsw.model.constants.WpcConstants;
-import it.polimi.ingsw.model.dicebag.Color;
-import it.polimi.ingsw.model.wpc.Cell;
-import it.polimi.ingsw.model.wpc.Position;
-import it.polimi.ingsw.model.wpc.WPC;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -265,7 +261,7 @@ public class CliRender {
         HashMap<Integer, ClientCell> rowCellsByCol = new HashMap<>();
 
         for(ClientCell cell : allCells){
-            ClientPosition pos = cell.getCellPosition();
+            Position pos = cell.getCellPosition();
             if (pos.getRow() == row) rowCellsByCol.put(pos.getColumn(), cell);
         }
 

@@ -1,14 +1,14 @@
 package it.polimi.ingsw.model.game;
 
+import it.polimi.ingsw.control.network.commands.notifications.GameStartedNotification;
 import it.polimi.ingsw.control.network.commands.notifications.NewRoundNotification;
 import it.polimi.ingsw.control.network.commands.notifications.NextTurnNotification;
+import it.polimi.ingsw.control.network.commands.notifications.PlayersChangedNotification;
 import it.polimi.ingsw.model.clientModel.ClientDice;
 import it.polimi.ingsw.model.constants.GameConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.exceptions.gameExceptions.*;
-import it.polimi.ingsw.control.network.commands.notifications.GameStartedNotification;
-import it.polimi.ingsw.control.network.commands.notifications.PlayersChangedNotification;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotAddPlayerInDatabaseException;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 
@@ -200,6 +200,10 @@ public class MultiplayerGame extends Game {
     }
 
 
+    @Override
+    public boolean isSinglePlayerGame() {
+        return false;
+    }
 
 
     //------------------------------- Metodi validi solo lato client -------------------------------

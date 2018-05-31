@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.clientModel;
 
 import it.polimi.ingsw.control.network.commands.notifications.*;
-import it.polimi.ingsw.model.wpc.WPC;
+import it.polimi.ingsw.model.wpc.Wpc;
 import it.polimi.ingsw.model.wpc.WpcDB;
 
 import java.util.ArrayList;
@@ -147,7 +147,7 @@ public class ClientModel implements Observer, NotificationHandler {
         this.privateObjectives = privateObjectives;
     }
 
-    public WPC getWpcByID(String id){
+    public Wpc getWpcByID(String id){
         return WpcDB.getInstance().getWpcByID(id);
     }
 

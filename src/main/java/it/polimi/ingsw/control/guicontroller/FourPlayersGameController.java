@@ -1,7 +1,6 @@
 package it.polimi.ingsw.control.guicontroller;
 
 import it.polimi.ingsw.control.network.commands.notifications.*;
-
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 

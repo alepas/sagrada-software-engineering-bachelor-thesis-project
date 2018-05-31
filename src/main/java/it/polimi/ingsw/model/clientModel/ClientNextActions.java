@@ -3,17 +3,15 @@ package it.polimi.ingsw.model.clientModel;
 import java.io.Serializable;
 
 public enum ClientNextActions implements Serializable {
-    PICKDICE,                       //Diventa PLACEDICE
-    PICKDICEFROMOTHERUSER,          //Eliminare
-    PICKPOSITION,                   //Eliminare
-    PICKCOLOR,                      //Eliminare
-    PICKNUMBER,
-    MOVEFINISHED,
-    MENU,
+    PLACE_DICE,
+    PLACE_DICE_TOOLCARD,
+    STOP_TOOL_CARD_QUESTION,
+    PICK_DICE_TOOLCARD,
+    PICK_NUMBER_TOOLCARD,
+    MENU_ALL,
     MENU_ONLY_PICKDICE,
     MENU_ONLY_TOOLCARD,
-    TURNFINISHED,
-    PICKDICE_SINGLEPLAYER_CARD;
-    //Aggiungere PLACEDICE FOR TOOLCARD
-    //Aggiungere STOPTTOLCARD
+    TURN_FINISHED,
+    PICKDICE_SINGLEPLAYER_ENABLECARD;
+
 }

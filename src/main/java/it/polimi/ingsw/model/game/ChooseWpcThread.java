@@ -3,8 +3,6 @@ package it.polimi.ingsw.model.game;
 import it.polimi.ingsw.model.constants.GameConstants;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 
-import java.util.ArrayList;
-
 public class ChooseWpcThread implements Runnable {
     private PlayerInGame[] players;
 

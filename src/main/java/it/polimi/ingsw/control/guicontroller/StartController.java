@@ -4,18 +4,15 @@ package it.polimi.ingsw.control.guicontroller;
 import it.polimi.ingsw.control.network.NetworkClient;
 import it.polimi.ingsw.control.network.socket.SocketClient;
 import it.polimi.ingsw.model.constants.NetworkConstants;
-
 import it.polimi.ingsw.view.cli.LaunchCli;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
-
 import javafx.stage.Stage;
-import javafx.scene.Node;
 
 import java.io.IOException;
 import java.net.ConnectException;

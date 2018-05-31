@@ -142,49 +142,23 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
     }
 
 
-
     @Override
-    public Response handle(PickDiceRequest request) {
-        try{
-            return controller.pickDice(request.userToken,request.diceId);
-        } catch (PlayerNotAuthorizedException | CannotFindPlayerInDatabaseException | CannotPickDiceException |CannotPerformThisMoveException e) {
-            return new PickDiceResponse(e);
-        }
-    }
-
-    @Override
-    public Response handle(PickPositionRequest request) {
-        try {
-            return controller.pickPosition(request.userToken, request.position);
-        } catch (PlayerNotAuthorizedException | CannotFindPlayerInDatabaseException | CannotPickPositionException|CannotPerformThisMoveException e) {
-            return new PickPositionResponse(e);
-        }
-    }
-
-    @Override
-    public Response handle(UseToolCardRequest request) {
+    public Response handle(ToolCardUseRequest request) {
         try {
             return controller.setToolCard(request.userToken,request.toolCardId);
         } catch (CannotFindPlayerInDatabaseException | PlayerNotAuthorizedException | CannotPerformThisMoveException | CannotUseToolCardException e) {
-            return new MoveResponse(e);
+            return new ToolCardResponse(e);
         }
     }
 
-    @Override
-    public Response handle(ToolCardPickColorRequest request) {
-        try {
-            return controller.pickColorForToolCard(request.userToken,request.color);
-        } catch (CannotFindPlayerInDatabaseException | CannotPickColorException | NoToolCardInUseException | PlayerNotAuthorizedException | CannotPerformThisMoveException e) {
-            return new MoveResponse(e);
-        }
-    }
+
 
     @Override
     public Response handle(ToolCardPickDiceRequest request) {
         try {
             return controller.pickDiceForToolCard(request.userToken,request.diceId,request.where);
         } catch (CannotFindPlayerInDatabaseException | CannotPickDiceException | PlayerNotAuthorizedException | NoToolCardInUseException | CannotPerformThisMoveException e) {
-            return new MoveResponse(e);
+            return new ToolCardResponse(e);
         }
     }
 
@@ -193,16 +167,16 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
         try {
             return controller.pickNumberForToolCard(request.userToken,request.number);
         } catch (CannotFindPlayerInDatabaseException | CannotPickNumberException | PlayerNotAuthorizedException | NoToolCardInUseException | CannotPerformThisMoveException e) {
-            return new MoveResponse(e);
+            return new ToolCardResponse(e);
         }
     }
 
     @Override
     public Response handle(ToolCardPlaceDiceRequest request) {
         try {
-            return controller.placeDiceForToolCard(request.userToken, request.diceId, request.diceFrom, request.position);
+            return controller.placeDiceForToolCard(request.userToken, request.diceId, request.diceFrom, request.diceDestination,request.position);
         } catch (CannotFindPlayerInDatabaseException | CannotPickPositionException | PlayerNotAuthorizedException | NoToolCardInUseException | CannotPerformThisMoveException | CannotPickDiceException e) {
-            return new MoveResponse(e);
+            return new ToolCardResponse(e);
         }
     }
 
@@ -262,11 +236,11 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
     }
 
     @Override
-    public Response handle(StopToolCardRequest stopToolCardRequest) {
+    public Response handle(ToolCardStopRequest toolCardStopRequest) {
         try {
-            return controller.stopToolCard(stopToolCardRequest.userToken);
+            return controller.stopToolCard(toolCardStopRequest.userToken);
         } catch (CannotFindPlayerInDatabaseException | PlayerNotAuthorizedException | CannotStopToolCardException | NoToolCardInUseException e) {
-            return new MoveResponse(e);
+            return new ToolCardResponse(e);
         }
     }
 
@@ -275,7 +249,7 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
         try {
             return controller.cancelAction(cancelActionRequest.userToken);
         } catch (CannotCancelActionException | PlayerNotAuthorizedException | CannotFindPlayerInDatabaseException e) {
-            return new MoveResponse(e);
+            return new NextMoveResponse(e);
         }
     }
 
@@ -284,7 +258,16 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
         try {
             return controller.placeDice(request.userToken, request.diceId, request.position);
         } catch (CannotPickDiceException | CannotPickPositionException | PlayerNotAuthorizedException | CannotPerformThisMoveException | CannotFindPlayerInDatabaseException e) {
-            return new MoveResponse(e);
+            return new PlaceDiceResponse(e);
+        }
+    }
+
+    @Override
+    public Response handle(NextMoveRequest nextMoveRequest) {
+        try {
+            return controller.getNextMove(nextMoveRequest.userToken);
+        } catch (CannotFindPlayerInDatabaseException | PlayerNotAuthorizedException e) {
+            return new NextMoveResponse(e);
         }
     }
 

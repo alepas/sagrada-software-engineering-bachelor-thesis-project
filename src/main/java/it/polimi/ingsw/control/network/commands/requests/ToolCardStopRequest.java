@@ -2,14 +2,12 @@ package it.polimi.ingsw.control.network.commands.requests;
 
 import it.polimi.ingsw.control.network.commands.responses.Response;
 
-public class UseToolCardRequest implements Request {
+public class ToolCardStopRequest implements Request {
     public final String userToken;
-    public final String toolCardId;
 
 
-    public UseToolCardRequest(String userToken, String toolCardId) {
+    public ToolCardStopRequest(String userToken) {
         this.userToken = userToken;
-        this.toolCardId = toolCardId;
 
     }
 

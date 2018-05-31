@@ -6,9 +6,9 @@ public class ClientCell implements Serializable {
     private ClientDice cellDice;
     private ClientColor cellColor;
     private int cellNumber;
-    private ClientPosition position;
+    private Position position;
 
-    public ClientCell(ClientDice cellDice, ClientColor cellColor, int cellNumber, ClientPosition position) {
+    public ClientCell(ClientDice cellDice, ClientColor cellColor, int cellNumber, Position position) {
         this.cellDice = cellDice;
         this.cellColor = cellColor;
         this.cellNumber = cellNumber;
@@ -27,7 +27,7 @@ public class ClientCell implements Serializable {
         return cellDice;
     }
 
-    public ClientPosition getCellPosition( ){
+    public Position getCellPosition( ){
         return position;
     }
 }

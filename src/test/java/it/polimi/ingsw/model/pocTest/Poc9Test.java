@@ -5,7 +5,7 @@ import it.polimi.ingsw.model.cards.concretePublicObjectiveCards.PublicObjectiveC
 import it.polimi.ingsw.model.constants.POCConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
-import it.polimi.ingsw.model.wpc.WPC;
+import it.polimi.ingsw.model.wpc.Wpc;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 public class Poc9Test {
 
     private PublicObjectiveCard9 card;
-    private WPC wpc;
+    private Wpc wpc;
     private ArrayList<Dice> wpcDices = new ArrayList<>();
     private ArrayList<Dice> col0Dices = new ArrayList<>();
     private ArrayList<Dice> col1Dices = new ArrayList<>();
@@ -34,7 +34,7 @@ public class Poc9Test {
     public void before(){
         card = new PublicObjectiveCard9();
 
-        wpc = mock(WPC.class);
+        wpc = mock(Wpc.class);
 
 
 

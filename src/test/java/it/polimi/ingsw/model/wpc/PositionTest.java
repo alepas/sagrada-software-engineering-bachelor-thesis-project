@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.wpc;
 
+import it.polimi.ingsw.model.clientModel.Position;
 import org.junit.Assert;
 import org.junit.Test;
 
