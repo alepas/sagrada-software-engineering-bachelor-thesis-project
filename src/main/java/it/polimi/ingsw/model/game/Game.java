@@ -2,6 +2,8 @@ package it.polimi.ingsw.model.game;
 
 import it.polimi.ingsw.control.network.commands.notifications.*;
 import it.polimi.ingsw.model.cards.PocDB;
+import it.polimi.ingsw.model.cards.PublicObjectiveCard;
+import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.cards.ToolCardDB;
 import it.polimi.ingsw.model.clientModel.ClientColor;
 import it.polimi.ingsw.model.clientModel.ClientPoc;
@@ -11,9 +13,6 @@ import it.polimi.ingsw.model.constants.GameConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.dicebag.DiceBag;
-import it.polimi.ingsw.model.cards.PublicObjectiveCard;
-import it.polimi.ingsw.model.cards.ToolCard;
-
 import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 import it.polimi.ingsw.model.wpc.WpcDB;
@@ -274,6 +273,9 @@ public abstract class Game extends Observable implements Runnable {
     public DiceBag getDiceBag() {
         return diceBag;
     }
+
+
+    public abstract boolean isSinglePlayerGame();
 
 
     //--------------------------------------- Metodi astratti --------------------------------------

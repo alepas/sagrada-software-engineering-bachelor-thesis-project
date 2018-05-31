@@ -112,7 +112,7 @@ public class CliController {
 
     public void placeDice(int id, int col, int row) {
         try {
-            client.placeDice(clientModel.getUserToken(), id, new ClientPosition(row, col));
+            client.placeDice(clientModel.getUserToken(), id, new Position(row, col));
         } catch (CannotFindPlayerInDatabaseException e) {
             e.printStackTrace();
         } catch (CannotPickPositionException e) {

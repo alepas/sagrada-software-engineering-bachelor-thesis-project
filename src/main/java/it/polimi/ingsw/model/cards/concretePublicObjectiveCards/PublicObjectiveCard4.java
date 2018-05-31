@@ -1,10 +1,10 @@
 package it.polimi.ingsw.model.cards.concretePublicObjectiveCards;
 
-import it.polimi.ingsw.model.wpc.WPC;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.constants.POCConstants;
 import it.polimi.ingsw.model.constants.WpcConstants;
 import it.polimi.ingsw.model.dicebag.Dice;
+import it.polimi.ingsw.model.wpc.WPC;
 
 import java.util.ArrayList;
 

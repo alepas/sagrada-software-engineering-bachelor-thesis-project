@@ -1,13 +1,14 @@
 package it.polimi.ingsw.model.cards;
 
-import it.polimi.ingsw.control.network.commands.responses.MoveResponse;
-import it.polimi.ingsw.model.clientModel.*;
+import it.polimi.ingsw.model.clientModel.ClientDiceLocations;
+import it.polimi.ingsw.model.clientModel.ClientToolCard;
+import it.polimi.ingsw.model.clientModel.Position;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
 import it.polimi.ingsw.model.game.Game;
+import it.polimi.ingsw.model.usersdb.MoveData;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
-import it.polimi.ingsw.model.wpc.Position;
 
 public abstract class ToolCard implements Cloneable{
     protected String id;
@@ -44,32 +45,31 @@ public abstract class ToolCard implements Cloneable{
         return description;
     }
 
-    public Boolean isUsed() { return used; }
+    public Boolean hasBeenUsed() { return used; }
 
-    public abstract MoveResponse setCard(PlayerInGame player) throws CannotUseToolCardException;
-    public abstract MoveResponse use( Position pos) throws CannotPickPositionException, CannotPerformThisMoveException;
-    public abstract MoveResponse use( Dice dice, ClientDiceLocations location) throws CannotPickDiceException, CannotPerformThisMoveException;
-    public abstract MoveResponse use( Color color) throws CannotPickColorException, CannotPerformThisMoveException;
-    public abstract MoveResponse use( int number) throws CannotPickNumberException, CannotPerformThisMoveException;
+    public abstract MoveData setCard(PlayerInGame player) throws CannotUseToolCardException;
+    public abstract MoveData placeDice(Dice dice, ClientDiceLocations startLocation, ClientDiceLocations finishLocation, Position pos) throws CannotPickDiceException, CannotPickPositionException, CannotPerformThisMoveException;
+    public abstract MoveData pickDice(Dice dice, ClientDiceLocations location) throws CannotPickDiceException, CannotPerformThisMoveException;
+    public abstract MoveData pickNumber(int number) throws CannotPickNumberException, CannotPerformThisMoveException;
 
 
     public ClientToolCard getClientToolcard(){
         return new ClientToolCard(id, name, description, used);
     }
 
-    public MoveResponse stopToolCard() throws CannotStopToolCardException {
+    public MoveData stopToolCard() throws CannotStopToolCardException {
         if (stoppable) {
             cleanCard();
-            return new MoveResponse(null,ClientNextActions.MOVEFINISHED, true, ClientToolCardStatus.SETTEDCARD,false);
+            return new MoveData(true);
         } else throw new CannotStopToolCardException(username, id);
 
     }
 
-    public abstract MoveResponse cancelAction() throws CannotCancelActionException;
+    public abstract MoveData cancelAction() throws CannotCancelActionException;
 
     protected abstract void cleanCard();
 
-    public abstract MoveResponse getNextMove();
+    public abstract MoveData getNextMove();
 
 
 }

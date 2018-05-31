@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions;
 
-import it.polimi.ingsw.model.wpc.Position;
+import it.polimi.ingsw.model.clientModel.Position;
 
 public class CannotPickPositionException extends Exception{
     private Position pos;

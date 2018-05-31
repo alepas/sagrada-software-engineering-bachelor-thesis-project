@@ -24,7 +24,10 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.util.Duration;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Observable;
+import java.util.Observer;
 
 import static java.lang.Thread.sleep;
 
@@ -204,7 +207,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                     int id = Integer.parseInt(db.getString());
                     int row = Integer.parseInt(cell.getId().substring(0,1));
                     int column = Integer.parseInt(cell.getId().substring(1,2));
-                    ClientPosition position = new ClientPosition(row, column);
+                    Position position = new Position(row, column);
                     placeDice(id, position);
                     for (ClientCell cells : clientModel.getMyWpc().getSchema()) {
                         if (cells.getCellDice() != null && cells.getCellDice().getDiceID() == id) {
@@ -234,7 +237,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
         });
     }
 
-    private void placeDice(int id, ClientPosition position) {
+    private void placeDice(int id, Position position) {
         Platform.runLater(()-> {
             try {
                 networkClient.placeDice(clientModel.getUserToken(), id, position);

@@ -199,6 +199,12 @@ public class SinglePlayerGame extends Game {
 
     }
 
+    @Override
+    public boolean isSinglePlayerGame() {
+        return true;
+    }
+
+
 
 
 

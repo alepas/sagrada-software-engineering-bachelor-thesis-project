@@ -1,18 +1,18 @@
 package it.polimi.ingsw.control.network.commands.requests;
 
 import it.polimi.ingsw.control.network.commands.responses.Response;
-import it.polimi.ingsw.model.clientModel.ClientColor;
 
-public class ToolCardPickColorRequest implements Request {
+public class ToolCardUseRequest implements Request {
     public final String userToken;
-    public final ClientColor color;
+    public final String toolCardId;
 
 
-
-    public ToolCardPickColorRequest(String userToken, ClientColor color) {
+    public ToolCardUseRequest(String userToken, String toolCardId) {
         this.userToken = userToken;
-        this.color=color;
+        this.toolCardId = toolCardId;
+
     }
+
 
 
 

@@ -16,8 +16,8 @@ import it.polimi.ingsw.model.game.Game;
 import it.polimi.ingsw.model.game.RoundTrack;
 import it.polimi.ingsw.model.gamesdb.DatabaseGames;
 import it.polimi.ingsw.model.usersdb.DatabaseUsers;
+import it.polimi.ingsw.model.usersdb.MoveData;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
-import it.polimi.ingsw.model.wpc.Position;
 import it.polimi.ingsw.model.wpc.WPC;
 
 import java.net.Socket;
@@ -73,13 +73,17 @@ public class ServerController {
         return new PassTurnResponse(null);
     }
 
-    public Response placeDice(String userToken, int id, ClientPosition position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, CannotPickDiceException, PlayerNotAuthorizedException, CannotPerformThisMoveException {
+    public Response placeDice(String userToken, int id, Position position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, CannotPickDiceException, PlayerNotAuthorizedException, CannotPerformThisMoveException {
         PlayerInGame player = databaseUsers.getPlayerInGameFromToken(userToken);
         Position pos = new Position(position.getRow(),position.getColumn());
-        return player.placeDice(id, pos);
+        return convertMoveDataToPlaceDiceResponse(player.placeDice(id, pos));
     }
 
 
+    public Response cancelAction (String userToken) throws CannotCancelActionException, PlayerNotAuthorizedException, CannotFindPlayerInDatabaseException {
+        PlayerInGame currentPlayer=databaseUsers.getPlayerInGameFromToken(userToken);
+        return convertMoveDataToNextMoveResponse(currentPlayer.cancelAction());
+    }
 
 
 
@@ -88,43 +92,34 @@ public class ServerController {
 
     public Response setToolCard(String userToken, String cardId) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotUseToolCardException, CannotPerformThisMoveException {
         PlayerInGame player=databaseUsers.getPlayerInGameFromToken(userToken);
-        return player.setToolCard(cardId);
+        return convertMoveDataToToolCardResponse(player.setToolCard(cardId));
     }
 
     public Response pickDiceForToolCard(String userToken, int diceId, ClientDiceLocations where) throws CannotFindPlayerInDatabaseException, CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException {
         PlayerInGame player=databaseUsers.getPlayerInGameFromToken(userToken);
-        return player.pickDiceforToolCard(diceId,where);
+        return convertMoveDataToToolCardResponse(player.pickDiceforToolCard(diceId,where));
     }
 
-    public Response placeDiceForToolCard(String userToken, int diceId, ClientDiceLocations diceFrom, ClientPosition position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException, CannotPickDiceException {
+    public Response placeDiceForToolCard(String userToken, int diceId, ClientDiceLocations initialLocation, ClientDiceLocations finalLocation, Position position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException, CannotPickDiceException {
         PlayerInGame player=databaseUsers.getPlayerInGameFromToken(userToken);
         Position pos=new Position(position.getRow(),position.getColumn());
-        return player.placeDiceForToolCard(diceId,diceFrom,pos);
-    }
-
-    public Response pickColorForToolCard(String userToken, ClientColor color) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotPickColorException, NoToolCardInUseException, CannotPerformThisMoveException {
-        PlayerInGame player=databaseUsers.getPlayerInGameFromToken(userToken);
-        Color colorTemp=Color.getColorFromClientColor(color);
-        return player.pickColorForToolCard(colorTemp);
+        return convertMoveDataToToolCardResponse(player.placeDiceForToolCard(diceId,initialLocation,finalLocation,pos));
     }
 
     public Response pickNumberForToolCard(String userToken, int number) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPickNumberException, CannotPerformThisMoveException {
         PlayerInGame player=databaseUsers.getPlayerInGameFromToken(userToken);
-        return player.pickNumberForToolCard(number);
+        return convertMoveDataToToolCardResponse(player.pickNumberForToolCard(number));
     }
 
-    public Response pickDice(String userToken, int diceId) throws CannotPickDiceException, CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotPerformThisMoveException {
-        PlayerInGame player=databaseUsers.getPlayerInGameFromToken(userToken);
-        player.pickDice(diceId);
-        return new PickDiceResponse(null);
+    public Response stopToolCard (String userToken) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotStopToolCardException, NoToolCardInUseException {
+        PlayerInGame currentPlayer=databaseUsers.getPlayerInGameFromToken(userToken);
+        return convertMoveDataToToolCardResponse(currentPlayer.stopToolCard());
     }
 
-    public Response pickPosition(String userToken, ClientPosition position) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotPickPositionException, CannotPerformThisMoveException {
-        PlayerInGame player=databaseUsers.getPlayerInGameFromToken(userToken);
-        Position pos=new Position(position.getRow(),position.getColumn());
-        player.pickPosition(pos);
-        return new PickPositionResponse(null);
-    }
+
+
+
+    //---------------------------update client model------------------------
 
     public Response getUpdatedExtractedDices(String userToken) throws CannotFindPlayerInDatabaseException {
         PlayerInGame player=databaseUsers.getPlayerInGameFromToken(userToken);
@@ -198,14 +193,27 @@ public class ServerController {
         return new UpdatedGameResponse(tempGame.getID(),tempGame.numActualPlayers(),tempGame.getNumPlayers(),clientColors, wpcHashMap,clientToolCards,clientPocs,tempGame.getRoundTrack().getCurrentRound(),clientDices,currentPlayer.getTurnForRound(),currentPlayer.isActive(), currentPlayer.getFavours(),tempGame.getRoundTrack().getClientRoundTrack());
     }
 
-    public Response stopToolCard (String userToken) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotStopToolCardException, NoToolCardInUseException {
+
+    public Response getNextMove(String userToken) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException {
         PlayerInGame currentPlayer=databaseUsers.getPlayerInGameFromToken(userToken);
-        return currentPlayer.stopToolCard();
+        return convertMoveDataToNextMoveResponse(currentPlayer.getNextMove());
     }
 
-    public Response cancelAction (String userToken) throws CannotCancelActionException, PlayerNotAuthorizedException, CannotFindPlayerInDatabaseException {
-        PlayerInGame currentPlayer=databaseUsers.getPlayerInGameFromToken(userToken);
-        return currentPlayer.cancelAction();
+    //--------private
+
+    private ToolCardResponse convertMoveDataToToolCardResponse(MoveData moveData){
+        return new ToolCardResponse(moveData.nextAction,moveData.wherePickNewDice,moveData.wherePutNewDice,moveData.numbersToChoose,moveData.wpc,
+                moveData.extractedDices,moveData.roundTrack,moveData.diceChosenId,moveData.exception);
+    }
+
+
+    private NextMoveResponse convertMoveDataToNextMoveResponse(MoveData moveData){
+        return new NextMoveResponse(moveData.nextAction,moveData.wherePickNewDice,moveData.wherePutNewDice,moveData.numbersToChoose,moveData.wpc,
+                moveData.extractedDices,moveData.roundTrack,moveData.diceChosenId,moveData.exception);
+    }
+
+    private PlaceDiceResponse convertMoveDataToPlaceDiceResponse(MoveData moveData){
+        return new PlaceDiceResponse(moveData.nextAction,moveData.wpc,moveData.extractedDices,moveData.roundTrack,moveData.exception);
     }
 
 

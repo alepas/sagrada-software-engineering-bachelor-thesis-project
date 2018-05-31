@@ -2,11 +2,11 @@ package it.polimi.ingsw.model.clientModel;
 
 import java.io.Serializable;
 
-public class ClientPosition implements Serializable {
+public class Position implements Serializable {
     private int row;
     private int column;
 
-    public ClientPosition(int row, int column) {
+    public Position(int row, int column) {
         this.row = row ;
         this.column = column;
     }

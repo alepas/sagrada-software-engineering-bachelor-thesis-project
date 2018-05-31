@@ -1,12 +1,15 @@
 package it.polimi.ingsw.model.wpc;
-import java.util.ArrayList;
 
-import it.polimi.ingsw.model.clientModel.*;
+import it.polimi.ingsw.model.clientModel.ClientCell;
+import it.polimi.ingsw.model.clientModel.ClientDice;
+import it.polimi.ingsw.model.clientModel.ClientWpc;
+import it.polimi.ingsw.model.clientModel.Position;
 import it.polimi.ingsw.model.constants.WpcConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
-
 import it.polimi.ingsw.model.exceptions.wpcExceptions.NotExistingCellException;
+
+import java.util.ArrayList;
 
 import static it.polimi.ingsw.model.constants.WpcConstants.COLS_NUMBER;
 import static it.polimi.ingsw.model.constants.WpcConstants.ROWS_NUMBER;
@@ -16,6 +19,7 @@ public class WPC {
     private  String id;
     private  int favours;
     public ArrayList<Cell> schema = new ArrayList<>();
+    boolean firstDicePutted=false;
 
 
     WPC(String id, int favours, ArrayList<Cell> schema) {
@@ -39,7 +43,7 @@ public class WPC {
             else clientDice = null;
 
             cells.add(new ClientCell(clientDice, Color.getClientColor(cell.getColor()),
-                    cell.getNumber(), cell.getCellPosition().getClientPosition()));
+                    cell.getNumber(), cell.getCellPosition()));
         }
         return new ClientWpc(id, favours, cells);
     }
@@ -55,9 +59,10 @@ public class WPC {
         if(cell.getDice()!=null)
             return false;
         //TODO: se la wpc non contiene dadi allora checkFirstTurnRestriction
-        if (globalTurn == 1) {
+        if (!firstDicePutted) {
             if (checkFirstTurnRestriction(cell)&&checkAdjacentRestriction(cell,dice)&&checkCellRestriction(cell,dice)) {
                 cell.setDice(dice);
+                firstDicePutted=true;
                 return true;
             }
         } else if (checkCellRestriction(cell, dice)&& checkAdjacentRestriction(cell, dice)&& isThereAtLeastADiceNear(cell)) {

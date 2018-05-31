@@ -5,8 +5,6 @@ import it.polimi.ingsw.control.network.rmi.RemoteServer;
 import it.polimi.ingsw.control.network.rmi.RmiServer;
 import it.polimi.ingsw.control.network.socket.SocketServer;
 import it.polimi.ingsw.model.cards.PocDB;
-import it.polimi.ingsw.model.cards.PublicObjectiveCard;
-import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.cards.ToolCardDB;
 import it.polimi.ingsw.model.constants.NetworkConstants;
 import it.polimi.ingsw.model.wpc.WpcDB;

@@ -3,10 +3,9 @@ package it.polimi.ingsw.control.network;
 import it.polimi.ingsw.control.network.commands.responses.*;
 import it.polimi.ingsw.control.network.rmi.RmiClient;
 import it.polimi.ingsw.control.network.socket.SocketClient;
-import it.polimi.ingsw.model.clientModel.ClientColor;
 import it.polimi.ingsw.model.clientModel.ClientDiceLocations;
 import it.polimi.ingsw.model.clientModel.ClientModel;
-import it.polimi.ingsw.model.clientModel.ClientPosition;
+import it.polimi.ingsw.model.clientModel.Position;
 import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
@@ -48,19 +47,21 @@ public abstract class NetworkClient implements ResponseHandler {
 
     public abstract void passTurn(String userToken) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotPerformThisMoveException;
 
+
+
+
     public abstract void useToolCard(String userToken, String cardId) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotUseToolCardException, CannotPerformThisMoveException;
 
     public abstract void pickDiceForToolCard(String userToken, int diceId, ClientDiceLocations where) throws CannotFindPlayerInDatabaseException, CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException;
 
-    public abstract void placeDiceForToolCard(String userToken, int diceId, ClientDiceLocations diceFrom, ClientPosition position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException, CannotPickDiceException;
-
-    public abstract void pickColorForToolCard(String userToken, ClientColor color) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotPickColorException, NoToolCardInUseException, CannotPerformThisMoveException;
+    public abstract void placeDiceForToolCard(String userToken, int diceId, ClientDiceLocations initialLocation, ClientDiceLocations finalLocation, Position position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException, CannotPickDiceException ;
 
     public abstract void pickNumberForToolCard(String userToken, int number) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPickNumberException, CannotPerformThisMoveException;
 
-    public abstract void pickDice(String userToken, int diceId) throws CannotPickDiceException, CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotPerformThisMoveException;
+    public abstract void stopToolCard (String userToken) throws  CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotStopToolCardException, NoToolCardInUseException;
 
-    public abstract void pickPosition(String userToken, ClientPosition position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, CannotPerformThisMoveException;
+
+
 
     public abstract void getUpdatedExtractedDices(String userToken) throws CannotFindPlayerInDatabaseException;
 
@@ -74,12 +75,15 @@ public abstract class NetworkClient implements ResponseHandler {
 
     public abstract void getUpdatedGame(String userToken) throws CannotFindPlayerInDatabaseException;
 
-    public abstract void stopToolCard (String userToken) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotStopToolCardException, NoToolCardInUseException;
 
-    public abstract void cancelAction (String userToken) throws CannotCancelActionException, PlayerNotAuthorizedException, CannotFindPlayerInDatabaseException;
 
-    public abstract void placeDice(String userToken, int id, ClientPosition position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, CannotPickDiceException, PlayerNotAuthorizedException, CannotPerformThisMoveException;
 
+
+    public abstract void cancelAction (String userToken) throws  CannotCancelActionException, PlayerNotAuthorizedException, CannotFindPlayerInDatabaseException;
+
+    public abstract void placeDice(String userToken, int id, Position position) throws  CannotFindPlayerInDatabaseException, CannotPickPositionException, CannotPickDiceException, PlayerNotAuthorizedException, CannotPerformThisMoveException;
+
+    public abstract void getNextMove(String userToken) throws  CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException ;
 
 
     //-------------------------------- Response Handler --------------------------------
@@ -120,18 +124,7 @@ public abstract class NetworkClient implements ResponseHandler {
     }
 
     @Override
-    public void handle(MoveResponse response){
-
-    }
-
-    @Override
-    public void handle(PickDiceResponse response){
-
-    }
-
-    @Override
-    public void handle(PickPositionResponse response){
-
+    public void handle(ToolCardResponse response){
 
     }
 
@@ -189,5 +182,15 @@ public abstract class NetworkClient implements ResponseHandler {
         if (response.exception == null) {
             clientModel.getWpcByUsername().put(response.user,response.wpc);
         }
+    }
+
+    @Override
+    public void handle(PlaceDiceResponse placeDiceResponse) {
+
+    }
+
+    @Override
+    public void handle(NextMoveResponse nextMoveResponse) {
+
     }
 }

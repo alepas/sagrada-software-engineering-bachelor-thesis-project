@@ -1,8 +1,8 @@
 package it.polimi.ingsw.model.wpc;
 
 import it.polimi.ingsw.model.clientModel.ClientWpc;
+import it.polimi.ingsw.model.clientModel.Position;
 import it.polimi.ingsw.model.dicebag.Color;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

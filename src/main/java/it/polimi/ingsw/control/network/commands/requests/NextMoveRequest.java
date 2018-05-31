@@ -2,12 +2,10 @@ package it.polimi.ingsw.control.network.commands.requests;
 
 import it.polimi.ingsw.control.network.commands.responses.Response;
 
-public class PickDiceRequest implements Request {
-    public final int diceId;
+public class NextMoveRequest implements Request {
     public final String userToken;
 
-    public PickDiceRequest(String userToken, int diceId) {
-        this.diceId = diceId;
+    public NextMoveRequest(String userToken) {
         this.userToken = userToken;
     }
 

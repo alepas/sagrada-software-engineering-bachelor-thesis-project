@@ -28,6 +28,8 @@ public class CannotCancelActionException extends Exception{
                 return "Can't cancelCard the current action for user " + user + " because you have to complete the action for this tool card: " + cardID;
             case 2:
                 return "Can't cancelCard the setCard of the Tool Card " + cardID +" for the user " + user;
+            case 3:
+                return "Can't cancelCard the current action for user " + user + " due to an internal problem in card: " + cardID;
 
         }
         return null;
