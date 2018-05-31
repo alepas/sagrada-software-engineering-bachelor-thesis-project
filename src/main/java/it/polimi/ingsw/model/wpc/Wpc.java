@@ -58,55 +58,58 @@ public class Wpc {
         Cell cell=getCellFromPosition(pos);
         if(cell.getDice()!=null)
             return false;
-        //TODO: se la wpc non contiene dadi allora checkFirstTurnRestriction
         if (!firstDicePutted) {
             if (checkFirstTurnRestriction(cell)&&checkCellRestriction(cell,dice)) {
                 cell.setDice(dice);
                 firstDicePutted=true;
                 return true;
             }
-        } else if (checkCellRestriction(cell, dice)
-                && checkAdjacentRestriction(cell, dice)
-                && isThereAtLeastADiceNear(cell)) {
-            cell.setDice(dice);
-            return true;
+        } else {
+            ArrayList<Cell> orthoCells=getOrthogonallyAdjacentCells(pos);
+            ArrayList<Cell> diagCells=getDiagonallyAdjacentCells(pos);
+
+            if (checkCellRestriction(cell, dice)
+                    && checkAdjacentDiceRestriction(orthoCells, dice)
+                    && isThereAtLeastADiceNear(orthoCells,diagCells)) {
+                cell.setDice(dice);
+                return true;
+            }
         }
         return false;
     }
 
-    public boolean addDicePersonalizedRestrictions(Dice dice, Position pos, int globalTurn, boolean ColorRestr, boolean ValueRestr, boolean PlacementRestr, boolean atLeastADiceNear, boolean noDicesNear){
+
+    public boolean addDicePersonalizedRestrictions(Dice dice, Position pos, boolean ColorRestr, boolean ValueRestr, boolean PlacementRestr, boolean atLeastADiceNear, boolean noDicesNear){
         Cell cell=getCellFromPosition(pos);
         boolean condition=true;
 
-        if (ColorRestr==true){
-            condition&=checkOnlyColorCellRestriction(cell,dice);
-            if (condition==false)
-                return false;}
-        if (ValueRestr==true){
-            condition&=checkOnlyNumberCellRestriction(cell,dice);
-        if (condition==false)
-            return false;}
-        if (PlacementRestr==true){
-            if (globalTurn == 1) {
-                if (checkFirstTurnRestriction(cell)==false)
-                    return false;
-            }
-            condition&= (checkAdjacentRestriction(cell, dice));
-            if (condition==false)
+        if (!firstDicePutted) {
+            if (!checkFirstTurnRestriction(cell)) {
                 return false;
+            }
         }
 
-        if (atLeastADiceNear==true){
-            condition&=isThereAtLeastADiceNear(cell);
-            if (condition==false)
+        if ((ColorRestr)&&(!checkOnlyColorCellRestriction(cell, dice)))
+            return false;
+
+        if ((ValueRestr)&&(!checkOnlyNumberCellRestriction(cell,dice)))
+            return false;
+
+        ArrayList<Cell> orthoCells=getOrthogonallyAdjacentCells(pos);
+        ArrayList<Cell> diagCells=getDiagonallyAdjacentCells(pos);
+
+        if ((PlacementRestr)&&(!checkAdjacentDiceRestriction(orthoCells, dice)))
                 return false;
-        }
-        if (noDicesNear==true){
-            condition&=!isThereAtLeastADiceNear(cell);
-            if (condition==false)
+
+        if ((atLeastADiceNear)&&(!isThereAtLeastADiceNear(orthoCells,diagCells)))
                 return false;
-        }
+
+        if ((noDicesNear)&&(isThereAtLeastADiceNear(orthoCells,diagCells)))
+                return false;
+
         cell.setDice(dice);
+        if (!firstDicePutted)
+            firstDicePutted=true;
         return true;
     }
 
@@ -173,7 +176,8 @@ public class Wpc {
         //pennello per eglomise: impone che sia considerata sulla cella solo la restrizione di numero e non quella di colore
         if (cell.getDice()!= null)
             return false;
-
+        if (cell.getNumber()==0)
+            return true;
         return cell.getNumber() == dice.getDiceNumber();
     }
 
@@ -182,41 +186,65 @@ public class Wpc {
         //Alesatore per lamine di rame: impone che sia considerata sulla cella solo la restrizione di colore e non quella di numero
         if (cell.getDice()!= null)
             return false;
+        if (cell.getColor()==null)
+            return true;
 
         return cell.getColor().equals(dice.getDiceColor());
     }
 
 
-    private boolean checkAdjacentRestriction(Cell cell, Dice dice){
-        //controllo se le celle adiacenti hanno dadi con numero o colore uguali a quelli del dado che si desidera inserire
-        int row= cell.getCellPosition().getRow();
-        int column= cell.getCellPosition().getColumn();
+    private boolean checkAdjacentDiceRestriction(ArrayList<Cell> orthoCell, Dice dice){
         boolean condition=true;
-
-        for(Cell schemaCell: this.schema) {
-            if (isAnAdjacentCell(schemaCell, row, column) && schemaCell.getDice()!= null)
-                condition&=!checkDiceEquivalence(schemaCell.getDice(), dice);
+        for(Cell cell: orthoCell) {
+            if (cell.getDice()!= null)
+                condition&=!checkDiceEquivalence(cell.getDice(), dice);
         }
         return condition;
     }
 
 
-    private boolean isAnAdjacentCell(Cell cell, int row, int column){
-        //verifico se la cella è adiacente a quella sotto esame
+    private boolean isOrthogonallyAdjacentCell(Cell cell, int row, int column){
+        //verifico se la cella è ortogonalmente adiacente a quella sotto esame
         int adjacentRow = cell.getCellPosition().getRow();
         int adjacentColumn = cell.getCellPosition().getColumn();
-        return (adjacentRow == row && (adjacentColumn == (column + 1) || adjacentColumn == (column - 1)))|| (adjacentColumn == column && (adjacentRow== row-1 || adjacentRow == row+1));
+        return ((adjacentRow == row && (adjacentColumn == (column + 1) || adjacentColumn == (column - 1)))
+                || (adjacentColumn == column && (adjacentRow== row-1 || adjacentRow == row+1)));
+    }
+
+    private boolean isDiagonallyAdjacentCell(Cell cell, int row, int column){
+        int adjacentRow = cell.getCellPosition().getRow();
+        int adjacentColumn = cell.getCellPosition().getColumn();
+        return  (((adjacentRow==row-1)&&((adjacentColumn==column-1)||(adjacentColumn==column+1)))
+                ||((adjacentRow==row+1)&&((adjacentColumn==column-1)||(adjacentColumn==column+1))));
 
     }
 
-    //manca il controllo che ci sia almeno un dado attorno alla cella selezionata
-    private boolean isThereAtLeastADiceNear(Cell cell) {
-        int row= cell.getCellPosition().getRow();
-        int column= cell.getCellPosition().getColumn();
-
+    private ArrayList<Cell> getOrthogonallyAdjacentCells(Position position){
+        ArrayList<Cell> orthoCells=new ArrayList<>();
         for(Cell schemaCell: this.schema) {
-            if (isAnAdjacentCell(schemaCell, row, column) && schemaCell.getDice()!= null)
-               return true;
+            if (isOrthogonallyAdjacentCell(schemaCell, position.getRow(), position.getColumn()))
+                orthoCells.add(schemaCell);
+        }
+        return orthoCells;
+    }
+
+    private ArrayList<Cell> getDiagonallyAdjacentCells(Position position){
+        ArrayList<Cell> diagCells=new ArrayList<>();
+        for(Cell schemaCell: this.schema) {
+            if (isDiagonallyAdjacentCell(schemaCell, position.getRow(), position.getColumn()))
+                diagCells.add(schemaCell);
+        }
+        return diagCells;
+    }
+    
+    private boolean isThereAtLeastADiceNear(ArrayList<Cell> orthoCells,ArrayList<Cell> diagCells) {
+        for(Cell cell: orthoCells) {
+            if (cell.getDice()!= null)
+                return true;
+        }
+        for (Cell cell: diagCells){
+            if (cell.getDice()!=null)
+                return true;
         }
         return false;
     }
