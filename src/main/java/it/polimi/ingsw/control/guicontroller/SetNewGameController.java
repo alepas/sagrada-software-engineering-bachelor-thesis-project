@@ -12,6 +12,8 @@ import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotFindPlayerInDatabaseException;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotFindUserInDBException;
 
+import javafx.animation.Animation;
+import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -19,9 +21,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.IOException;
 
@@ -40,7 +44,9 @@ public class SetNewGameController implements Observer, NotificationHandler {
     private boolean pocExtracted = false;
     private boolean privateObjExtractd = false;
     private boolean toolExtracted = false;
-    private static final Object waiter = new Object();
+    private boolean playerIn = false;
+    private boolean playerOut = false;
+    //private static final Object waiter = new Object();
 
     private ClientColor[] colors;
     private ArrayList<ClientWpc> userWpcs = new ArrayList<>();
@@ -52,6 +58,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
     private Label lab1 = new Label();
     private Label lab2 = new Label();
     private Label lab3 = new Label();
+    private Label lab4 = new Label();
 
     private String newPlayer = null;
 
@@ -65,15 +72,6 @@ public class SetNewGameController implements Observer, NotificationHandler {
     private Button personalAreaButton;
 
     @FXML
-    private Circle fourthWpcCirlce1;
-
-    @FXML
-    private Circle fourthWpcCirlce2;
-
-    @FXML
-    private Circle fourthWpcCirlce3;
-
-    @FXML
     private Circle fourthWpcCirlce4;
 
     @FXML
@@ -81,15 +79,6 @@ public class SetNewGameController implements Observer, NotificationHandler {
 
     @FXML
     private Circle fourthWpcCirlce6;
-
-    @FXML
-    private Circle thirdWpcCirlce1;
-
-    @FXML
-    private Circle thirdWpcCirlce2;
-
-    @FXML
-    private Circle thirdWpcCirlce3;
 
     @FXML
     private Circle thirdWpcCirlce4;
@@ -101,15 +90,6 @@ public class SetNewGameController implements Observer, NotificationHandler {
     private Circle thirdWpcCirlce6;
 
     @FXML
-    private Circle secondWpcCirlce1;
-
-    @FXML
-    private Circle secondWpcCirlce2;
-
-    @FXML
-    private Circle secondWpcCirlce3;
-
-    @FXML
     private Circle secondWpcCirlce4;
 
     @FXML
@@ -117,15 +97,6 @@ public class SetNewGameController implements Observer, NotificationHandler {
 
     @FXML
     private Circle secondWpcCirlce6;
-
-    @FXML
-    private Circle firstWpcCirlce1;
-
-    @FXML
-    private Circle firstWpcCirlce2;
-
-    @FXML
-    private Circle firstWpcCirlce3;
 
     @FXML
     private Circle firstWpcCirlce4;
@@ -219,8 +190,10 @@ public class SetNewGameController implements Observer, NotificationHandler {
                 disableAll();
                 findGame(4);
             } else {
-                errorLabel.setText("Select a number.");
-                errorLabel.setVisible(true);
+                Platform.runLater(()->{
+                    errorLabel.setText("Select a number.");
+                    errorLabel.setVisible(true);
+                });
             }
         });
 
@@ -302,23 +275,32 @@ public class SetNewGameController implements Observer, NotificationHandler {
 
 
     private void waitPlayers() {
+        TranslateTransition transition = new TranslateTransition();
+        ImageView image = new ImageView();
+        diceAnimation(image, transition);
         Thread waitPlayers = new Thread(() -> {
-
             if (!(clientModel.getGameActualPlayers() == clientModel.getGameNumPlayers())) {
                 findPlayersLabel.setVisible(false);
                 numOfPlayersLabel.setVisible(true);
             }
             while (!gameStarted) {
                 if (newPlayer != null) {
-
                     Platform.runLater(() -> {
-                        lab2.setText(" é entrato in partita " + newPlayer);
-                        lab2.setLayoutX(100);
-                        lab2.setLayoutY(360);
-                        lab1.setVisible(false);
-                        selectionArea.getChildren().add(lab2);
+                        if(playerIn) {
+                            lab2.setText(newPlayer + " é entrato in partita!");
+                            lab2.setLayoutX(100);
+                            lab2.setLayoutY(360);
+                            selectionArea.getChildren().add(lab2);
+                            playerIn = false;
+                        }
+                        if(playerOut){
+                            lab3.setText(newPlayer + " é uscito dalla partita!");
+                            lab3.setLayoutX(100);
+                            lab3.setLayoutY(340);
+                            selectionArea.getChildren().add(lab3);
+                            playerOut= false;
+                        }
                         newPlayer = null;
-                        //TODO: devo fare il caso di uscita da partita e modificare lab1
                     });
                 }
                 try {
@@ -327,18 +309,35 @@ public class SetNewGameController implements Observer, NotificationHandler {
                     //TODO
                 }
             }
+            Platform.runLater(()->{
+                transition.stop();
+                selectionArea.getChildren().remove(image);
+            });
         });
         waitPlayers.start();
+    }
+
+    private void diceAnimation(ImageView image, TranslateTransition transition) {
+        Platform.runLater(()->{
+            image.getStyleClass().add("violet5");
+            image.setFitHeight(30);
+            image.setFitWidth(30);
+            selectionArea.getChildren().add(image);
+            image.setLayoutX(100);
+            image.setLayoutY(450);
+
+            transition.setDuration(Duration.seconds(4));
+            transition.setToX(300);
+            transition.setAutoReverse(true);
+            transition.setCycleCount(Animation.INDEFINITE);
+            transition.setNode(image);
+            transition.play();
+        });
     }
 
 
     private void waitWPC() {
         Thread waitingWPC = new Thread(() -> {
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                //TODO
-            }
             while (!areWpcExtracted) {
                 try {
                     Thread.sleep(500);
@@ -381,6 +380,12 @@ public class SetNewGameController implements Observer, NotificationHandler {
                 secondWPC.setVisible(true);
                 thirdWPC.setVisible(true);
                 fourthWPC.setVisible(true);
+                lab4.setText("Obiettivi privati: "+ Arrays.toString(colors));
+                lab4.getStyleClass().add("Label");
+                lab4.setLayoutY(32);
+                lab4.setLayoutX(180);
+                messagesArea.getChildren().add(lab4);
+
             });
         });
         waitingWPC.start();
@@ -388,13 +393,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
 
 
     private void waitForPoc() {
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            //TODO
-        }
         Thread waitingPoc = new Thread(() -> {
-            if (!pocExtracted) System.out.println("In attesa degli obiettivi pubblici...");
             while (!pocExtracted) {
                 try {
                     Thread.sleep(500);
@@ -403,19 +402,12 @@ public class SetNewGameController implements Observer, NotificationHandler {
                 }
             }
         });
-
         waitingPoc.start();
     }
 
 
     private void waitForToolCards() {
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            //TODO
-        }
         Thread waitingToolcards = new Thread(() -> {
-            if (!toolExtracted) System.out.println("In attesa delle toolcard...");
             while (!toolExtracted) {
                 try {
                     Thread.sleep(500);
@@ -431,31 +423,16 @@ public class SetNewGameController implements Observer, NotificationHandler {
     private void setFourthWpcFavours(int favours) {
         switch (favours) {
             case 3:
-                fourthWpcCirlce1.setVisible(true);
-                fourthWpcCirlce2.setVisible(true);
-                fourthWpcCirlce3.setVisible(true);
-                fourthWpcCirlce4.setVisible(true);
+                fourthWpcCirlce6.setVisible(false);
+                fourthWpcCirlce5.setVisible(false);
+                fourthWpcCirlce4.setVisible(false);
                 break;
             case 4:
-                fourthWpcCirlce1.setVisible(true);
-                fourthWpcCirlce2.setVisible(true);
-                fourthWpcCirlce3.setVisible(true);
-                fourthWpcCirlce4.setVisible(true);
+                fourthWpcCirlce6.setVisible(false);
+                fourthWpcCirlce5.setVisible(false);
                 break;
             case 5:
-                fourthWpcCirlce1.setVisible(true);
-                fourthWpcCirlce2.setVisible(true);
-                fourthWpcCirlce3.setVisible(true);
-                fourthWpcCirlce4.setVisible(true);
-                fourthWpcCirlce5.setVisible(true);
-                break;
-            case 6:
-                fourthWpcCirlce1.setVisible(true);
-                fourthWpcCirlce2.setVisible(true);
-                fourthWpcCirlce3.setVisible(true);
-                fourthWpcCirlce4.setVisible(true);
-                fourthWpcCirlce5.setVisible(true);
-                fourthWpcCirlce6.setVisible(true);
+                fourthWpcCirlce6.setVisible(false);
                 break;
         }
     }
@@ -464,30 +441,16 @@ public class SetNewGameController implements Observer, NotificationHandler {
     private void setThirdWpcFavours(int favours) {
         switch (favours) {
             case 3:
-                thirdWpcCirlce1.setVisible(true);
-                thirdWpcCirlce2.setVisible(true);
-                thirdWpcCirlce3.setVisible(true);
+                thirdWpcCirlce6.setVisible(false);
+                thirdWpcCirlce5.setVisible(false);
+                thirdWpcCirlce4.setVisible(false);
                 break;
             case 4:
-                thirdWpcCirlce1.setVisible(true);
-                thirdWpcCirlce2.setVisible(true);
-                thirdWpcCirlce3.setVisible(true);
-                thirdWpcCirlce4.setVisible(true);
+                thirdWpcCirlce6.setVisible(false);
+                thirdWpcCirlce5.setVisible(false);
                 break;
             case 5:
-                thirdWpcCirlce1.setVisible(true);
-                thirdWpcCirlce2.setVisible(true);
-                thirdWpcCirlce3.setVisible(true);
-                thirdWpcCirlce4.setVisible(true);
-                thirdWpcCirlce5.setVisible(true);
-                break;
-            case 6:
-                thirdWpcCirlce1.setVisible(true);
-                thirdWpcCirlce2.setVisible(true);
-                thirdWpcCirlce3.setVisible(true);
-                thirdWpcCirlce4.setVisible(true);
-                thirdWpcCirlce5.setVisible(true);
-                thirdWpcCirlce6.setVisible(true);
+                thirdWpcCirlce6.setVisible(false);
                 break;
         }
     }
@@ -496,30 +459,16 @@ public class SetNewGameController implements Observer, NotificationHandler {
     private void setSecondWpcFavours(int favours) {
         switch (favours) {
             case 3:
-                secondWpcCirlce1.setVisible(true);
-                secondWpcCirlce2.setVisible(true);
-                secondWpcCirlce3.setVisible(true);
+                secondWpcCirlce6.setVisible(false);
+                secondWpcCirlce5.setVisible(false);
+                secondWpcCirlce4.setVisible(false);
                 break;
             case 4:
-                secondWpcCirlce1.setVisible(true);
-                secondWpcCirlce2.setVisible(true);
-                secondWpcCirlce3.setVisible(true);
-                secondWpcCirlce4.setVisible(true);
+                secondWpcCirlce6.setVisible(false);
+                secondWpcCirlce5.setVisible(false);
                 break;
             case 5:
-                secondWpcCirlce1.setVisible(true);
-                secondWpcCirlce2.setVisible(true);
-                secondWpcCirlce3.setVisible(true);
-                secondWpcCirlce4.setVisible(true);
-                secondWpcCirlce5.setVisible(true);
-                break;
-            case 6:
-                secondWpcCirlce1.setVisible(true);
-                secondWpcCirlce2.setVisible(true);
-                secondWpcCirlce3.setVisible(true);
-                secondWpcCirlce4.setVisible(true);
-                secondWpcCirlce5.setVisible(true);
-                secondWpcCirlce6.setVisible(true);
+                secondWpcCirlce6.setVisible(false);
                 break;
         }
     }
@@ -528,30 +477,16 @@ public class SetNewGameController implements Observer, NotificationHandler {
     private void setFirstWpcFavours(int favours) {
         switch (favours) {
             case 3:
-                firstWpcCirlce1.setVisible(true);
-                firstWpcCirlce2.setVisible(true);
-                firstWpcCirlce3.setVisible(true);
+                firstWpcCirlce6.setVisible(false);
+                firstWpcCirlce5.setVisible(false);
+                firstWpcCirlce4.setVisible(false);
                 break;
             case 4:
-                firstWpcCirlce1.setVisible(true);
-                firstWpcCirlce2.setVisible(true);
-                firstWpcCirlce3.setVisible(true);
-                firstWpcCirlce4.setVisible(true);
+                firstWpcCirlce6.setVisible(false);
+                firstWpcCirlce5.setVisible(false);
                 break;
             case 5:
-                firstWpcCirlce1.setVisible(true);
-                firstWpcCirlce2.setVisible(true);
-                firstWpcCirlce3.setVisible(true);
-                firstWpcCirlce4.setVisible(true);
-                firstWpcCirlce5.setVisible(true);
-                break;
-            case 6:
-                firstWpcCirlce1.setVisible(true);
-                firstWpcCirlce2.setVisible(true);
-                firstWpcCirlce3.setVisible(true);
-                firstWpcCirlce4.setVisible(true);
-                firstWpcCirlce5.setVisible(true);
-                firstWpcCirlce6.setVisible(true);
+                firstWpcCirlce6.setVisible(false);
                 break;
         }
     }
@@ -635,7 +570,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
 
     private void playGame(Event event) {
         Thread startGame = new Thread(() -> {
-            while (!pocExtracted || !toolExtracted || !(clientModel.getWpcByUsername().size() == clientModel.getGameNumPlayers())) {
+            while (!pocExtracted || !toolExtracted || !(clientModel.getWpcByUsername().size() == clientModel.getGameNumPlayers()) || !privateObjExtractd) {
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
@@ -698,11 +633,12 @@ public class SetNewGameController implements Observer, NotificationHandler {
     @Override
     public void handle(PlayersChangedNotification notification) {
         if (notification.joined){
+            playerIn = true;
             newPlayer = notification.username;
-            System.out.println( "é entrato in partita" + notification.username);
         } else {
+            playerOut = true;
+            newPlayer = notification.username;
             System.out.println(notification.username + " è uscito dalla partita.");
-            //TODO
         }
     }
 
@@ -715,14 +651,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
     @Override
     public void handle(PrivateObjExtractedNotification notification) {
         colors = notification.colorsByUser.get(clientModel.getUsername());
-        //privateObjExtractd = true;
-        Platform.runLater(()->{
-            Label lab4 = new Label("Il tuo obiettivo privato è il colore: "+ Arrays.toString(colors));
-            lab4.setLayoutX(100);
-            lab4.setLayoutY(380);
-            lab4.setVisible(true);
-            selectionArea.getChildren().add(lab4);
-        });
+        privateObjExtractd = true;
     }
 
     @Override

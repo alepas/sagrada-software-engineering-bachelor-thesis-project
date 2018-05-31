@@ -273,9 +273,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
 
 
     private void diceAnimation(){
-        for(int row = 0 ; row < extractedDices.size(); row++) {
-            ClientDice dice = extractedDices.get(row);
-
+        for (ClientDice dice : extractedDices) {
             String color = (String.valueOf(dice.getDiceColor())).toLowerCase();
             String number = String.valueOf(dice.getDiceNumber());
             String id = String.valueOf(dice.getDiceID());
