@@ -60,12 +60,14 @@ public class Wpc {
             return false;
         //TODO: se la wpc non contiene dadi allora checkFirstTurnRestriction
         if (!firstDicePutted) {
-            if (checkFirstTurnRestriction(cell)&&checkAdjacentRestriction(cell,dice)&&checkCellRestriction(cell,dice)) {
+            if (checkFirstTurnRestriction(cell)&&checkCellRestriction(cell,dice)) {
                 cell.setDice(dice);
                 firstDicePutted=true;
                 return true;
             }
-        } else if (checkCellRestriction(cell, dice)&& checkAdjacentRestriction(cell, dice)&& isThereAtLeastADiceNear(cell)) {
+        } else if (checkCellRestriction(cell, dice)
+                && checkAdjacentRestriction(cell, dice)
+                && isThereAtLeastADiceNear(cell)) {
             cell.setDice(dice);
             return true;
         }
@@ -189,12 +191,13 @@ public class Wpc {
         //controllo se le celle adiacenti hanno dadi con numero o colore uguali a quelli del dado che si desidera inserire
         int row= cell.getCellPosition().getRow();
         int column= cell.getCellPosition().getColumn();
+        boolean condition=true;
 
         for(Cell schemaCell: this.schema) {
             if (isAnAdjacentCell(schemaCell, row, column) && schemaCell.getDice()!= null)
-                return checkDiceEquivalence(schemaCell.getDice(), dice);
+                condition&=!checkDiceEquivalence(schemaCell.getDice(), dice);
         }
-        return true;
+        return condition;
     }
 
 
@@ -212,7 +215,7 @@ public class Wpc {
         int column= cell.getCellPosition().getColumn();
 
         for(Cell schemaCell: this.schema) {
-            if (isAnAdjacentCell(schemaCell, row, column) && cell.getDice()!= null)
+            if (isAnAdjacentCell(schemaCell, row, column) && schemaCell.getDice()!= null)
                return true;
         }
         return false;
