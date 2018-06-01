@@ -5,7 +5,7 @@ import it.polimi.ingsw.model.clientModel.*;
 import java.util.ArrayList;
 
 public class ToolCardResponse implements Response {
-    public final ClientNextActions nextAction;
+    public final NextAction nextAction;
     public final ClientDiceLocations wherePickNewDice;
     public final ClientDiceLocations wherePutNewDice;
     public final ArrayList<Integer> numbersToChoose;
@@ -16,7 +16,7 @@ public class ToolCardResponse implements Response {
     public final Exception exception;
 
 
-    public ToolCardResponse(ClientNextActions nextAction, ClientDiceLocations wherePickNewDice, ClientDiceLocations wherePutNewDice, ArrayList<Integer> numbersToChoose, ClientWpc wpc, ArrayList<ClientDice> extractedDices, ClientRoundTrack roundTrack, Integer diceChosenId, Exception exception) {
+    public ToolCardResponse(NextAction nextAction, ClientDiceLocations wherePickNewDice, ClientDiceLocations wherePutNewDice, ArrayList<Integer> numbersToChoose, ClientWpc wpc, ArrayList<ClientDice> extractedDices, ClientRoundTrack roundTrack, Integer diceChosenId, Exception exception) {
         this.nextAction = nextAction;
         this.wherePickNewDice = wherePickNewDice;
         this.wherePutNewDice = wherePutNewDice;

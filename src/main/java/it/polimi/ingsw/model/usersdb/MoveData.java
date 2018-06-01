@@ -4,7 +4,7 @@ import it.polimi.ingsw.model.clientModel.*;
 import java.util.ArrayList;
 
 public class MoveData {
-    public ClientNextActions nextAction=null;
+    public NextAction nextAction=null;
     public ClientDiceLocations wherePickNewDice=null;
     public ClientDiceLocations wherePutNewDice=null;
     public ClientWpc wpc=null;
@@ -16,7 +16,7 @@ public class MoveData {
     public boolean canceledToolCard =false;
     public Exception exception=null;
 
-    public MoveData(ClientNextActions nextAction, ClientDiceLocations wherePickNewDice, ClientDiceLocations wherePutNewDice,
+    public MoveData(NextAction nextAction, ClientDiceLocations wherePickNewDice, ClientDiceLocations wherePutNewDice,
                     ClientWpc wpc, ArrayList<ClientDice> extractedDices, ClientRoundTrack roundTrack, Integer diceChosenId,
                     ArrayList<Integer> numbersToChoose, boolean moveFinished, boolean canceledToolCard, Exception exception) {
         this.nextAction = nextAction;
@@ -38,7 +38,7 @@ public class MoveData {
     }
 
 
-    public MoveData(ClientNextActions nextAction, boolean moveFinished, ClientWpc wpc, ArrayList<ClientDice> extractedDices,
+    public MoveData(NextAction nextAction, boolean moveFinished, ClientWpc wpc, ArrayList<ClientDice> extractedDices,
                     ClientRoundTrack roundTrack, Integer diceChosenId){
         this.nextAction = nextAction;
         this.wpc = wpc;
@@ -48,7 +48,7 @@ public class MoveData {
         this.moveFinished=moveFinished;
     }
 
-    public MoveData(ClientNextActions nextAction, boolean moveFinished, ClientWpc wpc, ArrayList<ClientDice> extractedDices,
+    public MoveData(NextAction nextAction, boolean moveFinished, ClientWpc wpc, ArrayList<ClientDice> extractedDices,
                     ClientRoundTrack roundTrack, Integer diceChosenId, ArrayList<Integer> numbersToChoose){
         this.nextAction = nextAction;
         this.wpc = wpc;
@@ -60,7 +60,7 @@ public class MoveData {
     }
 
 
-    public MoveData(ClientNextActions nextAction, ClientWpc wpc, ArrayList<ClientDice> extractedDices,
+    public MoveData(NextAction nextAction, ClientWpc wpc, ArrayList<ClientDice> extractedDices,
                     ClientRoundTrack roundTrack, Integer diceChosenId, boolean canceledToolCard){
         this.nextAction = nextAction;
         this.wpc = wpc;
@@ -70,7 +70,7 @@ public class MoveData {
         this.canceledToolCard = canceledToolCard;
     }
 
-    public MoveData(ClientNextActions nextAction, ClientWpc wpc, ArrayList<ClientDice> extractedDices,
+    public MoveData(NextAction nextAction, ClientWpc wpc, ArrayList<ClientDice> extractedDices,
                     ClientRoundTrack roundTrack, Integer diceChosenId, ArrayList<Integer> numbersToChoose, boolean canceledToolCard){
         this.nextAction = nextAction;
         this.wpc = wpc;
@@ -81,7 +81,7 @@ public class MoveData {
         this.canceledToolCard = canceledToolCard;
     }
 
-    public MoveData(ClientNextActions nextAction, boolean moveFinished, ClientDiceLocations wherePickNewDice, ClientDiceLocations wherePutNewDice,
+    public MoveData(NextAction nextAction, boolean moveFinished, ClientDiceLocations wherePickNewDice, ClientDiceLocations wherePutNewDice,
                     ClientWpc wpc, ArrayList<ClientDice> extractedDices, ClientRoundTrack roundTrack, Integer diceChosenId,
                     ArrayList<Integer> numbersToChoose) {
         this.nextAction = nextAction;
@@ -171,20 +171,20 @@ public class MoveData {
         this.moveFinished=moveFinished;
     }
 
-    public MoveData(ClientNextActions nextAction){
+    public MoveData(NextAction nextAction){
         this.nextAction=nextAction;
     }
 
-    public MoveData(ClientNextActions nextAction, ClientDiceLocations wherePickNewDice){
+    public MoveData(NextAction nextAction, ClientDiceLocations wherePickNewDice){
         this.nextAction=nextAction;
         this.wherePickNewDice=wherePickNewDice;
     }
 
-    public void setNextAction(ClientNextActions nextAction) {
+    public void setNextAction(NextAction nextAction) {
         this.nextAction = nextAction;
     }
 
-    public MoveData(ClientNextActions nextAction, ClientDiceLocations wherePickNewDice, ClientDiceLocations wherePutNewDice,
+    public MoveData(NextAction nextAction, ClientDiceLocations wherePickNewDice, ClientDiceLocations wherePutNewDice,
                     ClientWpc wpc, ArrayList<ClientDice> extractedDices, ClientRoundTrack roundTrack, Integer diceChosenId) {
         this.wherePickNewDice = wherePickNewDice;
         this.wherePutNewDice = wherePutNewDice;

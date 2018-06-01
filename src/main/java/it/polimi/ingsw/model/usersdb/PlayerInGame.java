@@ -178,13 +178,13 @@ public class PlayerInGame {
             throw new PlayerNotAuthorizedException(username);
         if (toolCardInUse == null) {
                 if ((!placedDiceInTurn)&&(!toolCardUsedInTurn))
-                    return new MoveData(ClientNextActions.MENU_ALL);
+                    return new MoveData(NextAction.MENU_ALL);
                 else if (placedDiceInTurn)
-                    return new MoveData(ClientNextActions.MENU_ONLY_TOOLCARD);
+                    return new MoveData(NextAction.MENU_ONLY_TOOLCARD);
                 else if (toolCardUsedInTurn)
-                    return new MoveData(ClientNextActions.MENU_ONLY_PICKDICE);
+                    return new MoveData(NextAction.MENU_ONLY_PLACE_DICE);
                 else if (toolCardUsedInTurn&&placedDiceInTurn)
-                    return new MoveData(ClientNextActions.TURN_FINISHED);
+                    return new MoveData(NextAction.MENU_ONLY_ENDTURN);
             }
         else return toolCardInUse.getNextMove();
         return null;
@@ -218,8 +218,8 @@ public class PlayerInGame {
         MoveData tempResponse= new MoveData(true,clientWpc,tempExtractedDices,null);
 
         if (!toolCardUsedInTurn)
-            tempResponse.setNextAction(ClientNextActions.MENU_ONLY_TOOLCARD);
-        else tempResponse.setNextAction(ClientNextActions.TURN_FINISHED);
+            tempResponse.setNextAction(NextAction.MENU_ONLY_TOOLCARD);
+        else tempResponse.setNextAction(NextAction.MENU_ONLY_ENDTURN);
 
         return tempResponse;
 
@@ -238,8 +238,8 @@ public class PlayerInGame {
                 favours += lastFavoursRemoved;
                 game.changeAndNotifyObservers(new ToolCardCanceledNotification(username, oldCard.getID()));
                 if (!placedDiceInTurn)
-                    temp.setNextAction(ClientNextActions.MENU_ALL);
-                else temp.setNextAction(ClientNextActions.MENU_ONLY_TOOLCARD);
+                    temp.setNextAction(NextAction.MENU_ALL);
+                else temp.setNextAction(NextAction.MENU_ONLY_TOOLCARD);
 
             }
             return temp;
@@ -258,8 +258,8 @@ public class PlayerInGame {
         if (tempResponse.moveFinished==true){
             incrementActionInTurn(true);
             if ((!placedDiceInTurn)&&(allowPlaceDiceAfterCard))
-                tempResponse.setNextAction(ClientNextActions.MENU_ONLY_PICKDICE);
-            else tempResponse.setNextAction(ClientNextActions.TURN_FINISHED);
+                tempResponse.setNextAction(NextAction.MENU_ONLY_PLACE_DICE);
+            else tempResponse.setNextAction(NextAction.MENU_ONLY_ENDTURN);
         }
         return tempResponse;
     }
@@ -310,8 +310,8 @@ public class PlayerInGame {
         if (tempResponse.moveFinished){
             incrementActionInTurn(true);
             if ((!placedDiceInTurn)&&(allowPlaceDiceAfterCard))
-                tempResponse.setNextAction(ClientNextActions.MENU_ONLY_PICKDICE);
-            else tempResponse.setNextAction(ClientNextActions.TURN_FINISHED);
+                tempResponse.setNextAction(NextAction.MENU_ONLY_PLACE_DICE);
+            else tempResponse.setNextAction(NextAction.MENU_ONLY_ENDTURN);
         }
         return tempResponse;
     }
@@ -332,8 +332,8 @@ public class PlayerInGame {
         if (tempResponse.moveFinished){
             incrementActionInTurn(true);
             if ((!placedDiceInTurn)&&(allowPlaceDiceAfterCard))
-                tempResponse.setNextAction(ClientNextActions.MENU_ONLY_PICKDICE);
-            else tempResponse.setNextAction(ClientNextActions.TURN_FINISHED);
+                tempResponse.setNextAction(NextAction.MENU_ONLY_PLACE_DICE);
+            else tempResponse.setNextAction(NextAction.MENU_ONLY_ENDTURN);
         }
         return tempResponse;
 
@@ -354,8 +354,8 @@ public class PlayerInGame {
         if (tempResponse.moveFinished){
             incrementActionInTurn(true);
             if ((!placedDiceInTurn)&&(allowPlaceDiceAfterCard))
-                tempResponse.setNextAction(ClientNextActions.MENU_ONLY_PICKDICE);
-            else tempResponse.setNextAction(ClientNextActions.TURN_FINISHED);
+                tempResponse.setNextAction(NextAction.MENU_ONLY_PLACE_DICE);
+            else tempResponse.setNextAction(NextAction.MENU_ONLY_ENDTURN);
         }
         return tempResponse;
     }
@@ -370,8 +370,8 @@ public class PlayerInGame {
         if (tempResponse.moveFinished){
             incrementActionInTurn(true);
             if ((!placedDiceInTurn)&&(allowPlaceDiceAfterCard))
-                tempResponse.setNextAction(ClientNextActions.MENU_ONLY_PICKDICE);
-            else tempResponse.setNextAction(ClientNextActions.TURN_FINISHED);
+                tempResponse.setNextAction(NextAction.MENU_ONLY_PLACE_DICE);
+            else tempResponse.setNextAction(NextAction.MENU_ONLY_ENDTURN);
         }
         return tempResponse;
     }

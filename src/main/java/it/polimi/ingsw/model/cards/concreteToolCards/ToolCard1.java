@@ -5,7 +5,7 @@ import it.polimi.ingsw.control.network.commands.notifications.ToolCardUsedNotifi
 import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.clientModel.ClientDice;
 import it.polimi.ingsw.model.clientModel.ClientDiceLocations;
-import it.polimi.ingsw.model.clientModel.ClientNextActions;
+import it.polimi.ingsw.model.clientModel.NextAction;
 import it.polimi.ingsw.model.clientModel.Position;
 import it.polimi.ingsw.model.constants.ToolCardConstants;
 import it.polimi.ingsw.model.dicebag.Color;
@@ -74,12 +74,12 @@ public class ToolCard1 extends ToolCard {
         this.used = true;
         if (currentGame.isSinglePlayerGame()) {
             singlePlayerGame=true;
-            return new MoveData(ClientNextActions.PICKDICE_SINGLEPLAYER_ENABLECARD,ClientDiceLocations.EXTRACTED);
+            return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD,ClientDiceLocations.EXTRACTED);
         }
         else {
             this.currentStatus = 1;
             this.currentGame.changeAndNotifyObservers(new ToolCardUsedNotification(username, id));
-            return new MoveData(ClientNextActions.PICK_DICE_TOOLCARD,ClientDiceLocations.EXTRACTED);
+            return new MoveData(NextAction.SELECT_DICE_TOOLCARD,ClientDiceLocations.EXTRACTED);
 
         }
     }
@@ -94,13 +94,13 @@ public class ToolCard1 extends ToolCard {
             this.dice=dice;
             currentGame.getExtractedDices().remove(dice);
             updateClientExtractedDices();
-            return new MoveData(ClientNextActions.PICK_DICE_TOOLCARD,ClientDiceLocations.EXTRACTED,null,null,tempExtractedDices,null,null);
+            return new MoveData(NextAction.SELECT_DICE_TOOLCARD,ClientDiceLocations.EXTRACTED,null,null,tempExtractedDices,null,null);
         }
         if(currentStatus!=1)
             throw new CannotPerformThisMoveException(username,2,false);
         currentStatus=2;
         this.dice=dice;
-        return new MoveData(ClientNextActions.PICK_NUMBER_TOOLCARD,null,null,null,dice.getId(),numbers,false);
+        return new MoveData(NextAction.SELECT_NUMBER_TOOLCARD,null,null,null,dice.getId(),numbers,false);
     }
 
 
@@ -123,7 +123,7 @@ public class ToolCard1 extends ToolCard {
         currentStatus=3;
         updateClientExtractedDices();
         currentGame.changeAndNotifyObservers(new DiceChangedNotification(username,oldDice.getClientDice(),dice.getClientDice(),ClientDiceLocations.EXTRACTED,ClientDiceLocations.EXTRACTED,tempExtractedDices));
-        return new MoveData(ClientNextActions.PLACE_DICE_TOOLCARD,ClientDiceLocations.EXTRACTED,ClientDiceLocations.WPC,null,tempExtractedDices,null,dice.getId());
+        return new MoveData(NextAction.PLACE_DICE_TOOLCARD,ClientDiceLocations.EXTRACTED,ClientDiceLocations.WPC,null,tempExtractedDices,null,dice.getId());
     }
 
     @Override
@@ -163,12 +163,12 @@ public class ToolCard1 extends ToolCard {
                     return new MoveData(true,true,null,null,null,null,null);
 
                 }
-                return new MoveData(ClientNextActions.PICKDICE_SINGLEPLAYER_ENABLECARD,ClientDiceLocations.EXTRACTED);
+                return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD,ClientDiceLocations.EXTRACTED);
             }
             case 2: {
                 this.dice=null;
                 this.currentStatus=1;
-                return new MoveData(ClientNextActions.PICK_DICE_TOOLCARD,ClientDiceLocations.EXTRACTED);
+                return new MoveData(NextAction.SELECT_DICE_TOOLCARD,ClientDiceLocations.EXTRACTED);
 
             }
             case 3: {
@@ -178,7 +178,7 @@ public class ToolCard1 extends ToolCard {
                     throw new CannotCancelActionException(username,this.id,3);
                 }
                 updateClientExtractedDices();
-                return new MoveData(ClientNextActions.PICK_NUMBER_TOOLCARD,null,tempExtractedDices,null,null,numbers,false);
+                return new MoveData(NextAction.SELECT_NUMBER_TOOLCARD,null,tempExtractedDices,null,null,numbers,false);
             }
         }
         return null;
@@ -210,14 +210,14 @@ public class ToolCard1 extends ToolCard {
         switch (currentStatus){
             case 0: {
                 if (singlePlayerGame)
-                    return new MoveData(ClientNextActions.PICKDICE_SINGLEPLAYER_ENABLECARD,ClientDiceLocations.EXTRACTED);
+                    return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD,ClientDiceLocations.EXTRACTED);
                 else return null;
             }
-            case 1: return new MoveData(ClientNextActions.PICK_DICE_TOOLCARD,ClientDiceLocations.EXTRACTED,null,null,tempExtractedDices,null,null);
-            case 2: return new MoveData(ClientNextActions.PICK_NUMBER_TOOLCARD,null,null,null,this.dice.getId(),numbers,false);
+            case 1: return new MoveData(NextAction.SELECT_DICE_TOOLCARD,ClientDiceLocations.EXTRACTED,null,null,tempExtractedDices,null,null);
+            case 2: return new MoveData(NextAction.SELECT_NUMBER_TOOLCARD,null,null,null,this.dice.getId(),numbers,false);
 
 
-            case 3: return new MoveData(ClientNextActions.PLACE_DICE_TOOLCARD,ClientDiceLocations.EXTRACTED,ClientDiceLocations.WPC,null,tempExtractedDices,null,dice.getId());
+            case 3: return new MoveData(NextAction.PLACE_DICE_TOOLCARD,ClientDiceLocations.EXTRACTED,ClientDiceLocations.WPC,null,tempExtractedDices,null,dice.getId());
 
         }
         return null;
