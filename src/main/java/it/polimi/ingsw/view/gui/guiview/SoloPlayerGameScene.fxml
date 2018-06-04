@@ -7,13 +7,13 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
-<AnchorPane prefHeight="705.0" prefWidth="1280.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.control.guicontroller.TwoPlayersGameController">
+
+<AnchorPane styleClass="Scene" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.control.guicontroller.TwoPlayersGameController">
     <children>
 
-        <ImageView fitHeight="705.0" fitWidth="1280.0">
-            <image>
-                <Image url="@../images/vetrate.jpg" />
-            </image>
+        <ImageView fitHeight="705.0" fitWidth="1200.0">
+                <Image url="@/it/polimi/ingsw/view/gui/guiview/background/gameScene.jpg" />
         </ImageView>
 
         <GridPane fx:id="firstWPC" hgap="5.0" layoutX="428.0" layoutY="201.0" prefHeight="304.0" prefWidth="401.0" style="-fx-background-color: black;" styleClass="Grid" vgap="5.0">

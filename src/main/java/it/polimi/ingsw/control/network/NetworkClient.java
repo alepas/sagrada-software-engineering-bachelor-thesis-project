@@ -128,7 +128,9 @@ public abstract class NetworkClient implements ResponseHandler {
 
     @Override
     public void handle(ToolCardResponse response){
-
+        if (response.exception == null){
+            nextAction = response.nextAction;
+        }
     }
 
 

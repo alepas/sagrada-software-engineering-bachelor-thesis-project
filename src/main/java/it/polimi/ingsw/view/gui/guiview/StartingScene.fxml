@@ -1,20 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
-<?import javafx.geometry.Rectangle2D?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<AnchorPane styleClass="Window" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.control.guicontroller.StartController">
-    <ImageView blendMode="MULTIPLY" fitHeight="705.0" fitWidth="900.0">
-        <viewport>
-            <Rectangle2D />
-        </viewport>
-        <Image url="@../images/SagradaFirstScene.jpg" />
-    </ImageView>
 
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<AnchorPane stylesheets="@style.css" prefWidth="900.0" prefHeight="705.0" xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.control.guicontroller.StartController">
+
+    <ImageView fitHeight="705.0" fitWidth="900.0">
+        <Image url="@/it/polimi/ingsw/view/gui/guiview/background/startingScene.jpg"/>
+    </ImageView>
     <Button fx:id="cliButton" styleClass="FirstSceneButton" layoutX="391.0" layoutY="345.0" text="Cli"/>
 
     <Button fx:id="guiButton" styleClass="FirstSceneButton" layoutX="391.0" layoutY="475.0" text="Gui"/>

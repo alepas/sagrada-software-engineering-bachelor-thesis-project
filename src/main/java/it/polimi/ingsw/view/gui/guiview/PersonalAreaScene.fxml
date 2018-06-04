@@ -1,30 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <?import javafx.scene.control.*?>
-<?import javafx.scene.effect.DropShadow?>
-<?import javafx.scene.effect.Glow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<AnchorPane styleClass="Window" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8"
+
+<AnchorPane styleClass="Scene" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.control.guicontroller.PersonalAreaController">
 
-    <ImageView blendMode="DARKEN" fitHeight="705.0" fitWidth="900.0">
-        <Image url="/it/polimi/ingsw/view/gui/images/ladrainstagram2.jpg"/>
+    <ImageView fitHeight="705.0" fitWidth="1200.0">
+        <Image url="@/it/polimi/ingsw/view/gui/guiview/background/settingsScene.jpg"/>
     </ImageView>
 
-    <AnchorPane layoutX="209.0" layoutY="106.0" prefHeight="525.0" prefWidth="483.0" styleClass="Scene">
-        <effect>
-            <DropShadow color="#2f2424">
-                <input>
-                    <Glow/>
-                </input>
-            </DropShadow>
-        </effect>
-
+    <AnchorPane layoutX="360.0" layoutY="91.0" styleClass="MenuWindow">
         <ImageView fitHeight="550.0" fitWidth="500.0">
-            <Image url="@../images/FirstSettings.JPG"/>
+            <Image url="@/it/polimi/ingsw/view/gui/guiview/background/menuArea.jpg"/>
         </ImageView>
 
         <GridPane layoutX="150.0" layoutY="201.0">
@@ -44,7 +34,7 @@
             </rowConstraints>
 
             <Label contentDisplay="CENTER" prefHeight="20.0" prefWidth="147.0" styleClass="Label"
-                   text="Personal Datails" underline="true" GridPane.columnSpan="2"/>
+                   text="Area Personale" underline="true" GridPane.columnSpan="2"/>
             <Label styleClass="Label" text="-Username:" GridPane.rowIndex="1"/>
             <Label styleClass="Label" text="-Token:" GridPane.rowIndex="2"/>
             <Label fx:id="personalAreaUsername" styleClass="Label" GridPane.columnIndex="1" GridPane.rowIndex="1"/>

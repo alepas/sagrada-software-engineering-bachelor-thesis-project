@@ -1,170 +1,213 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.effect.DropShadow?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
-<AnchorPane fx:id="gameBoard" prefHeight="705.0" prefWidth="1280.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.control.guicontroller.TwoPlayersGameController">
-   <children>
-       <ImageView blendMode="SRC_ATOP" fitHeight="705.0" fitWidth="1280.0">
-          <image>
-              <Image url="/it/polimi/ingsw/view/gui/images/wood.jpg" />
-          </image>
-       </ImageView>
-      
-       <Label fx:id="roundLabel" layoutX="164.0" layoutY="72.0" prefHeight="35.0" prefWidth="480.0" styleClass="TitleLabel" />
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@style.css" styleClass="GameWindow" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.control.guicontroller.TwoPlayersGameController">
+    <ImageView fitHeight="705.0" fitWidth="1200.0">
+        <Image url="@/it/polimi/ingsw/view/gui/guiview/background/gameScene.jpg"/>
+    </ImageView>
+
+    <Label fx:id="roundLabel" layoutX="164.0" layoutY="72.0" prefHeight="35.0" prefWidth="480.0" styleClass="TitleLabel" wrapText="true" />
    
-       <GridPane fx:id="firstWpcGrid" hgap="5.0" layoutX="432.0" layoutY="144.0" prefHeight="335.0" prefWidth="400.0" style="-fx-background-color: black;" styleClass="Grid" vgap="5.0">
-           <columnConstraints>
-               <ColumnConstraints prefWidth="100.0" />
-               <ColumnConstraints prefWidth="100.0" />
-               <ColumnConstraints prefWidth="100.0" />
-               <ColumnConstraints prefWidth="100.0" />
-               <ColumnConstraints prefWidth="100.0" />
-           </columnConstraints>
-           <rowConstraints>
-               <RowConstraints prefHeight="100.0" />
-               <RowConstraints prefHeight="100.0" />
-               <RowConstraints prefHeight="100.0" />
-               <RowConstraints prefHeight="100.0" />
-               <RowConstraints prefHeight="50.0" />
+    <GridPane fx:id="firstWpcGrid" hgap="5.0" layoutX="432.0" layoutY="144.0" prefHeight="335.0" prefWidth="400.0" style="-fx-background-color: black;" styleClass="Grid" vgap="5.0">
+        <columnConstraints>
+            <ColumnConstraints prefWidth="100.0" />
+            <ColumnConstraints prefWidth="100.0" />
+            <ColumnConstraints prefWidth="100.0" />
+            <ColumnConstraints prefWidth="100.0" />
+            <ColumnConstraints prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints prefHeight="100.0" />
+            <RowConstraints prefHeight="100.0" />
+            <RowConstraints prefHeight="100.0" />
+            <RowConstraints prefHeight="100.0" />
+            <RowConstraints prefHeight="50.0" />
+        </rowConstraints>
+        <effect>
+            <DropShadow blurType="GAUSSIAN" color="#c29300" />
+        </effect>
+        <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+        </padding>
+
+        <Label contentDisplay="TOP" prefHeight="17.0" prefWidth="224.0" styleClass="Label" text="nome della wpc" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" />
+         
+        <AnchorPane prefHeight="15.0" prefWidth="65.0" style="-fx-background-color: black;" GridPane.columnIndex="4" GridPane.rowIndex="4">
+            <Circle layoutX="30.0" layoutY="12.0" radius="6.0" styleClass="Favours" />
+            <Circle layoutX="44.0" layoutY="12.0" radius="6.0" styleClass="Favours" />
+            <Circle layoutX="58.0" layoutY="12.0" radius="6.0" styleClass="Favours" />
+            <Circle layoutX="15.0" layoutY="12.0" radius="6.0" styleClass="Favours" />
+            <Circle layoutY="12.0" radius="6.0" styleClass="Favours" />
+            <Circle layoutX="-14.0" layoutY="12.0" radius="6.0" styleClass="Favours" />
+        </AnchorPane>
+    </GridPane>
+            
+    <GridPane fx:id="secondWpcGrid" disable="true" hgap="5.0" layoutX="59.0" layoutY="184.0" prefHeight="254.0" prefWidth="301.0" style="-fx-background-color: black;" vgap="5.0">
+        <columnConstraints>
+            <ColumnConstraints prefWidth="100.0" />
+            <ColumnConstraints prefWidth="100.0" />
+            <ColumnConstraints prefWidth="100.0" />
+            <ColumnConstraints prefWidth="100.0" />
+            <ColumnConstraints prefWidth="100.0" />
+        </columnConstraints>
+        <effect>
+            <DropShadow blurType="GAUSSIAN" color="#c29300" />
+        </effect>
+        <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+        </padding>
+        <rowConstraints>
+            <RowConstraints prefHeight="100.0" />
+            <RowConstraints prefHeight="100.0" />
+            <RowConstraints prefHeight="100.0" />
+            <RowConstraints prefHeight="100.0" />
+            <RowConstraints prefHeight="50.0" />
+        </rowConstraints>
+         
+        <Label prefHeight="17.0" prefWidth="224.0" styleClass="Label" text="nome della wpc"  GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" />
+                     
+        <AnchorPane prefHeight="20.0" prefWidth="54.0" style="-fx-background-color: black;" GridPane.columnIndex="4" GridPane.rowIndex="4">
+            <Circle layoutX="7.0" layoutY="11.0" radius="6.0" styleClass="Favours" />
+            <Circle layoutX="24.0" layoutY="11.0" radius="6.0" styleClass="Favours" />
+            <Circle layoutX="42.0" layoutY="11.0" radius="6.0" styleClass="Favours" />
+        </AnchorPane>
+                     
+        <AnchorPane prefHeight="6.0" prefWidth="53.0" style="-fx-background-color: black;" GridPane.columnIndex="3" GridPane.rowIndex="4">
+            <Circle layoutX="31.0" layoutY="11.0" radius="6.0" styleClass="Favours" />
+            <Circle layoutX="15.0" layoutY="11.0" radius="6.0" styleClass="Favours" />
+            <Circle layoutX="48.0" layoutY="11.0" radius="6.0" styleClass="Favours" />
+        </AnchorPane>
+    </GridPane>
+            
+    <Label fx:id="firstUserLabel" layoutX="588.0" layoutY="90.0" prefHeight="35.0" prefWidth="105.0" styleClass="TitleLabel" />
+    <Label fx:id="secondUserLabel" layoutX="157.0" layoutY="131.0" prefHeight="35.0" prefWidth="105.0" styleClass="TitleLabel" />
+   
+    <GridPane fx:id="toolCardGrid" layoutX="866.0" layoutY="44.0" prefHeight="639.0" prefWidth="330.0" vgap="5.0" visible="false">
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+
+        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
+            <Button fx:id="zoomTool1" layoutX="16.0" layoutY="65.0" styleClass="Button" text="Zoom ToolCard 1"/>
+            <Button fx:id="useTool1" layoutX="23.0" layoutY="116.0" styleClass="Button" text="Usa ToolCard 1"/>
+        </AnchorPane>
+
+        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Button fx:id="zoomTool2" layoutX="16.0" layoutY="62.0" styleClass="Button" text="Zoom ToolCard 2"/>
+            <Button fx:id="useTool2" layoutX="23.0" layoutY="112.0" styleClass="Button" text="Usa ToolCard 2"/>
+        </AnchorPane>
+
+        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <Button fx:id="zoomTool3" layoutX="16.0" layoutY="75.0" styleClass="Button" text="Zoom ToolCard 3"/>
+            <Button fx:id="useTool3" layoutX="23.0" layoutY="124.0" styleClass="Button" text="Usa ToolCard 3"/>
+            </AnchorPane>
+    </GridPane>
+
+    <AnchorPane fx:id="privateObjPane" layoutX="896.0" layoutY="124.0" prefHeight="381.0" prefWidth="274.0" />
+
+    <GridPane fx:id="roundTrackGrid" hgap="5.0" layoutX="884.0" layoutY="87.0" prefHeight="453.0" prefWidth="294.0" vgap="5.0" visible="false">
+        <columnConstraints>
+            <ColumnConstraints maxWidth="83.0" minWidth="30.0" prefWidth="41.0" />
+            <ColumnConstraints maxWidth="44.0" minWidth="2.0" prefWidth="44.0" />
+            <ColumnConstraints maxWidth="44.0" minWidth="30.0" prefWidth="100.0" />
+            <ColumnConstraints maxWidth="44.0" minWidth="30.0" prefWidth="100.0" />
+            <ColumnConstraints maxWidth="44.0" minWidth="30.0" prefWidth="100.0" />
+            <ColumnConstraints maxWidth="44.0" minWidth="30.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints maxHeight="44.0" minHeight="35.0" prefHeight="40.0" />
+            <RowConstraints maxHeight="44.0" minHeight="35.0" prefHeight="40.0" />
+            <RowConstraints maxHeight="44.0" minHeight="35.0" prefHeight="40.0" />
+            <RowConstraints maxHeight="44.0" minHeight="35.0" prefHeight="40.0" />
+            <RowConstraints maxHeight="44.0" minHeight="35.0" prefHeight="40.0" />
+            <RowConstraints maxHeight="44.0" minHeight="35.0" prefHeight="40.0" />
+            <RowConstraints maxHeight="44.0" minHeight="35.0" prefHeight="40.0" />
+            <RowConstraints maxHeight="44.0" minHeight="35.0" prefHeight="40.0" />
+            <RowConstraints maxHeight="44.0" minHeight="35.0" prefHeight="40.0" />
+            <RowConstraints maxHeight="44.0" minHeight="35.0" prefHeight="40.0" />
+            <RowConstraints maxHeight="44.0" minHeight="35.0" prefHeight="40.0" />
            </rowConstraints>
-           <effect>
-               <DropShadow blurType="GAUSSIAN" color="#c29300" />
-           </effect>
-                 <padding>
-                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                 </padding>
-         <children>
-         
-                 <Label contentDisplay="TOP" prefHeight="17.0" prefWidth="224.0" styleClass="Label" text="nome della wpc" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" />
-         
-                 <AnchorPane prefHeight="15.0" prefWidth="65.0" style="-fx-background-color: black;" GridPane.columnIndex="4" GridPane.rowIndex="4">
-            <children>
-                        <Circle layoutX="30.0" layoutY="12.0" radius="6.0" styleClass="Favours" />
-                        <Circle layoutX="44.0" layoutY="12.0" radius="6.0" styleClass="Favours" />
-                        <Circle layoutX="58.0" layoutY="12.0" radius="6.0" styleClass="Favours" />
-                        <Circle layoutX="15.0" layoutY="12.0" radius="6.0" styleClass="Favours" />
-                        <Circle layoutY="12.0" radius="6.0" styleClass="Favours" />
-                        <Circle layoutX="-14.0" layoutY="12.0" radius="6.0" styleClass="Favours" />
-            </children>
-                 </AnchorPane>
-         </children>
-          </GridPane>
-            
-          <GridPane fx:id="secondWpcGrid" disable="true" hgap="5.0" layoutX="59.0" layoutY="184.0" prefHeight="254.0" prefWidth="301.0" style="-fx-background-color: black;" vgap="5.0">
-         
-              <columnConstraints>
-                  <ColumnConstraints prefWidth="100.0" />
-                  <ColumnConstraints prefWidth="100.0" />
-                  <ColumnConstraints prefWidth="100.0" />
-                  <ColumnConstraints prefWidth="100.0" />
-                  <ColumnConstraints prefWidth="100.0" />
-              </columnConstraints>
-              <effect>
-                  <DropShadow blurType="GAUSSIAN" color="#c29300" />
-              </effect>
-              <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-              </padding>
-              <rowConstraints>
-                  <RowConstraints prefHeight="100.0" />
-                  <RowConstraints prefHeight="100.0" />
-                  <RowConstraints prefHeight="100.0" />
-                  <RowConstraints prefHeight="100.0" />
-                  <RowConstraints prefHeight="50.0" />
-              </rowConstraints>
-               <children>
-         
-                 <Label contentDisplay="TOP" prefHeight="17.0" prefWidth="224.0" styleClass="Label" text="nome della wpc" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" />
-                     
-                 <AnchorPane prefHeight="20.0" prefWidth="54.0" style="-fx-background-color: black;" GridPane.columnIndex="4" GridPane.rowIndex="4">
-                        <children>
-                        <Circle layoutX="7.0" layoutY="11.0" radius="6.0" styleClass="Favours" />
-                        <Circle layoutX="24.0" layoutY="11.0" radius="6.0" styleClass="Favours" />
-                        <Circle layoutX="42.0" layoutY="11.0" radius="6.0" styleClass="Favours" />
-                        </children>
-                 </AnchorPane>
-                     
-                 <AnchorPane prefHeight="6.0" prefWidth="53.0" style="-fx-background-color: black;" GridPane.columnIndex="3" GridPane.rowIndex="4">
-                        <children>
-                        <Circle layoutX="31.0" layoutY="11.0" radius="6.0" styleClass="Favours" />
-                        <Circle layoutX="15.0" layoutY="11.0" radius="6.0" styleClass="Favours" />
-                        <Circle layoutX="48.0" layoutY="11.0" radius="6.0" styleClass="Favours" />
-                        </children>
-                 </AnchorPane>
-               </children>
-          </GridPane>
-            
-          <Label fx:id="firstUserLabel" layoutX="588.0" layoutY="90.0" prefHeight="35.0" prefWidth="105.0" styleClass="TitleLabel" />
-          <Label fx:id="secondUserLabel" layoutX="157.0" layoutY="131.0" prefHeight="35.0" prefWidth="105.0" styleClass="TitleLabel" />
-   
-          <GridPane fx:id="toolCardGrid" layoutX="1013.0" layoutY="66.0" prefHeight="639.0" prefWidth="156.0" vgap="5.0">
-               <columnConstraints>
-                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-               </columnConstraints>
-               <rowConstraints>
-                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-               </rowConstraints>
-          </GridPane>
-   
-                <GridPane fx:id="pocGrid" layoutX="1021.0" layoutY="63.0" prefHeight="639.0" prefWidth="156.0" vgap="5.0">
-               <columnConstraints>
-                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-               </columnConstraints>
-               <rowConstraints>
-                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-               </rowConstraints>
-          </GridPane>
-         
-                       <GridPane fx:id="privateObjectiveGrid" blendMode="SRC_ATOP" layoutX="982.0" layoutY="134.0" prefHeight="67.0" prefWidth="98.0" vgap="5.0">
-               <columnConstraints>
-                   <ColumnConstraints prefWidth="100.0" />
-               </columnConstraints>
-               <rowConstraints>
-                   <RowConstraints prefHeight="30.0" />
-                   <RowConstraints prefHeight="30.0" />
-               </rowConstraints>
-           </GridPane>
-      
-          <GridPane fx:id="extractedDicesGrid" layoutX="367.0" layoutY="386.0" prefHeight="450.0" prefWidth="96.0" rotate="90.0">
-                 <columnConstraints>
-               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                 </columnConstraints>
-                 <rowConstraints>
-                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                 </rowConstraints>
-             </GridPane>
+
+        <Label styleClass="Label" text="Round"/>
+        <Label styleClass="Label" text="1" GridPane.rowIndex="1"/>
+        <Label styleClass="Label" text="2" GridPane.rowIndex="2" />
+        <Label styleClass="Label" text="3" GridPane.rowIndex="3" />
+        <Label styleClass="Label" text="4" GridPane.rowIndex="4" />
+        <Label styleClass="Label" text="5" GridPane.rowIndex="5" />
+        <Label styleClass="Label" text="6" GridPane.rowIndex="6" />
+        <Label styleClass="Label" text="7" GridPane.rowIndex="7" />
+        <Label styleClass="Label" text="8" GridPane.rowIndex="8" />
+        <Label styleClass="Label" text="9" GridPane.rowIndex="9" />
+        <Label styleClass="Label" text="10" GridPane.rowIndex="10" />
+    </GridPane>
+
+    <GridPane fx:id="extractedDicesGrid" layoutX="367.0" layoutY="386.0" prefHeight="450.0" prefWidth="96.0" rotate="90.0">
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+    </GridPane>
    
                
-                 <MenuButton layoutX="931.0" layoutY="14.0" prefHeight="21.0" prefWidth="365.0" styleClass="Menu" text="MenuButton">
-               <items>
-                   <MenuItem fx:id="toolCardButton" styleClass="Label" text="Tool cards" />
-                   <MenuItem fx:id="roundTrackButton" styleClass="Label" text="RoundTrack" />
-                   <MenuItem fx:id="pocButton" styleClass="Label" text="Public Objective Cards" />
-                   <MenuItem fx:id="privateObjectiveButton" styleClass="Label" text="Private Objective Card" />
-               </items>
-           </MenuButton>
-         <Button fx:id="endTurnButton" layoutX="59.0" layoutY="650.0" styleClass="Button" text="Fine Turno" />
-         <AnchorPane fx:id="zoomedCard" layoutX="392.0" layoutY="100.0" prefHeight="600.0" prefWidth="400.0" style="-fx-background-color: #006db3;" visible="false">
-            <effect>
-               <DropShadow blurType="GAUSSIAN" />
-            </effect>
-            <children>
-                  <Button fx:id="zoomCardBackButton" layoutX="281.0" layoutY="540.0" styleClass="Button" text="Torna Indietro" />
-                  <Button fx:id="zoomCardUseButton" layoutX="14.0" layoutY="540.0" styleClass="Button" text="Usa Tool" />
-            </children>
-         </AnchorPane>
-   </children>
+    <MenuButton layoutX="866.0" prefHeight="44.0" prefWidth="380.0" styleClass="Menu" text="MenuButton">
+        <items>
+            <MenuItem fx:id="toolCardButton" styleClass="Label" text="Tool cards" />
+            <MenuItem fx:id="roundTrackButton" styleClass="Label" text="RoundTrack" />
+            <MenuItem fx:id="pocButton" styleClass="Label" text="Public Objective Cards" />
+            <MenuItem fx:id="privateObjectiveButton" styleClass="Label" text="Private Objective Card" />
+        </items>
+    </MenuButton>
+
+    <Button fx:id="endTurnButton" layoutX="59.0" layoutY="650.0" styleClass="Button" text="Fine Turno" />
+
+    <AnchorPane fx:id="zoomedCard" layoutX="392.0" layoutY="100.0" prefHeight="600.0" prefWidth="400.0" visible="false">
+        <effect>
+            <DropShadow blurType="GAUSSIAN" />
+        </effect>
+        <Button fx:id="zoomCardBackButton" layoutX="281.0" layoutY="540.0" styleClass="Button" text="Torna Indietro" />
+    </AnchorPane>
+
+    <GridPane fx:id="pocGrid" layoutX="867.0" layoutY="46.0" prefHeight="639.0" prefWidth="330.0" vgap="5.0" visible="false">
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+
+        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
+            <Button fx:id="zoomPoc1" layoutX="19.0" layoutY="90.0" styleClass="Button" text="Zoom ToolCard 1"/>
+        </AnchorPane>
+
+        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Button fx:id="zoomPoc2" layoutX="19.0" layoutY="90.0" styleClass="Button" text="Zoom ToolCard 2"/>
+        </AnchorPane>
+
+        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <Button fx:id="zoomPoc3" layoutX="19.0" layoutY="90.0" styleClass="Button" text="Zoom ToolCard 2"/>
+        </AnchorPane>
+
+    </GridPane>
 </AnchorPane>

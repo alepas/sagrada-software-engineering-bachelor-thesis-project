@@ -34,11 +34,12 @@ import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
 
+import static java.lang.String.valueOf;
 import static java.lang.Thread.sleep;
 
 public class SetNewGameController implements Observer, NotificationHandler {
 
-    public AnchorPane messagesArea;
+
     private boolean gameStarted = false;
     private boolean areWpcExtracted = false;
     private boolean pocExtracted = false;
@@ -46,7 +47,6 @@ public class SetNewGameController implements Observer, NotificationHandler {
     private boolean toolExtracted = false;
     private boolean playerIn = false;
     private boolean playerOut = false;
-    //private static final Object waiter = new Object();
 
     private ClientColor[] colors;
     private ArrayList<ClientWpc> userWpcs = new ArrayList<>();
@@ -61,6 +61,8 @@ public class SetNewGameController implements Observer, NotificationHandler {
     private Label lab4 = new Label();
 
     private String newPlayer = null;
+
+    @FXML private AnchorPane privateObjArea;
 
     @FXML
     private AnchorPane selectionArea;
@@ -120,7 +122,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
     private Label numOfPlayersLabel;
 
     @FXML
-    private Label SelectionWpcsLabel;
+    private Label selectionWpcsLabel;
 
     @FXML
     private Label startGameLabel;
@@ -238,14 +240,14 @@ public class SetNewGameController implements Observer, NotificationHandler {
             try {
                 networkClient.findGame(clientModel.getUserToken(), numPlayers);
             } catch (CannotFindUserInDBException | InvalidNumOfPlayersException e) {
-                //TODO
+                //todo
                 e.printStackTrace();
             } catch (CannotCreatePlayerException e) {
                 errorLabel.setText(e.getMessage());
                 errorLabel.setVisible(true);
                 createGameButton.setDisable(false);
                 personalAreaButton.setDisable(false);
-                //TODO
+                //todo
             }
 
             String gameID = clientModel.getGameID();
@@ -279,7 +281,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
         ImageView image = new ImageView();
         diceAnimation(image, transition);
         Thread waitPlayers = new Thread(() -> {
-            if (!(clientModel.getGameActualPlayers() == clientModel.getGameNumPlayers())) {
+            if (clientModel.getGameActualPlayers() != clientModel.getGameNumPlayers()) {
                 findPlayersLabel.setVisible(false);
                 numOfPlayersLabel.setVisible(true);
             }
@@ -373,19 +375,19 @@ public class SetNewGameController implements Observer, NotificationHandler {
                             setWpc(fourthWPC, wpc);
                             setFourthWpcFavours(wpc.getFavours());
                             break;
+                            default:
+                            break;
                     }
                 }
-                SelectionWpcsLabel.setVisible(true);
+                selectionWpcsLabel.setVisible(true);
                 firstWPC.setVisible(true);
                 secondWPC.setVisible(true);
                 thirdWPC.setVisible(true);
                 fourthWPC.setVisible(true);
-                lab4.setText("Obiettivi privati: "+ Arrays.toString(colors));
-                lab4.getStyleClass().add("Label");
-                lab4.setLayoutY(32);
-                lab4.setLayoutX(180);
-                messagesArea.getChildren().add(lab4);
-
+                for(ClientColor color: colors){
+                    String style = "prOC".concat(String.valueOf(color).toLowerCase());
+                    privateObjArea.setId(style);
+                }
             });
         });
         waitingWPC.start();
@@ -434,6 +436,8 @@ public class SetNewGameController implements Observer, NotificationHandler {
             case 5:
                 fourthWpcCirlce6.setVisible(false);
                 break;
+            default:
+                break;
         }
     }
 
@@ -451,6 +455,8 @@ public class SetNewGameController implements Observer, NotificationHandler {
                 break;
             case 5:
                 thirdWpcCirlce6.setVisible(false);
+                break;
+            default:
                 break;
         }
     }
@@ -470,6 +476,8 @@ public class SetNewGameController implements Observer, NotificationHandler {
             case 5:
                 secondWpcCirlce6.setVisible(false);
                 break;
+            default:
+                break;
         }
     }
 
@@ -488,16 +496,19 @@ public class SetNewGameController implements Observer, NotificationHandler {
             case 5:
                 firstWpcCirlce6.setVisible(false);
                 break;
+            default:
+                break;
+
         }
     }
 
 
     /**
-     * @param gridPane  //todo
-     * @param wpc  //todo
+     * @param gridPane is the schema tat will be fill
+     * @param wpc  is the schema which is going to tell how to fill the gridPane
      */
     private void setWpc(GridPane gridPane, ClientWpc wpc) {
-        Platform.runLater(()-> messagesArea.setVisible(true));
+        Platform.runLater(()-> privateObjArea.setVisible(true));
         for (ClientCell cell : wpc.getSchema()) {
             int row = cell.getCellPosition().getRow();
             int column = cell.getCellPosition().getColumn();
@@ -515,7 +526,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
 
 
     /**
-     * @param cell //todo
+     * @param cell is the anchorPane that i have to fill
      * @param number is the number restriction
      */
     private void fillNumber(AnchorPane cell, int number) {
@@ -524,7 +535,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
                 cell.getStyleClass().add("white");
                 break;
             default:
-                String style = "num" + String.valueOf(number);
+                String style = "num" + valueOf(number);
                 cell.getStyleClass().add(style);
                 break;
         }
@@ -556,7 +567,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
                 e.printStackTrace();
                 //TODO
             }
-            Label lab4 = new Label("La tua WPC è"+wpcID);
+            lab4 = new Label("La tua WPC è"+wpcID);
             lab4.setLayoutY(400);
             lab4.setLayoutX(100);
             firstWPC.setDisable(true);
@@ -570,7 +581,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
 
     private void playGame(Event event) {
         Thread startGame = new Thread(() -> {
-            while (!pocExtracted || !toolExtracted || !(clientModel.getWpcByUsername().size() == clientModel.getGameNumPlayers()) || !privateObjExtractd) {
+            while (!pocExtracted || !toolExtracted || (clientModel.getGameNumPlayers() != clientModel.getWpcByUsername().size()) || !privateObjExtractd) {
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
@@ -638,7 +649,6 @@ public class SetNewGameController implements Observer, NotificationHandler {
         } else {
             playerOut = true;
             newPlayer = notification.username;
-            System.out.println(notification.username + " è uscito dalla partita.");
         }
     }
 
@@ -651,13 +661,12 @@ public class SetNewGameController implements Observer, NotificationHandler {
     @Override
     public void handle(PrivateObjExtractedNotification notification) {
         colors = notification.colorsByUser.get(clientModel.getUsername());
+        clientModel.setPrivateObjectives(colors);  //TODO: non lo posso fare ma per ora mi serve
         privateObjExtractd = true;
     }
 
     @Override
-    public void handle(UserPickedWpcNotification notification) {
-        System.out.println(notification.username + " ha scelto la wpc: " + notification.wpc);
-    }
+    public void handle(UserPickedWpcNotification notification) {}
 
     @Override
     public void handle(ToolcardsExtractedNotification notification) { toolExtracted = true; }
@@ -675,7 +684,6 @@ public class SetNewGameController implements Observer, NotificationHandler {
 
     @Override
     public void handle(DiceChangedNotification notification) {
-        System.out.println("ehi");
     }
 
     @Override

@@ -10,11 +10,12 @@
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.Font?>
-<AnchorPane prefHeight="705.0" prefWidth="1280.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8"
+
+<AnchorPane styleClass="Scene" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.control.guicontroller.FourPlayersGameController">
 
-    <ImageView fitHeight="705.0" fitWidth="1280.0">
-         <Image url="@../images/vetrate.jpg" />
+    <ImageView fitHeight="705.0" fitWidth="1200.0">
+         <Image url="@/it/polimi/ingsw/view/gui/guiview/background/gameScene.jpg" />
     </ImageView>
 
     <GridPane fx:id="firstWPC" styleClass="Grid" hgap="5.0" layoutX="118.0" layoutY="73.0"  prefHeight="286.0" prefWidth="372.0"
