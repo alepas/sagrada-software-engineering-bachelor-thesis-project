@@ -14,5 +14,4 @@ public enum NextAction implements Serializable {
     MENU_ONLY_ENDTURN,
     SELECT_DICE_TO_ACTIVATE_TOOLCARD,
     WAIT_FOR_TURN;
-
 }

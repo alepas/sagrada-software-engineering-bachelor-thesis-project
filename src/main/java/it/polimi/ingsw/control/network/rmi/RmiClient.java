@@ -3,6 +3,7 @@ package it.polimi.ingsw.control.network.rmi;
 import it.polimi.ingsw.control.network.NetworkClient;
 import it.polimi.ingsw.control.network.commands.responses.*;
 import it.polimi.ingsw.model.clientModel.ClientDiceLocations;
+import it.polimi.ingsw.model.clientModel.NextAction;
 import it.polimi.ingsw.model.clientModel.Position;
 import it.polimi.ingsw.model.constants.NetworkConstants;
 import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
@@ -31,7 +32,7 @@ public class RmiClient extends NetworkClient {
     @Override
     public void createUser(String username, String password) throws CannotRegisterUserException {
         try {
-            ((CreateUserResponse) remoteServer.createUser(username, password)).handle(this);
+            (remoteServer.createUser(username, password)).handle(this);
         } catch (RemoteException e){
 
         }
@@ -40,7 +41,7 @@ public class RmiClient extends NetworkClient {
     @Override
     public void login(String username, String password) throws CannotLoginUserException {
         try {
-            ((LoginResponse) remoteServer.login(username, password)).handle(this);
+            (remoteServer.login(username, password)).handle(this);
         } catch (RemoteException e){
 
         }
@@ -50,7 +51,7 @@ public class RmiClient extends NetworkClient {
     public void findGame(String token, int numPlayers) throws CannotFindUserInDBException, InvalidNumOfPlayersException, CannotCreatePlayerException {
         try {
             RemoteObserver remoteObserver = new RmiRemoteObserver();
-            ((FindGameResponse) remoteServer.findGame(token, numPlayers, remoteObserver)).handle(this);
+            (remoteServer.findGame(token, numPlayers, remoteObserver)).handle(this);
         } catch (RemoteException e){
 
         }
@@ -59,7 +60,7 @@ public class RmiClient extends NetworkClient {
     @Override
     public void pickWpc(String userToken, String wpcID) throws CannotFindPlayerInDatabaseException, NotYourWpcException {
         try {
-            ((PickWpcResponse) remoteServer.pickWpc(userToken, wpcID)).handle(this);
+            (remoteServer.pickWpc(userToken, wpcID)).handle(this);
         } catch (RemoteException e){
 
         }
@@ -68,7 +69,7 @@ public class RmiClient extends NetworkClient {
     @Override
     public void passTurn(String userToken) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotPerformThisMoveException {
         try {
-            ((PassTurnResponse)remoteServer.passTurn(userToken)).handle(this);
+            (remoteServer.passTurn(userToken)).handle(this);
         } catch (RemoteException e) {
 
         }
@@ -77,7 +78,7 @@ public class RmiClient extends NetworkClient {
     @Override
     public void useToolCard(String userToken, String cardId) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotUseToolCardException, CannotPerformThisMoveException {
         try {
-            ((ToolCardResponse) remoteServer.useToolCard(userToken, cardId)).handle(this);
+            (remoteServer.useToolCard(userToken, cardId)).handle(this);
         } catch (RemoteException e){
 
         }
@@ -86,7 +87,7 @@ public class RmiClient extends NetworkClient {
     @Override
     public void pickDiceForToolCard(String userToken, int diceId, ClientDiceLocations where) throws CannotFindPlayerInDatabaseException, CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException {
         try {
-            ((ToolCardResponse) remoteServer.pickDiceForToolCard(userToken, diceId, where)).handle(this);
+            (remoteServer.pickDiceForToolCard(userToken, diceId, where)).handle(this);
         } catch (RemoteException e){
 
         }
@@ -95,7 +96,7 @@ public class RmiClient extends NetworkClient {
     @Override
     public void placeDiceForToolCard(String userToken, int diceId, ClientDiceLocations initialLocation, ClientDiceLocations finalLocation, Position position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException, CannotPickDiceException {
         try {
-            ((ToolCardResponse)remoteServer.placeDiceForToolCard(userToken, diceId, initialLocation, finalLocation, position)).handle(this);
+            (remoteServer.placeDiceForToolCard(userToken, diceId, initialLocation, finalLocation, position)).handle(this);
         } catch (RemoteException e) {
 
         }
@@ -105,7 +106,7 @@ public class RmiClient extends NetworkClient {
     @Override
     public void pickNumberForToolCard(String userToken, int number) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPickNumberException, CannotPerformThisMoveException {
         try {
-            ((ToolCardResponse) remoteServer.pickNumberForToolCard(userToken, number)).handle(this);
+            (remoteServer.pickNumberForToolCard(userToken, number)).handle(this);
         } catch (RemoteException e){
 
         }
@@ -115,7 +116,7 @@ public class RmiClient extends NetworkClient {
     @Override
     public void getUpdatedExtractedDices(String userToken) throws CannotFindPlayerInDatabaseException {
         try {
-            ((UpdatedExtractedDicesResponse) remoteServer.getUpdatedExtractedDices(userToken)).handle(this);
+            (remoteServer.getUpdatedExtractedDices(userToken)).handle(this);
         } catch (RemoteException e) {
 
         }
@@ -124,7 +125,7 @@ public class RmiClient extends NetworkClient {
     @Override
     public void getUpdatedPOCs(String userToken) throws CannotFindPlayerInDatabaseException {
         try {
-            ((UpdatedPOCsResponse) remoteServer.getUpdatedPOCs(userToken)).handle(this);
+            (remoteServer.getUpdatedPOCs(userToken)).handle(this);
         } catch (RemoteException e) {
 
         }
@@ -133,7 +134,7 @@ public class RmiClient extends NetworkClient {
     @Override
     public void getUpdatedRoundTrack(String userToken) throws CannotFindPlayerInDatabaseException {
         try {
-            ((UpdatedRoundTrackResponse) remoteServer.getUpdatedRoundTrack(userToken)).handle(this);
+            (remoteServer.getUpdatedRoundTrack(userToken)).handle(this);
         } catch (RemoteException e) {
 
         }
@@ -142,7 +143,7 @@ public class RmiClient extends NetworkClient {
     @Override
     public void getUpdatedToolCards(String userToken) throws CannotFindPlayerInDatabaseException {
         try {
-            ((UpdatedToolCardsResponse) remoteServer.getUpdatedToolCards(userToken)).handle(this);
+            (remoteServer.getUpdatedToolCards(userToken)).handle(this);
         } catch (RemoteException e) {
 
         }
@@ -151,7 +152,7 @@ public class RmiClient extends NetworkClient {
     @Override
     public void getUpdatedWPC(String userToken, String username) throws CannotFindPlayerInDatabaseException, UserNotInThisGameException {
         try {
-            ((UpdatedWPCResponse) remoteServer.getUpdatedWPC(userToken, username)).handle(this);
+            (remoteServer.getUpdatedWPC(userToken, username)).handle(this);
         } catch (RemoteException e) {
 
         }
@@ -160,7 +161,7 @@ public class RmiClient extends NetworkClient {
     @Override
     public void getUpdatedGame(String userToken) throws CannotFindPlayerInDatabaseException {
         try {
-            ((UpdatedGameResponse) remoteServer.getUpdatedGame(userToken)).handle(this);
+            (remoteServer.getUpdatedGame(userToken)).handle(this);
         } catch (RemoteException e) {
 
         }
@@ -169,7 +170,7 @@ public class RmiClient extends NetworkClient {
     @Override
     public void stopToolCard(String userToken) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotStopToolCardException, NoToolCardInUseException {
         try {
-            ((ToolCardResponse) remoteServer.stopToolCard(userToken)).handle(this);
+            (remoteServer.stopToolCard(userToken)).handle(this);
         } catch (RemoteException e) {
 
         }
@@ -182,23 +183,21 @@ public class RmiClient extends NetworkClient {
 
 
     @Override
-    public void placeDice(String userToken, int id, Position position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, CannotPickDiceException, PlayerNotAuthorizedException, CannotPerformThisMoveException {
+    public NextAction placeDice(String userToken, int id, Position position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, CannotPickDiceException, PlayerNotAuthorizedException, CannotPerformThisMoveException {
         try {
-            ((PlaceDiceResponse) remoteServer.placeDice(userToken, id, position)).handle(this);
+            (remoteServer.placeDice(userToken, id, position)).handle(this);
         } catch (RemoteException e) {
 
         }
+        return nextAction;
     }
 
     @Override
     public void getNextMove(String userToken) throws PlayerNotAuthorizedException, CannotFindPlayerInDatabaseException {
         try {
-            ((NextMoveResponse)remoteServer.getNextMove(userToken)).handle(this);
+            (remoteServer.getNextMove(userToken)).handle(this);
         } catch (RemoteException e) {
 
         }
     }
-
-
-
 }

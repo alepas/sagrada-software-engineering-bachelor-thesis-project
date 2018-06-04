@@ -9,9 +9,9 @@ import java.util.ArrayList;
 
 public class PlaceDiceResponse implements Response {
     public final NextAction nextAction;
-    public final ClientWpc wpc;
-    public final ArrayList<ClientDice> extractedDices;
-    public final ClientRoundTrack roundTrack;
+    public final ClientWpc wpc;                             //Da eliminare
+    public final ArrayList<ClientDice> extractedDices;      //Da eliminare
+    public final ClientRoundTrack roundTrack;               //Da eliminare
     public final Exception exception;
 
 

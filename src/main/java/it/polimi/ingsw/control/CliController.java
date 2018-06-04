@@ -28,12 +28,7 @@ public class CliController {
     }
 
     public void run(){
-        do {
-            if (view.logPhase()) view.login();
-            else view.createUsername();
-        } while (clientModel.getUserToken() == null);
-
-        view.mainMenuPhase();
+        view.launch();
     }
 
     public String createUser(String username, String password){
@@ -56,6 +51,10 @@ public class CliController {
     }
 
     public int findGame(int numPlayers){
+        //Restituisce:
+        // -1 se non ha trovato alcuna partita
+        // 0  se ha trovato una partita ma mancano dei giocatori
+        // 1  se ha trovato una partita e sono presenti tutti i giocatori
         try {
             client.findGame(clientModel.getUserToken(), numPlayers);
         } catch (InvalidNumOfPlayersException e) {
@@ -110,9 +109,9 @@ public class CliController {
         return false;
     }
 
-    public void placeDice(int id, int col, int row) {
+    public NextAction placeDice(int id, int col, int row) {
         try {
-            client.placeDice(clientModel.getUserToken(), id, new Position(row, col));
+            return client.placeDice(clientModel.getUserToken(), id, new Position(row, col));
         } catch (CannotFindPlayerInDatabaseException e) {
             e.printStackTrace();
         } catch (CannotPickPositionException e) {
@@ -124,15 +123,33 @@ public class CliController {
         } catch (CannotPerformThisMoveException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
 
 
     //---------------------------------- Request to cli model ----------------------------------
 
-    public boolean areAllWpcsReceived(){
-        return clientModel.getWpcByUsername().size() == clientModel.getGameNumPlayers();
+    public boolean areWpcsArrived(){
+        return clientModel.areAllWpcsArrived();
     }
+
+    public boolean areAllPlayersInGame(){
+        return clientModel.areAllPlayersInGame();
+    }
+
+    public boolean arePrivateObjectivesArrived(){
+        return clientModel.arePrivateObjectivesArrived();
+    }
+
+    public boolean areToolcardsArrived(){
+        return clientModel.areToolcardsArrived();
+    }
+
+    public boolean arePocsArrived(){
+        return clientModel.arePocsArrived();
+    }
+
 
     public String getUser(){
         return clientModel.getUsername();
@@ -144,10 +161,6 @@ public class CliController {
 
     public ArrayList<ClientPoc> getPOC(){
         return clientModel.getGamePublicObjectiveCards();
-    }
-
-    public Wpc getWpcByID(String id){
-        return clientModel.getWpcByID(id);
     }
 
     public int getCurrentRound(){
@@ -177,4 +190,6 @@ public class CliController {
     public int getFavour(){
         return clientModel.getFavour();
     }
+
+    public ClientColor[] getPrivateObjectives(){ return clientModel.getPrivateObjectives(); }
 }

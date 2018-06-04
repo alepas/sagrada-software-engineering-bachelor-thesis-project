@@ -5,6 +5,7 @@ import it.polimi.ingsw.control.network.commands.requests.*;
 import it.polimi.ingsw.control.network.commands.responses.*;
 import it.polimi.ingsw.model.clientModel.ClientDiceLocations;
 import it.polimi.ingsw.model.clientModel.ClientModel;
+import it.polimi.ingsw.model.clientModel.NextAction;
 import it.polimi.ingsw.model.clientModel.Position;
 import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
@@ -321,10 +322,11 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
     }
 
     @Override
-    public void placeDice(String userToken, int id, Position position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, CannotPickDiceException, PlayerNotAuthorizedException, CannotPerformThisMoveException {
+    public NextAction placeDice(String userToken, int id, Position position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, CannotPickDiceException, PlayerNotAuthorizedException, CannotPerformThisMoveException {
         request(new PlaceDiceRequest(userToken, id, position));
 
-        Exception e = ((PlaceDiceResponse) waitResponse()).exception;
+        PlaceDiceResponse response = (PlaceDiceResponse) waitResponse();
+        Exception e = response.exception;
 
         if (e != null){
             if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
@@ -332,7 +334,10 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
             if (e instanceof CannotPickPositionException ) throw  (CannotPickPositionException) e;
             if (e instanceof CannotPerformThisMoveException ) throw  (CannotPerformThisMoveException) e;
             if (e instanceof CannotPickDiceException ) throw  (CannotPickDiceException) e;
+        } else {
+            nextAction = response.nextAction;
         }
+        return nextAction;
     }
 
     @Override

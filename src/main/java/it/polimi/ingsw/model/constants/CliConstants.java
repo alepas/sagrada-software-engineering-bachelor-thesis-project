@@ -27,7 +27,7 @@ public class CliConstants {
     public static final String LOG_SUCCESS = "Sei connesso come: ";
 
     public static final String PRESENT_MAIN_MENU = "Cosa vuoi fare? Digita:\n>>> 1) Cerca partita\n" +
-            ">>> 2) Visualizza statistiche giocatore";
+            ">>> 2) Visualizza statistiche giocatore\n>>> 3) Logout";
 
     public static final String SELECT_NUM_PLAYERS = "Seleziona numero giocatori:";
 

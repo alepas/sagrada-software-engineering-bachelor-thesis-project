@@ -1,0 +1,30 @@
+package it.polimi.ingsw.view.cli;
+
+import it.polimi.ingsw.control.CliController;
+
+public enum ObjectToWaitFor {
+    PLAYERS,
+    PRIVATE_OBJS,
+    WPCS,
+    TOOLCARDS,
+    POC,
+    TURN;
+
+    public boolean isArrived(CliController controller){
+        switch (this){
+            case PLAYERS:
+                return controller.areAllPlayersInGame();
+            case PRIVATE_OBJS:
+                return controller.arePrivateObjectivesArrived();
+            case WPCS:
+                return controller.areWpcsArrived();
+            case TOOLCARDS:
+                return controller.areToolcardsArrived();
+            case POC:
+                return controller.arePocsArrived();
+            case TURN:
+                return controller.isActive();
+        }
+        return false;
+    }
+}

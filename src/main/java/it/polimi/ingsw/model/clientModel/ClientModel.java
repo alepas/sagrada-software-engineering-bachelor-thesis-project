@@ -1,8 +1,6 @@
 package it.polimi.ingsw.model.clientModel;
 
 import it.polimi.ingsw.control.network.commands.notifications.*;
-import it.polimi.ingsw.model.wpc.Wpc;
-import it.polimi.ingsw.model.wpc.WpcDB;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,7 +10,6 @@ import java.util.Observer;
 public class ClientModel implements Observer, NotificationHandler {
     private static ClientModel instance;
     private Observer observer;
-    private WpcDB wpcDB = WpcDB.getInstance();
 
     //User
     private String username;
@@ -29,7 +26,7 @@ public class ClientModel implements Observer, NotificationHandler {
     private int currentRound;
     private ArrayList<ClientDice> extractedDices;
     private int currentTurn;
-    private boolean active = false;
+    private boolean active;
     private int favour;
     private ClientRoundTrack roundTrack;
 
@@ -46,14 +43,17 @@ public class ClientModel implements Observer, NotificationHandler {
 
     public void exitGame(){
         this.gameID = null;
-        gameActualPlayers = 0;
-        gameNumPlayers = 0;
-        favour = 0;
-        privateObjectives = null;
+        this.gameActualPlayers = 0;
+        this.gameNumPlayers = 0;
+        this.privateObjectives = null;
         this.wpcByUsername = new HashMap<>();
         this.gameToolCards = new ArrayList<>();
         this.gamePublicObjectiveCards = new ArrayList<>();
+        this.currentRound = 0;
         this.extractedDices = new ArrayList<>();
+        this.currentTurn = 0;
+        this.active = false;
+        this.favour = 0;
         this.roundTrack=null;
     }
 
@@ -147,10 +147,6 @@ public class ClientModel implements Observer, NotificationHandler {
         this.privateObjectives = privateObjectives;
     }
 
-    public Wpc getWpcByID(String id){
-        return WpcDB.getInstance().getWpcByID(id);
-    }
-
     public ArrayList<ClientToolCard> getGameToolCards() {
         return gameToolCards;
     }
@@ -195,6 +191,29 @@ public class ClientModel implements Observer, NotificationHandler {
         return favour;
     }
 
+
+    public boolean areAllPlayersInGame(){
+        return (gameActualPlayers != 0 && gameActualPlayers == gameNumPlayers);
+    }
+
+    public boolean arePrivateObjectivesArrived(){
+        return privateObjectives != null;
+    }
+
+    public boolean areAllWpcsArrived(){
+        return wpcByUsername.size() == gameNumPlayers;
+    }
+
+    public boolean areToolcardsArrived(){
+        return gameToolCards != null;
+    }
+
+    public boolean arePocsArrived(){
+        return gamePublicObjectiveCards != null;
+    }
+
+
+
     //----------------------------------- Notification Handler -------------------------------------
     @Override
     public void update(Observable o, Object arg) {
@@ -206,11 +225,14 @@ public class ClientModel implements Observer, NotificationHandler {
     public void handle(GameStartedNotification notification) { }
 
     @Override
-    public void handle(PlayersChangedNotification notification) { }
+    public void handle(PlayersChangedNotification notification) {
+        if (notification.joined) gameActualPlayers++;
+        else gameActualPlayers--;
+    }
 
     @Override
     public void handle(PrivateObjExtractedNotification notification) {
-
+        privateObjectives = notification.colorsByUser.get(username);
     }
 
     @Override

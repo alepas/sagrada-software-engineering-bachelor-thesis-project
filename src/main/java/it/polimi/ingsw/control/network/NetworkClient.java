@@ -5,6 +5,7 @@ import it.polimi.ingsw.control.network.rmi.RmiClient;
 import it.polimi.ingsw.control.network.socket.SocketClient;
 import it.polimi.ingsw.model.clientModel.ClientDiceLocations;
 import it.polimi.ingsw.model.clientModel.ClientModel;
+import it.polimi.ingsw.model.clientModel.NextAction;
 import it.polimi.ingsw.model.clientModel.Position;
 import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
@@ -18,6 +19,7 @@ import java.rmi.RemoteException;
 public abstract class NetworkClient implements ResponseHandler {
     private static NetworkClient instance;
     protected final ClientModel clientModel = ClientModel.getInstance();
+    protected NextAction nextAction;
 
     public static SocketClient getNewSocketInstance(String host, int port){
         if (instance == null){
@@ -81,7 +83,7 @@ public abstract class NetworkClient implements ResponseHandler {
 
     public abstract void cancelAction (String userToken) throws  CannotCancelActionException, PlayerNotAuthorizedException, CannotFindPlayerInDatabaseException;
 
-    public abstract void placeDice(String userToken, int id, Position position) throws  CannotFindPlayerInDatabaseException, CannotPickPositionException, CannotPickDiceException, PlayerNotAuthorizedException, CannotPerformThisMoveException;
+    public abstract NextAction placeDice(String userToken, int id, Position position) throws  CannotFindPlayerInDatabaseException, CannotPickPositionException, CannotPickDiceException, PlayerNotAuthorizedException, CannotPerformThisMoveException;
 
     public abstract void getNextMove(String userToken) throws  CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException ;
 
@@ -107,6 +109,7 @@ public abstract class NetworkClient implements ResponseHandler {
     @Override
     public void handle(FindGameResponse response){
         if (response.exception == null) {
+            clientModel.exitGame();
             clientModel.setGameID(response.gameID);
             clientModel.setGameActualPlayers(response.actualPlayers);
             clientModel.setGameNumPlayers(response.numPlayers);
@@ -185,12 +188,14 @@ public abstract class NetworkClient implements ResponseHandler {
     }
 
     @Override
-    public void handle(PlaceDiceResponse placeDiceResponse) {
-
+    public void handle(PlaceDiceResponse response) {
+        if (response.exception == null){
+            nextAction = response.nextAction;
+        }
     }
 
     @Override
-    public void handle(NextMoveResponse nextMoveResponse) {
+    public void handle(NextMoveResponse response) {
 
     }
 }
