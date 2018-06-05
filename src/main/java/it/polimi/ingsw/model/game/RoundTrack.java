@@ -17,10 +17,10 @@ public class RoundTrack implements Serializable {
     //array di arraylist in questo modo posso aggiungere tutti i dadi che voglio in modo dinamico
     public RoundTrack(){
         currentRound = 0;
-        dicesNotUsed = new Dice[NUM_OF_ROUND][HYPOTHETICAL_MAX_DICES_PER_ROUND];
+        dicesNotUsed = new Dice[NUM_OF_ROUND][NUM_OF_ROUND];
         for (int row = 0;  row< NUM_OF_ROUND; row++ ) {
 
-            for (int column = 0; column < HYPOTHETICAL_MAX_DICES_PER_ROUND; column++)
+            for (int column = 0; column < NUM_OF_ROUND; column++)
                 dicesNotUsed[row][column] = null;
         }
     }
@@ -57,7 +57,7 @@ public class RoundTrack implements Serializable {
         currentRound++;
     }
 
-    public void addDice( Dice dice){
+    void addDice(Dice dice){
             int column = currentRound - 1;
             int row = 0;
             
@@ -71,7 +71,7 @@ public class RoundTrack implements Serializable {
 
 
     
-    public Dice swapDice (Dice addedDice, Dice roundTrackDice, int round){
+    Dice swapDice(Dice addedDice, Dice roundTrackDice, int round){
         Dice removedDice = null;
         int column = round - 1;
         

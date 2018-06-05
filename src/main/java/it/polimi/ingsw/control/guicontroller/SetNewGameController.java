@@ -29,10 +29,7 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
 
 import static java.lang.String.valueOf;
 import static java.lang.Thread.sleep;
@@ -704,6 +701,10 @@ public class SetNewGameController implements Observer, NotificationHandler {
     @Override
     public void handle(PlayerSkipTurnNotification notification) {
 
+    }
+
+    @Override
+    public void handle(ScoreNotification notification) {
     }
 
 }

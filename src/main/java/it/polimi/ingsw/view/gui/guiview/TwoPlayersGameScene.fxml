@@ -8,12 +8,15 @@
 
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@style.css" styleClass="GameWindow" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.control.guicontroller.TwoPlayersGameController">
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@style.css" styleClass="Scene"
+            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.control.guicontroller.TwoPlayersGameController">
+
     <ImageView fitHeight="705.0" fitWidth="1200.0">
         <Image url="@/it/polimi/ingsw/view/gui/guiview/background/gameScene.jpg"/>
     </ImageView>
 
-    <Label fx:id="roundLabel" layoutX="164.0" layoutY="72.0" prefHeight="35.0" prefWidth="480.0" styleClass="TitleLabel" wrapText="true" />
+    <Label fx:id="roundLabel" layoutX="164.0" layoutY="72.0" styleClass="TitleLabel"/>
    
     <GridPane fx:id="firstWpcGrid" hgap="5.0" layoutX="432.0" layoutY="144.0" prefHeight="335.0" prefWidth="400.0" style="-fx-background-color: black;" styleClass="Grid" vgap="5.0">
         <columnConstraints>

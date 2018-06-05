@@ -58,7 +58,7 @@
 
 .Label{
     -fx-font-size: 14px;
-    -fx-alignment: center;
+    -fx-text-alignment: center;
     -fx-text-fill:  #4a626d;
     -fx-word-wrap: normal;
 }
@@ -67,6 +67,7 @@
     -fx-alignment: center;
     -fx-font-size: 24;
     -fx-text-fill:  #4a626d;
+    -fx-word-wrap: normal;
 }
 
 .Menu{

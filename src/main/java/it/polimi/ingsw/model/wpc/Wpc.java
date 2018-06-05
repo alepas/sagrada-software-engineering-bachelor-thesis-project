@@ -318,14 +318,16 @@ public class Wpc {
     }
 
 
+    /**
+     * Counts the cells having dice = null.
+     *
+     * @return an integer which represent the number of cells with dice= null
+     */
     public int getNumFreeCells(){
-        //restituisce il numero di celle vuote sulla wpc
+
         int count = 0;
-
-        for (Cell cell : schema){
-            if (cell.getDice() == null) count++;
-        }
-
+        for (Cell cell : schema) if (cell.getDice() == null) count++;
         return count;
     }
+
 }

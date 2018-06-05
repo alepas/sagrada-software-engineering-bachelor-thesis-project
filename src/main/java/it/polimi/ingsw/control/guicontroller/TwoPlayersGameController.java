@@ -21,10 +21,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
 
 import static java.lang.Thread.sleep;
 
@@ -229,8 +226,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
 
             dice.setOnDragDone(event -> {
                 if (event.getTransferMode() == TransferMode.MOVE) {
-                    System.out.println("Drag finito");
-
+                    Platform.runLater(()->extractedDicesGrid.getChildren().remove(dice));
                 } else
                     dice.setVisible(true);
                 event.consume();
@@ -610,6 +606,17 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
             dragAndDrop();
             waitForTurn();
         });
+    }
+
+    private void setScore(ArrayList<Map.Entry<String, Integer>> score){
+        Platform.runLater(()->{
+            if (score.get(0).getKey().equals(clientModel.getUsername()))
+                System.out.println("U won!");
+            else
+                System.out.println("u loose");
+
+        });
+
 
     }
 
@@ -682,5 +689,17 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
 
     @Override
     public void handle(PlayerSkipTurnNotification notification) {}
+
+    @Override
+    public void handle(ScoreNotification notification) {
+        ArrayList<Map.Entry<String, Integer>> scores = new ArrayList<>(notification.scoreList.entrySet());
+        Collections.sort(scores, new Comparator<Map.Entry<?, Integer>>() {
+            @Override
+            public int compare(Map.Entry<?, Integer> o1, Map.Entry<?, Integer> o2) {
+                return o1.getValue().compareTo(o2.getValue());
+            }
+        });
+        setScore(scores);
+    }
 
 }

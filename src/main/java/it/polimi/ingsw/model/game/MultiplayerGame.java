@@ -1,9 +1,7 @@
 package it.polimi.ingsw.model.game;
 
-import it.polimi.ingsw.control.network.commands.notifications.GameStartedNotification;
-import it.polimi.ingsw.control.network.commands.notifications.NewRoundNotification;
-import it.polimi.ingsw.control.network.commands.notifications.NextTurnNotification;
-import it.polimi.ingsw.control.network.commands.notifications.PlayersChangedNotification;
+import it.polimi.ingsw.control.network.commands.notifications.*;
+import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.clientModel.ClientDice;
 import it.polimi.ingsw.model.constants.GameConstants;
 import it.polimi.ingsw.model.dicebag.Color;
@@ -11,10 +9,12 @@ import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.exceptions.gameExceptions.*;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotAddPlayerInDatabaseException;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
+import it.polimi.ingsw.model.wpc.Wpc;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 
 public class MultiplayerGame extends Game {
     private int turnPlayer;
@@ -143,7 +143,10 @@ public class MultiplayerGame extends Game {
         else roundPlayer = 0;
         turnPlayer = roundPlayer;
 
-        nextTurn();
+        while(roundPlayer <=10)
+            nextTurn();
+
+        calculateScore();
     }
 
     @Override
@@ -177,11 +180,27 @@ public class MultiplayerGame extends Game {
         }
     }
 
+    /**
+     * Calculates the score of each player at the end of the game; the score is composed by the number of favors plus
+     * the sum of the dices' number which have the same color of the private Objective plus the sum of all points given
+     * by the respect of the Public Objective Card minus the number of cells without dice plaed on them.
+     */
     //Da testare
     @Override
     public void calculateScore() {
+        HashMap<String, Integer> scoreList = new HashMap<>();
+        for(PlayerInGame player: players){
+            Wpc wpc = player.getWPC();
+            int score = privateObjScore(player)  - wpc.getNumFreeCells() + wpc.getFavours();
 
+            for(PublicObjectiveCard poc: publicObjectiveCards)
+                score = score + poc.calculateScore(wpc);
+            scoreList.put(player.getUser(), score);
+            saveScore();
+        }
+        changeAndNotifyObservers(new ScoreNotification(scoreList));
     }
+
 
     private int privateObjScore(PlayerInGame player){
         Color[] playerColors = player.getPrivateObjs();

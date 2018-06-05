@@ -10,7 +10,7 @@ public enum Color implements Serializable {
 
     public static Color randomColor(){
         Random randomColor = new Random ();
-        return values()[randomColor.nextInt(4)];
+        return values()[randomColor.nextInt(5)];
     }
 
     public static Color parseColor(String stringColor) {

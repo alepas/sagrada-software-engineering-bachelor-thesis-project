@@ -29,6 +29,8 @@ public interface NotificationHandler {
 
     void handle(PlayerSkipTurnNotification notification);
 
+    void handle(ScoreNotification notification);
+
 
 
 }

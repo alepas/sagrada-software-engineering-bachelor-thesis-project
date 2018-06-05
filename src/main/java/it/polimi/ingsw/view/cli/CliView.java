@@ -576,4 +576,9 @@ public class CliView implements Observer, NotificationHandler {
     public void handle(PlayerSkipTurnNotification notification) {
 
     }
+
+    @Override
+    public void handle(ScoreNotification notification) {
+
+    }
 }

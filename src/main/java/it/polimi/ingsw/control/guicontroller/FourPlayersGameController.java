@@ -82,4 +82,9 @@ public class FourPlayersGameController implements NotificationHandler {
     public void handle(PlayerSkipTurnNotification notification) {
 
     }
+
+    @Override
+    public void handle(ScoreNotification notification) {
+
+    }
 }

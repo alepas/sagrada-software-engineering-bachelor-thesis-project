@@ -23,7 +23,7 @@ public class Dice implements Serializable {
     // ma anche nel caso in cui possa ritirare il dado
     int rollDice( ){
         Random random = new Random();
-        number = random.nextInt(5) + 1;
+        number = random.nextInt(6) + 1;
         return number;
     }
 
