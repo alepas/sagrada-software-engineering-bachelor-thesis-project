@@ -180,7 +180,7 @@ public class CliRender {
             wpcRendered.append(row + "\n");
         }
 
-        return wpcRendered.append(RESET + "\n").toString();
+        return wpcRendered.append(RESET).toString();
     }
 
     //Restituisce la stringa che rappresenta le wpc passate su cli, distanziate di distance carattateri

@@ -11,7 +11,6 @@ public class CliView implements Observer, NotificationHandler {
     private Scanner fromKeyBoard;
     private final CliRender cliRender;
 
-    private boolean needToWait = true;
     private boolean interruptThread = true;
 
     private Timer timer = new Timer();
@@ -85,14 +84,17 @@ public class CliView implements Observer, NotificationHandler {
                     quit = true;
                     //TODO
                     break;
+                case UNKNOWN:
+                    unknownPhase();
+                    break;
                 case LOG_PHASE:
                     logPhase();
                     break;
                 case LOGIN:
-                    login();
+                    log(true);
                     break;
                 case CREATE_ACCOUNT:
-                    createAccount();
+                    log(false);
                     break;
                 case DISPLAY_STAT:
                     //TODO
@@ -116,13 +118,13 @@ public class CliView implements Observer, NotificationHandler {
                     showMenuAll();
                     break;
                 case MENU_ONLY_PLACEDICE:
-                    //TODO
+                    showMenuOnlyPlaceDice();
                     break;
                 case MENU_ONLY_TOOLCARD:
-                    //TODO
+                    showMenuOnlyToolcard();
                     break;
                 case MENU_ONLY_ENDTURN:
-                    //TODO
+                    showMenuOnlyEndturn();
                     break;
             }
         }
@@ -143,38 +145,25 @@ public class CliView implements Observer, NotificationHandler {
         }
     }
 
-    private void login() {
+    private void log(boolean login){
         String user = null;
 
         do {
-            displayText(CliConstants.LOGIN_PHASE);
+            if (login) displayText(CliConstants.LOGIN_PHASE);
+            else displayText(CliConstants.CREATE_USER_PHASE);
+
             displayText(CliConstants.INSERT_USERNAME);
             String username = userInput();
-            if (username.equals(CliConstants.ESCAPE_RESPONSE)) return;
+            if (username.equals(CliConstants.ESCAPE_RESPONSE)){
+                state = state.getPrevious();
+                return;
+            }
 
             displayText(CliConstants.INSERT_PASS);
             String password = userInput();
 
-            user = controller.login(username, password);
-        } while (user == null);
-
-        displayText(CliConstants.LOG_SUCCESS + user);
-        state = CliStatus.MAIN_MENU_PHASE;
-    }
-
-    private void createAccount() {
-        String user = null;
-
-        do {
-            displayText(CliConstants.CREATE_USER_PHASE);
-            displayText(CliConstants.INSERT_USERNAME);
-            String username = userInput();
-            if (username.equals(CliConstants.ESCAPE_RESPONSE)) return;
-
-            displayText(CliConstants.INSERT_PASS);
-            String password = userInput();
-
-            user = controller.createUser(username, password);
+            if (login) user = controller.login(username, password);
+            else user = controller.createUser(username, password);
         } while (user == null);
 
         displayText(CliConstants.LOG_SUCCESS + user);
@@ -227,12 +216,23 @@ public class CliView implements Observer, NotificationHandler {
 
     private void startGamePhase() {
         waitFor("In attesa di altri giocatori...", ObjectToWaitFor.PLAYERS);
+        waitFor("Attendo che la partita inizi...", ObjectToWaitFor.GAME);
         waitFor("Attendo i private objectives...", ObjectToWaitFor.PRIVATE_OBJS);
-        waitFor("Attendo le wpc", ObjectToWaitFor.WPCS);
+        waitFor("Attendo le wpc...", ObjectToWaitFor.WPCS);
         chooseWpcPhase();
         waitFor("In attesa delle toolcard...", ObjectToWaitFor.TOOLCARDS);
         waitFor("In attesa degli obbiettivi pubblici...", ObjectToWaitFor.POC);
-        waitFor("In attesa di conoscere chi sarà il primo a giocare", ObjectToWaitFor.TURN);
+        state = CliStatus.UNKNOWN;
+    }
+
+    private void unknownPhase() {
+        synchronized (waiter){
+            try {
+                while (state.equals(CliStatus.UNKNOWN))  waiter.wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void waitFor(String message, ObjectToWaitFor obj){
@@ -249,22 +249,20 @@ public class CliView implements Observer, NotificationHandler {
 
     private void stopWaiting(){
         synchronized (waiter){
-            needToWait = false;
             waiter.notifyAll();
         }
     }
 
     private void chooseWpcPhase() {
         Thread requestWpcThread = new Thread(() -> {
-            boolean myWpcExtracted;
             do {
                 interruptThread = true;
                 displayText("Seleziona la wpc che vuoi utilizzare");
                 String wpcID = userInput();
                 interruptThread = false;
-                myWpcExtracted = controller.pickWpc(wpcID);
-            } while (!myWpcExtracted);
-            if (needToWait) displayText("Attendo che gli altri giocatori selezionino la wpc");
+                controller.pickWpc(wpcID);
+            } while (controller.getMyWpc() == null);
+            if (!controller.allPlayersChooseWpc()) displayText("Attendo che gli altri giocatori selezionino la wpc");
         });
         requestWpcThread.start();
 
@@ -273,7 +271,7 @@ public class CliView implements Observer, NotificationHandler {
                 int lastTimeLeft = task.timeLeft();
                 int nextStep = 50;
 
-                while (controller.areWpcsArrived()) {
+                while (!controller.allPlayersChooseWpc()) {
                     if (task.timeLeft() <= nextStep && lastTimeLeft > nextStep) {
                         displayText("Rimangono " + nextStep + " secondi per scegliere le wpc");
                         lastTimeLeft = nextStep;
@@ -295,17 +293,7 @@ public class CliView implements Observer, NotificationHandler {
     }
 
     private void waitForTurn() {
-        synchronized (waiter){
-            while (!controller.isActive()) {
-                try {
-                    displayText("In attesa del mio turno...");
-                    waiter.wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            state = CliStatus.MENU_ALL;
-        }
+        waitFor("In attesa del mio turno...", ObjectToWaitFor.TURN);
     }
 
     private void placeDice() {
@@ -336,7 +324,6 @@ public class CliView implements Observer, NotificationHandler {
     }
 
     private void showStartTurnInfo(){
-        System.out.println("\n");
         displayText("Questa è la tua wpc");
         displayText("Favours rimasti: " + controller.getFavour() + "\n"
                 + cliRender.renderWpc(controller.getMyWpc(), false));
@@ -401,8 +388,7 @@ public class CliView implements Observer, NotificationHandler {
         try {
             int action = Integer.parseInt(response) - 1;
             if (action >= 0 && action < possibleActions.length) {
-                performMenuAction(possibleActions[action]);
-                return true;
+                return performMenuAction(possibleActions[action]);
             }
             else {
                 displayText("Comando non riconosciuto");
@@ -414,18 +400,22 @@ public class CliView implements Observer, NotificationHandler {
         }
     }
 
-    private void performMenuAction(MenuAction action){
-        //Restituisce vero se il turno è finito
+    //Restituisce true se l'azione è stata compiuta
+    private boolean performMenuAction(MenuAction action){
+        //TODO: fare in modo che restituisca false quando qualcosa non è andato a buon fine
         switch (action){
             case PLACE_DICE:
-                displayText("Posizionato dado");
                 placeDice();
-                return;
+                return true;
             case USE_TOOLCARD:
                 displayText("Usata toolcard");
-                return;
+                return true;
             case END_TURN:
-                if (controller.passTurn()) state = CliStatus.ANOTHER_PLAYER_TURN;
+                System.out.println("\n");
+                return controller.passTurn();
+            default:
+                displayText("Passata azione non standard");
+                return false;
         }
     }
 
@@ -497,7 +487,7 @@ public class CliView implements Observer, NotificationHandler {
     @Override
     public void handle(UserPickedWpcNotification notification) {
         displayText(notification.username + " ha scelto la wpc: " + notification.wpc.getWpcID());
-        if (controller.areWpcsArrived()){
+        if (controller.allPlayersChooseWpc()){
             displayText("Tutti i giocatori hanno scelto la wpc");
             stopWaiting();
         }
@@ -521,7 +511,7 @@ public class CliView implements Observer, NotificationHandler {
     @Override
     public void handle(PocsExtractedNotification notification) {
         ArrayList<ClientPoc> cards = controller.getPOC();
-        System.out.println("\n\n");
+        System.out.println("\n");
         displayText("Gli obbiettivi pubblici della partita sono:\n");
 
         for (ClientPoc card : cards) {
@@ -529,6 +519,7 @@ public class CliView implements Observer, NotificationHandler {
             System.out.println("Nome: " + card.getName());
             System.out.println("Descrizione: " + card.getDescription() + "\n");
         }
+        System.out.println("\n");
 
         stopWaiting();
     }
@@ -542,8 +533,11 @@ public class CliView implements Observer, NotificationHandler {
     public void handle(NextTurnNotification notification) {
         displayText("Turno: " + notification.turnNumber + "\tRound: "
                 + controller.getCurrentRound() + "\tGiocatore attivo: " + notification.activeUser);
-        displayText("Dadi presenti: ");
-        System.out.println("\n" + cliRender.renderDices(controller.getExtractedDices()) + "\n");
+
+        if(!controller.isActive()) {
+            displayText("Dadi presenti: ");
+            System.out.println("\n" + cliRender.renderDices(controller.getExtractedDices()));
+        }
 
         synchronized (waiter){
             if (controller.isActive()) state = CliStatus.MENU_ALL;
@@ -559,9 +553,9 @@ public class CliView implements Observer, NotificationHandler {
 
     @Override
     public void handle(DicePlacedNotification notification) {
-        displayText("\n" + cliRender.renderWpc(notification.wpc, false));
+        System.out.println("\n" + cliRender.renderWpc(notification.wpc, false));
         displayText(notification.username + " ha posizionato il dado " + notification.dice.getDiceID() +
-                " in posizione (" + notification.position.getRow() + ", " + notification.position.getColumn() + ")");
+                " in posizione (" + notification.position.getColumn() + ", " + notification.position.getRow() + ")");
         if (notification.newExtractedDices != null) {
             displayText("I dadi nella riserva sono: \n");
             System.out.println(cliRender.renderDices(notification.newExtractedDices));
@@ -582,6 +576,4 @@ public class CliView implements Observer, NotificationHandler {
     public void handle(PlayerSkipTurnNotification notification) {
 
     }
-
-
 }

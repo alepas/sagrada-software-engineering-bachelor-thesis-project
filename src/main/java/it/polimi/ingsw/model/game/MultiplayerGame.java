@@ -138,6 +138,11 @@ public class MultiplayerGame extends Game {
         changeAndNotifyObservers(new NewRoundNotification(roundTrack.getCurrentRound(), extractedClientDices));
 
         currentTurn = 0;
+
+        if (roundPlayer < players.length-1) roundPlayer++;
+        else roundPlayer = 0;
+        turnPlayer = roundPlayer;
+
         nextTurn();
     }
 

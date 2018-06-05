@@ -83,7 +83,6 @@ public class CliController {
     public boolean pickWpc(String wpcID){
         try {
             client.pickWpc(clientModel.getUserToken(), wpcID);
-            view.displayText("Estratto wpc correttamente");
             return true;
         } catch (NotYourWpcException e) {
             view.displayText(e.getMessage());
@@ -94,6 +93,7 @@ public class CliController {
         return false;
     }
 
+    //Restituisce vero se è la richiesta è andata a buon fine
     public boolean passTurn(){
         try {
             client.passTurn(clientModel.getUserToken());
@@ -115,13 +115,9 @@ public class CliController {
         } catch (CannotFindPlayerInDatabaseException e) {
             e.printStackTrace();
         } catch (CannotPickPositionException e) {
-            e.printStackTrace();
-        } catch (CannotPickDiceException e) {
-            e.printStackTrace();
-        } catch (PlayerNotAuthorizedException e) {
-            e.printStackTrace();
-        } catch (CannotPerformThisMoveException e) {
-            e.printStackTrace();
+            view.displayText("Impossibile posizionare il dado: posizione non valida");
+        } catch (CannotPickDiceException|PlayerNotAuthorizedException|CannotPerformThisMoveException e) {
+            view.displayText(e.getMessage());
         }
         return null;
     }
@@ -132,6 +128,14 @@ public class CliController {
 
     public boolean areWpcsArrived(){
         return clientModel.areAllWpcsArrived();
+    }
+
+    public boolean allPlayersChooseWpc(){
+        return clientModel.allPlayersChooseWpc();
+    }
+
+    public boolean isGameStarted(){
+        return clientModel.isGameStarted();
     }
 
     public boolean areAllPlayersInGame(){
