@@ -13,6 +13,7 @@ public enum CliStatus {
     LOGOUT,
     START_GAME_PHASE,
     QUIT_SAGRADA,
+    UNKNOWN,
 
 
     //IN-GAME
@@ -55,5 +56,20 @@ public enum CliStatus {
                 return ANOTHER_PLAYER_TURN;
         }
         return null;
+    }
+
+    public CliStatus getPrevious(){
+        //TODO: implementare back di LogPhase, MAIN_MENU_PHASE, altri mancanti
+        switch (this){
+            case LOG_PHASE: case LOGOUT:
+                //TODO
+                return LOG_PHASE;
+            case LOGIN: case CREATE_ACCOUNT: case MAIN_MENU_PHASE:
+                return LOG_PHASE;
+            case FIND_GAME_PHASE: case DISPLAY_STAT:
+                return MAIN_MENU_PHASE;
+            default:
+                return this;
+        }
     }
 }

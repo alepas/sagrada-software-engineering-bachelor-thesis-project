@@ -4,6 +4,7 @@ import it.polimi.ingsw.control.CliController;
 
 public enum ObjectToWaitFor {
     PLAYERS,
+    GAME,
     PRIVATE_OBJS,
     WPCS,
     TOOLCARDS,
@@ -14,6 +15,8 @@ public enum ObjectToWaitFor {
         switch (this){
             case PLAYERS:
                 return controller.areAllPlayersInGame();
+            case GAME:
+                return controller.isGameStarted();
             case PRIVATE_OBJS:
                 return controller.arePrivateObjectivesArrived();
             case WPCS:

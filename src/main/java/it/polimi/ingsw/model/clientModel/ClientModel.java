@@ -17,9 +17,11 @@ public class ClientModel implements Observer, NotificationHandler {
 
     //Game
     private String gameID;
+    private boolean gameStarted;
     private int gameActualPlayers;
     private int gameNumPlayers;
     private ClientColor[] privateObjectives;
+    private boolean wpcsArrived;
     private HashMap<String, ClientWpc> wpcByUsername;
     private ArrayList<ClientToolCard> gameToolCards;
     private ArrayList<ClientPoc> gamePublicObjectiveCards;
@@ -43,9 +45,11 @@ public class ClientModel implements Observer, NotificationHandler {
 
     public void exitGame(){
         this.gameID = null;
+        this.gameStarted = false;
         this.gameActualPlayers = 0;
         this.gameNumPlayers = 0;
         this.privateObjectives = null;
+        this.wpcsArrived = false;
         this.wpcByUsername = new HashMap<>();
         this.gameToolCards = new ArrayList<>();
         this.gamePublicObjectiveCards = new ArrayList<>();
@@ -201,7 +205,15 @@ public class ClientModel implements Observer, NotificationHandler {
     }
 
     public boolean areAllWpcsArrived(){
-        return wpcByUsername.size() == gameNumPlayers;
+        return wpcsArrived;
+    }
+
+    public boolean allPlayersChooseWpc(){
+        return (gameNumPlayers != 0 && wpcByUsername.size() == gameNumPlayers);
+    }
+
+    public boolean isGameStarted(){
+        return gameStarted;
     }
 
     public boolean areToolcardsArrived(){
@@ -222,7 +234,9 @@ public class ClientModel implements Observer, NotificationHandler {
     }
 
     @Override
-    public void handle(GameStartedNotification notification) { }
+    public void handle(GameStartedNotification notification) {
+        gameStarted = true;
+    }
 
     @Override
     public void handle(PlayersChangedNotification notification) {
@@ -237,7 +251,7 @@ public class ClientModel implements Observer, NotificationHandler {
 
     @Override
     public void handle(WpcsExtractedNotification notification) {
-
+        wpcsArrived = true;
     }
 
     @Override
