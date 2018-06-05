@@ -611,7 +611,6 @@ public class SetNewGameController implements Observer, NotificationHandler {
 
 
     private void changeSceneHandle(Event event, String path) {
-            clientModel.addObserver(null);
             AnchorPane nextNode = new AnchorPane();
             try {
                 nextNode = FXMLLoader.load(getClass().getResource(path));
