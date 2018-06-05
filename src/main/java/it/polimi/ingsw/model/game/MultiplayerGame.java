@@ -143,7 +143,7 @@ public class MultiplayerGame extends Game {
         else roundPlayer = 0;
         turnPlayer = roundPlayer;
 
-        if(roundTrack.getCurrentRound() <=10) nextTurn();
+        if(roundTrack.getCurrentRound() < 10) nextTurn();
         else calculateScore();
     }
 
