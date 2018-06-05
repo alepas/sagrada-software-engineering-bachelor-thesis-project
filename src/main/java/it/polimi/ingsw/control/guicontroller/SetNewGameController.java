@@ -29,7 +29,10 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Observable;
+import java.util.Observer;
 
 import static java.lang.String.valueOf;
 import static java.lang.Thread.sleep;
@@ -167,7 +170,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
 
         networkClient = NetworkClient.getInstance();
         clientModel = ClientModel.getInstance();
-        clientModel.setObserver(this);
+        clientModel.addObserver(this);
 
         ToggleGroup group = new ToggleGroup();
         soloPlayerBox.setToggleGroup(group);
@@ -608,7 +611,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
 
 
     private void changeSceneHandle(Event event, String path) {
-            clientModel.setObserver(null);
+            clientModel.addObserver(null);
             AnchorPane nextNode = new AnchorPane();
             try {
                 nextNode = FXMLLoader.load(getClass().getResource(path));

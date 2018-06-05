@@ -2,6 +2,7 @@ package it.polimi.ingsw.control.network.rmi;
 
 import it.polimi.ingsw.control.network.NetworkClient;
 import it.polimi.ingsw.control.network.commands.responses.*;
+import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.clientModel.ClientDiceLocations;
 import it.polimi.ingsw.model.clientModel.NextAction;
 import it.polimi.ingsw.model.clientModel.Position;
@@ -76,39 +77,47 @@ public class RmiClient extends NetworkClient {
     }
 
     @Override
-    public void useToolCard(String userToken, String cardId) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotUseToolCardException, CannotPerformThisMoveException {
+    public NextAction useToolCard(String userToken, String cardId) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotUseToolCardException, CannotPerformThisMoveException {
         try {
-            (remoteServer.useToolCard(userToken, cardId)).handle(this);
-        } catch (RemoteException e){
-
-        }
-    }
-
-    @Override
-    public void pickDiceForToolCard(String userToken, int diceId, ClientDiceLocations where) throws CannotFindPlayerInDatabaseException, CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException {
-        try {
-            (remoteServer.pickDiceForToolCard(userToken, diceId, where)).handle(this);
-        } catch (RemoteException e){
-
-        }
-    }
-
-    @Override
-    public void placeDiceForToolCard(String userToken, int diceId, ClientDiceLocations initialLocation, ClientDiceLocations finalLocation, Position position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException, CannotPickDiceException {
-        try {
-            (remoteServer.placeDiceForToolCard(userToken, diceId, initialLocation, finalLocation, position)).handle(this);
+            ToolCardResponse response = (ToolCardResponse) remoteServer.useToolCard(userToken, cardId);
+            response.handle(this);
+            return response.nextAction;
         } catch (RemoteException e) {
+            return null;
+        }
+    }
 
+    @Override
+    public NextAction pickDiceForToolCard(String userToken, int diceId, ClientDiceLocations where) throws CannotFindPlayerInDatabaseException, CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException {
+        try {
+            ToolCardResponse response = (ToolCardResponse) remoteServer.pickDiceForToolCard(userToken, diceId, where);
+            response.handle(this);
+            return response.nextAction;
+        } catch (RemoteException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public NextAction placeDiceForToolCard(String userToken, int diceId, ClientDiceLocations initialLocation, ClientDiceLocations finalLocation, Position position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException, CannotPickDiceException {
+        try {
+            ToolCardResponse response = (ToolCardResponse) remoteServer.placeDiceForToolCard(userToken, diceId, initialLocation, finalLocation, position);
+            response.handle(this);
+            return response.nextAction;
+        } catch (RemoteException e) {
+            return null;
         }
     }
 
 
     @Override
-    public void pickNumberForToolCard(String userToken, int number) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPickNumberException, CannotPerformThisMoveException {
+    public NextAction pickNumberForToolCard(String userToken, int number) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPickNumberException, CannotPerformThisMoveException {
         try {
-            (remoteServer.pickNumberForToolCard(userToken, number)).handle(this);
-        } catch (RemoteException e){
-
+            ToolCardResponse response = (ToolCardResponse) remoteServer.pickNumberForToolCard(userToken, number);
+            response.handle(this);
+            return response.nextAction;
+        } catch (RemoteException e) {
+            return null;
         }
     }
 
@@ -159,45 +168,58 @@ public class RmiClient extends NetworkClient {
     }
 
     @Override
-    public void getUpdatedGame(String userToken) throws CannotFindPlayerInDatabaseException {
+    public NextAction getUpdatedGame(String userToken) throws CannotFindPlayerInDatabaseException {
         try {
-            (remoteServer.getUpdatedGame(userToken)).handle(this);
+            UpdatedGameResponse response = (UpdatedGameResponse) remoteServer.getUpdatedGame(userToken);
+            response.handle(this);
+            return response.nextAction;
         } catch (RemoteException e) {
-
+            return null;
         }
     }
 
     @Override
-    public void stopToolCard(String userToken) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotStopToolCardException, NoToolCardInUseException {
+    public NextAction stopToolCard(String userToken) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotStopToolCardException, NoToolCardInUseException {
         try {
-            (remoteServer.stopToolCard(userToken)).handle(this);
+            ToolCardResponse response = (ToolCardResponse) remoteServer.stopToolCard(userToken);
+            response.handle(this);
+            return response.nextAction;
         } catch (RemoteException e) {
-
+            return null;
         }
     }
 
     @Override
-    public void cancelAction(String userToken) throws CannotCancelActionException, PlayerNotAuthorizedException, CannotFindPlayerInDatabaseException {
-
+    public NextAction cancelAction(String userToken) throws CannotCancelActionException, PlayerNotAuthorizedException, CannotFindPlayerInDatabaseException {
+        try {
+            ToolCardResponse response = (ToolCardResponse) remoteServer.cancelAction(userToken);
+            response.handle(this);
+            return response.nextAction;
+        } catch (RemoteException e) {
+            return null;
+        }
     }
 
 
     @Override
     public NextAction placeDice(String userToken, int id, Position position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, CannotPickDiceException, PlayerNotAuthorizedException, CannotPerformThisMoveException {
         try {
-            (remoteServer.placeDice(userToken, id, position)).handle(this);
+            PlaceDiceResponse response = (PlaceDiceResponse) remoteServer.placeDice(userToken, id, position);
+            response.handle(this);
+            return response.nextAction;
         } catch (RemoteException e) {
-
+            return null;
         }
-        return nextAction;
     }
 
     @Override
-    public void getNextMove(String userToken) throws PlayerNotAuthorizedException, CannotFindPlayerInDatabaseException {
+    public NextAction getNextMove(String userToken) throws PlayerNotAuthorizedException, CannotFindPlayerInDatabaseException {
         try {
-            (remoteServer.getNextMove(userToken)).handle(this);
+            NextMoveResponse response = (NextMoveResponse) remoteServer.getNextMove(userToken);
+            response.handle(this);
+            return response.nextAction;
         } catch (RemoteException e) {
-
+            return null;
         }
     }
 }

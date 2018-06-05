@@ -6,7 +6,6 @@ import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerExcepti
 import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
-import it.polimi.ingsw.model.wpc.Wpc;
 import it.polimi.ingsw.view.cli.CliView;
 
 import java.util.ArrayList;
@@ -69,7 +68,7 @@ public class CliController {
 
         String gameID = clientModel.getGameID();
         if (gameID != null) {
-            clientModel.setObserver(view);
+            clientModel.addObserver(view);
             view.displayText("Entrato nella partita: " + gameID);
             view.displayText("Giocatori presenti: " + clientModel.getGameActualPlayers() +
                     " di " + clientModel.getGameNumPlayers() + " necessari.");
@@ -122,6 +121,21 @@ public class CliController {
         return null;
     }
 
+    public NextAction useToolcard(String id){
+        try {
+            return client.useToolCard(clientModel.getUsername(), id);
+        } catch (CannotFindPlayerInDatabaseException e) {
+            e.printStackTrace();
+        } catch (PlayerNotAuthorizedException e) {
+            e.printStackTrace();
+        } catch (CannotUseToolCardException e) {
+            e.printStackTrace();
+        } catch (CannotPerformThisMoveException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
 
     //---------------------------------- Request to cli model ----------------------------------
@@ -153,7 +167,6 @@ public class CliController {
     public boolean arePocsArrived(){
         return clientModel.arePocsArrived();
     }
-
 
     public String getUser(){
         return clientModel.getUsername();

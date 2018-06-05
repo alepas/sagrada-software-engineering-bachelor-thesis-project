@@ -9,7 +9,7 @@ import java.util.Observer;
 
 public class ClientModel implements Observer, NotificationHandler {
     private static ClientModel instance;
-    private Observer observer;
+    private ArrayList<Observer> observers;
 
     //User
     private String username;
@@ -31,6 +31,7 @@ public class ClientModel implements Observer, NotificationHandler {
     private boolean active;
     private int favour;
     private ClientRoundTrack roundTrack;
+    private ToolCardClientNextActionInfo toolCardClientNextActionInfo;
 
     private ClientModel() { }
 
@@ -59,6 +60,7 @@ public class ClientModel implements Observer, NotificationHandler {
         this.active = false;
         this.favour = 0;
         this.roundTrack=null;
+        this.toolCardClientNextActionInfo = null;
     }
 
     public void clean(){
@@ -67,8 +69,12 @@ public class ClientModel implements Observer, NotificationHandler {
         exitGame();
     }
 
-    public void setObserver(Observer observer) {
-        this.observer = observer;
+    public void addObserver(Observer observer) {
+        if (!observers.contains(observer)) observers.add(observer);
+    }
+
+    public void removeObserver(Observer observer){
+        observers.remove(observer);
     }
 
     public String getUsername() {
@@ -230,7 +236,9 @@ public class ClientModel implements Observer, NotificationHandler {
     @Override
     public void update(Observable o, Object arg) {
         ((Notification) arg).handle(this);
-        observer.update(o, arg);
+        for(Observer observer : observers){
+            observer.update(o, arg);
+        }
     }
 
     @Override

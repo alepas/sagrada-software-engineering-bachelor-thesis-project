@@ -20,6 +20,8 @@ public class UpdatedGameResponse implements Response {
     public int favour;
     public final Exception exception;
     public final ClientRoundTrack roundTrack;
+    public final NextAction nextAction;
+    public final ToolCardClientNextActionInfo nextActionInfo;
 
     public UpdatedGameResponse(Exception exception) {
         this.exception = null;
@@ -36,8 +38,11 @@ public class UpdatedGameResponse implements Response {
         this.active = false;
         this.favour = 0;
         this.roundTrack=null;
+        this.nextAction = null;
+        this.nextActionInfo = null;
     }
 
+    //TODO: togliere nextAction e nextActionInfo da null
     public UpdatedGameResponse(String gameID, int gameActualPlayers, int gameNumPlayers, ClientColor[] privateObjectives, HashMap<String, ClientWpc> wpcByUsername, ArrayList<ClientToolCard> gameToolCards, ArrayList<ClientPoc> gamePublicObjectiveCards, int currentRound, ArrayList<ClientDice> extractedDices, int currentTurn, boolean active, int favour, ClientRoundTrack roundTrack) {
         this.exception=null;
 
@@ -54,6 +59,8 @@ public class UpdatedGameResponse implements Response {
         this.active = active;
         this.favour = favour;
         this.roundTrack=roundTrack;
+        this.nextAction = null;
+        this.nextActionInfo = null;
     }
 
     @Override

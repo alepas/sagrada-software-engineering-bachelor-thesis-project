@@ -3,6 +3,7 @@ package it.polimi.ingsw.control.network.socket;
 import it.polimi.ingsw.control.network.NetworkClient;
 import it.polimi.ingsw.control.network.commands.requests.*;
 import it.polimi.ingsw.control.network.commands.responses.*;
+import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.clientModel.ClientDiceLocations;
 import it.polimi.ingsw.model.clientModel.ClientModel;
 import it.polimi.ingsw.model.clientModel.NextAction;
@@ -172,25 +173,31 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
 
 
     @Override
-    public void useToolCard(String userToken, String cardId) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotUseToolCardException, CannotPerformThisMoveException {
+    public NextAction useToolCard(String userToken, String cardId) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotUseToolCardException, CannotPerformThisMoveException {
         request(new ToolCardUseRequest(userToken, cardId));
 
-        Exception e = ((ToolCardResponse) waitResponse()).exception;
+        ToolCardResponse response = (ToolCardResponse) waitResponse();
+        assert response != null;
+        Exception e = response.exception;
 
         if (e != null){
             if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
             if (e instanceof PlayerNotAuthorizedException) throw (PlayerNotAuthorizedException) e;
             if (e instanceof CannotUseToolCardException ) throw  (CannotUseToolCardException) e;
             if (e instanceof CannotPerformThisMoveException ) throw  (CannotPerformThisMoveException) e;
-
+            return null;
+        } else {
+            return response.nextAction;
         }
     }
 
     @Override
-    public void pickDiceForToolCard(String userToken, int diceId, ClientDiceLocations where) throws CannotFindPlayerInDatabaseException, CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException {
+    public NextAction pickDiceForToolCard(String userToken, int diceId, ClientDiceLocations where) throws CannotFindPlayerInDatabaseException, CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException {
         request(new ToolCardPickDiceRequest(userToken, diceId,where));
 
-        Exception e = ((ToolCardResponse) waitResponse()).exception;
+        ToolCardResponse response = (ToolCardResponse) waitResponse();
+        assert response != null;
+        Exception e = response.exception;
 
         if (e != null){
             if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
@@ -198,15 +205,19 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
             if (e instanceof CannotPickDiceException ) throw  (CannotPickDiceException) e;
             if (e instanceof NoToolCardInUseException ) throw  (NoToolCardInUseException) e;
             if (e instanceof CannotPerformThisMoveException ) throw  (CannotPerformThisMoveException) e;
-
+            return null;
+        } else {
+            return response.nextAction;
         }
     }
 
     @Override
-    public void placeDiceForToolCard(String userToken, int diceId, ClientDiceLocations initialLocation, ClientDiceLocations finalLocation, Position position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException, CannotPickDiceException {
+    public NextAction placeDiceForToolCard(String userToken, int diceId, ClientDiceLocations initialLocation, ClientDiceLocations finalLocation, Position position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException, CannotPickDiceException {
         request(new ToolCardPlaceDiceRequest(userToken, diceId,initialLocation,finalLocation,position));
 
-        Exception e = ((ToolCardResponse) waitResponse()).exception;
+        ToolCardResponse response = (ToolCardResponse) waitResponse();
+        assert response != null;
+        Exception e = response.exception;
 
         if (e != null){
             if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
@@ -215,17 +226,21 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
             if (e instanceof CannotPickPositionException ) throw  (CannotPickPositionException) e;
             if (e instanceof NoToolCardInUseException ) throw  (NoToolCardInUseException) e;
             if (e instanceof CannotPerformThisMoveException ) throw  (CannotPerformThisMoveException) e;
-
+            return null;
+        } else {
+            return response.nextAction;
         }
     }
 
 
 
     @Override
-    public void pickNumberForToolCard(String userToken, int number) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPickNumberException, CannotPerformThisMoveException {
+    public NextAction pickNumberForToolCard(String userToken, int number) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPickNumberException, CannotPerformThisMoveException {
         request(new ToolCardPickNumberRequest(userToken, number));
 
-        Exception e = ((ToolCardResponse) waitResponse()).exception;
+        ToolCardResponse response = (ToolCardResponse) waitResponse();
+        assert response != null;
+        Exception e = response.exception;
 
         if (e != null){
             if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
@@ -233,7 +248,9 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
             if (e instanceof CannotPickNumberException ) throw  (CannotPickNumberException) e;
             if (e instanceof NoToolCardInUseException ) throw  (NoToolCardInUseException) e;
             if (e instanceof CannotPerformThisMoveException ) throw  (CannotPerformThisMoveException) e;
-
+            return null;
+        } else {
+            return response.nextAction;
         }
     }
 
@@ -289,36 +306,56 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
     }
 
     @Override
-    public void getUpdatedGame(String userToken) throws CannotFindPlayerInDatabaseException {
+    public NextAction getUpdatedGame(String userToken) throws CannotFindPlayerInDatabaseException {
         request(new UpdatedGameRequest(userToken));
-        Exception e = ((UpdatedGameResponse) waitResponse()).exception;
-        if (e != null) {
+
+        UpdatedGameResponse response = (UpdatedGameResponse) waitResponse();
+        assert response != null;
+        Exception e = response.exception;
+
+        if (e != null){
             if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
+            return null;
+        } else {
+            return response.nextAction;
         }
     }
 
     @Override
-    public void stopToolCard(String userToken) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotStopToolCardException, NoToolCardInUseException {
+    public NextAction stopToolCard(String userToken) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotStopToolCardException, NoToolCardInUseException {
         request(new ToolCardStopRequest(userToken));
-        Exception e = ((ToolCardResponse)waitResponse()).exception;
-        if (e!=null){
+
+        ToolCardResponse response = (ToolCardResponse) waitResponse();
+        assert response != null;
+        Exception e = response.exception;
+
+        if (e != null){
             if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
             if (e instanceof PlayerNotAuthorizedException) throw (PlayerNotAuthorizedException) e;
             if (e instanceof CannotStopToolCardException ) throw  (CannotStopToolCardException) e;
             if (e instanceof NoToolCardInUseException ) throw  (NoToolCardInUseException) e;
+            return null;
+        } else {
+            return response.nextAction;
         }
     }
 
     @Override
-    public void cancelAction(String userToken) throws CannotCancelActionException, PlayerNotAuthorizedException, CannotFindPlayerInDatabaseException {
+    public NextAction cancelAction(String userToken) throws CannotCancelActionException, PlayerNotAuthorizedException, CannotFindPlayerInDatabaseException {
         request(new CancelActionRequest(userToken));
-        Exception e = ((ToolCardResponse)waitResponse()).exception;
-        if (e!=null){
+
+        ToolCardResponse response = (ToolCardResponse) waitResponse();
+        assert response != null;
+        Exception e = response.exception;
+
+        if (e != null){
             if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
             if (e instanceof PlayerNotAuthorizedException) throw (PlayerNotAuthorizedException) e;
             if (e instanceof CannotCancelActionException ) throw  (CannotCancelActionException) e;
+            return null;
+        } else {
+            return response.nextAction;
         }
-
     }
 
     @Override
@@ -326,6 +363,7 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
         request(new PlaceDiceRequest(userToken, id, position));
 
         PlaceDiceResponse response = (PlaceDiceResponse) waitResponse();
+        assert response != null;
         Exception e = response.exception;
 
         if (e != null){
@@ -334,14 +372,14 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
             if (e instanceof CannotPickPositionException ) throw  (CannotPickPositionException) e;
             if (e instanceof CannotPerformThisMoveException ) throw  (CannotPerformThisMoveException) e;
             if (e instanceof CannotPickDiceException ) throw  (CannotPickDiceException) e;
+            return null;
         } else {
-            nextAction = response.nextAction;
+            return response.nextAction;
         }
-        return nextAction;
     }
 
     @Override
-    public void getNextMove(String userToken) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException {
-
+    public NextAction getNextMove(String userToken) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException {
+        return null;
     }
 }
