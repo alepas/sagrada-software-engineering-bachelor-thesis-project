@@ -66,6 +66,7 @@ public class ClientModel implements Observer, NotificationHandler {
     public void clean(){
         this.username = null;
         this.userToken = null;
+        this.observers = new ArrayList<>();
         exitGame();
     }
 
