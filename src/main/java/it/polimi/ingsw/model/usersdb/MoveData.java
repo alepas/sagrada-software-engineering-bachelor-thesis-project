@@ -195,4 +195,11 @@ public class MoveData {
         this.numbersToChoose = numbersToChoose;
      this.nextAction=nextAction;
     }
+
+    public MoveData(NextAction nextAction, ClientDiceLocations wherePickNewDice, ClientDiceLocations wherePutNewDice) {
+        this.wherePickNewDice = wherePickNewDice;
+        this.wherePutNewDice = wherePutNewDice;
+        this.nextAction=nextAction;
+    }
+
 }

@@ -54,7 +54,7 @@ public class Wpc {
 
     public String getId(){ return id; }
 
-    public boolean addDiceWithAllRestrictions(Dice dice, Position pos, int globalTurn) {
+    public boolean addDiceWithAllRestrictions(Dice dice, Position pos) {
         Cell cell=getCellFromPosition(pos);
         if(cell.getDice()!=null)
             return false;

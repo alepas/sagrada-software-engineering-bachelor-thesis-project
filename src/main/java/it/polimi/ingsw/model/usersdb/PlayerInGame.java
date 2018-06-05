@@ -136,6 +136,7 @@ public class PlayerInGame {
         if (wpc==null) {
             WpcDB dbWpc=WpcDB.getInstance();
             wpc=dbWpc.getWpcByID(id).copyWpc();
+            favours=wpc.getFavours();
             return true;
         }
         else return false;
@@ -208,7 +209,7 @@ public class PlayerInGame {
         }
         if (dice==null)
             throw new CannotPickDiceException(username,dice.getDiceNumber(),dice.getDiceColor(),ClientDiceLocations.EXTRACTED, 0);
-        if ( wpc.addDiceWithAllRestrictions(dice,pos,game.getCurrentTurn())==false)
+        if ( wpc.addDiceWithAllRestrictions(dice,pos)==false)
             throw new CannotPickPositionException(username, pos);
         game.getExtractedDices().remove(dice);
         ArrayList<ClientDice> tempExtractedDices=getClientExtractedDices();
@@ -296,6 +297,7 @@ public class PlayerInGame {
                     game.changeAndNotifyObservers(new ToolCardUsedNotification(username, cardID));
                 } else throw new CannotUseToolCardException(cardID, 1);
             } else {
+                System.out.println("l'utente ha favours: "+favours);
                 if (favours >= 1) {
                     favours = favours - 1;
                     lastFavoursRemoved = 1;

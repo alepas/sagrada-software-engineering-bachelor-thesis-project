@@ -36,6 +36,10 @@ public class CannotPickDiceException extends Exception{
             return "Can't choose the dice "+diceColor+": "+diceNum+" because it does not match the restrictions of the tool card";
         if (cause==3)
             return "Can't choose the dice "+diceColor+": "+diceNum+" because you have to use the dice modified by toolCard";
+        if (cause==4)
+            return "Can't choose the dice "+diceColor+": "+diceNum+" because you have to use another dice not modified by toolCard";
+
+
 
         return null;
     }
