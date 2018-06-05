@@ -19,7 +19,6 @@ import java.rmi.RemoteException;
 public abstract class NetworkClient implements ResponseHandler {
     private static NetworkClient instance;
     protected final ClientModel clientModel = ClientModel.getInstance();
-    protected NextAction nextAction;
 
     public static SocketClient getNewSocketInstance(String host, int port){
         if (instance == null){
@@ -52,15 +51,15 @@ public abstract class NetworkClient implements ResponseHandler {
 
 
 
-    public abstract void useToolCard(String userToken, String cardId) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotUseToolCardException, CannotPerformThisMoveException;
+    public abstract NextAction useToolCard(String userToken, String cardId) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotUseToolCardException, CannotPerformThisMoveException;
 
-    public abstract void pickDiceForToolCard(String userToken, int diceId, ClientDiceLocations where) throws CannotFindPlayerInDatabaseException, CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException;
+    public abstract NextAction pickDiceForToolCard(String userToken, int diceId, ClientDiceLocations where) throws CannotFindPlayerInDatabaseException, CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException;
 
-    public abstract void placeDiceForToolCard(String userToken, int diceId, ClientDiceLocations initialLocation, ClientDiceLocations finalLocation, Position position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException, CannotPickDiceException ;
+    public abstract NextAction placeDiceForToolCard(String userToken, int diceId, ClientDiceLocations initialLocation, ClientDiceLocations finalLocation, Position position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException, CannotPickDiceException ;
 
-    public abstract void pickNumberForToolCard(String userToken, int number) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPickNumberException, CannotPerformThisMoveException;
+    public abstract NextAction pickNumberForToolCard(String userToken, int number) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPickNumberException, CannotPerformThisMoveException;
 
-    public abstract void stopToolCard (String userToken) throws  CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotStopToolCardException, NoToolCardInUseException;
+    public abstract NextAction stopToolCard (String userToken) throws  CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotStopToolCardException, NoToolCardInUseException;
 
 
 
@@ -75,17 +74,17 @@ public abstract class NetworkClient implements ResponseHandler {
 
     public abstract void getUpdatedWPC(String userToken, String username) throws CannotFindPlayerInDatabaseException, UserNotInThisGameException;
 
-    public abstract void getUpdatedGame(String userToken) throws CannotFindPlayerInDatabaseException;
+    public abstract NextAction getUpdatedGame(String userToken) throws CannotFindPlayerInDatabaseException;
 
 
 
 
 
-    public abstract void cancelAction (String userToken) throws  CannotCancelActionException, PlayerNotAuthorizedException, CannotFindPlayerInDatabaseException;
+    public abstract NextAction cancelAction (String userToken) throws  CannotCancelActionException, PlayerNotAuthorizedException, CannotFindPlayerInDatabaseException;
 
     public abstract NextAction placeDice(String userToken, int id, Position position) throws  CannotFindPlayerInDatabaseException, CannotPickPositionException, CannotPickDiceException, PlayerNotAuthorizedException, CannotPerformThisMoveException;
 
-    public abstract void getNextMove(String userToken) throws  CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException ;
+    public abstract NextAction getNextMove(String userToken) throws  CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException ;
 
 
     //-------------------------------- Response Handler --------------------------------
@@ -128,9 +127,7 @@ public abstract class NetworkClient implements ResponseHandler {
 
     @Override
     public void handle(ToolCardResponse response){
-        if (response.exception == null){
-            nextAction = response.nextAction;
-        }
+
     }
 
 
@@ -191,9 +188,7 @@ public abstract class NetworkClient implements ResponseHandler {
 
     @Override
     public void handle(PlaceDiceResponse response) {
-        if (response.exception == null){
-            nextAction = response.nextAction;
-        }
+
     }
 
     @Override

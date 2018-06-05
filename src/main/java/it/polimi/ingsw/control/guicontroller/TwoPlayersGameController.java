@@ -122,7 +122,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
     void initialize() {
         networkClient = NetworkClient.getInstance();
         clientModel = ClientModel.getInstance();
-        clientModel.setObserver(this);
+        clientModel.addObserver(this);
 
         //game parameters
         username = clientModel.getUsername();
