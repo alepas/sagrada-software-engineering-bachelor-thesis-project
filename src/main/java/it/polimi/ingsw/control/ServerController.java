@@ -52,11 +52,12 @@ public class ServerController {
     }
 
     public Response findGame(String userToken, int numPlayers, Observer observer) throws InvalidNumOfPlayersException, CannotFindUserInDBException, CannotCreatePlayerException {
-        String username = databaseUsers.getUsernameByToken(userToken);
+       /* String username = databaseUsers.getUsernameByToken(userToken);
         Game game = databaseGames.findGameForUser(username, numPlayers);
 
-        game.addObserver(observer);
+        game.addObserver(observer);*/
 
+        Game game=databaseUsers.findNewGame(userToken, numPlayers, observer);
         return new FindGameResponse(game.getID(), game.numActualPlayers(), game.getNumPlayers(), null);
     }
 

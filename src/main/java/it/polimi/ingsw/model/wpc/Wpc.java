@@ -56,6 +56,8 @@ public class Wpc {
 
     public boolean addDiceWithAllRestrictions(Dice dice, Position pos) {
         Cell cell=getCellFromPosition(pos);
+        if (cell==null)
+            return false;
         if(cell.getDice()!=null)
             return false;
         if (!firstDicePutted) {
@@ -136,6 +138,10 @@ public class Wpc {
     }
 
     private Cell getCellFromPosition(Position pos){
+        if (pos.getColumn()>=COLS_NUMBER)
+            return null;
+        if (pos.getRow()>=ROWS_NUMBER)
+            return null;
         return schema.get(pos.getRow()*WpcConstants.COLS_NUMBER+pos.getColumn());
     }
 

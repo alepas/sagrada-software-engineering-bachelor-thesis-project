@@ -19,6 +19,7 @@ import it.polimi.ingsw.model.wpc.Wpc;
 import it.polimi.ingsw.model.wpc.WpcDB;
 
 import java.util.ArrayList;
+import java.util.Observer;
 
 
 public class PlayerInGame {
@@ -36,6 +37,7 @@ public class PlayerInGame {
     private boolean placedDiceInTurn;
     private boolean allowPlaceDiceAfterCard;
     private ToolCard cardUsedBlockingTurn;
+    private Observer observer;
 
 
 
@@ -58,6 +60,14 @@ public class PlayerInGame {
         lastFavoursRemoved=0;
         turnForRound=0;
 
+    }
+
+    public Observer getObserver() {
+        return observer;
+    }
+
+    public void setObserver(Observer observer) {
+        this.observer = observer;
     }
 
     public String getUser(){

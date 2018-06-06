@@ -2,7 +2,12 @@ package it.polimi.ingsw.model.usersdb;
 
 
 import it.polimi.ingsw.model.constants.UserDBConstants;
+import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
+import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
+import it.polimi.ingsw.model.game.Game;
+import it.polimi.ingsw.model.gamesdb.DatabaseGames;
+import javafx.beans.Observable;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,12 +15,14 @@ import java.net.Socket;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.HashMap;
+import java.util.Observer;
 import java.util.UUID;
 
 public class DatabaseUsers {
     private static String pathFile;
 
     private static DatabaseUsers instance ;
+    private DatabaseGames databaseGames;
 
     private HashMap<String, User> usersByUsername;
 
@@ -47,6 +54,8 @@ public class DatabaseUsers {
             instance.socketByToken = new HashMap<>();
 
             instance.playerInGameByToken=new HashMap<>();
+
+            instance.databaseGames=DatabaseGames.getInstance();
         }
         return instance;
     }
@@ -184,6 +193,7 @@ public class DatabaseUsers {
                         throw new CannotLoginUserException(username,3);
                 }
                 usersByToken.remove(oldtoken);
+
                 playerInGameByToken.remove(oldtoken);
 
             }
@@ -499,6 +509,32 @@ public class DatabaseUsers {
         }}
         throw new DatabaseFileErrorException(0);
 
+    }
+
+    public synchronized Game findAlreadyStartedGame(String userToken, Observer observer){
+        PlayerInGame player=playerInGameByToken.get(userToken);
+        Game game;
+        if (player!=null) {
+            game = player.getGame();
+            game.deleteObserver(player.getObserver());
+            game.addObserver(observer);
+            player.setObserver(observer);
+            return game;
+        }
+        return null;
+
+    }
+
+    public synchronized Game findNewGame(String userToken, int numPlayers, Observer observer) throws InvalidNumOfPlayersException, CannotCreatePlayerException, CannotFindUserInDBException {
+        PlayerInGame player=playerInGameByToken.get(userToken);
+        Game game;
+        if (player!=null) {
+           throw new CannotCreatePlayerException(player.getUser());
+        }
+        game=databaseGames.findGameForUser(getUsernameByToken(userToken), numPlayers);
+        game.addObserver(observer);
+        playerInGameByToken.get(userToken).setObserver(observer);
+        return game;
     }
 
 
