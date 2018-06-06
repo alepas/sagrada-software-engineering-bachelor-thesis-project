@@ -41,4 +41,6 @@ public interface RequestHandler {
     Response handle(PlaceDiceRequest placeDiceRequest);
 
     Response handle(NextMoveRequest nextMoveRequest);
+
+    Response handle(GetUserStatRequest request);
 }

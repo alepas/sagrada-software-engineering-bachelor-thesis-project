@@ -51,8 +51,7 @@ public interface RemoteServer extends Remote {
 
     Response getNextMove(String userToken) throws RemoteException, CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException ;
 
-
-
+    Response getUserStat(String userToken) throws RemoteException, CannotFindUserInDBException;
 
     }
 

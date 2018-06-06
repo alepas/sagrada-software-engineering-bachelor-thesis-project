@@ -45,13 +45,16 @@ public abstract class NetworkClient implements ResponseHandler {
 
     public abstract void passTurn(String userToken) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotPerformThisMoveException;
 
+    public abstract void getUserStat(String userToken) throws CannotFindUserInDBException;
 
 
 
     public abstract NextAction useToolCard(String userToken, String cardId) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotUseToolCardException, CannotPerformThisMoveException;
 
+    //TODO: rimuovere where (Passare null per il momento)
     public abstract NextAction pickDiceForToolCard(String userToken, int diceId, ClientDiceLocations where) throws CannotFindPlayerInDatabaseException, CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException;
 
+    //TODO: rimouovere initialLocation, finalLocation (Passare null per il momento)
     public abstract NextAction placeDiceForToolCard(String userToken, int diceId, ClientDiceLocations initialLocation, ClientDiceLocations finalLocation, Position position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException, CannotPickDiceException ;
 
     public abstract NextAction pickNumberForToolCard(String userToken, int number) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPickNumberException, CannotPerformThisMoveException;
@@ -200,5 +203,12 @@ public abstract class NetworkClient implements ResponseHandler {
     @Override
     public void handle(NextMoveResponse response) {
 
+    }
+
+    @Override
+    public void handle(GetUserStatResponse response) {
+        if (response.exception != null){
+            clientModel.setUser(response.user);
+        }
     }
 }

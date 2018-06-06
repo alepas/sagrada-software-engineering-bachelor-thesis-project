@@ -3,10 +3,10 @@ package it.polimi.ingsw.model.clientModel;
 import java.io.Serializable;
 
 public class ClientToolCard implements Serializable {
-    private String id;
-    private String name;
-    private String description;
-    private Boolean used;
+    private final String id;
+    private final String name;
+    private final String description;
+    private final Boolean used;
 
     public ClientToolCard(String id, String name, String description, Boolean used) {
         this.id = id;

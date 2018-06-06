@@ -125,6 +125,6 @@ public class RoundTrack implements Serializable {
                 roundTrackTable[i][j]=dicesNotUsed[i][j].getClientDice();
             }
         }
-        return new ClientRoundTrack(roundTrackTable);
+        return new ClientRoundTrack(currentRound, roundTrackTable);
     }
 }

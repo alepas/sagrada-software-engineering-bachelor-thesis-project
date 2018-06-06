@@ -14,20 +14,21 @@ public interface ResponseHandler{
 
     void handle(ToolCardResponse response);
 
-    void handle(UpdatedExtractedDicesResponse updatedExtractedDicesResponse);
+    void handle(UpdatedExtractedDicesResponse response);
 
-    void handle(UpdatedGameResponse updatedGameResponse);
+    void handle(UpdatedGameResponse response);
 
-    void handle(UpdatedPOCsResponse updatedPOCsResponse);
+    void handle(UpdatedPOCsResponse response);
 
-    void handle(UpdatedRoundTrackResponse updatedRoundTrackResponse);
+    void handle(UpdatedRoundTrackResponse response);
 
-    void handle(UpdatedToolCardsResponse updatedToolCardsResponse);
+    void handle(UpdatedToolCardsResponse response);
 
-    void handle(UpdatedWPCResponse updatedWPCResponse);
+    void handle(UpdatedWPCResponse response);
 
+    void handle(PlaceDiceResponse response);
 
-    void handle(PlaceDiceResponse placeDiceResponse);
+    void handle(NextMoveResponse response);
 
-    void handle(NextMoveResponse nextMoveResponse);
+    void handle(GetUserStatResponse response);
 }

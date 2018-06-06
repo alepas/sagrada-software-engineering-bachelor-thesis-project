@@ -29,8 +29,8 @@ public enum CliStatus {
     SELECT_DICE_TO_ACTIVE_TOOLCARD,
     ANOTHER_PLAYER_TURN;
 
-    public static CliStatus getCliState(NextAction nextActions){
-        switch (nextActions){
+    public CliStatus change(NextAction nextAction){
+        switch (nextAction){
             case PLACE_DICE:
                 return PLACE_DICE;
             case PLACE_DICE_TOOLCARD:

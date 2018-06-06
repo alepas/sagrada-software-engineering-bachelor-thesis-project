@@ -133,6 +133,11 @@ public class RmiServer extends UnicastRemoteObject implements RemoteServer, Obse
         return controller.getNextMove(userToken);
     }
 
+    @Override
+    public Response getUserStat(String userToken) throws RemoteException, CannotFindUserInDBException {
+        return controller.getUserStat(userToken);
+    }
+
 
     @Override
     public void update(Observable o, Object arg) {

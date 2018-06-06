@@ -3,9 +3,9 @@ package it.polimi.ingsw.model.clientModel;
 import java.io.Serializable;
 
 public class ClientPoc implements Serializable {
-    private String id;
-    private String name;
-    private String description;
+    private final String id;
+    private final String name;
+    private final String description;
 
     public ClientPoc(String id, String name, String description) {
         this.id = id;

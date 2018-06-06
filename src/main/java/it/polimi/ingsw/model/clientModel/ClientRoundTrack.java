@@ -3,18 +3,19 @@ package it.polimi.ingsw.model.clientModel;
 import java.io.Serializable;
 
 public class ClientRoundTrack implements Serializable {
-    private int currentRound;
-    private ClientDice[][] dicesNotUsed;
+    private final int currentRound;
+    private final ClientDice[][] dicesNotUsed;
 
-    //array di arraylist in questo modo posso aggiungere tutti i dadi che voglio in modo dinamico
-    public ClientRoundTrack(ClientDice[][] roundTrack){
-        dicesNotUsed = roundTrack;
-
+    public ClientRoundTrack(int currentRound, ClientDice[][] dicesNotUsed) {
+        this.currentRound = currentRound;
+        this.dicesNotUsed = dicesNotUsed;
     }
 
+    public int getCurrentRound() {
+        return currentRound;
+    }
 
     public ClientDice[][] getAllDices(){
         return dicesNotUsed;
     }
-
 }

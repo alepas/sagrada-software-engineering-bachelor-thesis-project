@@ -271,6 +271,15 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
         }
     }
 
+    @Override
+    public Response handle(GetUserStatRequest request) {
+        try {
+            return controller.getUserStat(request.userToken);
+        } catch (CannotFindUserInDBException e) {
+            return new GetUserStatResponse(null, e);
+        }
+    }
+
 
     //------------------------------ Game observer ------------------------------
 

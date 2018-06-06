@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.usersdb;
 
 
+import it.polimi.ingsw.model.clientModel.ClientUser;
 import it.polimi.ingsw.model.constants.UserDBConstants;
 import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
@@ -271,6 +272,16 @@ public class DatabaseUsers {
             throw new CannotFindUserInDBException(user);
         return token;
     }
+
+    public synchronized ClientUser getClientUserByToken(String token) throws CannotFindUserInDBException {
+        if (token == null) throw new CannotFindUserInDBException("");
+
+        User user = usersByToken.get(token);
+        if (user == null) throw new CannotFindUserInDBException("");
+
+        return user.getClientUser();
+    }
+
 
     public synchronized String getUsernameByToken(String token) throws CannotFindUserInDBException {
         if (token == null) throw new CannotFindUserInDBException("");

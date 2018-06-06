@@ -3,10 +3,10 @@ package it.polimi.ingsw.model.clientModel;
 import java.io.Serializable;
 
 public class ClientCell implements Serializable {
-    private ClientDice cellDice;
-    private ClientColor cellColor;
-    private int cellNumber;
-    private Position position;
+    private final ClientDice cellDice;
+    private final ClientColor cellColor;
+    private final int cellNumber;
+    private final Position position;
 
     public ClientCell(ClientDice cellDice, ClientColor cellColor, int cellNumber, Position position) {
         this.cellDice = cellDice;

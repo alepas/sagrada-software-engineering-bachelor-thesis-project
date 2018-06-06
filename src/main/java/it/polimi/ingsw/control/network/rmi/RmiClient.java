@@ -77,6 +77,15 @@ public class RmiClient extends NetworkClient {
     }
 
     @Override
+    public void getUserStat(String userToken) throws CannotFindUserInDBException {
+        try {
+            (remoteServer.getUserStat(userToken)).handle(this);
+        } catch (RemoteException e) {
+
+        }
+    }
+
+    @Override
     public NextAction useToolCard(String userToken, String cardId) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotUseToolCardException, CannotPerformThisMoveException {
         try {
             ToolCardResponse response = (ToolCardResponse) remoteServer.useToolCard(userToken, cardId);

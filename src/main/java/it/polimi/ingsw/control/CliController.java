@@ -108,9 +108,9 @@ public class CliController {
         return false;
     }
 
-    public NextAction placeDice(int id, int col, int row) {
+    public NextAction placeDice(int id, Position position) {
         try {
-            return client.placeDice(clientModel.getUserToken(), id, new Position(row, col));
+            return client.placeDice(clientModel.getUserToken(), id, position);
         } catch (CannotFindPlayerInDatabaseException e) {
             e.printStackTrace();
         } catch (CannotPickPositionException e) {
@@ -123,7 +123,7 @@ public class CliController {
 
     public NextAction useToolcard(String id){
         try {
-            return client.useToolCard(clientModel.getUsername(), id);
+            return client.useToolCard(clientModel.getUserToken(), id);
         } catch (CannotFindPlayerInDatabaseException e) {
             e.printStackTrace();
         } catch (PlayerNotAuthorizedException e) {
@@ -131,6 +131,33 @@ public class CliController {
         } catch (CannotUseToolCardException e) {
             e.printStackTrace();
         } catch (CannotPerformThisMoveException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public NextAction pickDiceForToolCard(int id){
+        try {
+            return client.pickDiceForToolCard(clientModel.getUserToken(), id, null);
+        } catch (CannotFindPlayerInDatabaseException e) {
+            e.printStackTrace();
+        } catch (CannotPickDiceException e) {
+            e.printStackTrace();
+        } catch (PlayerNotAuthorizedException e) {
+            e.printStackTrace();
+        } catch (NoToolCardInUseException e) {
+            e.printStackTrace();
+        } catch (CannotPerformThisMoveException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public ClientUser getUserStat() {
+        try {
+            client.getUserStat(clientModel.getUserToken());
+            return clientModel.getUser();
+        } catch (CannotFindUserInDBException e) {
             e.printStackTrace();
         }
         return null;
@@ -214,21 +241,16 @@ public class CliController {
         return clientModel.getToolCardClientNextActionInfo();
     }
 
-    public ArrayList<ClientDice> getDicesByLocation(ClientDiceLocations location){
-        switch (location){
-            case ROUNDTRACK:
-                ArrayList<ClientDice> dices = new ArrayList<>();
-                ClientDice[][] array = clientModel.getRoundTrack().getAllDices();
-                for(int i = 0; i < array.length; i++){
-                    for(int j = 0; j < array[i].length; j++){
-                        if (array[i][j] != null) dices.add(array[i][j]);
-                    }
-                }
-                return dices;
-            case EXTRACTED:
-                return clientModel.getExtractedDices();
-            default:
-                return null;
+    public ArrayList<ClientDice> getRoundtrackDices(){
+        ArrayList<ClientDice> dices = new ArrayList<>();
+        ClientDice[][] arrays = clientModel.getRoundTrack().getAllDices();
+
+        for(ClientDice[] array : arrays) {
+            for (ClientDice dice :  array) {
+                if (dice != null) dices.add(dice);
+            }
         }
+
+        return dices;
     }
 }

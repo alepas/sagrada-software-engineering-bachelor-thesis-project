@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model.usersdb;
 
 
+import it.polimi.ingsw.model.clientModel.ClientUser;
+
 import java.io.Serializable;
 
 class User implements Serializable {
@@ -21,6 +23,11 @@ class User implements Serializable {
         lostGames=0;
         abandonedGames=0;
         ranking=0;
+    }
+
+    ClientUser getClientUser(){
+        return new ClientUser(this.username, this.wonGames,
+                this.lostGames, this.abandonedGames, this.ranking);
     }
 
 

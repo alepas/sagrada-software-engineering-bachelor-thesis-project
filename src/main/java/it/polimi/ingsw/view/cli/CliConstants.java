@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.constants;
+package it.polimi.ingsw.view.cli;
 
 public class CliConstants {
 

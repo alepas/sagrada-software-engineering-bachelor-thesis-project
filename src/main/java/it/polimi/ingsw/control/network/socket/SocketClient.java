@@ -171,6 +171,17 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
         }
     }
 
+    @Override
+    public void getUserStat(String userToken) throws CannotFindUserInDBException {
+        request(new GetUserStatRequest(userToken));
+
+        Exception e = ((GetUserStatResponse) waitResponse()).exception;
+
+        if (e != null){
+            if (e instanceof CannotFindUserInDBException) throw (CannotFindUserInDBException) e;
+        }
+    }
+
 
     @Override
     public NextAction useToolCard(String userToken, String cardId) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotUseToolCardException, CannotPerformThisMoveException {

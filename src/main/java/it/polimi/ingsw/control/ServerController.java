@@ -52,12 +52,7 @@ public class ServerController {
     }
 
     public Response findGame(String userToken, int numPlayers, Observer observer) throws InvalidNumOfPlayersException, CannotFindUserInDBException, CannotCreatePlayerException {
-       /* String username = databaseUsers.getUsernameByToken(userToken);
-        Game game = databaseGames.findGameForUser(username, numPlayers);
-
-        game.addObserver(observer);*/
-
-        Game game=databaseUsers.findNewGame(userToken, numPlayers, observer);
+        Game game = databaseUsers.findNewGame(userToken, numPlayers, observer);
         return new FindGameResponse(game.getID(), game.numActualPlayers(), game.getNumPlayers(), null);
     }
 
@@ -81,9 +76,14 @@ public class ServerController {
     }
 
 
-    public Response cancelAction (String userToken) throws CannotCancelActionException, PlayerNotAuthorizedException, CannotFindPlayerInDatabaseException {
+    public Response cancelAction(String userToken) throws CannotCancelActionException, PlayerNotAuthorizedException, CannotFindPlayerInDatabaseException {
         PlayerInGame currentPlayer=databaseUsers.getPlayerInGameFromToken(userToken);
         return convertMoveDataToNextMoveResponse(currentPlayer.cancelAction());
+    }
+
+    public Response getUserStat(String userToken) throws CannotFindUserInDBException {
+        ClientUser user = databaseUsers.getClientUserByToken(userToken);
+        return new GetUserStatResponse(user, null);
     }
 
 

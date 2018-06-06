@@ -12,8 +12,8 @@ public class ClientModel implements Observer, NotificationHandler {
     private ArrayList<Observer> observers;
 
     //User
-    private String username;
     private String userToken;
+    private ClientUser user;
 
     //Game
     private String gameID;
@@ -64,8 +64,8 @@ public class ClientModel implements Observer, NotificationHandler {
     }
 
     public void clean(){
-        this.username = null;
         this.userToken = null;
+        this.user = null;
         this.observers = new ArrayList<>();
         exitGame();
     }
@@ -79,7 +79,8 @@ public class ClientModel implements Observer, NotificationHandler {
     }
 
     public String getUsername() {
-        return username;
+        if (user != null) return user.getUsername();
+        return null;
     }
 
     public ClientRoundTrack getRoundTrack() {
@@ -91,7 +92,15 @@ public class ClientModel implements Observer, NotificationHandler {
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.user = new ClientUser(username);
+    }
+
+    public ClientUser getUser() {
+        return user;
+    }
+
+    public void setUser(ClientUser user) {
+        this.user = user;
     }
 
     public String getUserToken() {
@@ -175,11 +184,11 @@ public class ClientModel implements Observer, NotificationHandler {
     }
 
     public ClientWpc getMyWpc(){
-        return wpcByUsername.get(username);
+        return wpcByUsername.get(user.getUsername());
     }
 
     public void setMyWpc(ClientWpc wpc){
-        wpcByUsername.put(username, wpc);
+        wpcByUsername.put(user.getUsername(), wpc);
     }
 
     public HashMap<String, ClientWpc> getWpcByUsername() {
@@ -267,7 +276,7 @@ public class ClientModel implements Observer, NotificationHandler {
 
     @Override
     public void handle(PrivateObjExtractedNotification notification) {
-        privateObjectives = notification.colorsByUser.get(username);
+        privateObjectives = notification.colorsByUser.get(user.getUsername());
     }
 
     @Override
@@ -278,7 +287,7 @@ public class ClientModel implements Observer, NotificationHandler {
     @Override
     public void handle(UserPickedWpcNotification notification) {
         wpcByUsername.put(notification.username, notification.wpc);
-        if (notification.username.equals(username)) favour = notification.wpc.getFavours();
+        if (notification.username.equals(user.getUsername())) favour = notification.wpc.getFavours();
     }
 
     @Override
@@ -300,7 +309,7 @@ public class ClientModel implements Observer, NotificationHandler {
     @Override
     public void handle(NextTurnNotification notification) {
         currentTurn = notification.turnNumber;
-        active = notification.activeUser.equals(username);
+        active = notification.activeUser.equals(user.getUsername());
     }
 
     @Override

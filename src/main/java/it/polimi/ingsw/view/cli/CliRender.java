@@ -1,7 +1,6 @@
 package it.polimi.ingsw.view.cli;
 
 import it.polimi.ingsw.model.clientModel.*;
-import it.polimi.ingsw.model.constants.CliConstants;
 import it.polimi.ingsw.model.constants.WpcConstants;
 
 import java.util.ArrayList;
