@@ -3,6 +3,7 @@ package it.polimi.ingsw.view.cli;
 import it.polimi.ingsw.control.CliController;
 import it.polimi.ingsw.control.network.commands.notifications.*;
 import it.polimi.ingsw.model.clientModel.*;
+import it.polimi.ingsw.view.Status;
 
 import java.util.*;
 
@@ -18,7 +19,7 @@ public class CliView implements Observer, NotificationHandler {
     private final Object waiter = new Object();
     private final Object prova = new Object();       //TODO: Attualmente utilizzato in stopHere, da eliminare
 
-    private CliStatus state;
+    private Status state;
 
     // ----- The view is composed with the controller (strategy)
     private final CliController controller;
@@ -72,7 +73,7 @@ public class CliView implements Observer, NotificationHandler {
 
     //---------------------------- External methods ----------------------------
     public void launch(){
-        state = CliStatus.LOG_PHASE;
+        state = Status.LOG_PHASE;
         start();
     }
 
@@ -147,11 +148,11 @@ public class CliView implements Observer, NotificationHandler {
             displayText(CliConstants.CHOOSE_LOG_TYPE);
             String answer = userInput();
             if (answer.equals(CliConstants.YES_RESPONSE)) {
-                state = CliStatus.LOGIN;
+                state = Status.LOGIN;
                 return;
             };
             if (answer.equals(CliConstants.NO_RESPONSE)){
-                state = CliStatus.CREATE_ACCOUNT;
+                state = Status.CREATE_ACCOUNT;
                 return;
             }
         }
@@ -179,7 +180,7 @@ public class CliView implements Observer, NotificationHandler {
         } while (user == null);
 
         displayText(CliConstants.LOG_SUCCESS + user);
-        state = CliStatus.MAIN_MENU_PHASE;
+        state = Status.MAIN_MENU_PHASE;
     }
 
     private void mainMenuPhase() {
@@ -187,13 +188,13 @@ public class CliView implements Observer, NotificationHandler {
         String response = userInput();
         switch (response){
             case "1":
-                state = CliStatus.FIND_GAME_PHASE;
+                state = Status.FIND_GAME_PHASE;
                 break;
             case "2":
-                state = CliStatus.DISPLAY_STAT;
+                state = Status.DISPLAY_STAT;
                 break;
             case "3":
-                state = CliStatus.LOGOUT;
+                state = Status.LOGOUT;
                 break;
             default:
                 break;
@@ -211,7 +212,7 @@ public class CliView implements Observer, NotificationHandler {
         displayText("Ranking: " + user.getRanking());
         printText("");
 
-        state = CliStatus.MAIN_MENU_PHASE;
+        state = Status.MAIN_MENU_PHASE;
     }
 
     private void findGamePhase(){
@@ -222,7 +223,7 @@ public class CliView implements Observer, NotificationHandler {
         response = userInput();
 
         if (response.equals(CliConstants.ESCAPE_RESPONSE)){
-            state = CliStatus.MAIN_MENU_PHASE;
+            state = Status.MAIN_MENU_PHASE;
             return;
         }
 
@@ -231,9 +232,9 @@ public class CliView implements Observer, NotificationHandler {
             int i = controller.findGame(numPlayers);
             if (i < 0){
                 displayText("Impossibile trovare partita. Riprovare più tardi");
-                state = CliStatus.MAIN_MENU_PHASE;
+                state = Status.MAIN_MENU_PHASE;
             } else {
-                state = CliStatus.START_GAME_PHASE;
+                state = Status.START_GAME_PHASE;
             }
         } catch (NumberFormatException e){
             displayText("Perfavore inserire un numero intero");
@@ -248,13 +249,13 @@ public class CliView implements Observer, NotificationHandler {
         chooseWpcPhase();
         waitFor("In attesa delle toolcard...", ObjectToWaitFor.TOOLCARDS);
         waitFor("In attesa degli obbiettivi pubblici...", ObjectToWaitFor.POC);
-        state = CliStatus.UNKNOWN;
+        state = Status.UNKNOWN;
     }
 
     private void unknownPhase() {
         synchronized (waiter){
             try {
-                while (state.equals(CliStatus.UNKNOWN))  waiter.wait();
+                while (state.equals(Status.UNKNOWN))  waiter.wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -696,8 +697,8 @@ public class CliView implements Observer, NotificationHandler {
         }
 
         synchronized (waiter){
-            if (controller.isActive()) state = CliStatus.MENU_ALL;
-            else state = CliStatus.ANOTHER_PLAYER_TURN;
+            if (controller.isActive()) state = Status.MENU_ALL;
+            else state = Status.ANOTHER_PLAYER_TURN;
             stopWaiting();
         }
     }
