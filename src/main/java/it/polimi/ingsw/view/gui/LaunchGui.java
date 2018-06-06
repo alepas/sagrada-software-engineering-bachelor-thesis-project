@@ -1,6 +1,7 @@
 package it.polimi.ingsw.view.gui;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -28,6 +29,11 @@ public class LaunchGui extends Application {
         final MediaPlayer mediaPlayer = new MediaPlayer(media);
         mediaPlayer.play();
         stage.show();
+
+        stage.setOnCloseRequest(event -> {
+            Platform.exit();
+            System.exit(0);
+        });
 
     }
 }

@@ -8,6 +8,7 @@ public class GameConstants {
     public static final int PRIVATE_OBJ_SCORE_VALUE = 1;
     public static final int MIN_NUM_PLAYERS = 1;
     public static final int MAX_NUM_PLAYERS = 4;
+    public static final int NUM_OF_ROUNDS = 10;
 
     //MultiplayerGame
     public static final int NUM_PRIVATE_OBJ_FOR_PLAYER_IN_MULTIPLAYER_GAME = 1;

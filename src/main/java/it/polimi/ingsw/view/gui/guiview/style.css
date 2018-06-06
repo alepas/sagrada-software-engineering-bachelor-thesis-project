@@ -58,12 +58,14 @@
 
 .Label{
     -fx-font-size: 14px;
+    -fx-alignment: center;
     -fx-text-alignment: center;
     -fx-text-fill:  #4a626d;
     -fx-word-wrap: normal;
 }
 
 .TitleLabel{
+    -fx-text-alignment: center;
     -fx-alignment: center;
     -fx-font-size: 24;
     -fx-text-fill:  #4a626d;
@@ -134,70 +136,60 @@
 #poc1{
     -fx-background-image: url("/view/cards/public/pub1.jpg");
     -fx-background-size: cover;
-    -fx-cursor: HAND;
 }
 
 
 #poc2{
     -fx-background-image: url("/view/cards/public/pub2.jpg");
     -fx-background-size: cover;
-    -fx-cursor: HAND;
 }
 
 
 #poc3{
     -fx-background-image: url("/view/cards/public/pub3.jpg");
     -fx-background-size: cover;
-    -fx-cursor: HAND;
 }
 
 
 #poc4{
     -fx-background-image: url("/view/cards/public/pub4.jpg");
     -fx-background-size: cover;
-    -fx-cursor: HAND;
 }
 
 
 #poc5{
     -fx-background-image: url("/view/cards/public/pub5.jpg");
     -fx-background-size: cover;
-    -fx-cursor: HAND;
 }
 
 
 #poc6{
     -fx-background-image: url("/view/cards/public/pub6.jpg");
     -fx-background-size: cover;
-    -fx-cursor: HAND;
 }
 
 
 #poc7{
     -fx-background-image: url("/view/cards/public/pub7.jpg");
     -fx-background-size: cover;
-    -fx-cursor: HAND;
 }
 
 
 #poc8{
     -fx-background-image: url("/view/cards/public/pub8.jpg");
     -fx-background-size: cover;
-    -fx-cursor: HAND;
 }
 
 
 #poc9{
     -fx-background-image: url("/view/cards/public/pub9.jpg");
     -fx-background-size: cover;
-        -fx-cursor: HAND;
 }
 
 
 #poc10{
     -fx-background-image: url("/view/cards/public/pub10.jpg");
     -fx-background-size: cover;
-    -fx-cursor: HAND;
 }
 
 

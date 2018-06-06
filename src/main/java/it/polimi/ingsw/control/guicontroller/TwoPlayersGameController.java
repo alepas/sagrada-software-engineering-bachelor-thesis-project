@@ -4,6 +4,8 @@ import it.polimi.ingsw.control.network.NetworkClient;
 import it.polimi.ingsw.control.network.commands.notifications.*;
 import it.polimi.ingsw.model.clientModel.*;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
+
+import it.polimi.ingsw.view.Status;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
@@ -23,10 +25,28 @@ import javafx.scene.layout.GridPane;
 
 import java.util.*;
 
+import static it.polimi.ingsw.view.Status.*;
 import static java.lang.Thread.sleep;
 
 public class TwoPlayersGameController implements Observer, NotificationHandler {
 
+    @FXML private Label messageLabel;
+    @FXML private Button exitButton;
+    @FXML private Button newGameButton;
+    @FXML
+    private Label winnerLabel;
+    @FXML
+    private Label firstLabel;
+    @FXML
+    private Label secondLabel;
+    @FXML
+    private Label firstScoreLabel;
+    @FXML
+    private Label secondScoreLabel;
+    @FXML
+    private AnchorPane boardGame;
+    @FXML
+    private AnchorPane scoreBoard;
     private NetworkClient networkClient;
     private ClientModel clientModel;
     private String username;
@@ -36,6 +56,8 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
     private ArrayList<ImageView> dices = new ArrayList<>();
     private ArrayList<AnchorPane> schema = new ArrayList<>();
     private HashMap<String, ClientWpc> wpc;
+    private Status state;
+    private final Object waiter = new Object();
 
     @FXML
     private AnchorPane privateObjPane;
@@ -132,10 +154,9 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
         setPoc();
         setPrivateObjective(clientModel.getPrivateObjectives());
         setDices(clientModel.getExtractedDices());
-        //diceAnimation();
         setWpc();
-        waitForTurn();
         dragAndDrop();
+        stateAction(ANOTHER_PLAYER_TURN);
 
         toolCardButton.setOnAction(event -> {
             pocGrid.setVisible(false);
@@ -204,6 +225,57 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
             }
         });
 
+
+        endTurnButton.setOnAction(event -> {
+            try {
+                networkClient.passTurn(clientModel.getUserToken());
+                waitForTurn();
+            } catch (CannotFindPlayerInDatabaseException | PlayerNotAuthorizedException | CannotPerformThisMoveException e) {
+                e.printStackTrace();
+            }
+            state = ANOTHER_PLAYER_TURN;
+        });
+
+        exitButton.setOnAction(event->{});
+
+        newGameButton.setOnAction(event -> {});
+    }
+
+    private void stateAction(Status state){
+        switch (state) {
+            case QUIT_SAGRADA:
+                //TODO
+                break;
+            case ANOTHER_PLAYER_TURN:
+                waitForTurn();
+                break;
+            case MENU_ALL:
+                playTurn();
+                break;
+            case MENU_ONLY_PLACEDICE:
+                possibleActionPlaceDice();
+                break;
+            case MENU_ONLY_TOOLCARD:
+                possibleActionUseToolCard();
+                break;
+            case MENU_ONLY_ENDTURN:
+                passTurn();
+                break;
+            case INTERRUPT_TOOLCARD:
+                //TODO
+                break;
+            case SELECT_DICE_TOOLCARD:
+                break;
+            case SELECT_NUMBER_TOOLCARD:
+                //TODO
+                break;
+            case SELECT_DICE_TO_ACTIVE_TOOLCARD:
+                //TODO
+                break;
+            case PLACE_DICE_TOOLCARD:
+                placeDiceWithToolCard();
+                break;
+        }
     }
 
     /**
@@ -249,7 +321,8 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                     int column = Integer.parseInt(cell.getId().substring(1, 2));
                     Position position = new Position(row, column);
                     try {
-                        networkClient.placeDice(clientModel.getUserToken(), id, position);
+                        NextAction nextAction = networkClient.placeDice(clientModel.getUserToken(), id, position);
+                        stateAction(state.change(nextAction));
                     } catch (CannotFindPlayerInDatabaseException | CannotPickPositionException |
                             CannotPickDiceException | PlayerNotAuthorizedException | CannotPerformThisMoveException e) {
                         e.printStackTrace();
@@ -274,15 +347,6 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                 event.consume();
             });
         }
-
-        endTurnButton.setOnAction(event -> {
-            try {
-                networkClient.passTurn(clientModel.getUserToken());
-                waitForTurn();
-            } catch (CannotFindPlayerInDatabaseException | PlayerNotAuthorizedException | CannotPerformThisMoveException e) {
-                e.printStackTrace();
-            }
-        });
     }
 
     /**
@@ -298,7 +362,9 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
      */
     private void useToolCard(String id) throws CannotUseToolCardException {
         try {
-            networkClient.useToolCard(clientModel.getUserToken(), id);
+            System.out.println(clientModel.getUserToken());
+            NextAction nextAction = networkClient.useToolCard(clientModel.getUserToken(), id);
+            System.out.println(nextAction);
         } catch (CannotFindPlayerInDatabaseException | CannotPerformThisMoveException | PlayerNotAuthorizedException e) {
             e.printStackTrace();
         }
@@ -334,47 +400,44 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
             while (!clientModel.isActive()) {
                 Platform.runLater(() -> {
                     roundLabel.setText("Round numero " + round + ", in attesa del proprio turno..");
+                    messageLabel.setText("Attendi il tuo turno.");
                     extractedDicesGrid.setDisable(true);
+                    useTool1.setDisable(true);
+                    useTool2.setDisable(true);
+                    useTool3.setDisable(true);
                     endTurnButton.setDisable(true);
                 });
-                try {
-                    sleep(500);
-                } catch (InterruptedException e) {
-                    //TODO
+                synchronized (waiter) {
+                    try {
+                        waiter.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-            setTurn();
+            stateAction(MENU_ALL);
         });
         waitTurn.start();
     }
 
+    /**
+     *Changes the label information and sets Able both the endTurnButton and the extractedDicesGrid.
+     */
+    private void playTurn() {
+        round = String.valueOf(clientModel.getCurrentRound());
+        String turn = String.valueOf(clientModel.getCurrentTurn());
+        Platform.runLater(() -> {
+            if(turn.equals("3")) messageLabel.setText("Tocca ancora a te!");
+            else messageLabel.setText("Tocca a te!");
 
-    /*private void diceAnimation(){
-        for (ClientDice dice : extractedDices) {
-            String color = (String.valueOf(dice.getDiceColor())).toLowerCase();
-            String number = String.valueOf(dice.getDiceNumber());
-            String id = String.valueOf(dice.getDiceID());
-            String style = color.concat(number);
-
-            ImageView image = new ImageView();
-            image.getStyleClass().add(style);
-            image.setFitHeight(100);
-            image.setFitWidth(100);
-            dices.add(image);
-            image.setId(id);
-            gameBoard.getChildren().add(image);
-            Path path = new Path();
-            path.getElements().add(new MoveTo(0, 0));
-            path.getElements().add(new LineTo(extractedDicesGrid.getLayoutX(), extractedDicesGrid.getLayoutY()));
-
-            PathTransition pathTransition = new PathTransition();
-            pathTransition.setDuration(Duration.millis(10000));
-            pathTransition.setNode(image);
-            pathTransition.setPath(path);
-            pathTransition.setOrientation(PathTransition.OrientationType.NONE);
-            pathTransition.play();
-        }
-    }*/
+            roundLabel.setText("Round numero " + round + ", turno di " + username);
+            endTurnButton.setDisable(false);
+            extractedDicesGrid.setDisable(false);
+            useTool1.setDisable(false);
+            useTool2.setDisable(false);
+            useTool3.setDisable(false);
+        });
+    }
 
 
     /**
@@ -533,20 +596,6 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
 
 
     /**
-     *Changes the label information and sets Able both the endTurnButton and the extractedDicesGrid.
-     */
-    private void setTurn() {
-        round = String.valueOf(clientModel.getCurrentRound());
-        String turn = String.valueOf(clientModel.getCurrentTurn());
-        Platform.runLater(() -> {
-            roundLabel.setText("Round numero " + round +" turno numero "+ turn + ", turno di " + username);
-            endTurnButton.setDisable(false);
-            extractedDicesGrid.setDisable(false);
-        });
-    }
-
-
-    /**
      * Sets the style of a cell:
      * if number =0 there aren't number restrictions, the method fills the pane in white
      * if number !=0 the method sets the style of the cell with the ImageView representing the restriction
@@ -604,21 +653,64 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
             dices.clear();
             setDices(extractedDices);
             dragAndDrop();
-            waitForTurn();
+            stateAction(ANOTHER_PLAYER_TURN);
         });
     }
 
+    /**
+     * It's called when the player has placed a dice; the only things he/she can do are pass the turn or use a tool card.
+     */
+    private void possibleActionUseToolCard(){
+        extractedDicesGrid.setDisable(true);
+        messageLabel.setText("Usa una ToolCard o termina il turno!");
+    }
+
+
+    /**
+     * It's called when the player as already used a toolcard, the only things he/she can do are to placea dice or to
+     * end the turn.
+     */
+    private void possibleActionPlaceDice(){
+        toolCardGrid.setDisable(true);
+        messageLabel.setText("Posiziona un dado o passa il turno!");
+    }
+
+    /**
+     * The player can only end the turn bacause has already placed a dice and used a card.
+     */
+    private void passTurn(){
+        toolCardGrid.setDisable(true);
+        extractedDicesGrid.setDisable(true);
+        messageLabel.setText("Termina il turno, non puoi fare altre mosse.");
+    }
+
+    /**
+     * Sets the game invisible and shows to the users who won and who lost the game.
+     *
+     * @param score Arraylist composte by HashMAp containing the score and the username of each player, it is already sorted
+     */
     private void setScore(ArrayList<Map.Entry<String, Integer>> score){
         Platform.runLater(()->{
-            if (score.get(0).getKey().equals(clientModel.getUsername()))
-                System.out.println("U won!");
-            else
-                System.out.println("u loose");
-
+            boardGame.setVisible(false);
+            if (score.get(0).getKey().equals(clientModel.getUsername())) {
+                firstLabel.setText("1. " + username);
+                firstScoreLabel.setText(String.valueOf(score.get(0).getValue()));
+                winnerLabel.setText("HAI VINTO!");
+                secondLabel.setText("2. " + score.get(1).getKey());
+                secondScoreLabel.setText(String.valueOf(score.get(1).getValue()));
+            }
+            else {
+                firstLabel.setText("1. " + score.get(0).getKey());
+                firstScoreLabel.setText(String.valueOf(score.get(0).getValue()));
+                winnerLabel.setText("HAI PERSO!");
+                secondLabel.setText("2. " + username);
+                secondScoreLabel.setText(String.valueOf(score.get(1).getValue()));
+            }
+            scoreBoard.setVisible(true);
         });
-
-
     }
+
+    private void placeDiceWithToolCard(){}
 
     //-------------------------------------- Observer ------------------------------------------
 
@@ -660,6 +752,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
     public void handle(NextTurnNotification notification){
         System.out.println("Turno: " + notification.turnNumber + "\tRound: " + clientModel.getCurrentRound());
         System.out.println("utente Attivo " + notification.activeUser);
+        synchronized (waiter) {waiter.notify();}
     }
 
     @Override
@@ -693,13 +786,9 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
     @Override
     public void handle(ScoreNotification notification) {
         ArrayList<Map.Entry<String, Integer>> scores = new ArrayList<>(notification.scoreList.entrySet());
-        Collections.sort(scores, new Comparator<Map.Entry<?, Integer>>() {
-            @Override
-            public int compare(Map.Entry<?, Integer> o1, Map.Entry<?, Integer> o2) {
-                return o1.getValue().compareTo(o2.getValue());
-            }
+        scores.sort((Comparator<Map.Entry<?, Integer>>) (o1, o2) -> {
+            return o2.getValue().compareTo(o1.getValue()); //ascendente e non descrescente
         });
         setScore(scores);
     }
-
 }

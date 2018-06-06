@@ -1,8 +1,8 @@
-package it.polimi.ingsw.view.cli;
+package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.model.clientModel.NextAction;
 
-public enum CliStatus {
+public enum Status {
     //BEFORE-GAME
     LOG_PHASE,
     LOGIN,
@@ -29,7 +29,7 @@ public enum CliStatus {
     SELECT_DICE_TO_ACTIVE_TOOLCARD,
     ANOTHER_PLAYER_TURN;
 
-    public CliStatus change(NextAction nextAction){
+    public Status change(NextAction nextAction){
         switch (nextAction){
             case PLACE_DICE:
                 return PLACE_DICE;
@@ -57,7 +57,7 @@ public enum CliStatus {
         return null;
     }
 
-    public CliStatus getPrevious(){
+    public Status getPrevious(){
         //TODO: implementare back di LogPhase, MAIN_MENU_PHASE, altri mancanti
         switch (this){
             case LOG_PHASE: case LOGOUT:

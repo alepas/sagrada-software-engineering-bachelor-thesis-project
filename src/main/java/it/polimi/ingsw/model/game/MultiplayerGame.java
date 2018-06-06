@@ -8,17 +8,18 @@ import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.exceptions.gameExceptions.*;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotAddPlayerInDatabaseException;
+import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotUpdateStatsForUserException;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 import it.polimi.ingsw.model.wpc.Wpc;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.*;
+
+import static it.polimi.ingsw.model.constants.GameConstants.NUM_OF_ROUNDS;
 
 public class MultiplayerGame extends Game {
     private int turnPlayer;
     private int roundPlayer;
+    HashMap<String, Integer> scoreList = new HashMap<>();
 
     public MultiplayerGame(int numPlayers) throws InvalidMultiplayerGamePlayersException {
         super(numPlayers);
@@ -121,29 +122,29 @@ public class MultiplayerGame extends Game {
 
 
     @Override
-    public void endGame() {
-
-    }
+    public void endGame() {}
 
     @Override
     public void nextRound() {
         for (Dice dice : extractedDices) roundTrack.addDice(dice);
 
         roundTrack.nextRound();
-        extractedDices = diceBag.extractDices(numPlayers);
-        ArrayList<ClientDice> extractedClientDices = new ArrayList<>();
+        if(roundTrack.getCurrentRound()<= NUM_OF_ROUNDS) {
+            extractedDices = diceBag.extractDices(numPlayers);
+            ArrayList<ClientDice> extractedClientDices = new ArrayList<>();
 
-        for (Dice dice : extractedDices) extractedClientDices.add(dice.getClientDice());
+            for (Dice dice : extractedDices) extractedClientDices.add(dice.getClientDice());
 
-        changeAndNotifyObservers(new NewRoundNotification(roundTrack.getCurrentRound(), extractedClientDices));
+            changeAndNotifyObservers(new NewRoundNotification(roundTrack.getCurrentRound(), extractedClientDices));
 
-        currentTurn = 0;
+            currentTurn = 0;
 
-        if (roundPlayer < players.length-1) roundPlayer++;
-        else roundPlayer = 0;
-        turnPlayer = roundPlayer;
+            if (roundPlayer < players.length - 1) roundPlayer++;
+            else roundPlayer = 0;
+            turnPlayer = roundPlayer;
 
-        if(roundTrack.getCurrentRound() < 10) nextTurn();
+            nextTurn();
+        }
         else calculateScore();
     }
 
@@ -160,7 +161,7 @@ public class MultiplayerGame extends Game {
         }
     }
 
-    protected int nextPlayer(){
+    int nextPlayer(){
         if (currentTurn % numPlayers == 0) {
             return turnPlayer;
         } else if ((currentTurn / numPlayers) % 2 == 0){
@@ -186,13 +187,16 @@ public class MultiplayerGame extends Game {
     //Da testare
     @Override
     public void calculateScore() {
-        HashMap<String, Integer> scoreList = new HashMap<>();
         for(PlayerInGame player: players){
             Wpc wpc = player.getWPC();
+            System.out.println("favor: "+ wpc.getFavours());
+            System.out.println("freeCell" + wpc.getNumFreeCells());
             int score = privateObjScore(player)  - wpc.getNumFreeCells() + wpc.getFavours();
 
-            for(PublicObjectiveCard poc: publicObjectiveCards)
+            for(PublicObjectiveCard poc: publicObjectiveCards) {
+                System.out.println(poc.getID() + " score: " + poc.calculateScore(wpc));
                 score = score + poc.calculateScore(wpc);
+            }
             scoreList.put(player.getUser(), score);
             saveScore();
         }
@@ -211,14 +215,21 @@ public class MultiplayerGame extends Game {
                 if (dice.getDiceColor() == color) score += dice.getDiceNumber();
             }
         }
-
+        System.out.println("private score: "+ score);
         return score;
     }
 
     //Da testare
     @Override
     public void saveScore() {
-
+        for(PlayerInGame player: players){
+            try {
+                player.addPointsToRanking(scoreList.get(player.getUser()));
+            } catch (CannotUpdateStatsForUserException e) {
+                e.printStackTrace();
+            }
+        }
+        endGame();
     }
 
 

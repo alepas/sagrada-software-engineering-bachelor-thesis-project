@@ -24,6 +24,6 @@ public class PublicObjectiveCard8  extends PublicObjectiveCard {
             max = Math.min(max, wpc.numDicesOfShade(i));
         }
 
-        return max*POCConstants.POC10_SCORE;
+        return max*POCConstants.POC8_SCORE;
     }
 }

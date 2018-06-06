@@ -30,15 +30,16 @@ import javafx.util.Duration;
 import java.io.IOException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
 
 import static java.lang.String.valueOf;
-import static java.lang.Thread.sleep;
 
 public class SetNewGameController implements Observer, NotificationHandler {
 
+    private final Object playerWaiter = new Object();
+    private final Object cardWaiter = new Object();
+    private final Object wpcWaiter = new Object();
 
     private boolean gameStarted = false;
     private boolean areWpcExtracted = false;
@@ -74,40 +75,40 @@ public class SetNewGameController implements Observer, NotificationHandler {
     private Button personalAreaButton;
 
     @FXML
-    private Circle fourthWpcCirlce4;
+    private Circle fourthWpcCircle4;
 
     @FXML
-    private Circle fourthWpcCirlce5;
+    private Circle fourthWpcCircle5;
 
     @FXML
-    private Circle fourthWpcCirlce6;
+    private Circle fourthWpcCircle6;
 
     @FXML
-    private Circle thirdWpcCirlce4;
+    private Circle thirdWpcCircle4;
 
     @FXML
-    private Circle thirdWpcCirlce5;
+    private Circle thirdWpcCircle5;
 
     @FXML
-    private Circle thirdWpcCirlce6;
+    private Circle thirdWpcCircle6;
 
     @FXML
-    private Circle secondWpcCirlce4;
+    private Circle secondWpcCircle4;
 
     @FXML
-    private Circle secondWpcCirlce5;
+    private Circle secondWpcCircle5;
 
     @FXML
-    private Circle secondWpcCirlce6;
+    private Circle secondWpcCircle6;
 
     @FXML
-    private Circle firstWpcCirlce4;
+    private Circle firstWpcCircle4;
 
     @FXML
-    private Circle firstWpcCirlce5;
+    private Circle firstWpcCircle5;
 
     @FXML
-    private Circle firstWpcCirlce6;
+    private Circle firstWpcCircle6;
 
     @FXML
     private Label errorLabel;
@@ -247,7 +248,6 @@ public class SetNewGameController implements Observer, NotificationHandler {
                 errorLabel.setVisible(true);
                 createGameButton.setDisable(false);
                 personalAreaButton.setDisable(false);
-                //todo
             }
 
             String gameID = clientModel.getGameID();
@@ -275,7 +275,6 @@ public class SetNewGameController implements Observer, NotificationHandler {
         waitForPoc();
     }
 
-
     private void waitPlayers() {
         TranslateTransition transition = new TranslateTransition();
         ImageView image = new ImageView();
@@ -286,8 +285,14 @@ public class SetNewGameController implements Observer, NotificationHandler {
                 numOfPlayersLabel.setVisible(true);
             }
             while (!gameStarted) {
-                if (newPlayer != null) {
-                    Platform.runLater(() -> {
+                synchronized (playerWaiter){
+                    try {
+                        while (newPlayer== null)  playerWaiter.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                Platform.runLater(() -> {
                         if(playerIn) {
                             lab2.setText(newPlayer + " é entrato in partita!");
                             lab2.setLayoutX(100);
@@ -304,12 +309,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
                         }
                         newPlayer = null;
                     });
-                }
-                try {
-                    sleep(500);
-                } catch (InterruptedException e) {
-                    //TODO
-                }
+
             }
             Platform.runLater(()->{
                 transition.stop();
@@ -341,54 +341,57 @@ public class SetNewGameController implements Observer, NotificationHandler {
     private void waitWPC() {
         Thread waitingWPC = new Thread(() -> {
             while (!areWpcExtracted) {
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    //TODO
+                synchronized (wpcWaiter) {
+                    try {
+                        wpcWaiter.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
             Platform.runLater(() -> {
-                selectionArea.setVisible(false);
-                for (int i = 0; i < userWpcs.size(); i++) {
-                    ClientWpc wpc = userWpcs.get(i);
-                    switch (i) {
-                        case 0:
-                            wpc0Name.setText(wpc.getWpcID());
-                            setWpc(firstWPC, wpc);
-                            setFirstWpcFavours(wpc.getFavours());
-                            break;
+                    selectionArea.setVisible(false);
+                    for (int i = 0; i < userWpcs.size(); i++) {
+                        ClientWpc wpc = userWpcs.get(i);
+                        switch (i) {
+                            case 0:
+                                wpc0Name.setText(wpc.getWpcID());
+                                setWpc(firstWPC, wpc);
+                                setFirstWpcFavours(wpc.getFavours());
+                                break;
 
-                        case 1:
-                            wpc1Name.setText(wpc.getWpcID());
-                            setWpc(secondWPC, wpc);
-                            setSecondWpcFavours(wpc.getFavours());
-                            break;
+                            case 1:
+                                wpc1Name.setText(wpc.getWpcID());
+                                setWpc(secondWPC, wpc);
+                                setSecondWpcFavours(wpc.getFavours());
+                                break;
 
-                        case 2:
-                            wpc2Name.setText(wpc.getWpcID());
-                            setWpc(thirdWPC, wpc);
-                            setThirdWpcFavours(wpc.getFavours());
-                            break;
+                            case 2:
+                                wpc2Name.setText(wpc.getWpcID());
+                                setWpc(thirdWPC, wpc);
+                                setThirdWpcFavours(wpc.getFavours());
+                                break;
 
-                        case 3:
-                            wpc3Name.setText(wpc.getWpcID());
-                            setWpc(fourthWPC, wpc);
-                            setFourthWpcFavours(wpc.getFavours());
-                            break;
+                            case 3:
+                                wpc3Name.setText(wpc.getWpcID());
+                                setWpc(fourthWPC, wpc);
+                                setFourthWpcFavours(wpc.getFavours());
+                                break;
                             default:
-                            break;
+                                break;
+                        }
                     }
-                }
-                selectionWpcsLabel.setVisible(true);
-                firstWPC.setVisible(true);
-                secondWPC.setVisible(true);
-                thirdWPC.setVisible(true);
-                fourthWPC.setVisible(true);
-                for(ClientColor color: colors){
-                    String style = "prOC".concat(String.valueOf(color).toLowerCase());
-                    privateObjArea.setId(style);
-                }
-            });
+                    selectionWpcsLabel.setVisible(true);
+                    firstWPC.setVisible(true);
+                    secondWPC.setVisible(true);
+                    thirdWPC.setVisible(true);
+                    fourthWPC.setVisible(true);
+                    for (ClientColor color : colors) {
+                        String style = "prOC".concat(String.valueOf(color).toLowerCase());
+                        privateObjArea.setId(style);
+                    }
+                });
+
         });
         waitingWPC.start();
     }
@@ -425,16 +428,16 @@ public class SetNewGameController implements Observer, NotificationHandler {
     private void setFourthWpcFavours(int favours) {
         switch (favours) {
             case 3:
-                fourthWpcCirlce6.setVisible(false);
-                fourthWpcCirlce5.setVisible(false);
-                fourthWpcCirlce4.setVisible(false);
+                fourthWpcCircle6.setVisible(false);
+                fourthWpcCircle5.setVisible(false);
+                fourthWpcCircle4.setVisible(false);
                 break;
             case 4:
-                fourthWpcCirlce6.setVisible(false);
-                fourthWpcCirlce5.setVisible(false);
+                fourthWpcCircle6.setVisible(false);
+                fourthWpcCircle5.setVisible(false);
                 break;
             case 5:
-                fourthWpcCirlce6.setVisible(false);
+                fourthWpcCircle6.setVisible(false);
                 break;
             default:
                 break;
@@ -445,16 +448,16 @@ public class SetNewGameController implements Observer, NotificationHandler {
     private void setThirdWpcFavours(int favours) {
         switch (favours) {
             case 3:
-                thirdWpcCirlce6.setVisible(false);
-                thirdWpcCirlce5.setVisible(false);
-                thirdWpcCirlce4.setVisible(false);
+                thirdWpcCircle6.setVisible(false);
+                thirdWpcCircle5.setVisible(false);
+                thirdWpcCircle4.setVisible(false);
                 break;
             case 4:
-                thirdWpcCirlce6.setVisible(false);
-                thirdWpcCirlce5.setVisible(false);
+                thirdWpcCircle6.setVisible(false);
+                thirdWpcCircle5.setVisible(false);
                 break;
             case 5:
-                thirdWpcCirlce6.setVisible(false);
+                thirdWpcCircle6.setVisible(false);
                 break;
             default:
                 break;
@@ -465,16 +468,16 @@ public class SetNewGameController implements Observer, NotificationHandler {
     private void setSecondWpcFavours(int favours) {
         switch (favours) {
             case 3:
-                secondWpcCirlce6.setVisible(false);
-                secondWpcCirlce5.setVisible(false);
-                secondWpcCirlce4.setVisible(false);
+                secondWpcCircle6.setVisible(false);
+                secondWpcCircle5.setVisible(false);
+                secondWpcCircle4.setVisible(false);
                 break;
             case 4:
-                secondWpcCirlce6.setVisible(false);
-                secondWpcCirlce5.setVisible(false);
+                secondWpcCircle6.setVisible(false);
+                secondWpcCircle5.setVisible(false);
                 break;
             case 5:
-                secondWpcCirlce6.setVisible(false);
+                secondWpcCircle6.setVisible(false);
                 break;
             default:
                 break;
@@ -485,16 +488,16 @@ public class SetNewGameController implements Observer, NotificationHandler {
     private void setFirstWpcFavours(int favours) {
         switch (favours) {
             case 3:
-                firstWpcCirlce6.setVisible(false);
-                firstWpcCirlce5.setVisible(false);
-                firstWpcCirlce4.setVisible(false);
+                firstWpcCircle6.setVisible(false);
+                firstWpcCircle5.setVisible(false);
+                firstWpcCircle4.setVisible(false);
                 break;
             case 4:
-                firstWpcCirlce6.setVisible(false);
-                firstWpcCirlce5.setVisible(false);
+                firstWpcCircle6.setVisible(false);
+                firstWpcCircle5.setVisible(false);
                 break;
             case 5:
-                firstWpcCirlce6.setVisible(false);
+                firstWpcCircle6.setVisible(false);
                 break;
             default:
                 break;
@@ -649,6 +652,9 @@ public class SetNewGameController implements Observer, NotificationHandler {
             playerOut = true;
             newPlayer = notification.username;
         }
+        synchronized (playerWaiter){
+            playerWaiter.notify();
+        }
     }
 
     @Override
@@ -660,7 +666,6 @@ public class SetNewGameController implements Observer, NotificationHandler {
     @Override
     public void handle(PrivateObjExtractedNotification notification) {
         colors = notification.colorsByUser.get(clientModel.getUsername());
-        clientModel.setPrivateObjectives(colors);  //TODO: non lo posso fare ma per ora mi serve
         privateObjExtractd = true;
     }
 

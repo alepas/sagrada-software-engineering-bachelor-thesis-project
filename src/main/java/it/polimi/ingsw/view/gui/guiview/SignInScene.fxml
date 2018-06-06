@@ -29,5 +29,6 @@
 
 
         <Label fx:id="signInErrorLabel" layoutX="107.0" layoutY="461.0" styleClass="Label" text="Errore: password o username errati. Riprova." visible="false" />
+
     </AnchorPane>
 </AnchorPane>
