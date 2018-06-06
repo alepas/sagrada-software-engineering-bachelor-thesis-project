@@ -130,7 +130,7 @@ public class CliView implements Observer, NotificationHandler {
                     //TODO
                     break;
                 case SELECT_DICE_TOOLCARD:
-                    //TODO
+                    selectDiceToolcard();
                     break;
                 case SELECT_NUMBER_TOOLCARD:
                     //TODO
@@ -429,6 +429,14 @@ public class CliView implements Observer, NotificationHandler {
                 displayText("Passata azione non standard");
                 return false;
         }
+    }
+
+    private void selectDiceToolcard() {
+        ToolCardClientNextActionInfo info = controller.getToolcardNextActionInfo();
+        ArrayList<ClientDice> dices = controller.getDicesByLocation(info.wherePickNewDice);
+        if (dices == null && info.wherePickNewDice == ClientDiceLocations.WPC)
+        displayText("Seleziona il dado da utilizzare");
+
     }
 
     //-------------------------------------- Observer ------------------------------------------

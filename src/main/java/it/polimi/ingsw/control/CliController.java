@@ -213,4 +213,22 @@ public class CliController {
     public ToolCardClientNextActionInfo getToolcardNextActionInfo(){
         return clientModel.getToolCardClientNextActionInfo();
     }
+
+    public ArrayList<ClientDice> getDicesByLocation(ClientDiceLocations location){
+        switch (location){
+            case ROUNDTRACK:
+                ArrayList<ClientDice> dices = new ArrayList<>();
+                ClientDice[][] array = clientModel.getRoundTrack().getAllDices();
+                for(int i = 0; i < array.length; i++){
+                    for(int j = 0; j < array[i].length; j++){
+                        if (array[i][j] != null) dices.add(array[i][j]);
+                    }
+                }
+                return dices;
+            case EXTRACTED:
+                return clientModel.getExtractedDices();
+            default:
+                return null;
+        }
+    }
 }
