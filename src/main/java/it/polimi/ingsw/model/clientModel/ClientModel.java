@@ -178,6 +178,10 @@ public class ClientModel implements Observer, NotificationHandler {
         return wpcByUsername.get(username);
     }
 
+    public void setMyWpc(ClientWpc wpc){
+        wpcByUsername.put(username, wpc);
+    }
+
     public HashMap<String, ClientWpc> getWpcByUsername() {
         return wpcByUsername;
     }
@@ -229,6 +233,14 @@ public class ClientModel implements Observer, NotificationHandler {
 
     public boolean arePocsArrived(){
         return gamePublicObjectiveCards != null;
+    }
+
+    public ToolCardClientNextActionInfo getToolCardClientNextActionInfo() {
+        return toolCardClientNextActionInfo;
+    }
+
+    public void setToolCardClientNextActionInfo(ToolCardClientNextActionInfo toolCardClientNextActionInfo) {
+        this.toolCardClientNextActionInfo = toolCardClientNextActionInfo;
     }
 
 

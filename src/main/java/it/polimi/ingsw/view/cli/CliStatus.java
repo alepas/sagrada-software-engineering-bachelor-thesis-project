@@ -27,8 +27,7 @@ public enum CliStatus {
     MENU_ONLY_TOOLCARD,
     MENU_ONLY_ENDTURN,
     SELECT_DICE_TO_ACTIVE_TOOLCARD,
-    ANOTHER_PLAYER_TURN,
-    WAIT;
+    ANOTHER_PLAYER_TURN;
 
     public static CliStatus getCliState(NextAction nextActions){
         switch (nextActions){

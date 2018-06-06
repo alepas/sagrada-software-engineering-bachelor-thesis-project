@@ -126,6 +126,18 @@ public class CliView implements Observer, NotificationHandler {
                 case MENU_ONLY_ENDTURN:
                     showMenuOnlyEndturn();
                     break;
+                case INTERRUPT_TOOLCARD:
+                    //TODO
+                    break;
+                case SELECT_DICE_TOOLCARD:
+                    //TODO
+                    break;
+                case SELECT_NUMBER_TOOLCARD:
+                    //TODO
+                    break;
+                case SELECT_DICE_TO_ACTIVE_TOOLCARD:
+                    //TODO
+                    break;
             }
         }
     }

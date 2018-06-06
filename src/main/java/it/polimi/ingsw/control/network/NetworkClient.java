@@ -3,10 +3,7 @@ package it.polimi.ingsw.control.network;
 import it.polimi.ingsw.control.network.commands.responses.*;
 import it.polimi.ingsw.control.network.rmi.RmiClient;
 import it.polimi.ingsw.control.network.socket.SocketClient;
-import it.polimi.ingsw.model.clientModel.ClientDiceLocations;
-import it.polimi.ingsw.model.clientModel.ClientModel;
-import it.polimi.ingsw.model.clientModel.NextAction;
-import it.polimi.ingsw.model.clientModel.Position;
+import it.polimi.ingsw.model.clientModel.*;
 import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
@@ -127,7 +124,16 @@ public abstract class NetworkClient implements ResponseHandler {
 
     @Override
     public void handle(ToolCardResponse response){
+        //TODO: è giusto il controllo diverso da null?
+        if (response.exception != null){
+            ToolCardClientNextActionInfo info = new ToolCardClientNextActionInfo(response.wherePickNewDice,
+                response.wherePutNewDice, response.numbersToChoose, response.diceChosenId);
 
+            clientModel.setToolCardClientNextActionInfo(info);
+            if (response.wpc != null) clientModel.setMyWpc(response.wpc);
+            if (response.extractedDices != null) clientModel.setExtractedDices(response.extractedDices);
+            if (response.roundTrack != null) clientModel.setRoundTrack(response.roundTrack);
+        }
     }
 
 

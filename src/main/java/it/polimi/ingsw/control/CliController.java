@@ -209,4 +209,8 @@ public class CliController {
     }
 
     public ClientColor[] getPrivateObjectives(){ return clientModel.getPrivateObjectives(); }
+
+    public ToolCardClientNextActionInfo getToolcardNextActionInfo(){
+        return clientModel.getToolCardClientNextActionInfo();
+    }
 }
