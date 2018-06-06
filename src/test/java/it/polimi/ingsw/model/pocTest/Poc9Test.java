@@ -138,7 +138,7 @@ public class Poc9Test {
         wpcDices.add(dice17);
 
         Dice dice18 = mock(Dice.class);
-        when(dice18.getDiceColor()).thenReturn(Color.GREEN);
+        when(dice18.getDiceColor()).thenReturn(Color.RED);
         when(dice18.getDiceNumber()).thenReturn(4);
         wpcDices.add(dice18);
 
@@ -190,15 +190,15 @@ public class Poc9Test {
         row0Dices.add(dice2);
         row0Dices.add(dice3);
         row0Dices.add(dice4);
-        when(wpc.getRowDices(0)).thenReturn(row0Dices);
+        when(wpc.getRows(0)).thenReturn(row0Dices);
 
         row1Dices.clear();
         row1Dices.add(dice5);
-        row1Dices.add(dice6);
+        row1Dices.add(null);
         row1Dices.add(dice7);
-        row1Dices.add(dice8);
+        row1Dices.add(null);
         row1Dices.add(dice9);
-        when(wpc.getRowDices(1)).thenReturn(row1Dices);
+        when(wpc.getRows(1)).thenReturn(row1Dices);
 
         row2Dices.clear();
         row2Dices.add(dice10);
@@ -206,7 +206,7 @@ public class Poc9Test {
         row2Dices.add(dice12);
         row2Dices.add(dice13);
         row2Dices.add(dice14);
-        when(wpc.getRowDices(2)).thenReturn(row2Dices);
+        when(wpc.getRows(2)).thenReturn(row2Dices);
 
         row3Dices.clear();
         row3Dices.add(dice15);
@@ -214,7 +214,7 @@ public class Poc9Test {
         row3Dices.add(dice17);
         row3Dices.add(dice18);
         row3Dices.add(dice19);
-        when(wpc.getRowDices(3)).thenReturn(row3Dices);
+        when(wpc.getRows(3)).thenReturn(row3Dices);
 
 
         when(wpc.numDicesOfColor(Color.BLUE)).thenReturn(3);
@@ -233,6 +233,6 @@ public class Poc9Test {
 
     @Test
     public void poc9Test(){
-        Assert.assertEquals(9*POCConstants.POC9_SCORE, card.calculateScore(wpc));
+        Assert.assertEquals(7*POCConstants.POC9_SCORE, card.calculateScore(wpc));
     }
 }

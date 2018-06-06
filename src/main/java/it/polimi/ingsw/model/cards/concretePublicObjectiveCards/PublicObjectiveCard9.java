@@ -22,12 +22,12 @@ public class PublicObjectiveCard9  extends PublicObjectiveCard {
     public int calculateScore(Wpc wpc){
         ArrayList<ArrayList<Dice>> rows= new ArrayList<>();
         for (int row = 0; row < WpcConstants.ROWS_NUMBER; row++){
-
-            rows.add(wpc.getRowDices(row));
+            rows.add(wpc.getRows(row));
             if (rows.get(row).size() != WpcConstants.COLS_NUMBER)
                 return -1;
 
         }
+
 
 
         return diagSameColor(rows)*POCConstants.POC9_SCORE;
@@ -38,37 +38,51 @@ public class PublicObjectiveCard9  extends PublicObjectiveCard {
     private int diagSameColor(ArrayList<ArrayList<Dice>> rows ){
         int tempPoints=0;
         boolean found;
+        boolean dicepresent;
+        Dice tempDice;
+        Dice secondTempDice;
         for (int row = 0; row < WpcConstants.ROWS_NUMBER; row++){
             for (int diceCol=0; diceCol<WpcConstants.COLS_NUMBER;diceCol++){
                 found=false;
-                Color diceColor=rows.get(row).get(diceCol).getDiceColor();
-                if(row!=0) {
-                    if (diceCol != 0) {
-                        if (rows.get(row - 1).get(diceCol - 1).getDiceColor() == diceColor) {
-                            tempPoints++;
-                            found = true;
+                tempDice=rows.get(row).get(diceCol);
+                if (tempDice!=null){
+
+                    Color diceColor=tempDice.getDiceColor();
+                    if(row!=0) {
+                        if (diceCol != 0) {
+                            secondTempDice=rows.get(row - 1).get(diceCol - 1);
+                            if (secondTempDice!=null&&secondTempDice.getDiceColor() == diceColor) {
+                                tempPoints++;
+                                found = true;
+                            }
+                        }
+                        if (!found&&(diceCol < (WpcConstants.COLS_NUMBER-1))) {
+                            secondTempDice=rows.get(row - 1).get(diceCol +1);
+                            if (secondTempDice!=null&&secondTempDice.getDiceColor() == diceColor)  {
+                                tempPoints++;
+                                found = true;
+                            }
                         }
                     }
-                    if (!found&&(diceCol != WpcConstants.COLS_NUMBER - 1)) {
-                        if (rows.get(row - 1).get(diceCol + 1).getDiceColor() == diceColor) {
-                            tempPoints++;
-                            found = true;
+                    if(!found&&(row<(WpcConstants.ROWS_NUMBER-1))){
+                        if(diceCol!=0){
+                            secondTempDice=rows.get(row + 1).get(diceCol - 1);
+                            if (secondTempDice!=null&&secondTempDice.getDiceColor() == diceColor)  {
+                                tempPoints++;
+                                found = true;
+                            }
+                        }
+                        if (!found&&(diceCol <(WpcConstants.COLS_NUMBER - 1))) {
+                            secondTempDice=rows.get(row + 1).get(diceCol + 1);
+                            if (secondTempDice!=null&&secondTempDice.getDiceColor() == diceColor)  {
+                                tempPoints++;
+                            }
                         }
                     }
+
+
                 }
-                if(!found&&(row!=WpcConstants.ROWS_NUMBER-1)){
-                    if(diceCol!=0){
-                        if(rows.get(row+1).get(diceCol-1).getDiceColor()==diceColor) {
-                            tempPoints++;
-                            found = true;
-                        }
-                    }
-                    if (!found&&(diceCol != WpcConstants.COLS_NUMBER - 1)) {
-                        if (rows.get(row + 1).get(diceCol + 1).getDiceColor() == diceColor) {
-                            tempPoints++;
-                        }
-                    }
-                }
+
 
             }
         }

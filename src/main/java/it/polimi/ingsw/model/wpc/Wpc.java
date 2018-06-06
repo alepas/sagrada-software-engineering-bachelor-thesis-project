@@ -274,6 +274,15 @@ public class Wpc {
         return rowDices;
     }
 
+    public ArrayList<Dice>getRows(int row){
+        ArrayList<Dice> rowArray = new ArrayList<>();
+        for(Cell cell: schema){
+            if (cell.getCellPosition().getRow() == row)
+                rowArray.add(cell.getDice());
+        }
+        return rowArray;
+    }
+
 
     public ArrayList<Dice> getColDices(int column){
         //restituisce tutti i dadi presenti in una colonna
@@ -286,6 +295,7 @@ public class Wpc {
 
         return columnDices;
     }
+
 
 
     public ArrayList<Dice> getWpcDices(){
