@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.game;
 
 import it.polimi.ingsw.model.clientModel.ClientDice;
 import it.polimi.ingsw.model.clientModel.ClientRoundTrack;
+import it.polimi.ingsw.model.clientModel.Position;
 import it.polimi.ingsw.model.dicebag.Dice;
 
 import java.io.Serializable;
@@ -69,12 +70,22 @@ public class RoundTrack implements Serializable {
                 
     }
 
+    public Position getPositionFromDice(Dice roundTrackDice) {
+        for (int row = 0; row < NUM_OF_ROUND; row++) {
 
-    
+            for (int column = 0; column < HYPOTHETICAL_MAX_DICES_PER_ROUND; column++)
+                if (isThereADice(row, column))
+                    if (getDice(row, column).equals(roundTrackDice)) {
+                        return new Position(row,column);
+                    }
+        }
+        return null;
+    }
+
     Dice swapDice(Dice addedDice, Dice roundTrackDice, int round){
         Dice removedDice = null;
         int column = round - 1;
-        
+
         for (int row = 0; row < HYPOTHETICAL_MAX_DICES_PER_ROUND; row++) {
             if (getDice(row, column).equals(roundTrackDice)) {
                 removedDice = dicesNotUsed[row][column];
@@ -84,6 +95,15 @@ public class RoundTrack implements Serializable {
         
         return removedDice;
     }
+
+    public Dice swapDice (Dice addedDice, Position position){
+        Dice removedDice = null;
+        removedDice = dicesNotUsed[position.getRow()][position.getColumn()];
+        dicesNotUsed[position.getRow()][position.getColumn()] = addedDice;
+        return removedDice;
+
+    }
+
 
     
     public ArrayList<Dice> getRoundDices ( int round) {

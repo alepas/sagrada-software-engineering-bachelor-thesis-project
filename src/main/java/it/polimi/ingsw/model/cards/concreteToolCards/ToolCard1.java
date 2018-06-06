@@ -138,6 +138,7 @@ public class ToolCard1 extends ToolCard {
             throw new CannotPickDiceException(username,dice.getId(),ClientDiceLocations.EXTRACTED,3);
         if (!currentPlayer.getWPC().addDiceWithAllRestrictions(dice, pos))
             throw new CannotPickPositionException(username, pos);
+        currentGame.getExtractedDices().remove(dice);
         currentStatus=4;
         updateClientWPC();
         updateClientExtractedDices();
