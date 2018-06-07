@@ -9,8 +9,10 @@ import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.exceptions.gameExceptions.*;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotAddPlayerInDatabaseException;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotUpdateStatsForUserException;
+import it.polimi.ingsw.model.gamesdb.DatabaseGames;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 import it.polimi.ingsw.model.wpc.Wpc;
+import javafx.application.Platform;
 
 import java.util.*;
 
@@ -19,7 +21,7 @@ import static it.polimi.ingsw.model.constants.GameConstants.NUM_OF_ROUNDS;
 public class MultiplayerGame extends Game {
     private int turnPlayer;
     private int roundPlayer;
-    HashMap<String, Integer> scoreList = new HashMap<>();
+    private HashMap<String, Integer> scoreList = new HashMap<>();
 
     public MultiplayerGame(int numPlayers) throws InvalidMultiplayerGamePlayersException {
         super(numPlayers);
@@ -122,7 +124,12 @@ public class MultiplayerGame extends Game {
 
 
     @Override
-    public void endGame() {}
+    public void endGame() {
+        DatabaseGames.getInstance().removeGame(this);
+        for(int i = 0; i <players.length; i++ ){
+            players[i] = null;
+        }
+    }
 
     @Override
     public void nextRound() {
@@ -198,12 +205,19 @@ public class MultiplayerGame extends Game {
                 score = score + poc.calculateScore(wpc);
             }
             scoreList.put(player.getUser(), score);
-            saveScore();
         }
         changeAndNotifyObservers(new ScoreNotification(scoreList));
+        saveScore();
     }
 
 
+    /**
+     * Counts the score made by the player with the private objective, this score is the sum of all numbers of all
+     * dices with color equals to the private objective.
+     *
+     * @param player is the player of which the game is calculating the score
+     * @return the score made with the private objective
+     */
     private int privateObjScore(PlayerInGame player){
         Color[] playerColors = player.getPrivateObjs();
         ArrayList<Dice> dices = player.getWPC().getWpcDices();
@@ -215,16 +229,29 @@ public class MultiplayerGame extends Game {
                 if (dice.getDiceColor() == color) score += dice.getDiceNumber();
             }
         }
-        System.out.println("private score: "+ score);
         return score;
     }
 
+    /**
+     * Sets points to each player: if the player has won the game will have the amount of points that has done in the
+     * game plus as many points as many players played with him (that's way because the presence of more players increase
+     * the game's difficulty). Add one to the wongame to who won and add one to the lostgame to who lost.
+     */
     //Da testare
     @Override
     public void saveScore() {
+        ArrayList<Map.Entry<String, Integer>> scores = new ArrayList<>(scoreList.entrySet());
+        scores.sort((Comparator<Map.Entry<?, Integer>>) (o1, o2) -> o2.getValue().compareTo(o1.getValue()));
         for(PlayerInGame player: players){
             try {
-                player.addPointsToRanking(scoreList.get(player.getUser()));
+                if(player.getUser().equals(scores.get(0).getKey())) {
+                    player.addPointsToRanking(scoreList.get(player.getUser()) + numPlayers);
+                    player.addWonGame();
+                }
+                else {
+                    player.addPointsToRanking(scoreList.get(player.getUser()));
+                    player.addLostGame();
+                }
             } catch (CannotUpdateStatsForUserException e) {
                 e.printStackTrace();
             }

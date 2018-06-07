@@ -7,9 +7,12 @@ import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
 
 import it.polimi.ingsw.view.Status;
 import javafx.application.Platform;
+import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -22,7 +25,9 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.*;
 
 import static it.polimi.ingsw.view.Status.*;
@@ -30,8 +35,24 @@ import static java.lang.Thread.sleep;
 
 public class TwoPlayersGameController implements Observer, NotificationHandler {
 
+
+    private NetworkClient networkClient;
+    private ClientModel clientModel;
+    private String username;
+    private ArrayList<ClientToolCard> toolCardsIDs = new ArrayList<>();
+    private ArrayList<ClientPoc> pocIDs = new ArrayList<>();
+    private String round;
+    private ArrayList<ImageView> extractDices = new ArrayList<>();
+    private ArrayList<ImageView> schemaDices = new ArrayList<>();
+    private ArrayList<ImageView> roundTrackDices = new ArrayList<>();
+    private ArrayList<AnchorPane> schema = new ArrayList<>();
+    private HashMap<String, ClientWpc> wpc;
+    private Status state;
+    private final Object waiter = new Object();
+    private boolean isUsedToolCard = false;
+
     @FXML private Label messageLabel;
-    @FXML private Button exitButton;
+    @FXML private Button personalAreaButton;
     @FXML private Button newGameButton;
     @FXML
     private Label winnerLabel;
@@ -47,17 +68,6 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
     private AnchorPane boardGame;
     @FXML
     private AnchorPane scoreBoard;
-    private NetworkClient networkClient;
-    private ClientModel clientModel;
-    private String username;
-    private ArrayList<ClientToolCard> toolCardsIDs = new ArrayList<>();
-    private ArrayList<ClientPoc> pocIDs = new ArrayList<>();
-    private String round;
-    private ArrayList<ImageView> dices = new ArrayList<>();
-    private ArrayList<AnchorPane> schema = new ArrayList<>();
-    private HashMap<String, ClientWpc> wpc;
-    private Status state;
-    private final Object waiter = new Object();
 
     @FXML
     private AnchorPane privateObjPane;
@@ -236,16 +246,13 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
             state = ANOTHER_PLAYER_TURN;
         });
 
-        exitButton.setOnAction(event->{});
+        personalAreaButton.setOnAction(event->changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/PersonalAreaScene.fxml"));
 
-        newGameButton.setOnAction(event -> {});
+        newGameButton.setOnAction(event -> changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/SetNewGameScene.fxml"));
     }
 
     private void stateAction(Status state){
         switch (state) {
-            case QUIT_SAGRADA:
-                //TODO
-                break;
             case ANOTHER_PLAYER_TURN:
                 waitForTurn();
                 break;
@@ -265,6 +272,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                 //TODO
                 break;
             case SELECT_DICE_TOOLCARD:
+                pickDiceWithToolCard();
                 break;
             case SELECT_NUMBER_TOOLCARD:
                 //TODO
@@ -285,7 +293,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
      * This method doesn't need parameters and return void.
      */
     private void dragAndDrop() {
-        for (ImageView dice : dices) {
+        for (ImageView dice : extractDices) {
             dice.setOnDragDetected(event -> {
                 Dragboard db = dice.startDragAndDrop(TransferMode.MOVE);
                 ClipboardContent content = new ClipboardContent();
@@ -313,20 +321,13 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
             });
 
             cell.setOnDragDropped(event -> {
+                NextAction nextAction = null;
                 Dragboard db = event.getDragboard();
                 boolean success = false;
                 if (db.hasImage()) {
                     int id = Integer.parseInt(db.getString());
-                    int row = Integer.parseInt(cell.getId().substring(0, 1));
-                    int column = Integer.parseInt(cell.getId().substring(1, 2));
-                    Position position = new Position(row, column);
-                    try {
-                        NextAction nextAction = networkClient.placeDice(clientModel.getUserToken(), id, position);
-                        stateAction(state.change(nextAction));
-                    } catch (CannotFindPlayerInDatabaseException | CannotPickPositionException |
-                            CannotPickDiceException | PlayerNotAuthorizedException | CannotPerformThisMoveException e) {
-                        e.printStackTrace();
-                    }
+                    nextAction = placeDice( cell, id );
+
                     try {
                         sleep(500);
                     } catch (InterruptedException e) {
@@ -339,14 +340,41 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                             dice.setFitWidth(70);
                             dice.setFitHeight(70);
                             cell.getChildren().add(dice);
+                            schemaDices.add(dice);
                             success = true;
                         }
                     }
                 }
                 event.setDropCompleted(success);
                 event.consume();
+                stateAction(state.change(nextAction));
             });
         }
+    }
+
+    /**
+     * Calls the network method that will check if it's possible to add the dice in the chosen position.
+     *
+     * @param cell is the AnchorPane where the player want to add the dice
+     * @param id is the dice ID
+     * @return the next action that the player can do after placing the dice
+     */
+    private NextAction placeDice(AnchorPane cell, int id){
+        int row = Integer.parseInt(cell.getId().substring(0, 1));
+        int column = Integer.parseInt(cell.getId().substring(1, 2));
+        Position position = new Position(row, column);
+        try {
+            if(!isUsedToolCard) return networkClient.placeDice(clientModel.getUserToken(), id, position);
+            else {
+                isUsedToolCard = false;
+                System.out.println("da fare");
+                //nextAction= networkClient.placeDiceForToolCard(clientModel.getUserToken(), id, position);
+            }
+        } catch (CannotFindPlayerInDatabaseException | CannotPickPositionException |
+                CannotPickDiceException | PlayerNotAuthorizedException | CannotPerformThisMoveException e) {
+            Platform.runLater(()->messageLabel.setText("Non è possibile posizionare il dado nella cella selezionata."));
+        }
+        return null;
     }
 
     /**
@@ -354,11 +382,6 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
      *
      * @param id it's the toolCard's id
      * @throws CannotUseToolCardException suppose it's the same of the second one
-     * @exception CannotFindPlayerInDatabaseException it is thrown if it is not possible to find the player because
-     * he/she could be disonnected.
-     * @exception CannotPerformThisMoveException is thrown if the player has already used a toolcard during his/hur turn
-     * or if the favour's number isn't sufficent.
-     * @exception PlayerNotAuthorizedException is never thrown because the Button are disable
      */
     private void useToolCard(String id) throws CannotUseToolCardException {
         try {
@@ -451,7 +474,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
             ImageView dice = setDiceStyle(extractedDices.get(row));
             dice.setFitHeight(100);
             dice.setFitWidth(100);
-            dices.add(dice);
+            extractDices.add(dice);
             extractedDicesGrid.add(dice, 0, row);
         }
     }
@@ -648,9 +671,10 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                 dice.setFitHeight(30);
                 dice.setFitWidth(30);
                 roundTrackGrid.add(dice, column+1, round);
+                roundTrackDices.add(dice);
             }
             extractedDicesGrid.getChildren().removeAll(extractedDicesGrid.getChildren());
-            dices.clear();
+            extractDices.clear();
             setDices(extractedDices);
             dragAndDrop();
             stateAction(ANOTHER_PLAYER_TURN);
@@ -684,6 +708,45 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
         messageLabel.setText("Termina il turno, non puoi fare altre mosse.");
     }
 
+
+    private void placeDiceWithToolCard(){
+        Platform.runLater(()->{
+            messageLabel.setText("Scegli un dado e posizionalo.");
+            isUsedToolCard = true;
+            dragAndDrop();
+        });
+    }
+
+    private void pickDiceWithToolCard(){
+        for(ImageView extractDice: extractDices){
+            extractDice.setOnMouseClicked(event-> {
+                System.out.println("ehi");
+                //networkClient.pickDiceForToolCard(clientModel.getUserToken(), Integer.parseInt(dice.getId()));
+            });
+        }
+
+        for(ImageView roundTrackDice: roundTrackDices){
+            roundTrackDice.setOnMouseClicked(event -> System.out.println("ehi"));
+        }
+
+        for(ImageView schemaDice: schemaDices){
+            schemaDice.setOnMouseClicked(event -> System.out.println("ehi"));
+        }
+    }
+
+    private void changeSceneHandle(Event event, String path) {
+        AnchorPane nextNode = new AnchorPane();
+        try {
+            nextNode = FXMLLoader.load(getClass().getResource(path));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(nextNode);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(scene);
+        window.show();
+    }
+
     /**
      * Sets the game invisible and shows to the users who won and who lost the game.
      *
@@ -709,9 +772,6 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
             scoreBoard.setVisible(true);
         });
     }
-
-    private void placeDiceWithToolCard(){}
-
     //-------------------------------------- Observer ------------------------------------------
 
     @Override
@@ -786,9 +846,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
     @Override
     public void handle(ScoreNotification notification) {
         ArrayList<Map.Entry<String, Integer>> scores = new ArrayList<>(notification.scoreList.entrySet());
-        scores.sort((Comparator<Map.Entry<?, Integer>>) (o1, o2) -> {
-            return o2.getValue().compareTo(o1.getValue()); //ascendente e non descrescente
-        });
+        scores.sort((Comparator<Map.Entry<?, Integer>>) (o1, o2) -> o2.getValue().compareTo(o1.getValue()));
         setScore(scores);
     }
 }

@@ -14,6 +14,7 @@ import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.dicebag.DiceBag;
 import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
+import it.polimi.ingsw.model.gamesdb.DatabaseGames;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 import it.polimi.ingsw.model.wpc.WpcDB;
 
@@ -277,7 +278,6 @@ public abstract class Game extends Observable implements Runnable {
 
     public abstract boolean isSinglePlayerGame();
 
-
     //--------------------------------------- Metodi astratti --------------------------------------
 
     abstract void initializeGame();
@@ -286,5 +286,6 @@ public abstract class Game extends Observable implements Runnable {
     public abstract void nextTurn();
     abstract void calculateScore();
     abstract void saveScore();
+
 
 }
