@@ -163,6 +163,23 @@ public class CliController {
         return null;
     }
 
+    public NextAction selectNumberForToolcard(int num){
+        try {
+            return client.pickNumberForToolCard(clientModel.getUserToken(), num);
+        } catch (CannotFindPlayerInDatabaseException e) {
+            e.printStackTrace();
+        } catch (PlayerNotAuthorizedException e) {
+            e.printStackTrace();
+        } catch (NoToolCardInUseException e) {
+            e.printStackTrace();
+        } catch (CannotPickNumberException e) {
+            e.printStackTrace();
+        } catch (CannotPerformThisMoveException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
 
     //---------------------------------- Request to cli model ----------------------------------

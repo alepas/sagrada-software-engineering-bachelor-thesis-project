@@ -3,7 +3,7 @@ package it.polimi.ingsw.model.clientModel;
 import java.io.Serializable;
 
 public enum NextAction implements Serializable {
-    PLACE_DICE,
+    PLACE_DICE,                 //Ha senso???
     PLACE_DICE_TOOLCARD,
     INTERRUPT_TOOLCARD,
     SELECT_DICE_TOOLCARD,
