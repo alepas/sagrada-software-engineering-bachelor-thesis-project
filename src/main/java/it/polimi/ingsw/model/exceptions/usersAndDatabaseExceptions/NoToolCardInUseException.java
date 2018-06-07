@@ -10,8 +10,6 @@ public class NoToolCardInUseException extends Exception{
     }
     @Override
     public String getMessage() {
-
-
         return "No ToolCard in setCard";
     }
 

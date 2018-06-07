@@ -124,14 +124,10 @@ public class CliController {
     public NextAction useToolcard(String id){
         try {
             return client.useToolCard(clientModel.getUserToken(), id);
-        } catch (CannotFindPlayerInDatabaseException e) {
+        } catch (CannotFindPlayerInDatabaseException e){
             e.printStackTrace();
-        } catch (PlayerNotAuthorizedException e) {
-            e.printStackTrace();
-        } catch (CannotUseToolCardException e) {
-            e.printStackTrace();
-        } catch (CannotPerformThisMoveException e) {
-            e.printStackTrace();
+        } catch (PlayerNotAuthorizedException|CannotUseToolCardException|CannotPerformThisMoveException e){
+            view.displayText(e.getMessage());
         }
         return null;
     }
@@ -141,14 +137,9 @@ public class CliController {
             return client.pickDiceForToolCard(clientModel.getUserToken(), id);
         } catch (CannotFindPlayerInDatabaseException e) {
             e.printStackTrace();
-        } catch (CannotPickDiceException e) {
-            e.printStackTrace();
-        } catch (PlayerNotAuthorizedException e) {
-            e.printStackTrace();
-        } catch (NoToolCardInUseException e) {
-            e.printStackTrace();
-        } catch (CannotPerformThisMoveException e) {
-            e.printStackTrace();
+        } catch (CannotPickDiceException|PlayerNotAuthorizedException|
+                NoToolCardInUseException|CannotPerformThisMoveException e) {
+            view.displayText(e.getMessage());
         }
         return null;
     }
@@ -163,19 +154,26 @@ public class CliController {
         return null;
     }
 
-    public NextAction selectNumberForToolcard(int num){
+    public NextAction placeDiceForToolCard(int id, Position pos){
+        try {
+            return client.placeDiceForToolCard(clientModel.getUserToken(), id, pos);
+        } catch (CannotFindPlayerInDatabaseException e) {
+            e.printStackTrace();
+        } catch (CannotPickPositionException|PlayerNotAuthorizedException
+                |NoToolCardInUseException|CannotPerformThisMoveException|CannotPickDiceException e) {
+            view.displayText(e.getMessage());
+        }
+        return null;
+    }
+
+    public NextAction pickNumberForToolcard(int num){
         try {
             return client.pickNumberForToolCard(clientModel.getUserToken(), num);
         } catch (CannotFindPlayerInDatabaseException e) {
             e.printStackTrace();
-        } catch (PlayerNotAuthorizedException e) {
-            e.printStackTrace();
-        } catch (NoToolCardInUseException e) {
-            e.printStackTrace();
-        } catch (CannotPickNumberException e) {
-            e.printStackTrace();
-        } catch (CannotPerformThisMoveException e) {
-            e.printStackTrace();
+        } catch (PlayerNotAuthorizedException|NoToolCardInUseException|CannotPickNumberException
+                |CannotPerformThisMoveException e) {
+            view.displayText(e.getMessage());
         }
         return null;
     }

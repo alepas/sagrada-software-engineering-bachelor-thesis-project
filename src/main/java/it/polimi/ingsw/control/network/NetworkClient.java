@@ -35,6 +35,8 @@ public abstract class NetworkClient implements ResponseHandler {
         return instance;
     }
 
+
+
     public abstract void createUser(String username, String password) throws CannotRegisterUserException;
 
     public abstract void login(String username, String password) throws CannotLoginUserException;
@@ -51,14 +53,13 @@ public abstract class NetworkClient implements ResponseHandler {
 
     public abstract NextAction useToolCard(String userToken, String cardId) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotUseToolCardException, CannotPerformThisMoveException;
 
-    //TODO: rimuovere where (Passare null per il momento)
     public abstract NextAction pickDiceForToolCard(String userToken, int diceId) throws CannotFindPlayerInDatabaseException, CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException;
 
-    //TODO: rimouovere initialLocation, finalLocation (Passare null per il momento)
     public abstract NextAction placeDiceForToolCard(String userToken, int diceId, Position position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException, CannotPickDiceException ;
 
     public abstract NextAction pickNumberForToolCard(String userToken, int number) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPickNumberException, CannotPerformThisMoveException;
 
+    //TODO
     public abstract NextAction stopToolCard (String userToken) throws  CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotStopToolCardException, NoToolCardInUseException;
 
 
@@ -79,11 +80,12 @@ public abstract class NetworkClient implements ResponseHandler {
 
 
 
-
+    //TODO
     public abstract NextAction cancelAction (String userToken) throws  CannotCancelActionException, PlayerNotAuthorizedException, CannotFindPlayerInDatabaseException;
 
     public abstract NextAction placeDice(String userToken, int id, Position position) throws  CannotFindPlayerInDatabaseException, CannotPickPositionException, CannotPickDiceException, PlayerNotAuthorizedException, CannotPerformThisMoveException;
 
+    //TODO
     public abstract NextAction getNextMove(String userToken) throws  CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException ;
 
 
@@ -128,7 +130,7 @@ public abstract class NetworkClient implements ResponseHandler {
     @Override
     public void handle(ToolCardResponse response){
         //TODO: è giusto il controllo diverso da null?
-        if (response.exception != null){
+        if (response.exception == null){
             ToolCardClientNextActionInfo info = new ToolCardClientNextActionInfo(response.wherePickNewDice,
                 response.wherePutNewDice, response.numbersToChoose, response.diceChosenId, response.diceChosenLocation);
 

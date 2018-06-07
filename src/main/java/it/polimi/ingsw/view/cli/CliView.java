@@ -147,7 +147,7 @@ public class CliView implements Observer, NotificationHandler {
                     break;
 
                 case SELECT_DICE_TOOLCARD:
-                    selectDiceForToolCard();
+                    pickDiceForToolCard();
                     break;
 
                 case SELECT_NUMBER_TOOLCARD:
@@ -163,7 +163,7 @@ public class CliView implements Observer, NotificationHandler {
                     break;
 
                 case PLACE_DICE_TOOLCARD:
-                    //TODO
+                    placeDiceForToolcard();
                     break;
             }
         }
@@ -480,9 +480,8 @@ public class CliView implements Observer, NotificationHandler {
                 return placeDice();
 
             case USE_TOOLCARD:
-                //TODO
-                displayText("Ancora da fare");
-                return false;
+                useToolcard();
+                return true;
 
             case END_TURN:
                 printText("\n");
@@ -570,30 +569,49 @@ public class CliView implements Observer, NotificationHandler {
 
     //--------------------------------------- Toolcard ---------------------------------------
 
-    private void selectDiceForToolCard() {
+    private void useToolcard(){
+        NextAction nextAction = null;
+
+        do {
+            showToolcards();
+            displayText("Seleziona l'ID della toolcard da utilizzare");
+            nextAction = controller.useToolcard(userInput());
+        } while (nextAction == null);
+
+        changeState(nextAction);
+    }
+
+    private void pickDiceForToolCard() {
+        NextAction nextAction = null;
         ToolCardClientNextActionInfo info = controller.getToolcardNextActionInfo();
 
-        switch (info.wherePickNewDice){
+        do {
+            int id = pickDice(info.wherePickNewDice);
+            nextAction = controller.pickDiceForToolCard(id);
+        } while (nextAction == null);
+
+        changeState(nextAction);
+    }
+
+    private int pickDice(ClientDiceLocations location){
+        switch (location){
             case WPC:
-                pickDiceFromWpc();
-                break;
+                return pickDiceFromWpc();
             case EXTRACTED:
-                pickDiceFromDices(controller.getExtractedDices());
-                break;
+                return pickDiceFromDices(controller.getExtractedDices());
             case ROUNDTRACK:
-                pickDiceFromDices(controller.getRoundtrackDices());
-                break;
+                return pickDiceFromDices(controller.getRoundtrackDices());
             default:
                 displayText("Non so come fare una pick dalla posizione passata");
-                displayText(info.wherePickNewDice.toString());
+                displayText(location.toString());
+                return -1;
         }
     }
-    
-    private void pickDiceFromWpc(){
-        NextAction nextAction = null;
-//        String response;
+
+    private int pickDiceFromWpc(){
         ClientWpc wpc = controller.getMyWpc();
-        
+        int id = -1;
+
         do {
             try {
                 displayText("Seleziona dalla wpc il dado da utilizzare");
@@ -601,28 +619,22 @@ public class CliView implements Observer, NotificationHandler {
                 printText(cliRender.renderWpc(wpc, false));
 
                 displayText("Inserisci la riga del dado");
-//                if ((response = userInput()).equals(CliConstants.ESCAPE_RESPONSE)) return; //TODO
                 int row = Integer.parseInt(userInput())-strNum;
 
                 displayText("Indica la colonna del dado");
-//                if ((response = userInput()).equals(CliConstants.ESCAPE_RESPONSE)) return; //TODO
                 int col = Integer.parseInt(userInput())-strNum;
 
                 Position pos = new Position(row, col);
 
-                int id = getDiceIdFromWpc(wpc, pos);
-                if (id == -1){
-                    displayText("Non è presente alcun dado nella posizione inserita o la posizione non esiste");
-                    continue;
-                }
+                id = getDiceIdFromWpc(wpc, pos);
+                if (id == -1)displayText("Non è presente alcun dado nella posizione inserita o la posizione non esiste");
 
-                nextAction = controller.pickDiceForToolCard(id);
             } catch (NumberFormatException e) {
                 displayText("Inserire un numero intero");
             }
-        } while (nextAction == null);
+        } while (id == -1);
         
-        changeState(nextAction);
+        return id;
     }
 
     //Restituisce l'ID del dado presente nella posizione passata
@@ -638,22 +650,58 @@ public class CliView implements Observer, NotificationHandler {
         return -1;
     }
 
-    private void pickDiceFromDices(ArrayList<ClientDice> dices){
-        NextAction nextAction = null;
-//        String response;
-
+    private int pickDiceFromDices(ArrayList<ClientDice> dices){
+        int id = -1;
         do {
             try {
                 printText(cliRender.renderDices(dices));
 
-                displayText("Inserisci l'ID del dado da utilizzare (digita 'back' per annullare la mossa)");
-//                if ((response = userInput()).equals(CliConstants.ESCAPE_RESPONSE)) return; //TODO
-                int id = Integer.parseInt(userInput());
+                displayText("Inserisci l'ID del dado da utilizzare");
+                id = Integer.parseInt(userInput());
 
-                nextAction = controller.pickDiceForToolCard(id);
             } catch (NumberFormatException e) {
                 displayText("Inserire un numero intero");
             }
+        } while (id == -1);
+
+        return id;
+    }
+
+    private Position selectWpcPosition(){
+        ClientWpc wpc = controller.getMyWpc();
+
+        do {
+            try {
+                printText(cliRender.renderWpc(wpc, false));
+
+                displayText("Indica la riga in cui posizionare il dado");
+                int row = Integer.parseInt(userInput())-strNum;
+
+                displayText("Indica la colonna in cui posizionare il dado");
+                int col = Integer.parseInt(userInput())-strNum;
+
+                Position pos = new Position(row, col);
+
+                int id = getDiceIdFromWpc(wpc, pos);
+                if (id == -1) return pos;
+                else displayText("É gia presente un dado nella posizione (" + pos.getRow()
+                    + ", " + pos.getColumn() + ")");
+
+            } catch (NumberFormatException e) {
+                displayText("Inserire un numero intero");
+            }
+        } while (true);
+    }
+
+    private void placeDiceForToolcard(){
+        NextAction nextAction = null;
+        ToolCardClientNextActionInfo info = controller.getToolcardNextActionInfo();
+
+        Position pos = null;
+
+        do {
+            if (info.wherePutNewDice.equals(ClientDiceLocations.WPC)) pos = selectWpcPosition();
+            nextAction = controller.placeDiceForToolCard(info.diceChosenId, pos);
         } while (nextAction == null);
 
         changeState(nextAction);
@@ -680,7 +728,7 @@ public class CliView implements Observer, NotificationHandler {
                     continue;
                 }
 
-                nextAction = controller.selectNumberForToolcard(num);
+                nextAction = controller.pickNumberForToolcard(num);
             } catch (NumberFormatException e) {
                 displayText("Inserire un numero intero");
             }
@@ -765,7 +813,6 @@ public class CliView implements Observer, NotificationHandler {
     @Override
     public void handle(PocsExtractedNotification notification) {
         showPocs();
-
         stopWaiting();
     }
 

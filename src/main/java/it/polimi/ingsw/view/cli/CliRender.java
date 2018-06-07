@@ -93,37 +93,62 @@ public class CliRender {
 
 
     private final String[] dice1 = {"       ",
-                                    "   O   ",
+                                    "   ◯   ",
                                     "       "};
 
-    private final String[] dice2 = {" O     ",
+    private final String[] dice2 = {" ◯     ",
                                     "       ",
-                                    "     O "};
+                                    "     ◯ "};
 
-    private final String[] dice3 = {" O     ",
-                                    "   O   ",
-                                    "     O "};
+    private final String[] dice3 = {" ◯     ",
+                                    "   ◯   ",
+                                    "     ◯ "};
 
-    private final String[] dice4 = {" O   O ",
+    private final String[] dice4 = {" ◯   ◯ ",
                                     "       ",
-                                    " O   O "};
+                                    " ◯   ◯ "};
 
-    private final String[] dice5 = {" O   O ",
-                                    "   O   ",
-                                    " O   O "};
+    private final String[] dice5 = {" ◯   ◯ ",
+                                    "   ◯   ",
+                                    " ◯   ◯ "};
 
-    private final String[] dice6 = {" O   O ",
-                                    " O   O ",
-                                    " O   O "};
+    private final String[] dice6 = {" ◯   ◯ ",
+                                    " ◯   ◯ ",
+                                    " ◯   ◯ "};
 
-    private final String[] cellColorRestricted =   {"XXXXXXX",
-                                                    "XXXXXXX",
-                                                    "XXXXXXX"};
+    private final String[] diceWithNumber1 = {  "       ",
+                                                "   ●   ",
+                                                "       "};
+
+    private final String[] diceWithNumber2 = {  " ●     ",
+                                                "       ",
+                                                "     ● "};
+
+    private final String[] diceWithNumber3 = {  " ●     ",
+                                                "   ●   ",
+                                                "     ● "};
+
+    private final String[] diceWithNumber4 = {  " ●   ● ",
+                                                "       ",
+                                                " ●   ● "};
+
+    private final String[] diceWithNumber5 = {  " ●   ● ",
+                                                "   ●   ",
+                                                " ●   ● "};
+    
+    private final String[] diceWithNumber6 = {  " ●   ● ",
+                                                " ●   ● ",
+                                                " ●   ● "};
+
+    private final String[] cellColorRestricted =   {"///////",
+                                                    "///////",
+                                                    "///////"};
 //    private final String[] cellColorRestricted =   {"       ",
 //                                                    "       ",
 //                                                    "       "};
 
     private final String[][] dices = {emptyDice, dice1, dice2, dice3, dice4, dice5, dice6};
+    private final String[][] dicesWithNumber = {emptyDice, diceWithNumber1, diceWithNumber2, diceWithNumber3, diceWithNumber4, diceWithNumber5, diceWithNumber6};
 
 
     public CliRender() { }
@@ -314,19 +339,19 @@ public class CliRender {
             switch (color) {
                 case GREEN:
                     if (num == 0) return GREEN;
-                    else return GREEN_BACKGROUND + WHITE_BRIGHT;
+                    else return GREEN_BACKGROUND + BLACK;
                 case RED:
                     if (num == 0) return RED;
-                    else return RED_BACKGROUND_BRIGHT + WHITE_BRIGHT;
+                    else return RED_BACKGROUND_BRIGHT + BLACK;
                 case YELLOW:
                     if (num == 0) return YELLOW;
-                    else return YELLOW_BACKGROUND_BRIGHT + WHITE_BRIGHT;
+                    else return YELLOW_BACKGROUND_BRIGHT + BLACK;
                 case BLUE:
                     if (num == 0) return BLUE;
-                    else return BLUE_BACKGROUND_BRIGHT + WHITE_BRIGHT;
+                    else return BLUE_BACKGROUND_BRIGHT + BLACK;
                 case VIOLET:
                     if (num == 0) return PURPLE;
-                    else return PURPLE_BACKGROUND + WHITE_BRIGHT;
+                    else return PURPLE_BACKGROUND + BLACK;
                 default:
                     return NULL_COLOR_CELL;
             }
@@ -337,8 +362,11 @@ public class CliRender {
     private String[] renderCell(int num, String color) {
         String[] diceRows;
 
-        if (num == 0 && !color.equals(NULL_COLOR_CELL)) diceRows = Arrays.copyOf(cellColorRestricted, cellColorRestricted.length);
-        else diceRows= Arrays.copyOf(dices[num], cellHeight);
+        if (!color.equals(NULL_COLOR_CELL)) {
+            if (num == 0) diceRows = Arrays.copyOf(cellColorRestricted, cellColorRestricted.length);
+            else diceRows = Arrays.copyOf(dicesWithNumber[num], cellHeight);
+        }
+        else diceRows = Arrays.copyOf(dices[num], cellHeight);
         
         for(int row = 0; row < diceRows.length; row++){
             diceRows[row] = color + diceRows[row] + RESET;
