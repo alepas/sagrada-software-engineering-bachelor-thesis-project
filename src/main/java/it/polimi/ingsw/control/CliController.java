@@ -138,7 +138,7 @@ public class CliController {
 
     public NextAction pickDiceForToolCard(int id){
         try {
-            return client.pickDiceForToolCard(clientModel.getUserToken(), id, null);
+            return client.pickDiceForToolCard(clientModel.getUserToken(), id);
         } catch (CannotFindPlayerInDatabaseException e) {
             e.printStackTrace();
         } catch (CannotPickDiceException e) {

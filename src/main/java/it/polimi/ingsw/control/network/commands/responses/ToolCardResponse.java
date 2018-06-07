@@ -13,10 +13,10 @@ public class ToolCardResponse implements Response {
     public final ArrayList<ClientDice> extractedDices;
     public final ClientRoundTrack roundTrack;
     public final Integer diceChosenId;
+    public final ClientDiceLocations diceChosenLocation;
     public final Exception exception;
 
-
-    public ToolCardResponse(NextAction nextAction, ClientDiceLocations wherePickNewDice, ClientDiceLocations wherePutNewDice, ArrayList<Integer> numbersToChoose, ClientWpc wpc, ArrayList<ClientDice> extractedDices, ClientRoundTrack roundTrack, Integer diceChosenId, Exception exception) {
+    public ToolCardResponse(NextAction nextAction, ClientDiceLocations wherePickNewDice, ClientDiceLocations wherePutNewDice, ArrayList<Integer> numbersToChoose, ClientWpc wpc, ArrayList<ClientDice> extractedDices, ClientRoundTrack roundTrack, Integer diceChosenId, ClientDiceLocations diceChosenLocation, Exception exception) {
         this.nextAction = nextAction;
         this.wherePickNewDice = wherePickNewDice;
         this.wherePutNewDice = wherePutNewDice;
@@ -25,6 +25,7 @@ public class ToolCardResponse implements Response {
         this.extractedDices = extractedDices;
         this.roundTrack = roundTrack;
         this.diceChosenId = diceChosenId;
+        this.diceChosenLocation = diceChosenLocation;
         this.exception = exception;
     }
 
@@ -38,6 +39,7 @@ public class ToolCardResponse implements Response {
         roundTrack=null;
         diceChosenId= null;
         wherePutNewDice=null;
+        diceChosenLocation=null;
     }
 
     @Override

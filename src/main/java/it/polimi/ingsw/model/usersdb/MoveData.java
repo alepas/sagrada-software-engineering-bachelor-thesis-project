@@ -11,6 +11,7 @@ public class MoveData {
     public ArrayList<ClientDice> extractedDices=null;
     public ClientRoundTrack roundTrack=null;
     public Integer diceChosenId =0;
+    public ClientDiceLocations diceChosenLocation=null;
     public ArrayList<Integer> numbersToChoose=null;
     public boolean moveFinished=false;
     public boolean canceledToolCard =false;
@@ -18,7 +19,7 @@ public class MoveData {
 
     public MoveData(NextAction nextAction, ClientDiceLocations wherePickNewDice, ClientDiceLocations wherePutNewDice,
                     ClientWpc wpc, ArrayList<ClientDice> extractedDices, ClientRoundTrack roundTrack, Integer diceChosenId,
-                    ArrayList<Integer> numbersToChoose, boolean moveFinished, boolean canceledToolCard, Exception exception) {
+                    ClientDiceLocations diceChosenLocation, ArrayList<Integer> numbersToChoose, boolean moveFinished, boolean canceledToolCard, Exception exception) {
         this.nextAction = nextAction;
         this.wherePickNewDice = wherePickNewDice;
         this.wherePutNewDice = wherePutNewDice;
@@ -26,6 +27,7 @@ public class MoveData {
         this.extractedDices = extractedDices;
         this.roundTrack = roundTrack;
         this.diceChosenId = diceChosenId;
+        this.diceChosenLocation = diceChosenLocation;
         this.numbersToChoose = numbersToChoose;
         this.moveFinished=moveFinished;
         this.canceledToolCard = canceledToolCard;
@@ -39,44 +41,48 @@ public class MoveData {
 
 
     public MoveData(NextAction nextAction, boolean moveFinished, ClientWpc wpc, ArrayList<ClientDice> extractedDices,
-                    ClientRoundTrack roundTrack, Integer diceChosenId){
+                    ClientRoundTrack roundTrack, Integer diceChosenId, ClientDiceLocations diceChosenLocation){
         this.nextAction = nextAction;
         this.wpc = wpc;
         this.extractedDices = extractedDices;
         this.roundTrack = roundTrack;
         this.diceChosenId = diceChosenId;
         this.moveFinished=moveFinished;
+        this.diceChosenLocation = diceChosenLocation;
     }
 
     public MoveData(NextAction nextAction, boolean moveFinished, ClientWpc wpc, ArrayList<ClientDice> extractedDices,
-                    ClientRoundTrack roundTrack, Integer diceChosenId, ArrayList<Integer> numbersToChoose){
+                    ClientRoundTrack roundTrack, Integer diceChosenId, ClientDiceLocations diceChosenLocation, ArrayList<Integer> numbersToChoose){
         this.nextAction = nextAction;
         this.wpc = wpc;
         this.extractedDices = extractedDices;
         this.roundTrack = roundTrack;
         this.diceChosenId = diceChosenId;
+        this.diceChosenLocation = diceChosenLocation;
         this.numbersToChoose = numbersToChoose;
         this.moveFinished=moveFinished;
     }
 
 
     public MoveData(NextAction nextAction, ClientWpc wpc, ArrayList<ClientDice> extractedDices,
-                    ClientRoundTrack roundTrack, Integer diceChosenId, boolean canceledToolCard){
+                    ClientRoundTrack roundTrack, Integer diceChosenId, ClientDiceLocations diceChooenLocation, boolean canceledToolCard){
         this.nextAction = nextAction;
         this.wpc = wpc;
         this.extractedDices = extractedDices;
         this.roundTrack = roundTrack;
         this.diceChosenId = diceChosenId;
+        this.diceChosenLocation = diceChooenLocation;
         this.canceledToolCard = canceledToolCard;
     }
 
     public MoveData(NextAction nextAction, ClientWpc wpc, ArrayList<ClientDice> extractedDices,
-                    ClientRoundTrack roundTrack, Integer diceChosenId, ArrayList<Integer> numbersToChoose, boolean canceledToolCard){
+                    ClientRoundTrack roundTrack, Integer diceChosenId, ClientDiceLocations diceChooenLocation, ArrayList<Integer> numbersToChoose, boolean canceledToolCard){
         this.nextAction = nextAction;
         this.wpc = wpc;
         this.extractedDices = extractedDices;
         this.roundTrack = roundTrack;
         this.diceChosenId = diceChosenId;
+        this.diceChosenLocation = diceChooenLocation;
         this.numbersToChoose = numbersToChoose;
         this.canceledToolCard = canceledToolCard;
     }
@@ -97,43 +103,52 @@ public class MoveData {
 
     public MoveData(boolean moveFinished, ClientDiceLocations wherePickNewDice, ClientDiceLocations wherePutNewDice,
                     ClientWpc wpc, ArrayList<ClientDice> extractedDices, ClientRoundTrack roundTrack, Integer diceChosenId,
-                    ArrayList<Integer> numbersToChoose) {
+                    ClientDiceLocations diceChosenLocation, ArrayList<Integer> numbersToChoose) {
         this.wherePickNewDice = wherePickNewDice;
         this.wherePutNewDice = wherePutNewDice;
         this.wpc = wpc;
         this.extractedDices = extractedDices;
         this.roundTrack = roundTrack;
         this.diceChosenId = diceChosenId;
+        this.diceChosenLocation = diceChosenLocation;
         this.numbersToChoose = numbersToChoose;
         this.moveFinished=moveFinished;
     }
 
     public MoveData(boolean moveFinished, ClientWpc wpc, ArrayList<ClientDice> extractedDices,
-                    ClientRoundTrack roundTrack, Integer diceChosenId){
+                    ClientRoundTrack roundTrack, Integer diceChosenId, ClientDiceLocations diceChosenLocation){
         this.wpc = wpc;
         this.extractedDices = extractedDices;
         this.roundTrack = roundTrack;
         this.diceChosenId = diceChosenId;
         this.moveFinished=moveFinished;
+        this.diceChosenLocation = diceChosenLocation;
     }
 
     public MoveData(boolean moveFinished, ClientWpc wpc, ArrayList<ClientDice> extractedDices,
-                    ClientRoundTrack roundTrack, Integer diceChosenId, ArrayList<Integer> numbersToChoose){
+                    ClientRoundTrack roundTrack, Integer diceChosenId, ClientDiceLocations diceChosenLocation, ArrayList<Integer> numbersToChoose){
         this.wpc = wpc;
         this.extractedDices = extractedDices;
         this.roundTrack = roundTrack;
         this.diceChosenId = diceChosenId;
+        this.diceChosenLocation = diceChosenLocation;
         this.numbersToChoose = numbersToChoose;
         this.moveFinished=moveFinished;
     }
 
-    public MoveData(boolean moveFinished, boolean canceledToolCard,ClientWpc wpc, ArrayList<ClientDice> extractedDices,
-                    ClientRoundTrack roundTrack, Integer diceChosenId, ArrayList<Integer> numbersToChoose){
+    public MoveData(boolean moveFinished, boolean canceledToolCard, ClientWpc wpc, ArrayList<ClientDice> extractedDices,
+                    ClientRoundTrack roundTrack, Integer diceChosenId, ClientDiceLocations diceChosenLocation, ArrayList<Integer> numbersToChoose){
         this.wpc = wpc;
         this.extractedDices = extractedDices;
         this.roundTrack = roundTrack;
         this.diceChosenId = diceChosenId;
+        this.diceChosenLocation = diceChosenLocation;
         this.numbersToChoose = numbersToChoose;
+        this.moveFinished=moveFinished;
+        this.canceledToolCard=canceledToolCard;
+    }
+
+    public MoveData(boolean moveFinished, boolean canceledToolCard){
         this.moveFinished=moveFinished;
         this.canceledToolCard=canceledToolCard;
     }
@@ -185,13 +200,14 @@ public class MoveData {
     }
 
     public MoveData(NextAction nextAction, ClientDiceLocations wherePickNewDice, ClientDiceLocations wherePutNewDice,
-                    ClientWpc wpc, ArrayList<ClientDice> extractedDices, ClientRoundTrack roundTrack, Integer diceChosenId) {
+                    ClientWpc wpc, ArrayList<ClientDice> extractedDices, ClientRoundTrack roundTrack, Integer diceChosenId, ClientDiceLocations diceChosenLocation) {
         this.wherePickNewDice = wherePickNewDice;
         this.wherePutNewDice = wherePutNewDice;
         this.wpc = wpc;
         this.extractedDices = extractedDices;
         this.roundTrack = roundTrack;
         this.diceChosenId = diceChosenId;
+        this.diceChosenLocation = diceChosenLocation;
         this.numbersToChoose = numbersToChoose;
      this.nextAction=nextAction;
     }

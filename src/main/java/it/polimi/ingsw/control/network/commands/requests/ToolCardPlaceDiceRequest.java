@@ -6,23 +6,15 @@ import it.polimi.ingsw.model.clientModel.Position;
 
 public class ToolCardPlaceDiceRequest implements Request {
     public final String userToken;
-    public final Position position;
     public final int diceId;
-    public final ClientDiceLocations diceFrom;
-    public final ClientDiceLocations diceDestination;
+    public final Position position;
 
 
-    public ToolCardPlaceDiceRequest(String userToken, int diceId, ClientDiceLocations diceFrom, ClientDiceLocations diceDestination, Position position) {
+    public ToolCardPlaceDiceRequest(String userToken, int diceId, Position position) {
         this.userToken = userToken;
-        this.diceDestination = diceDestination;
-        this.position=position;
-        this.diceId=diceId;
-        this.diceFrom=diceFrom;
-
+        this.diceId = diceId;
+        this.position = position;
     }
-
-
-
 
     @Override
     public Response handle(RequestHandler handler) {

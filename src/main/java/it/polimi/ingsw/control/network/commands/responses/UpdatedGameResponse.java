@@ -42,10 +42,8 @@ public class UpdatedGameResponse implements Response {
         this.nextActionInfo = null;
     }
 
-    //TODO: togliere nextAction e nextActionInfo da null
-    public UpdatedGameResponse(String gameID, int gameActualPlayers, int gameNumPlayers, ClientColor[] privateObjectives, HashMap<String, ClientWpc> wpcByUsername, ArrayList<ClientToolCard> gameToolCards, ArrayList<ClientPoc> gamePublicObjectiveCards, int currentRound, ArrayList<ClientDice> extractedDices, int currentTurn, boolean active, int favour, ClientRoundTrack roundTrack) {
-        this.exception=null;
 
+    public UpdatedGameResponse(String gameID, int gameActualPlayers, int gameNumPlayers, ClientColor[] privateObjectives, HashMap<String, ClientWpc> wpcByUsername, ArrayList<ClientToolCard> gameToolCards, ArrayList<ClientPoc> gamePublicObjectiveCards, int currentRound, ArrayList<ClientDice> extractedDices, int currentTurn, boolean active, int favour, ClientRoundTrack roundTrack, NextAction nextAction, ToolCardClientNextActionInfo nextActionInfo) {
         this.gameID = gameID;
         this.gameActualPlayers = gameActualPlayers;
         this.gameNumPlayers = gameNumPlayers;
@@ -58,9 +56,10 @@ public class UpdatedGameResponse implements Response {
         this.currentTurn = currentTurn;
         this.active = active;
         this.favour = favour;
-        this.roundTrack=roundTrack;
-        this.nextAction = null;
-        this.nextActionInfo = null;
+        this.exception = null;
+        this.roundTrack = roundTrack;
+        this.nextAction = nextAction;
+        this.nextActionInfo = nextActionInfo;
     }
 
     @Override

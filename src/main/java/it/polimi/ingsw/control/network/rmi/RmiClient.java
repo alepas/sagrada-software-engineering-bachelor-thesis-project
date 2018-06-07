@@ -97,9 +97,9 @@ public class RmiClient extends NetworkClient {
     }
 
     @Override
-    public NextAction pickDiceForToolCard(String userToken, int diceId, ClientDiceLocations where) throws CannotFindPlayerInDatabaseException, CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException {
+    public NextAction pickDiceForToolCard(String userToken, int diceId) throws CannotFindPlayerInDatabaseException, CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException {
         try {
-            ToolCardResponse response = (ToolCardResponse) remoteServer.pickDiceForToolCard(userToken, diceId, where);
+            ToolCardResponse response = (ToolCardResponse) remoteServer.pickDiceForToolCard(userToken, diceId);
             response.handle(this);
             return response.nextAction;
         } catch (RemoteException e) {
@@ -108,9 +108,9 @@ public class RmiClient extends NetworkClient {
     }
 
     @Override
-    public NextAction placeDiceForToolCard(String userToken, int diceId, ClientDiceLocations initialLocation, ClientDiceLocations finalLocation, Position position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException, CannotPickDiceException {
+    public NextAction placeDiceForToolCard(String userToken, int diceId, Position position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException, CannotPickDiceException {
         try {
-            ToolCardResponse response = (ToolCardResponse) remoteServer.placeDiceForToolCard(userToken, diceId, initialLocation, finalLocation, position);
+            ToolCardResponse response = (ToolCardResponse) remoteServer.placeDiceForToolCard(userToken, diceId, position);
             response.handle(this);
             return response.nextAction;
         } catch (RemoteException e) {

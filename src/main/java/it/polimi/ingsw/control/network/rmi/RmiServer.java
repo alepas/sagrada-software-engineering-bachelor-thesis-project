@@ -69,13 +69,13 @@ public class RmiServer extends UnicastRemoteObject implements RemoteServer, Obse
     }
 
     @Override
-    public Response pickDiceForToolCard(String userToken, int diceId, ClientDiceLocations where) throws CannotFindPlayerInDatabaseException, CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException {
-        return controller.pickDiceForToolCard(userToken, diceId, where);
+    public Response pickDiceForToolCard(String userToken, int diceId) throws CannotFindPlayerInDatabaseException, CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException {
+        return controller.pickDiceForToolCard(userToken, diceId);
     }
 
     @Override
-    public Response placeDiceForToolCard(String userToken, int diceId, ClientDiceLocations diceFrom, ClientDiceLocations diceDestination, Position position) throws RemoteException, CannotFindPlayerInDatabaseException, CannotPickPositionException, CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException {
-        return controller.placeDiceForToolCard(userToken, diceId, diceFrom, diceDestination, position);
+    public Response placeDiceForToolCard(String userToken, int diceId, Position position) throws RemoteException, CannotFindPlayerInDatabaseException, CannotPickPositionException, CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException {
+        return controller.placeDiceForToolCard(userToken, diceId, position);
     }
 
     @Override

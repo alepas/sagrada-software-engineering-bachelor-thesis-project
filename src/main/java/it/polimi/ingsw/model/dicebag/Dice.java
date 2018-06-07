@@ -21,7 +21,7 @@ public class Dice implements Serializable {
 
     //metodo invocato sia dal costruttore per assegnare un numero tra 1 e 6
     // ma anche nel caso in cui possa ritirare il dado
-    int rollDice( ){
+    public int rollDice( ){
         Random random = new Random();
         number = random.nextInt(6) + 1;
         return number;

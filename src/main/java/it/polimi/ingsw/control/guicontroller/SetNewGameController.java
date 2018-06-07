@@ -678,7 +678,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
     }
 
     @Override
-    public void handle(DiceChangedNotification notification) {
+    public void handle(ToolCardDiceChangedNotification notification) {
     }
 
     @Override
@@ -686,10 +686,6 @@ public class SetNewGameController implements Observer, NotificationHandler {
 
     }
 
-    @Override
-    public void handle(ToolCardCanceledNotification notification) {
-
-    }
 
     @Override
     public void handle(ToolCardUsedNotification notification) {
@@ -703,6 +699,16 @@ public class SetNewGameController implements Observer, NotificationHandler {
 
     @Override
     public void handle(ScoreNotification notification) {
+    }
+
+    @Override
+    public void handle(ToolCardDicePlacedNotification toolCardDicePlacedNotification) {
+
+    }
+
+    @Override
+    public void handle(ToolCardExtractedDicesModified toolCardExtractedDicesModified) {
+
     }
 
 }

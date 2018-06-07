@@ -6,14 +6,11 @@ import it.polimi.ingsw.model.clientModel.ClientDiceLocations;
 public class ToolCardPickDiceRequest implements Request {
     public final String userToken;
     public final int diceId;
-    public final ClientDiceLocations where;
 
-    public ToolCardPickDiceRequest(String userToken, int diceId, ClientDiceLocations where) {
+    public ToolCardPickDiceRequest(String userToken, int diceId) {
         this.userToken = userToken;
-        this.diceId=diceId;
-        this.where=where;
+        this.diceId = diceId;
     }
-
 
     @Override
     public Response handle(RequestHandler handler) {

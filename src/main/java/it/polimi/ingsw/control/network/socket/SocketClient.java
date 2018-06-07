@@ -203,8 +203,8 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
     }
 
     @Override
-    public NextAction pickDiceForToolCard(String userToken, int diceId, ClientDiceLocations where) throws CannotFindPlayerInDatabaseException, CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException {
-        request(new ToolCardPickDiceRequest(userToken, diceId,where));
+    public NextAction pickDiceForToolCard(String userToken, int diceId) throws CannotFindPlayerInDatabaseException, CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException {
+        request(new ToolCardPickDiceRequest(userToken, diceId));
 
         ToolCardResponse response = (ToolCardResponse) waitResponse();
         assert response != null;
@@ -223,8 +223,8 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
     }
 
     @Override
-    public NextAction placeDiceForToolCard(String userToken, int diceId, ClientDiceLocations initialLocation, ClientDiceLocations finalLocation, Position position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException, CannotPickDiceException {
-        request(new ToolCardPlaceDiceRequest(userToken, diceId,initialLocation,finalLocation,position));
+    public NextAction placeDiceForToolCard(String userToken, int diceId, Position position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException, CannotPickDiceException {
+        request(new ToolCardPlaceDiceRequest(userToken, diceId, position));
 
         ToolCardResponse response = (ToolCardResponse) waitResponse();
         assert response != null;

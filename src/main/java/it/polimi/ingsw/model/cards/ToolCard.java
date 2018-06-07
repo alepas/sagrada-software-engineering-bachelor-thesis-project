@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.cards;
 
-import it.polimi.ingsw.model.clientModel.ClientDiceLocations;
+import it.polimi.ingsw.control.network.commands.notifications.Notification;
 import it.polimi.ingsw.model.clientModel.ClientToolCard;
 import it.polimi.ingsw.model.clientModel.Position;
 import it.polimi.ingsw.model.dicebag.Color;
@@ -9,6 +9,8 @@ import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
 import it.polimi.ingsw.model.game.Game;
 import it.polimi.ingsw.model.usersdb.MoveData;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
+
+import java.util.ArrayList;
 
 public abstract class ToolCard implements Cloneable{
     protected String id;
@@ -27,6 +29,7 @@ public abstract class ToolCard implements Cloneable{
     protected Game currentGame=null;
     protected boolean singlePlayerGame=false;
     protected String username=null;
+    protected ArrayList<Notification> movesNotifications;
 
 
     public abstract ToolCard getToolCardCopy();
@@ -48,8 +51,8 @@ public abstract class ToolCard implements Cloneable{
     public Boolean hasBeenUsed() { return used; }
 
     public abstract MoveData setCard(PlayerInGame player) throws CannotUseToolCardException;
-    public abstract MoveData placeDice(Dice dice, ClientDiceLocations startLocation, ClientDiceLocations finishLocation, Position pos) throws CannotPickDiceException, CannotPickPositionException, CannotPerformThisMoveException;
-    public abstract MoveData pickDice(Dice dice, ClientDiceLocations location) throws CannotPickDiceException, CannotPerformThisMoveException;
+    public abstract MoveData placeDice(int diceId, Position pos) throws CannotPickDiceException, CannotPickPositionException, CannotPerformThisMoveException;
+    public abstract MoveData pickDice(int diceId) throws CannotPickDiceException, CannotPerformThisMoveException;
     public abstract MoveData pickNumber(int number) throws CannotPickNumberException, CannotPerformThisMoveException;
 
 

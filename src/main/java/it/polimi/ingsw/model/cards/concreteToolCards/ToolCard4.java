@@ -1,3 +1,4 @@
+/*
 package it.polimi.ingsw.model.cards.concreteToolCards;
 
 import it.polimi.ingsw.control.network.commands.notifications.DicePlacedNotification;
@@ -29,7 +30,7 @@ public class ToolCard4 extends ToolCard {
         this.colorForDiceSingleUser=Color.YELLOW;
         this.allowPlaceDiceAfterCard=true;
         this.cardBlocksNextTurn=false;
-        this.maxCancelStatus=3;
+        this.maxCancelStatus=2;
         this.cardOnlyInFirstMove=false;
         this.used=false;
         this.diceForSingleUser=null;
@@ -80,13 +81,13 @@ public class ToolCard4 extends ToolCard {
 
 
     @Override
-    public MoveData pickDice(Dice dice, ClientDiceLocations location) throws CannotPickDiceException, CannotPerformThisMoveException {
+    public MoveData pickDice(int diceId) throws CannotPickDiceException, CannotPerformThisMoveException {
         if ((currentStatus==0)&&(singlePlayerGame)){
-            if (dice.getDiceColor()!=colorForDiceSingleUser)
-                throw new CannotPickDiceException(username,dice.getDiceNumber(),dice.getDiceColor(),location, 1);
+            if (diceId.getDiceColor()!=colorForDiceSingleUser)
+                throw new CannotPickDiceException(username, diceId.getDiceNumber(), diceId.getDiceColor(),location, 1);
             this.currentStatus = 1;
-            this.diceForSingleUser=dice;
-            currentGame.getExtractedDices().remove(dice);
+            this.diceForSingleUser= diceId;
+            currentGame.getExtractedDices().remove(diceId);
             updateClientExtractedDices();
             return new MoveData(NextAction.PLACE_DICE_TOOLCARD,ClientDiceLocations.WPC,ClientDiceLocations.WPC,null,tempExtractedDices,null,null);
         }
@@ -100,33 +101,34 @@ public class ToolCard4 extends ToolCard {
     }
 
     @Override
-    public MoveData placeDice(Dice dice, ClientDiceLocations startLocation, ClientDiceLocations finishLocation, Position pos) throws CannotPerformThisMoveException, CannotPickPositionException, CannotPickDiceException {
+    public MoveData placeDice(int diceId, Position pos) throws CannotPerformThisMoveException, CannotPickPositionException, CannotPickDiceException {
         if (!((startLocation == finishLocation) && (finishLocation == ClientDiceLocations.WPC))) {
             throw new CannotPerformThisMoveException(currentPlayer.getUser(), 2, false);
         }
         if(currentStatus==1) {
 
-            firstStartPosition = currentPlayer.getWPC().getPositionFromDice(dice.getId());
-            if (!currentPlayer.getWPC().addDiceWithAllRestrictions(dice, pos))
+            firstStartPosition = currentPlayer.getWPC().getPositionFromDice(diceId.getId());
+            if (!currentPlayer.getWPC().addDiceWithAllRestrictions(diceId, pos))
                 throw new CannotPickPositionException(username, pos);
             currentPlayer.getWPC().removeDice(firstStartPosition);
             currentStatus=2;
             updateClientWPC();
-            currentPlayer.getGame().changeAndNotifyObservers(new DicePlacedNotification(username, dice.getClientDice(), pos, tempClientWpc, null, null));
+            currentPlayer.getGame().changeAndNotifyObservers(new DicePlacedNotification(username, diceId.getClientDice(), pos, tempClientWpc, null, null));
 
             return new MoveData(NextAction.PLACE_DICE_TOOLCARD,ClientDiceLocations.WPC,ClientDiceLocations.WPC,tempClientWpc,null,null,null);
 
         }
         else if (currentStatus==2){
-            if (dice.getId()==firstDice.getId())
-                throw new CannotPickDiceException(username,dice.getId(),ClientDiceLocations.WPC,4);
-            secondStartPosition = currentPlayer.getWPC().getPositionFromDice(dice.getId());
-            if (!currentPlayer.getWPC().addDiceWithAllRestrictions(dice, pos))
+            if (diceId.getId()==firstDice.getId())
+                throw new CannotPickDiceException(username, diceId.getId(),ClientDiceLocations.WPC,4);
+            secondStartPosition = currentPlayer.getWPC().getPositionFromDice(diceId.getId());
+            if (!currentPlayer.getWPC().addDiceWithAllRestrictions(diceId, pos))
                 throw new CannotPickPositionException(username, pos);
             currentPlayer.getWPC().removeDice(secondStartPosition);
             updateClientWPC();
-            currentPlayer.getGame().changeAndNotifyObservers(new DicePlacedNotification(username, dice.getClientDice(), pos, tempClientWpc, null, null));
+            currentPlayer.getGame().changeAndNotifyObservers(new DicePlacedNotification(username, diceId.getClientDice(), pos, tempClientWpc, null, null));
             currentPlayer.setToolCardUsedInTurn(true);
+            this.used = true;
             ClientWpc tempWpc=tempClientWpc;
             cleanCard();
             return new MoveData(true,tempWpc,null,null);
@@ -220,3 +222,4 @@ public class ToolCard4 extends ToolCard {
 
 
 }
+*/

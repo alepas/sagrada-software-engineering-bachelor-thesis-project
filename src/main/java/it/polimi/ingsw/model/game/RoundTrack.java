@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.clientModel.ClientDice;
 import it.polimi.ingsw.model.clientModel.ClientRoundTrack;
 import it.polimi.ingsw.model.clientModel.Position;
 import it.polimi.ingsw.model.dicebag.Dice;
+import it.polimi.ingsw.model.wpc.DiceAndPosition;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -102,6 +103,18 @@ public class RoundTrack implements Serializable {
         dicesNotUsed[position.getRow()][position.getColumn()] = addedDice;
         return removedDice;
 
+    }
+
+    public DiceAndPosition getDiceAndPosition(int diceId){
+        for (int row = 0; row < NUM_OF_ROUND; row++) {
+
+            for (int column = 0; column < HYPOTHETICAL_MAX_DICES_PER_ROUND; column++)
+                if (isThereADice(row, column))
+                    if (getDice(row, column).getId()==diceId) {
+                        return new DiceAndPosition(getDice(row,column),new Position(row,column));
+                    }
+        }
+        return null;
     }
 
 

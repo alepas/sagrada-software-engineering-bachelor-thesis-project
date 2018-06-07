@@ -220,6 +220,8 @@ public class DatabaseUsers {
         String oldtoken=null;
 
         // username isn't registered
+
+        System.out.println("username ricevuto: "+username+" password: "+password);
         if(!usersByUsername.containsKey(username) ){
             throw new CannotLoginUserException(username,2);
         }

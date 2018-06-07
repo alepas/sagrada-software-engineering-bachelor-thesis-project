@@ -156,7 +156,7 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
     @Override
     public Response handle(ToolCardPickDiceRequest request) {
         try {
-            return controller.pickDiceForToolCard(request.userToken,request.diceId,request.where);
+            return controller.pickDiceForToolCard(request.userToken,request.diceId);
         } catch (CannotFindPlayerInDatabaseException | CannotPickDiceException | PlayerNotAuthorizedException | NoToolCardInUseException | CannotPerformThisMoveException e) {
             return new ToolCardResponse(e);
         }
@@ -174,7 +174,7 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
     @Override
     public Response handle(ToolCardPlaceDiceRequest request) {
         try {
-            return controller.placeDiceForToolCard(request.userToken, request.diceId, request.diceFrom, request.diceDestination,request.position);
+            return controller.placeDiceForToolCard(request.userToken, request.diceId,request.position);
         } catch (CannotFindPlayerInDatabaseException | CannotPickPositionException | PlayerNotAuthorizedException | NoToolCardInUseException | CannotPerformThisMoveException | CannotPickDiceException e) {
             return new ToolCardResponse(e);
         }

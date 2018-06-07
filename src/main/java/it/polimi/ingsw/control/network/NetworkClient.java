@@ -52,10 +52,10 @@ public abstract class NetworkClient implements ResponseHandler {
     public abstract NextAction useToolCard(String userToken, String cardId) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotUseToolCardException, CannotPerformThisMoveException;
 
     //TODO: rimuovere where (Passare null per il momento)
-    public abstract NextAction pickDiceForToolCard(String userToken, int diceId, ClientDiceLocations where) throws CannotFindPlayerInDatabaseException, CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException;
+    public abstract NextAction pickDiceForToolCard(String userToken, int diceId) throws CannotFindPlayerInDatabaseException, CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException;
 
     //TODO: rimouovere initialLocation, finalLocation (Passare null per il momento)
-    public abstract NextAction placeDiceForToolCard(String userToken, int diceId, ClientDiceLocations initialLocation, ClientDiceLocations finalLocation, Position position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException, CannotPickDiceException ;
+    public abstract NextAction placeDiceForToolCard(String userToken, int diceId, Position position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException, CannotPickDiceException ;
 
     public abstract NextAction pickNumberForToolCard(String userToken, int number) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPickNumberException, CannotPerformThisMoveException;
 
@@ -130,7 +130,7 @@ public abstract class NetworkClient implements ResponseHandler {
         //TODO: è giusto il controllo diverso da null?
         if (response.exception != null){
             ToolCardClientNextActionInfo info = new ToolCardClientNextActionInfo(response.wherePickNewDice,
-                response.wherePutNewDice, response.numbersToChoose, response.diceChosenId);
+                response.wherePutNewDice, response.numbersToChoose, response.diceChosenId, response.diceChosenLocation);
 
             clientModel.setToolCardClientNextActionInfo(info);
             if (response.wpc != null) clientModel.setMyWpc(response.wpc);

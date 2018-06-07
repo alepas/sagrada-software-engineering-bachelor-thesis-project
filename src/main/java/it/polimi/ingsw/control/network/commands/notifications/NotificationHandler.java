@@ -19,11 +19,9 @@ public interface NotificationHandler {
 
     void handle(NextTurnNotification notification);
 
-    void handle(DiceChangedNotification notification);
+    void handle(ToolCardDiceChangedNotification notification);
 
     void handle(DicePlacedNotification notification);
-
-    void handle(ToolCardCanceledNotification notification);
 
     void handle(ToolCardUsedNotification notification);
 
@@ -31,6 +29,7 @@ public interface NotificationHandler {
 
     void handle(ScoreNotification notification);
 
+    void handle(ToolCardDicePlacedNotification toolCardDicePlacedNotification);
 
-
+    void handle(ToolCardExtractedDicesModified toolCardExtractedDicesModified);
 }

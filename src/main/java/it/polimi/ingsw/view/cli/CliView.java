@@ -792,7 +792,7 @@ public class CliView implements Observer, NotificationHandler {
     }
 
     @Override
-    public void handle(DiceChangedNotification notification) {
+    public void handle(ToolCardDiceChangedNotification notification) {
 
     }
 
@@ -807,10 +807,7 @@ public class CliView implements Observer, NotificationHandler {
         }
     }
 
-    @Override
-    public void handle(ToolCardCanceledNotification notification) {
 
-    }
 
     @Override
     public void handle(ToolCardUsedNotification notification) {
@@ -824,6 +821,16 @@ public class CliView implements Observer, NotificationHandler {
 
     @Override
     public void handle(ScoreNotification notification) {
+
+    }
+
+    @Override
+    public void handle(ToolCardDicePlacedNotification toolCardDicePlacedNotification) {
+
+    }
+
+    @Override
+    public void handle(ToolCardExtractedDicesModified toolCardExtractedDicesModified) {
 
     }
 }

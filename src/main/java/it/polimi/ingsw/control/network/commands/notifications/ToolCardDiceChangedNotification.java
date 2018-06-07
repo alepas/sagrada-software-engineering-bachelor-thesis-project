@@ -7,7 +7,7 @@ import it.polimi.ingsw.model.clientModel.ClientWpc;
 
 import java.util.ArrayList;
 
-public class DiceChangedNotification implements Notification {
+public class ToolCardDiceChangedNotification implements Notification {
     public final String username;
     public final ClientDice oldDice;
     public final ClientDice newDice;
@@ -17,7 +17,7 @@ public class DiceChangedNotification implements Notification {
     public final ClientRoundTrack roundTrack;
     public final ClientWpc wpc;
 
-    public DiceChangedNotification(String username, ClientDice oldDice, ClientDice newDice, ClientDiceLocations oldPosition, ClientDiceLocations newPosiition, ArrayList<ClientDice> extractedDices) {
+    public ToolCardDiceChangedNotification(String username, ClientDice oldDice, ClientDice newDice, ClientDiceLocations oldPosition, ClientDiceLocations newPosiition, ArrayList<ClientDice> extractedDices) {
         this.username = username;
         this.oldDice = oldDice;
         this.newDice = newDice;
@@ -29,7 +29,7 @@ public class DiceChangedNotification implements Notification {
 
     }
 
-    public DiceChangedNotification(String username, ClientDice oldDice, ClientDice newDice, ClientDiceLocations oldPosition, ClientDiceLocations newPosiition, ArrayList<ClientDice> extractedDices, ClientRoundTrack roundTrack) {
+    public ToolCardDiceChangedNotification(String username, ClientDice oldDice, ClientDice newDice, ClientDiceLocations oldPosition, ClientDiceLocations newPosiition, ArrayList<ClientDice> extractedDices, ClientRoundTrack roundTrack) {
         this.username = username;
         this.oldDice = oldDice;
         this.newDice = newDice;
@@ -40,7 +40,7 @@ public class DiceChangedNotification implements Notification {
         this.wpc=null;
 
     }
-    public DiceChangedNotification(String username, ClientDice oldDice, ClientDice newDice, ClientDiceLocations oldPosition, ClientDiceLocations newPosiition, ArrayList<ClientDice> extractedDices, ClientWpc wpc) {
+    public ToolCardDiceChangedNotification(String username, ClientDice oldDice, ClientDice newDice, ClientDiceLocations oldPosition, ClientDiceLocations newPosiition, ArrayList<ClientDice> extractedDices, ClientWpc wpc) {
         this.username = username;
         this.oldDice = oldDice;
         this.newDice = newDice;
@@ -51,7 +51,7 @@ public class DiceChangedNotification implements Notification {
         this.wpc=wpc;
 
     }
-    public DiceChangedNotification(String username, ClientDice oldDice, ClientDice newDice, ClientDiceLocations oldPosition, ClientDiceLocations newPosiition, ArrayList<ClientDice> extractedDices,ClientRoundTrack roundTrack, ClientWpc wpc) {
+    public ToolCardDiceChangedNotification(String username, ClientDice oldDice, ClientDice newDice, ClientDiceLocations oldPosition, ClientDiceLocations newPosiition, ArrayList<ClientDice> extractedDices, ClientRoundTrack roundTrack, ClientWpc wpc) {
         this.username = username;
         this.oldDice = oldDice;
         this.newDice = newDice;

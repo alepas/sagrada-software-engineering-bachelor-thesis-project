@@ -2,8 +2,6 @@ package it.polimi.ingsw.model.usersdb;
 
 import it.polimi.ingsw.control.network.commands.notifications.DicePlacedNotification;
 import it.polimi.ingsw.control.network.commands.notifications.PlayerSkipTurnNotification;
-import it.polimi.ingsw.control.network.commands.notifications.ToolCardCanceledNotification;
-import it.polimi.ingsw.control.network.commands.notifications.ToolCardUsedNotification;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.clientModel.*;
@@ -15,6 +13,7 @@ import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
 import it.polimi.ingsw.model.game.Game;
 import it.polimi.ingsw.model.game.MultiplayerGame;
 import it.polimi.ingsw.model.game.RoundTrack;
+import it.polimi.ingsw.model.wpc.DiceAndPosition;
 import it.polimi.ingsw.model.wpc.Wpc;
 import it.polimi.ingsw.model.wpc.WpcDB;
 
@@ -184,21 +183,20 @@ public class PlayerInGame {
         } else throw new CannotPerformThisMoveException(username,1,true);
     }
 
-    public synchronized MoveData getNextMove() throws PlayerNotAuthorizedException {
+    public synchronized MoveData getNextMove() {
         if (!active)
-            throw new PlayerNotAuthorizedException(username);
+            return new MoveData(NextAction.WAIT_FOR_TURN);
         if (toolCardInUse == null) {
-                if ((!placedDiceInTurn)&&(!toolCardUsedInTurn))
-                    return new MoveData(NextAction.MENU_ALL);
-                else if (placedDiceInTurn)
-                    return new MoveData(NextAction.MENU_ONLY_TOOLCARD);
-                else if (toolCardUsedInTurn)
-                    return new MoveData(NextAction.MENU_ONLY_PLACE_DICE);
-                else if (toolCardUsedInTurn&&placedDiceInTurn)
-                    return new MoveData(NextAction.MENU_ONLY_ENDTURN);
-            }
+            if ((!placedDiceInTurn)&&(!toolCardUsedInTurn))
+                return new MoveData(NextAction.MENU_ALL);
+            else if (toolCardUsedInTurn&&placedDiceInTurn)
+                return new MoveData(NextAction.MENU_ONLY_ENDTURN);
+            else if (placedDiceInTurn)
+                return new MoveData(NextAction.MENU_ONLY_TOOLCARD);
+            else
+                return new MoveData(NextAction.MENU_ONLY_PLACE_DICE);
+        }
         else return toolCardInUse.getNextMove();
-        return null;
     }
 
     public synchronized MoveData placeDice(int diceId, Position pos) throws CannotPickDiceException, CannotPerformThisMoveException, PlayerNotAuthorizedException, CannotPickPositionException {
@@ -247,7 +245,6 @@ public class PlayerInGame {
             temp = toolCardInUse.cancelAction();
             if (temp.canceledToolCard) {
                 favours += lastFavoursRemoved;
-                game.changeAndNotifyObservers(new ToolCardCanceledNotification(username, oldCard.getID()));
                 if (!placedDiceInTurn)
                     temp.setNextAction(NextAction.MENU_ALL);
                 else temp.setNextAction(NextAction.MENU_ONLY_TOOLCARD);
@@ -304,7 +301,6 @@ public class PlayerInGame {
                     favours = favours - 2;
                     lastFavoursRemoved = 2;
                     tempResponse = card.setCard(this);
-                    game.changeAndNotifyObservers(new ToolCardUsedNotification(username, cardID));
                 } else throw new CannotUseToolCardException(cardID, 1);
             } else {
                 System.out.println("l'utente ha favours: "+favours);
@@ -312,7 +308,6 @@ public class PlayerInGame {
                     favours = favours - 1;
                     lastFavoursRemoved = 1;
                     tempResponse = card.setCard(this);
-                    game.changeAndNotifyObservers(new ToolCardUsedNotification(username, cardID));
                 } else throw new CannotUseToolCardException(cardID, 1);
             }
         }
@@ -329,18 +324,15 @@ public class PlayerInGame {
     }
 
 
-    public synchronized MoveData pickDiceforToolCard(int diceId, ClientDiceLocations where) throws CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException {
+    public synchronized MoveData pickDiceforToolCard(int diceId) throws CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException {
         if (!active)
             throw new PlayerNotAuthorizedException(username);
 
         if (toolCardInUse==null)
             throw new NoToolCardInUseException(username);
-        Dice dice=null;
         MoveData tempResponse;
-        dice=dicePresentInLocation(diceId,where);
-        if (dice==null)
-            throw new CannotPickDiceException(username,diceId,where,0);
-        tempResponse=toolCardInUse.pickDice(dice,where);
+
+        tempResponse=toolCardInUse.pickDice(diceId);
         if (tempResponse.moveFinished){
             incrementActionInTurn(true);
             if ((!placedDiceInTurn)&&(allowPlaceDiceAfterCard))
@@ -351,18 +343,13 @@ public class PlayerInGame {
 
     }
 
-    public synchronized MoveData placeDiceForToolCard(int diceId, ClientDiceLocations startLocation, ClientDiceLocations finishLocation, Position pos) throws PlayerNotAuthorizedException, NoToolCardInUseException, CannotPickPositionException, CannotPerformThisMoveException, CannotPickDiceException {
+    public synchronized MoveData placeDiceForToolCard(int diceId, Position pos) throws PlayerNotAuthorizedException, NoToolCardInUseException, CannotPickPositionException, CannotPerformThisMoveException, CannotPickDiceException {
         if (!active)
             throw new PlayerNotAuthorizedException(username);
-
         if (toolCardInUse==null)
             throw new NoToolCardInUseException(username);
-        Dice dice=null;
         MoveData tempResponse;
-        dice=dicePresentInLocation(diceId,startLocation);
-        if (dice==null)
-            throw new CannotPickDiceException(username,diceId,startLocation,0);
-        tempResponse=toolCardInUse.placeDice(dice,startLocation,finishLocation,pos);
+        tempResponse=toolCardInUse.placeDice(diceId, pos);
         if (tempResponse.moveFinished){
             incrementActionInTurn(true);
             if ((!placedDiceInTurn)&&(allowPlaceDiceAfterCard))
@@ -499,32 +486,29 @@ public class PlayerInGame {
     }
 
 
-    private Dice dicePresentInLocation(int diceId, ClientDiceLocations location) throws CannotPickDiceException {
-
+    public DiceAndPosition dicePresentInLocation(int diceId, ClientDiceLocations location) throws CannotPickDiceException {
+        DiceAndPosition tempResponse;
 
         if (location == ClientDiceLocations.EXTRACTED) {
             for (Dice tempDice : game.getExtractedDices()) {
                 if (tempDice.getId() == diceId) {
-                    return tempDice;
+                    return new DiceAndPosition(tempDice,null);
                 }
             }
             throw new CannotPickDiceException(username, diceId, ClientDiceLocations.EXTRACTED, 0);
         } else if (location == ClientDiceLocations.WPC) {
-            for (Dice tempDice : wpc.getWpcDices()) {
-                if (tempDice.getId() == diceId) {
-                    return tempDice;
-                }
-            }
-            throw new CannotPickDiceException(username, diceId, ClientDiceLocations.WPC, 0);
+            tempResponse = wpc.getDiceAndPosition(diceId);
+            if (tempResponse == null)
+                throw new CannotPickDiceException(username, diceId, ClientDiceLocations.WPC, 0);
+            else return tempResponse;
+
         } else if (location == ClientDiceLocations.ROUNDTRACK) {
-            for (Dice tempDice : game.getRoundTrack().getDicesNotUsed()) {
-                if (tempDice.getId() == diceId) {
-                    return tempDice;
-                }
-            }
-            throw new CannotPickDiceException(username, diceId, ClientDiceLocations.ROUNDTRACK, 0);
+            tempResponse=game.getRoundTrack().getDiceAndPosition(diceId);
+            if (tempResponse==null)
+                throw new CannotPickDiceException(username, diceId, ClientDiceLocations.ROUNDTRACK, 0);
+            else return tempResponse;
         }
-        return null;
+        throw new CannotPickDiceException(username, diceId, null, 0);
     }
 
 }

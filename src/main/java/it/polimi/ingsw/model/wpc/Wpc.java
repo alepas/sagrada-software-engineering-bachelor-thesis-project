@@ -34,6 +34,8 @@ public class Wpc {
         return new Wpc(id,favours,schema);
     }
 
+
+
     public ClientWpc getClientWpc(){
         ArrayList<ClientCell> cells = new ArrayList<>();
         for(Cell cell : schema){
@@ -53,6 +55,31 @@ public class Wpc {
     public ArrayList<Cell> getSchema() { return schema; }
 
     public String getId(){ return id; }
+
+
+    public boolean isDicePlaceable(Dice dice) {
+        Position pos;
+        for (Cell cell : schema) {
+            if (cell.getDice() == null) {
+                pos = cell.getCellPosition();
+                if (!firstDicePutted) {
+                    if (checkFirstTurnRestriction(cell) && checkCellRestriction(cell, dice)) {
+                        return true;
+                    }
+                } else {
+                    ArrayList<Cell> orthoCells = getOrthogonallyAdjacentCells(pos);
+                    ArrayList<Cell> diagCells = getDiagonallyAdjacentCells(pos);
+                    if (checkCellRestriction(cell, dice)
+                            && checkAdjacentDiceRestriction(orthoCells, dice)
+                            && isThereAtLeastADiceNear(orthoCells, diagCells)) {
+                        return true;
+                    }
+
+                }
+            }
+        }
+        return false;
+    }
 
     public boolean addDiceWithAllRestrictions(Dice dice, Position pos) {
         Cell cell=getCellFromPosition(pos);
@@ -127,6 +154,14 @@ public class Wpc {
 
     public Dice getDiceFromPosition(Position pos){
         return getCellFromPosition(pos).getDice();
+    }
+
+    public DiceAndPosition getDiceAndPosition(int diceId){
+        for(Cell cell: schema) {
+            if (cell.getDice().getId() == diceId)
+                return new DiceAndPosition(cell.getDice(),cell.getCellPosition());
+        }
+        return null;
     }
 
     public Position getPositionFromDice(int diceID){

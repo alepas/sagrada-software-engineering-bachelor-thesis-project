@@ -1,11 +1,9 @@
 package it.polimi.ingsw.model.cards.concreteToolCards;
 
 import it.polimi.ingsw.model.cards.ToolCard;
-import it.polimi.ingsw.model.clientModel.ClientDiceLocations;
 import it.polimi.ingsw.model.clientModel.Position;
 import it.polimi.ingsw.model.constants.ToolCardConstants;
 import it.polimi.ingsw.model.dicebag.Color;
-import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
 import it.polimi.ingsw.model.usersdb.MoveData;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
@@ -43,12 +41,12 @@ public class ToolCard8 extends ToolCard {
     }
 
     @Override
-    public MoveData placeDice(Dice dice, ClientDiceLocations startLocation, ClientDiceLocations finishLocation, Position pos) throws CannotPickDiceException, CannotPickPositionException, CannotPerformThisMoveException {
+    public MoveData placeDice(int diceId, Position pos) throws CannotPickDiceException, CannotPickPositionException, CannotPerformThisMoveException {
         return null;
     }
 
     @Override
-    public MoveData pickDice(Dice dice, ClientDiceLocations location) throws CannotPickDiceException, CannotPerformThisMoveException {
+    public MoveData pickDice(int diceId) throws CannotPickDiceException, CannotPerformThisMoveException {
         return null;
     }
 

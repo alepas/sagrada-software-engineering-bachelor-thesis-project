@@ -96,15 +96,15 @@ public class ServerController {
         return convertMoveDataToToolCardResponse(player.setToolCard(cardId));
     }
 
-    public Response pickDiceForToolCard(String userToken, int diceId, ClientDiceLocations where) throws CannotFindPlayerInDatabaseException, CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException {
+    public Response pickDiceForToolCard(String userToken, int diceId) throws CannotFindPlayerInDatabaseException, CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException {
         PlayerInGame player=databaseUsers.getPlayerInGameFromToken(userToken);
-        return convertMoveDataToToolCardResponse(player.pickDiceforToolCard(diceId,where));
+        return convertMoveDataToToolCardResponse(player.pickDiceforToolCard(diceId));
     }
 
-    public Response placeDiceForToolCard(String userToken, int diceId, ClientDiceLocations initialLocation, ClientDiceLocations finalLocation, Position position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException, CannotPickDiceException {
+    public Response placeDiceForToolCard(String userToken, int diceId, Position position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException, CannotPickDiceException {
         PlayerInGame player=databaseUsers.getPlayerInGameFromToken(userToken);
         Position pos=new Position(position.getRow(),position.getColumn());
-        return convertMoveDataToToolCardResponse(player.placeDiceForToolCard(diceId,initialLocation,finalLocation,pos));
+        return convertMoveDataToToolCardResponse(player.placeDiceForToolCard(diceId, pos));
     }
 
     public Response pickNumberForToolCard(String userToken, int number) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPickNumberException, CannotPerformThisMoveException {
@@ -190,8 +190,12 @@ public class ServerController {
         for (Color col: currentPlayer.getPrivateObjs())
             tempPrivateObjects.add(Color.getClientColor(col));
         ClientColor[] clientColors= (ClientColor[])tempPrivateObjects.toArray();
-
-        return new UpdatedGameResponse(tempGame.getID(),tempGame.numActualPlayers(),tempGame.getNumPlayers(),clientColors, wpcHashMap,clientToolCards,clientPocs,tempGame.getRoundTrack().getCurrentRound(),clientDices,currentPlayer.getTurnForRound(),currentPlayer.isActive(), currentPlayer.getFavours(),tempGame.getRoundTrack().getClientRoundTrack());
+        MoveData nextActionMove=currentPlayer.getNextMove();
+        ToolCardClientNextActionInfo toolCardClientNextActionInfo=new ToolCardClientNextActionInfo(nextActionMove.wherePickNewDice,nextActionMove.wherePutNewDice,
+                nextActionMove.numbersToChoose,nextActionMove.diceChosenId, nextActionMove.diceChosenLocation);
+        return new UpdatedGameResponse(tempGame.getID(),tempGame.numActualPlayers(),tempGame.getNumPlayers(),clientColors,wpcHashMap,clientToolCards,clientPocs,
+                tempGame.getRoundTrack().getCurrentRound(),clientDices,tempGame.getCurrentTurn(),currentPlayer.isActive(),currentPlayer.getFavours(),
+                tempGame.getRoundTrack().getClientRoundTrack(),nextActionMove.nextAction,toolCardClientNextActionInfo);
     }
 
 
@@ -204,7 +208,7 @@ public class ServerController {
 
     private ToolCardResponse convertMoveDataToToolCardResponse(MoveData moveData){
         return new ToolCardResponse(moveData.nextAction,moveData.wherePickNewDice,moveData.wherePutNewDice,moveData.numbersToChoose,moveData.wpc,
-                moveData.extractedDices,moveData.roundTrack,moveData.diceChosenId,moveData.exception);
+                moveData.extractedDices,moveData.roundTrack,moveData.diceChosenId,moveData.diceChosenLocation,moveData.exception);
     }
 
 
