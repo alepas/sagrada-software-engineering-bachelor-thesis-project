@@ -30,6 +30,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.*;
 
+import static it.polimi.ingsw.model.clientModel.ClientDiceLocations.EXTRACTED;
+import static it.polimi.ingsw.model.clientModel.ClientDiceLocations.ROUNDTRACK;
 import static it.polimi.ingsw.view.Status.*;
 import static java.lang.Thread.sleep;
 
@@ -275,13 +277,15 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                 pickDiceWithToolCard();
                 break;
             case SELECT_NUMBER_TOOLCARD:
-                //TODO
+                //selectNumberToolCard();
                 break;
             case SELECT_DICE_TO_ACTIVE_TOOLCARD:
                 //TODO
                 break;
             case PLACE_DICE_TOOLCARD:
                 placeDiceWithToolCard();
+                break;
+            default:
                 break;
         }
     }
@@ -347,7 +351,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                 }
                 event.setDropCompleted(success);
                 event.consume();
-                stateAction(state.change(nextAction));
+                stateAction(Objects.requireNonNull(state.change(Objects.requireNonNull(nextAction))));
             });
         }
     }
@@ -367,12 +371,13 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
             if(!isUsedToolCard) return networkClient.placeDice(clientModel.getUserToken(), id, position);
             else {
                 isUsedToolCard = false;
-                System.out.println("da fare");
-                //nextAction= networkClient.placeDiceForToolCard(clientModel.getUserToken(), id, position);
+                return networkClient.placeDiceForToolCard(clientModel.getUserToken(), id, position);
             }
         } catch (CannotFindPlayerInDatabaseException | CannotPickPositionException |
                 CannotPickDiceException | PlayerNotAuthorizedException | CannotPerformThisMoveException e) {
             Platform.runLater(()->messageLabel.setText("Non è possibile posizionare il dado nella cella selezionata."));
+        } catch (NoToolCardInUseException e) {
+            messageLabel.setText("Non stai usando alcuna Tool Card!");
         }
         return null;
     }
@@ -717,21 +722,59 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
         });
     }
 
+    /**
+     * Contains three possible events on three possible different actions that the player can do: the player can pick a
+     * dice from the extracted dices, from the round track or from the his/her schema.
+     */
     private void pickDiceWithToolCard(){
-        for(ImageView extractDice: extractDices){
-            extractDice.setOnMouseClicked(event-> {
-                System.out.println("ehi");
-                //networkClient.pickDiceForToolCard(clientModel.getUserToken(), Integer.parseInt(dice.getId()));
-            });
+        ToolCardClientNextActionInfo info = clientModel.getToolCardClientNextActionInfo();
+
+        if(info.wherePickNewDice == EXTRACTED) {
+            extractedDicesGrid.setDisable(false);
+            messageLabel.setText("Clicca su un dado della riserva!");
+            for (ImageView extractDice : extractDices)
+                extractDice.setOnMouseClicked(event ->
+                        stateAction(state.change(pickDice(Integer.parseInt(extractDice.getId())))));
         }
 
-        for(ImageView roundTrackDice: roundTrackDices){
-            roundTrackDice.setOnMouseClicked(event -> System.out.println("ehi"));
+        else if (info.wherePickNewDice == ROUNDTRACK ) {
+            roundTrackGrid.setDisable(false);
+            messageLabel.setText("Clicca su un dado del Round Track!");
+            for (ImageView roundTrackDice : roundTrackDices)
+                roundTrackDice.setOnMouseClicked(event ->
+                        stateAction(state.change(pickDice(Integer.parseInt(roundTrackDice.getId())))));
         }
 
-        for(ImageView schemaDice: schemaDices){
-            schemaDice.setOnMouseClicked(event -> System.out.println("ehi"));
+        else {
+            firstWpcGrid.setDisable(false);
+            messageLabel.setText("Clicca su un dado del tuo schema di gioco!");
+            for (ImageView schemaDice : schemaDices)
+                schemaDice.setOnMouseClicked(event ->
+                        stateAction(state.change(pickDice(Integer.parseInt(schemaDice.getId())))));
         }
+    }
+
+    /**
+     * Calls the method pickDiceForToolCard in the networkClient.
+     *
+     * @param id is the dice's is the player want to pick
+     * @return the next action that the player can do
+     */
+    private NextAction pickDice(int id){
+        try {
+            return networkClient.pickDiceForToolCard(clientModel.getUserToken(), id);
+        } catch (CannotFindPlayerInDatabaseException e) {
+            messageLabel.setText(e.getMessage());
+        } catch (CannotPickDiceException e) {
+            messageLabel.setText(e.getMessage());
+        } catch (PlayerNotAuthorizedException e) {
+            messageLabel.setText(e.getMessage());
+        } catch (NoToolCardInUseException e) {
+            messageLabel.setText(e.getMessage());
+        } catch (CannotPerformThisMoveException e) {
+            messageLabel.setText(e.getMessage());
+        }
+        return null;
     }
 
     private void changeSceneHandle(Event event, String path) {
