@@ -129,7 +129,6 @@ public abstract class NetworkClient implements ResponseHandler {
 
     @Override
     public void handle(ToolCardResponse response){
-        //TODO: è giusto il controllo diverso da null?
         if (response.exception == null){
             ToolCardClientNextActionInfo info = new ToolCardClientNextActionInfo(response.wherePickNewDice,
                 response.wherePutNewDice, response.numbersToChoose, response.diceChosenId, response.diceChosenLocation);

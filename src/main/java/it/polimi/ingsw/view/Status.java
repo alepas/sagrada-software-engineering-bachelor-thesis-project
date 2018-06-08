@@ -31,8 +31,6 @@ public enum Status {
 
     public Status change(NextAction nextAction){
         switch (nextAction){
-            case PLACE_DICE:
-                return PLACE_DICE;
             case PLACE_DICE_TOOLCARD:
                 return PLACE_DICE_TOOLCARD;
             case INTERRUPT_TOOLCARD:
