@@ -64,6 +64,7 @@ public abstract class NetworkClient implements ResponseHandler {
 
 
 
+    public abstract NextAction findAlreadyStartedGame(String userToken) throws CannotFindGameForUserInDatabaseException;
 
     public abstract void getUpdatedExtractedDices(String userToken) throws CannotFindPlayerInDatabaseException;
 
@@ -165,6 +166,7 @@ public abstract class NetworkClient implements ResponseHandler {
             clientModel.setPrivateObjectives(response.privateObjectives);
             clientModel.setActive(response.active);
             clientModel.setFavour(response.favour);
+            clientModel.setToolCardClientNextActionInfo(response.nextActionInfo);
         }
     }
 

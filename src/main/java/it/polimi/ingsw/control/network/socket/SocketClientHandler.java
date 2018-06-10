@@ -280,6 +280,15 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
         }
     }
 
+    @Override
+    public Response handle(FindAlreadyStartedGameRequest request) {
+        try{
+            return controller.findAlreadyStartedGame(request.token, this);
+        } catch (CannotFindGameForUserInDatabaseException e) {
+            return new UpdatedGameResponse(e);
+        }
+    }
+
 
     //------------------------------ Game observer ------------------------------
 

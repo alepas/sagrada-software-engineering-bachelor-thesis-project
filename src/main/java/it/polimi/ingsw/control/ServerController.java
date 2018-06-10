@@ -120,6 +120,7 @@ public class ServerController {
 
 
 
+
     //---------------------------update client model------------------------
 
     public Response getUpdatedExtractedDices(String userToken) throws CannotFindPlayerInDatabaseException {
@@ -202,6 +203,20 @@ public class ServerController {
     public Response getNextMove(String userToken) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException {
         PlayerInGame currentPlayer=databaseUsers.getPlayerInGameFromToken(userToken);
         return convertMoveDataToNextMoveResponse(currentPlayer.getNextMove());
+    }
+
+
+    public Response findAlreadyStartedGame(String userToken, Observer observer) throws CannotFindGameForUserInDatabaseException {
+        Game game = databaseUsers.findAlreadyStartedGame(userToken, observer);
+        if (game != null) {
+            try {
+                return getUpdatedGame(userToken);
+            } catch (CannotFindPlayerInDatabaseException e) {
+                throw new CannotFindGameForUserInDatabaseException();
+            }
+
+        }
+        throw new CannotFindGameForUserInDatabaseException();
     }
 
     //--------private

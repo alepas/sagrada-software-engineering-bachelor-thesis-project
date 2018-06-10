@@ -53,5 +53,7 @@ public interface RemoteServer extends Remote {
 
     Response getUserStat(String userToken) throws RemoteException, CannotFindUserInDBException;
 
+    Response findAlreadyStartedGame(String userToken) throws RemoteException, CannotFindGameForUserInDatabaseException;
+
     }
 

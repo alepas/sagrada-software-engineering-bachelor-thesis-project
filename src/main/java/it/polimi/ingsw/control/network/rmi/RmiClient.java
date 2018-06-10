@@ -199,6 +199,17 @@ public class RmiClient extends NetworkClient {
     }
 
     @Override
+    public NextAction findAlreadyStartedGame(String userToken) throws CannotFindGameForUserInDatabaseException {
+        try {
+            UpdatedGameResponse response = (UpdatedGameResponse) remoteServer.findAlreadyStartedGame(userToken);
+            response.handle(this);
+            return response.nextAction;
+        } catch (RemoteException e) {
+            return null;
+        }
+    }
+
+    @Override
     public NextAction cancelAction(String userToken) throws CannotCancelActionException, PlayerNotAuthorizedException, CannotFindPlayerInDatabaseException {
         try {
             ToolCardResponse response = (ToolCardResponse) remoteServer.cancelAction(userToken);

@@ -43,4 +43,6 @@ public interface RequestHandler {
     Response handle(NextMoveRequest nextMoveRequest);
 
     Response handle(GetUserStatRequest request);
+
+    Response handle(FindAlreadyStartedGameRequest findAlreadyStartedGameRequest);
 }

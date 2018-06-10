@@ -352,6 +352,22 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
     }
 
     @Override
+    public NextAction findAlreadyStartedGame(String userToken) throws CannotFindGameForUserInDatabaseException {
+        request(new FindAlreadyStartedGameRequest(userToken));
+
+        UpdatedGameResponse response=(UpdatedGameResponse) waitResponse();
+        assert response !=null;
+        Exception e = response.exception;
+
+        if (e!=null){
+            if (e instanceof CannotFindGameForUserInDatabaseException) throw (CannotFindGameForUserInDatabaseException)e;
+            return null;
+        }
+        else
+            return response.nextAction;
+    }
+
+    @Override
     public NextAction cancelAction(String userToken) throws CannotCancelActionException, PlayerNotAuthorizedException, CannotFindPlayerInDatabaseException {
         request(new CancelActionRequest(userToken));
 

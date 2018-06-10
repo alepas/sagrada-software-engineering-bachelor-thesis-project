@@ -138,6 +138,11 @@ public class RmiServer extends UnicastRemoteObject implements RemoteServer, Obse
         return controller.getUserStat(userToken);
     }
 
+    @Override
+    public Response findAlreadyStartedGame(String userToken) throws RemoteException, CannotFindGameForUserInDatabaseException {
+        return controller.findAlreadyStartedGame(userToken, this);
+    }
+
 
     @Override
     public void update(Observable o, Object arg) {
