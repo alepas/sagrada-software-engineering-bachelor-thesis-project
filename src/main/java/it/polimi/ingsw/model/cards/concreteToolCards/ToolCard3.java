@@ -105,9 +105,11 @@ public class ToolCard3 extends ToolCard {
         if (pos==null){
             throw new CannotPerformThisMoveException(currentPlayer.getUser(),2,false);
         }
-        if (!currentPlayer.getWPC().addDicePersonalizedRestrictions(tempDice,pos,true,false,true,true,false))
-            throw new CannotPickPositionException(username, pos);
         currentPlayer.getWPC().removeDice(diceAndPosition.getPosition());
+        if (!currentPlayer.getWPC().addDicePersonalizedRestrictions(tempDice,pos,true,false,true,true,false)){
+            currentPlayer.getWPC().addDicePersonalizedRestrictions(tempDice,diceAndPosition.getPosition(),false,false,false,false,false);
+            throw new CannotPickPositionException(username, pos);
+        }
         this.used = true;
         updateClientWPC();
         movesNotifications.add(new ToolCardDicePlacedNotification(username, tempDice.getClientDice(),pos,tempClientWpc,null,null));
@@ -131,6 +133,7 @@ public class ToolCard3 extends ToolCard {
             }
             case 1: {
                 if (!singlePlayerGame){
+                    System.out.println("sto cancellando la cartina bbbeella");
                     cleanCard();
                     return new MoveData(true,true);
 

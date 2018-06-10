@@ -302,8 +302,8 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                 stateAction(ANOTHER_PLAYER_TURN);
                 break;
             case INTERRUPT_TOOLCARD:
-                stopToolCard();
-                //cancelLastOperation();
+                //stopToolCard();
+                cancelLastOperation();
                 break;
             case SELECT_DICE_TOOLCARD:
                 isChosenDiceIdActive();
@@ -435,19 +435,31 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
         int row = Integer.parseInt(cell.getId().substring(0, 1));
         int column = Integer.parseInt(cell.getId().substring(1, 2));
         Position position = new Position(row, column);
+        NextAction temp=null;
         try {
-            if(!isUsedToolCard) return networkClient.placeDice(clientModel.getUserToken(), id, position);
+            if(!isUsedToolCard)
+                temp= networkClient.placeDice(clientModel.getUserToken(), id, position);
             else {
-                isUsedToolCard = false;
-                return networkClient.placeDiceForToolCard(clientModel.getUserToken(), id, position);
+                temp= networkClient.placeDiceForToolCard(clientModel.getUserToken(), id, position);
+
             }
         } catch (CannotFindPlayerInDatabaseException | CannotPickPositionException |
                 CannotPickDiceException | PlayerNotAuthorizedException | CannotPerformThisMoveException e) {
             Platform.runLater(()->messageLabel.setText("Non è possibile posizionare il dado nella cella selezionata."));
+            if(isUsedToolCard) {
+                isUsedToolCard = false;
+                return NextAction.PLACE_DICE_TOOLCARD;
+            }
+            else return NextAction.MENU_ONLY_PLACE_DICE;
         } catch (NoToolCardInUseException e) {
             messageLabel.setText("Non stai usando alcuna Tool Card!");
+            if(isUsedToolCard) {
+                isUsedToolCard = false;
+                return NextAction.PLACE_DICE_TOOLCARD;
+            }
+            else return NextAction.MENU_ONLY_PLACE_DICE;
         }
-        return null;
+        return temp;
     }
 
     /**

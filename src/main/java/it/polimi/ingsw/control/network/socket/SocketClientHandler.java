@@ -249,7 +249,7 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
         try {
             return controller.cancelAction(cancelActionRequest.userToken);
         } catch (CannotCancelActionException | PlayerNotAuthorizedException | CannotFindPlayerInDatabaseException e) {
-            return new NextMoveResponse(e);
+            return new ToolCardResponse(e);
         }
     }
 

@@ -20,6 +20,7 @@ public class Wpc {
     private  int favours;
     public ArrayList<Cell> schema = new ArrayList<>();
     boolean firstDicePutted=false;
+    boolean onlyFirstDice=false;
 
 
     Wpc(String id, int favours, ArrayList<Cell> schema) {
@@ -91,6 +92,7 @@ public class Wpc {
             if (checkFirstTurnRestriction(cell)&&checkCellRestriction(cell,dice)) {
                 cell.setDice(dice);
                 firstDicePutted=true;
+                onlyFirstDice=true;
                 return true;
             }
         } else {
@@ -101,6 +103,7 @@ public class Wpc {
                     && checkAdjacentDiceRestriction(orthoCells, dice)
                     && isThereAtLeastADiceNear(orthoCells,diagCells)) {
                 cell.setDice(dice);
+                onlyFirstDice=false;
                 return true;
             }
         }
@@ -130,15 +133,22 @@ public class Wpc {
         if ((PlacementRestr)&&(!checkAdjacentDiceRestriction(orthoCells, dice)))
                 return false;
 
-        if ((atLeastADiceNear)&&(!isThereAtLeastADiceNear(orthoCells,diagCells)))
+        if (atLeastADiceNear){
+            if (firstDicePutted&&!isThereAtLeastADiceNear(orthoCells,diagCells))
                 return false;
+        }
 
         if ((noDicesNear)&&(isThereAtLeastADiceNear(orthoCells,diagCells)))
                 return false;
 
         cell.setDice(dice);
-        if (!firstDicePutted)
-            firstDicePutted=true;
+        if (onlyFirstDice==true)
+            onlyFirstDice=false;
+        if (!firstDicePutted) {
+            firstDicePutted = true;
+            onlyFirstDice=true;
+        }
+
         return true;
     }
 
@@ -148,6 +158,10 @@ public class Wpc {
         Cell cell=getCellFromPosition(position);
         dice=cell.getDice();
         cell.removeDice();
+        if (onlyFirstDice){
+            firstDicePutted=false;
+            onlyFirstDice=false;
+        }
         return dice;
     }
 
@@ -157,9 +171,13 @@ public class Wpc {
     }
 
     public DiceAndPosition getDiceAndPosition(int diceId){
+        Dice tempDice;
         for(Cell cell: schema) {
-            if (cell.getDice().getId() == diceId)
+            if ((tempDice=cell.getDice())!=null){
+                if (tempDice.getId() == diceId)
                 return new DiceAndPosition(cell.getDice(),cell.getCellPosition());
+            }
+
         }
         return null;
     }

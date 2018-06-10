@@ -78,7 +78,7 @@ public class ServerController {
 
     public Response cancelAction(String userToken) throws CannotCancelActionException, PlayerNotAuthorizedException, CannotFindPlayerInDatabaseException {
         PlayerInGame currentPlayer=databaseUsers.getPlayerInGameFromToken(userToken);
-        return convertMoveDataToNextMoveResponse(currentPlayer.cancelAction());
+        return convertMoveDataToToolCardResponse(currentPlayer.cancelAction());
     }
 
     public Response getUserStat(String userToken) throws CannotFindUserInDBException {
