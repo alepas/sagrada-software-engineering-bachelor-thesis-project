@@ -29,7 +29,7 @@ public enum Status {
     SELECT_DICE_TO_ACTIVE_TOOLCARD,
     ANOTHER_PLAYER_TURN;
 
-    public Status change(NextAction nextAction){
+    public static Status change(NextAction nextAction){
         switch (nextAction){
             case PLACE_DICE_TOOLCARD:
                 return PLACE_DICE_TOOLCARD;

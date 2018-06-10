@@ -72,6 +72,14 @@
     -fx-word-wrap: normal;
 }
 
+.NumberLabel{
+    -fx-text-alignment: center;
+    -fx-alignment: center;
+    -fx-font-size: 26;
+    -fx-text-fill:  BLACK;
+    -fx-font-name: Ravie;
+}
+
 .Menu{
     -fx-background-color: #ffffff;
     -fx-pref-height: 20.0;
@@ -103,6 +111,14 @@
     -fx-fill: #ffffff;
     -fx-stroke: BLACK;
     -fx-stroke-type: INSIDE;
+}
+
+.FavoursLabel{
+   -fx-font-size: 14px;
+   -fx-alignment: center;
+   -fx-text-alignment: center;
+   -fx-text-fill:  #ffffff;
+   -fx-word-wrap: normal;
 }
 
 
@@ -541,5 +557,14 @@
     -fx-image: url("/view/dices/violet/violet6.png");
     -fx-image-fitWidth: 100;
     -fx-image-fitHeight: 100;
+}
+
+
+.ChangeNumberCircle{
+    -fx-fill: #ffffff;
+    -fx-stroke: BLACK;
+    -fx-stroke-type: INSIDE;
+    -fx-stroke-width: 4;
+    -fx-cursor: HAND;
 }
 

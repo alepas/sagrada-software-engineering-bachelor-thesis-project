@@ -2,7 +2,7 @@ package it.polimi.ingsw.control.guicontroller;
 
 
 
-import it.polimi.ingsw.model.clientModel.ClientModel;
+import it.polimi.ingsw.model.clientModel.ClientUser;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,11 +17,11 @@ import java.io.IOException;
 
 public class PersonalAreaController {
 
-    private ClientModel clientModel;
+    private ClientUser clientUser;
 
     @FXML private Label personalAreaUsername;
 
-    @FXML private Label personalAreaToken;
+    @FXML private Label personalAreaRanking;
 
     @FXML private Label personalAreaWon;
 
@@ -33,13 +33,11 @@ public class PersonalAreaController {
 
     public void initialize(){
 
-        clientModel = ClientModel.getInstance();
-
-        personalAreaUsername.setText(clientModel.getUsername());
-        personalAreaToken.setText(clientModel.getUserToken());
-        personalAreaWon.setText("0");
-        personalAreaLost.setText("0");
-        personalAreaScore.setText("0");
+        personalAreaUsername.setText(clientUser.getUsername());
+        personalAreaRanking.setText(String.valueOf(clientUser.getRanking()));
+        personalAreaWon.setText(String.valueOf(clientUser.getWonGames()));
+        personalAreaLost.setText(String.valueOf(clientUser.getLostGames()));
+        personalAreaScore.setText(String.valueOf(clientUser.getAbandonedGames()));
 
         newGameButton.setOnAction(event -> changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/SetNewGameScene.fxml"));
     }

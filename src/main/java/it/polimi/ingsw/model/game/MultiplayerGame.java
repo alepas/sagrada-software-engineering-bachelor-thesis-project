@@ -8,8 +8,10 @@ import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.exceptions.gameExceptions.*;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotAddPlayerInDatabaseException;
+import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotFindPlayerInDatabaseException;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotUpdateStatsForUserException;
 import it.polimi.ingsw.model.gamesdb.DatabaseGames;
+import it.polimi.ingsw.model.usersdb.DatabaseUsers;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 import it.polimi.ingsw.model.wpc.Wpc;
 import javafx.application.Platform;
@@ -126,8 +128,12 @@ public class MultiplayerGame extends Game {
     @Override
     public void endGame() {
         DatabaseGames.getInstance().removeGame(this);
-        for(int i = 0; i <players.length; i++ ){
-            players[i] = null;
+        for (PlayerInGame player : players) {
+            try {
+                DatabaseUsers.getInstance().removePlayerInGameFromDB(player);
+            } catch (CannotFindPlayerInDatabaseException e) {
+                e.printStackTrace();
+            }
         }
     }
 
