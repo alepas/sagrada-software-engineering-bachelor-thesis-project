@@ -190,7 +190,8 @@ public class ServerController {
         ArrayList<ClientColor> tempPrivateObjects=new ArrayList<>();
         for (Color col: currentPlayer.getPrivateObjs())
             tempPrivateObjects.add(Color.getClientColor(col));
-        ClientColor[] clientColors= (ClientColor[])tempPrivateObjects.toArray();
+        ClientColor []clientColors= new ClientColor[tempPrivateObjects.size()];
+        tempPrivateObjects.toArray(clientColors);
         MoveData nextActionMove=currentPlayer.getNextMove();
         ToolCardClientNextActionInfo toolCardClientNextActionInfo=new ToolCardClientNextActionInfo(nextActionMove.wherePickNewDice,nextActionMove.wherePutNewDice,
                 nextActionMove.numbersToChoose,nextActionMove.diceChosenId, nextActionMove.diceChosenLocation);
