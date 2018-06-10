@@ -135,7 +135,10 @@ public class RoundTrack implements Serializable {
         ClientDice[][] roundTrackTable=new ClientDice[NUM_OF_ROUND][HYPOTHETICAL_MAX_DICES_PER_ROUND];
         for (int i=0; i<NUM_OF_ROUND; i++){
             for (int j=0;j<HYPOTHETICAL_MAX_DICES_PER_ROUND;j++){
-                roundTrackTable[i][j]=dicesNotUsed[i][j].getClientDice();
+                if(dicesNotUsed[i][j]!= null)
+                    roundTrackTable[i][j] = dicesNotUsed[i][j].getClientDice();
+                else
+                    roundTrackTable[i][j] = null;
             }
         }
         return new ClientRoundTrack(currentRound, roundTrackTable);

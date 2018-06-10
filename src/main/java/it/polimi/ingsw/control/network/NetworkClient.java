@@ -64,7 +64,7 @@ public abstract class NetworkClient implements ResponseHandler {
 
 
 
-    public abstract NextAction findAlreadyStartedGame(String userToken) throws CannotFindGameForUserInDatabaseException;
+    public abstract int findAlreadyStartedGame(String userToken) throws CannotFindGameForUserInDatabaseException;
 
     public abstract void getUpdatedExtractedDices(String userToken) throws CannotFindPlayerInDatabaseException;
 

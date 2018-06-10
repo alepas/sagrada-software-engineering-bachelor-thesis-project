@@ -352,7 +352,7 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
     }
 
     @Override
-    public NextAction findAlreadyStartedGame(String userToken) throws CannotFindGameForUserInDatabaseException {
+    public int findAlreadyStartedGame(String userToken) throws CannotFindGameForUserInDatabaseException {
         request(new FindAlreadyStartedGameRequest(userToken));
 
         UpdatedGameResponse response=(UpdatedGameResponse) waitResponse();
@@ -361,10 +361,10 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
 
         if (e!=null){
             if (e instanceof CannotFindGameForUserInDatabaseException) throw (CannotFindGameForUserInDatabaseException)e;
-            return null;
+            return 0;
         }
         else
-            return response.nextAction;
+            return response.gameNumPlayers;
     }
 
     @Override

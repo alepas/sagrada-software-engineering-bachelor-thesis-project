@@ -199,13 +199,13 @@ public class RmiClient extends NetworkClient {
     }
 
     @Override
-    public NextAction findAlreadyStartedGame(String userToken) throws CannotFindGameForUserInDatabaseException {
+    public int findAlreadyStartedGame(String userToken) throws CannotFindGameForUserInDatabaseException {
         try {
             UpdatedGameResponse response = (UpdatedGameResponse) remoteServer.findAlreadyStartedGame(userToken);
             response.handle(this);
-            return response.nextAction;
+            return response.gameNumPlayers;
         } catch (RemoteException e) {
-            return null;
+            return 0;
         }
     }
 

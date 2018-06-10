@@ -277,8 +277,15 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
         setPrivateObjective(clientModel.getPrivateObjectives());
         setDices(clientModel.getExtractedDices());
         setWpc();
+
+        try {
+            NextAction nextAction = networkClient.getUpdatedGame(clientModel.getUserToken());
+            System.out.println("stato ripristino: "+ nextAction);
+            if (nextAction == null) stateAction(ANOTHER_PLAYER_TURN);
+            else stateAction(Status.change(nextAction));
+        } catch (CannotFindPlayerInDatabaseException e) {
+            e.printStackTrace(); }
         dragAndDrop();
-        stateAction(ANOTHER_PLAYER_TURN);
     }
 
     private void stateAction(Status state){
@@ -441,11 +448,12 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                 temp= networkClient.placeDice(clientModel.getUserToken(), id, position);
             else {
                 temp= networkClient.placeDiceForToolCard(clientModel.getUserToken(), id, position);
-                isUsedToolCard =false;
+                isUsedToolCard = false;
             }
         } catch (CannotFindPlayerInDatabaseException | CannotPickPositionException |
                 CannotPickDiceException | PlayerNotAuthorizedException | CannotPerformThisMoveException e) {
             Platform.runLater(()->messageLabel.setText("Non è possibile posizionare il dado nella cella selezionata."));
+
         } catch (NoToolCardInUseException e) {
             messageLabel.setText("Non stai usando alcuna Tool Card!");
             if(isUsedToolCard) {
@@ -632,11 +640,11 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                 for (String wpcUser : wpc.keySet()) {
                     if (wpcUser.equals(username)) {
                         firstUserLabel.setText(username);
-                        firstFavourLabel.setText(String.valueOf(wpc.get(wpcUser).getFavours()).concat("X"));
+                        firstFavourLabel.setText(String.valueOf(wpc.get(username).getFavours()).concat("X"));
                         fillWpc(firstWpcGrid, wpc.get(wpcUser));
                     } else {
                         secondUserLabel.setText(wpcUser);
-                        firstFavourLabel.setText(String.valueOf(wpc.get(wpcUser).getFavours()).concat("X"));
+                        secondFavourLabel.setText(String.valueOf(wpc.get(wpcUser).getFavours()).concat("X"));
                         fillWpc(secondWpcGrid, wpc.get(wpcUser));
                     }
                 }
@@ -658,9 +666,6 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
      * @param wpc is the schema containing all the information that will be used to fill the gridPane
      */
     private void fillWpc(GridPane gridPane, ClientWpc wpc){
-        String favours = String.valueOf(wpc.getFavours()).concat("x");
-        if(clientModel.isActive()) firstFavourLabel.setText(favours);
-        else secondFavourLabel.setText(favours);
         for (ClientCell cell : wpc.getSchema()) {
 
             int row = cell.getCellPosition().getRow();
@@ -678,8 +683,8 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
 
             if(cell.getCellDice()!= null){
                 ImageView dice = setDiceStyle(cell.getCellDice());
-                schemaDices.add(dice);
                 if(clientModel.getMyWpc() == wpc) {
+                    schemaDices.add(dice);
                     dice.setFitWidth(70);
                     dice.setFitHeight(70);
                 }else{
@@ -777,7 +782,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
     /**
      * It's called when the player has placed a dice; the only things he/she can do are pass the turn or use a tool card.
      */
-    private void possibleActionUseToolCard(){
+    private void possibleActionUseToolCard(){ ;
         cancelActionButton.setVisible(false);
         extractedDicesGrid.setDisable(true);
         messageLabel.setText("Usa una ToolCard o termina il turno!");
@@ -789,6 +794,9 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
      * end the turn.
      */
     private void possibleActionPlaceDice(){
+        for(Node dice: extractedDicesGrid.getChildren())
+            dice.setDisable(false);
+        extractedDicesGrid.setDisable(false);
         useTool1.setDisable(true);
         useTool2.setDisable(true);
         useTool3.setDisable(true);
@@ -805,6 +813,8 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                 case WPC:
                     messageLabel.setText("Scegli un dado dallo schema e posizionalo.");
                     extractedDicesGrid.setDisable(true);
+                    for(Node cell: firstWpcGrid.getChildren())
+                        cell.setDisable(false);
                     firstWpcGrid.setDisable(false);
                     break;
                 case EXTRACTED:
@@ -814,8 +824,6 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                             dice.setDisable(true);
                         else{
                             for(ClientDice clientDice: clientModel.getExtractedDices()) {
-                                System.out.println("clientdice id: "+clientDice.getDiceID());
-                                System.out.println("dice id:" + dice.getId());
                                 if (String.valueOf(clientDice.getDiceID()).equals(dice.getId()))
                                     changeDiceStyle(dice, clientDice);
                             }
@@ -869,6 +877,8 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                 break;
 
             case WPC:
+                for(ImageView schemaDice: schemaDices)
+                    schemaDice.setDisable(false);
                 firstWpcGrid.setDisable(false);
                 messageLabel.setText("Clicca su un dado del tuo schema di gioco!");
                 for (ImageView schemaDice : schemaDices)
@@ -996,10 +1006,19 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
      * Goes back to the previous action.
      */
     private void cancelLastOperation(){
+
         try {
             NextAction previousAction = networkClient.cancelAction(clientModel.getUserToken());
-            System.out.println(previousAction);
+            System.out.println("PrevAction: "+ previousAction);
+            if(previousAction == NextAction.MENU_ALL )
+                isUsedToolCard = false;
+            if(previousAction == NextAction.SELECT_DICE_TOOLCARD){
+                plusMinusPane.setVisible(false);
+                changeNumberPane.setVisible(false);
+            }
+
             stateAction(state.change(previousAction));
+
         } catch (CannotCancelActionException e) {
             messageLabel.setText(e.getMessage());
         } catch (PlayerNotAuthorizedException e) {
@@ -1111,7 +1130,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
 
     @Override
     public void handle(ToolCardUsedNotification notification) {
-
+        //uso per mettere la stellina sulla toolcard
     }
 
     @Override
@@ -1125,12 +1144,8 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
     }
 
     @Override
-    public void handle(ToolCardDicePlacedNotification toolCardDicePlacedNotification) {
-
-    }
+    public void handle(ToolCardDicePlacedNotification toolCardDicePlacedNotification) {}
 
     @Override
-    public void handle(ToolCardExtractedDicesModified toolCardExtractedDicesModified) {
-
-    }
+    public void handle(ToolCardExtractedDicesModified toolCardExtractedDicesModified) {}
 }

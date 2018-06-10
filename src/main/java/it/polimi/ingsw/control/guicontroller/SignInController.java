@@ -2,10 +2,9 @@ package it.polimi.ingsw.control.guicontroller;
 
 import it.polimi.ingsw.control.network.NetworkClient;
 import it.polimi.ingsw.model.clientModel.ClientModel;
-import it.polimi.ingsw.model.clientModel.NextAction;
-import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotFindPlayerInDatabaseException;
+import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotFindGameForUserInDatabaseException;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotLoginUserException;
-import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.PlayerNotAuthorizedException;
+import it.polimi.ingsw.model.usersdb.PlayerInGame;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -78,9 +77,11 @@ public class SignInController {
             try {
                 networkClient.login(username, password);
             } catch (CannotLoginUserException e) {
-                signInErrorLabel.setVisible(true);
-                signInUsername.clear();
-                signInPassword.clear();
+                Platform.runLater(()->{
+                    signInErrorLabel.setVisible(true);
+                    signInUsername.clear();
+                    signInPassword.clear();
+                });
             }
             try {
                 Thread.sleep(500);
@@ -88,8 +89,26 @@ public class SignInController {
                 //TODO
             }
             Platform.runLater(()->{
+                try {
+                    int numPlayers = networkClient.findAlreadyStartedGame(clientModel.getUserToken());
+                    switch (numPlayers){
+                        case 1:
+                            break;
+                        case 2:
+                            changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/TwoPlayersGameScene.fxml");
+                            break;
+                        case 3:
+                            changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/ThreePlayersGameScene.fxml");
+                            break;
+                        case 4:
+                            changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/FourPlayersGameScene.fxml");
+                            break;
+                    }
+                } catch (CannotFindGameForUserInDatabaseException e) {
+                    changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/SetNewGameScene.fxml");
+                }
 
-                changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/SetNewGameScene.fxml");
+
             });
         });
         signIn.start();
