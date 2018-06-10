@@ -17,7 +17,6 @@ import java.io.IOException;
 
 public class PersonalAreaController {
 
-    private ClientUser clientUser;
 
     @FXML private Label personalAreaUsername;
 
@@ -33,11 +32,11 @@ public class PersonalAreaController {
 
     public void initialize(){
 
-        personalAreaUsername.setText(clientUser.getUsername());
-        personalAreaRanking.setText(String.valueOf(clientUser.getRanking()));
+        //personalAreaUsername.setText(clientUser.getUsername());
+        /*personalAreaRanking.setText(String.valueOf(clientUser.getRanking()));
         personalAreaWon.setText(String.valueOf(clientUser.getWonGames()));
         personalAreaLost.setText(String.valueOf(clientUser.getLostGames()));
-        personalAreaScore.setText(String.valueOf(clientUser.getAbandonedGames()));
+        personalAreaScore.setText(String.valueOf(clientUser.getAbandonedGames()));*/
 
         newGameButton.setOnAction(event -> changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/SetNewGameScene.fxml"));
     }

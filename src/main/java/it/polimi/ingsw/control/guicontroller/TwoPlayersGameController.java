@@ -291,13 +291,13 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                 playTurn();
                 break;
             case MENU_ONLY_PLACEDICE:
+                cancelActionButton.setVisible(false);
                 possibleActionPlaceDice();
                 break;
             case MENU_ONLY_TOOLCARD:
                 possibleActionUseToolCard();
                 break;
             case MENU_ONLY_ENDTURN:
-                cancelActionButton.setVisible(false);
                 messageLabel.setText("Il turno è terminato, non puoi fare altre mosse.");
                 stateAction(ANOTHER_PLAYER_TURN);
                 break;
@@ -441,16 +441,11 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                 temp= networkClient.placeDice(clientModel.getUserToken(), id, position);
             else {
                 temp= networkClient.placeDiceForToolCard(clientModel.getUserToken(), id, position);
-
+                isUsedToolCard =false;
             }
         } catch (CannotFindPlayerInDatabaseException | CannotPickPositionException |
                 CannotPickDiceException | PlayerNotAuthorizedException | CannotPerformThisMoveException e) {
             Platform.runLater(()->messageLabel.setText("Non è possibile posizionare il dado nella cella selezionata."));
-            if(isUsedToolCard) {
-                isUsedToolCard = false;
-                return NextAction.PLACE_DICE_TOOLCARD;
-            }
-            else return NextAction.MENU_ONLY_PLACE_DICE;
         } catch (NoToolCardInUseException e) {
             messageLabel.setText("Non stai usando alcuna Tool Card!");
             if(isUsedToolCard) {
@@ -516,6 +511,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                     useTool2.setDisable(true);
                     useTool3.setDisable(true);
                     endTurnButton.setDisable(true);
+                    cancelActionButton.setVisible(false);
                 });
                 synchronized (waiter) {
                     try {
@@ -542,6 +538,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
 
             roundLabel.setText("Round numero " + round + ", turno di " + username);
             endTurnButton.setDisable(false);
+            cancelActionButton.setVisible(false);
             for(Node dice: extractedDicesGrid.getChildren())
                 dice.setDisable(false);
             extractedDicesGrid.setDisable(false);
@@ -615,7 +612,6 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                 String style = typeCard.concat(number);
 
                 toolCard.setId(style);
-                toolCard.setCursor(Cursor.HAND);
                 toolCardGrid.add(toolCard, 0, finalTool);
             });
         }
@@ -793,7 +789,6 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
      * end the turn.
      */
     private void possibleActionPlaceDice(){
-        cancelActionButton.setVisible(false);
         useTool1.setDisable(true);
         useTool2.setDisable(true);
         useTool3.setDisable(true);
@@ -962,7 +957,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
     /**
      * Sets disable all dices that are different from the one that as as id the diceChosenId
      */
-    private  void isChosenDiceIdActive(){ //nextActionInfo
+    private  void isChosenDiceIdActive(){
         ToolCardClientNextActionInfo info = clientModel.getToolCardClientNextActionInfo();
         if(info.diceChosenLocation == WPC) {
             for (ImageView dice : schemaDices) {

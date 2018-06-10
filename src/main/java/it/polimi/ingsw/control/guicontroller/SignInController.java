@@ -2,7 +2,10 @@ package it.polimi.ingsw.control.guicontroller;
 
 import it.polimi.ingsw.control.network.NetworkClient;
 import it.polimi.ingsw.model.clientModel.ClientModel;
+import it.polimi.ingsw.model.clientModel.NextAction;
+import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotFindPlayerInDatabaseException;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotLoginUserException;
+import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.PlayerNotAuthorizedException;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -75,8 +78,9 @@ public class SignInController {
             try {
                 networkClient.login(username, password);
             } catch (CannotLoginUserException e) {
-                e.printStackTrace();
-            //TODO
+                signInErrorLabel.setVisible(true);
+                signInUsername.clear();
+                signInPassword.clear();
             }
             try {
                 Thread.sleep(500);
@@ -84,12 +88,8 @@ public class SignInController {
                 //TODO
             }
             Platform.runLater(()->{
-                if (clientModel.getUsername() == null) {
-                    signInErrorLabel.setVisible(true);
-                    signInUsername.clear();
-                    signInPassword.clear();
-                } else
-                    changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/SetNewGameScene.fxml");
+
+                changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/SetNewGameScene.fxml");
             });
         });
         signIn.start();
