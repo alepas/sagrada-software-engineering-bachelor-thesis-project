@@ -187,6 +187,7 @@ public class ToolCard1 extends ToolCard {
                     throw new CannotCancelActionException(username,this.id,3);
                 }
                 updateClientExtractedDices();
+                this.currentStatus=2;
                 movesNotifications.remove(movesNotifications.size()-1);
                 return new MoveData(NextAction.SELECT_NUMBER_TOOLCARD,null,tempExtractedDices,null,this.dice.getId(), ClientDiceLocations.EXTRACTED, numbers,false);
             }
@@ -196,6 +197,7 @@ public class ToolCard1 extends ToolCard {
     }
 
     private void updateClientExtractedDices(){
+        tempExtractedDices.clear();
         for (Dice tempdice:currentPlayer.getUpdatedExtractedDices())
             tempExtractedDices.add(tempdice.getClientDice());
     }

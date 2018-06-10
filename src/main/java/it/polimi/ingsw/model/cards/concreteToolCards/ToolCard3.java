@@ -141,6 +141,7 @@ public class ToolCard3 extends ToolCard {
                 currentGame.getExtractedDices().add(diceForSingleUser);
                 updateClientExtractedDices();
                 diceForSingleUser=null;
+                this.currentStatus=0;
                 return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD,ClientDiceLocations.EXTRACTED,null,null,tempExtractedDices,null,null, null);
             }
         }
@@ -149,6 +150,7 @@ public class ToolCard3 extends ToolCard {
     }
 
     private void updateClientExtractedDices(){
+        tempExtractedDices.clear();
         for (Dice tempdice:currentPlayer.getUpdatedExtractedDices())
             tempExtractedDices.add(tempdice.getClientDice());
     }
