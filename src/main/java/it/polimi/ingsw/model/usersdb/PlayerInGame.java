@@ -320,7 +320,6 @@ public class PlayerInGame {
             tempResponse.setNextAction(incrementActionInTurn(true));
         }
         return tempResponse;
-
     }
 
     public synchronized MoveData placeDiceForToolCard(int diceId, Position pos) throws PlayerNotAuthorizedException, NoToolCardInUseException, CannotPickPositionException, CannotPerformThisMoveException, CannotPickDiceException {

@@ -101,7 +101,7 @@ public class ToolCard5 extends ToolCard {
             currentStatus = 2;
             return new MoveData(NextAction.SELECT_DICE_TOOLCARD, ClientDiceLocations.ROUNDTRACK, null, null, null, null, fromExtracted.getDice().getClientDice(), ClientDiceLocations.EXTRACTED);
         } else if (currentStatus == 2) {
-            this.fromRoundTrack = currentPlayer.dicePresentInLocation(diceId, ClientDiceLocations.EXTRACTED);
+            this.fromRoundTrack = currentPlayer.dicePresentInLocation(diceId, ClientDiceLocations.ROUNDTRACK);
             currentStatus = 3;
 
             currentGame.getExtractedDices().remove(fromExtracted.getDice());

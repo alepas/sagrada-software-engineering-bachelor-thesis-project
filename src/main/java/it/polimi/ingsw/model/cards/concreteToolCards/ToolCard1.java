@@ -145,6 +145,7 @@ public class ToolCard1 extends ToolCard {
         updateClientWPC();
         updateClientExtractedDices();
         movesNotifications.add(new DicePlacedNotification(username, this.dice.getClientDice(),pos,tempClientWpc,tempExtractedDices,null));
+        currentPlayer.getGame().changeAndNotifyObservers(new DicePlacedNotification(username, this.dice.getClientDice(),pos,tempClientWpc,tempExtractedDices,currentPlayer.getGame().getRoundTrack().getClientRoundTrack()));
         currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username,this.getClientToolcard(),movesNotifications));
         ClientWpc tempWpc=tempClientWpc;
         ArrayList<ClientDice> tempExtracted=tempExtractedDices;
