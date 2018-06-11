@@ -10,7 +10,7 @@ public class MoveData {
     public ClientWpc wpc=null;
     public ArrayList<ClientDice> extractedDices=null;
     public ClientRoundTrack roundTrack=null;
-    public Integer diceChosenId =0;
+    public Integer diceChosenId =null;
     public ClientDiceLocations diceChosenLocation=null;
     public ArrayList<Integer> numbersToChoose=null;
     public boolean moveFinished=false;

@@ -441,7 +441,7 @@ public class PlayerInGame {
             if (toolCardUsedInTurn) {
                 clearPlayerTurn();
                 game.nextTurn();
-                return NextAction.WAIT_FOR_TURN;
+                return NextAction.MENU_ONLY_ENDTURN;
             } else return NextAction.MENU_ONLY_TOOLCARD;
         } else {
             if (toolCardUsedInTurn) {
@@ -450,7 +450,7 @@ public class PlayerInGame {
                 else {
                     clearPlayerTurn();
                     game.nextTurn();
-                    return NextAction.WAIT_FOR_TURN;
+                    return NextAction.MENU_ONLY_ENDTURN;
                 }
             }
             else return NextAction.MENU_ALL;
