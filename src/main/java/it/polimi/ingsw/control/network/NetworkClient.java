@@ -132,7 +132,7 @@ public abstract class NetworkClient implements ResponseHandler {
     public void handle(ToolCardResponse response){
         if (response.exception == null){
             ToolCardClientNextActionInfo info = new ToolCardClientNextActionInfo(response.wherePickNewDice,
-                response.wherePutNewDice, response.numbersToChoose, response.diceChosenId, response.diceChosenLocation);
+                response.wherePutNewDice, response.numbersToChoose, response.diceChosen, response.diceChosenLocation);
 
             clientModel.setToolCardClientNextActionInfo(info);
             if (response.wpc != null) clientModel.setMyWpc(response.wpc);

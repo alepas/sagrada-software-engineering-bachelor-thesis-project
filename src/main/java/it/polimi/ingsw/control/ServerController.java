@@ -194,7 +194,7 @@ public class ServerController {
         tempPrivateObjects.toArray(clientColors);
         MoveData nextActionMove=currentPlayer.getNextMove();
         ToolCardClientNextActionInfo toolCardClientNextActionInfo=new ToolCardClientNextActionInfo(nextActionMove.wherePickNewDice,nextActionMove.wherePutNewDice,
-                nextActionMove.numbersToChoose,nextActionMove.diceChosenId, nextActionMove.diceChosenLocation);
+                nextActionMove.numbersToChoose,nextActionMove.diceChosen, nextActionMove.diceChosenLocation);
         return new UpdatedGameResponse(tempGame.getID(),tempGame.numActualPlayers(),tempGame.getNumPlayers(),clientColors,wpcHashMap,clientToolCards,clientPocs,
                 tempGame.getRoundTrack().getCurrentRound(),clientDices,tempGame.getCurrentTurn(),currentPlayer.isActive(),currentPlayer.getFavours(),
                 tempGame.getRoundTrack().getClientRoundTrack(),nextActionMove.nextAction,toolCardClientNextActionInfo);
@@ -224,13 +224,13 @@ public class ServerController {
 
     private ToolCardResponse convertMoveDataToToolCardResponse(MoveData moveData){
         return new ToolCardResponse(moveData.nextAction,moveData.wherePickNewDice,moveData.wherePutNewDice,moveData.numbersToChoose,moveData.wpc,
-                moveData.extractedDices,moveData.roundTrack,moveData.diceChosenId,moveData.diceChosenLocation,moveData.exception);
+                moveData.extractedDices,moveData.roundTrack,moveData.diceChosen,moveData.diceChosenLocation,moveData.exception);
     }
 
 
     private NextMoveResponse convertMoveDataToNextMoveResponse(MoveData moveData){
         return new NextMoveResponse(moveData.nextAction,moveData.wherePickNewDice,moveData.wherePutNewDice,moveData.numbersToChoose,moveData.wpc,
-                moveData.extractedDices,moveData.roundTrack,moveData.diceChosenId,moveData.exception);
+                moveData.extractedDices,moveData.roundTrack,moveData.diceChosen,moveData.exception);
     }
 
     private PlaceDiceResponse convertMoveDataToPlaceDiceResponse(MoveData moveData){

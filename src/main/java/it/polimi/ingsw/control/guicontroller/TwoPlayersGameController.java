@@ -828,7 +828,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                 case EXTRACTED:
                     messageLabel.setText("Scegli un dado dalla riserva e posizionalo.");
                     for(Node dice: extractedDicesGrid.getChildren()){
-                        if(!dice.getId().equals(String.valueOf(info.diceChosenId)))
+                        if(!dice.getId().equals(String.valueOf(info.diceChosen.getDiceID())))
                             dice.setDisable(true);
                         else{
                             for(ClientDice clientDice: clientModel.getExtractedDices()) {
@@ -939,13 +939,13 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
 
             plusOneIcon.setOnMouseClicked(event -> {
                 for (ClientDice dice : clientModel.getExtractedDices()) {
-                    if (dice.getDiceID() == info.diceChosenId) pickNumberForToolCard(1);
+                    if (dice.getDiceID() == info.diceChosen.getDiceID()) pickNumberForToolCard(1);
                 }
             });
 
             minusOneIcon.setOnMouseClicked(event -> {
                 for (ClientDice dice : clientModel.getExtractedDices()) {
-                    if (dice.getDiceID() == info.diceChosenId) pickNumberForToolCard(-1);
+                    if (dice.getDiceID() == info.diceChosen.getDiceID()) pickNumberForToolCard(-1);
                 }
             });
         }
@@ -988,25 +988,25 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
     }
 
     /**
-     * Sets disable all dices that are different from the one that as as id the diceChosenId
+     * Sets disable all dices that are different from the one that as as id the diceChosen
      */
     private void isChosenDiceIdActive(){
         ToolCardClientNextActionInfo info = clientModel.getToolCardClientNextActionInfo();
         if(info.diceChosenLocation == WPC) {
             for (ImageView dice : schemaDices) {
-                if (Integer.parseInt(dice.getId()) == (info.diceChosenId)) makeSelectedDiceVisible(dice);
+                if (Integer.parseInt(dice.getId()) == (info.diceChosen.getDiceID())) makeSelectedDiceVisible(dice);
                 else dice.setDisable(true);
             }
         }
         else if( info.diceChosenLocation == EXTRACTED) {
             for (ImageView dice : extractDices) {
-                if (Integer.parseInt(dice.getId()) == (info.diceChosenId)) makeSelectedDiceVisible(dice);
+                if (Integer.parseInt(dice.getId()) == (info.diceChosen.getDiceID())) makeSelectedDiceVisible(dice);
                 else dice.setDisable(true);
             }
         }
         else if(info.diceChosenLocation == ROUNDTRACK) {
             for (ImageView dice : roundTrackDices) {
-                if (Integer.parseInt(dice.getId()) == (info.diceChosenId)) makeSelectedDiceVisible(dice);
+                if (Integer.parseInt(dice.getId()) == (info.diceChosen.getDiceID())) makeSelectedDiceVisible(dice);
                 else dice.setDisable(true);
             }
         }

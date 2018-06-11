@@ -102,7 +102,7 @@ public class ToolCard1 extends ToolCard {
         Dice tempDice=currentPlayer.dicePresentInLocation(diceId,ClientDiceLocations.EXTRACTED).getDice();
         this.dice= tempDice;
         currentStatus=2;
-        return new MoveData(NextAction.SELECT_NUMBER_TOOLCARD,null,null,null, tempDice.getId(), ClientDiceLocations.EXTRACTED, numbers,false);
+        return new MoveData(NextAction.SELECT_NUMBER_TOOLCARD,null,null,null, tempDice.getClientDice(), ClientDiceLocations.EXTRACTED, numbers,false);
     }
 
 
@@ -125,7 +125,7 @@ public class ToolCard1 extends ToolCard {
         currentStatus=3;
         updateClientExtractedDices();
         movesNotifications.add(new ToolCardDiceChangedNotification(username,oldDice.getClientDice(),dice.getClientDice(),ClientDiceLocations.EXTRACTED,ClientDiceLocations.EXTRACTED,tempExtractedDices));
-        return new MoveData(NextAction.PLACE_DICE_TOOLCARD,ClientDiceLocations.EXTRACTED,ClientDiceLocations.WPC,null,tempExtractedDices,null,dice.getId(), ClientDiceLocations.EXTRACTED);
+        return new MoveData(NextAction.PLACE_DICE_TOOLCARD,ClientDiceLocations.EXTRACTED,ClientDiceLocations.WPC,null,tempExtractedDices,null,dice.getClientDice(), ClientDiceLocations.EXTRACTED);
     }
 
     @Override
@@ -189,7 +189,7 @@ public class ToolCard1 extends ToolCard {
                 updateClientExtractedDices();
                 this.currentStatus=2;
                 movesNotifications.remove(movesNotifications.size()-1);
-                return new MoveData(NextAction.SELECT_NUMBER_TOOLCARD,null,tempExtractedDices,null,this.dice.getId(), ClientDiceLocations.EXTRACTED, numbers,false);
+                return new MoveData(NextAction.SELECT_NUMBER_TOOLCARD,null,tempExtractedDices,null,this.dice.getClientDice(), ClientDiceLocations.EXTRACTED, numbers,false);
             }
         }
         return null;
@@ -235,10 +235,10 @@ public class ToolCard1 extends ToolCard {
                 else return null;
             }
             case 1: return new MoveData(NextAction.SELECT_DICE_TOOLCARD,ClientDiceLocations.EXTRACTED,null,null,tempExtractedDices,null,null, null);
-            case 2: return new MoveData(NextAction.SELECT_NUMBER_TOOLCARD,null,null,null,this.dice.getId(), ClientDiceLocations.EXTRACTED, numbers,false);
+            case 2: return new MoveData(NextAction.SELECT_NUMBER_TOOLCARD,null,null,null,this.dice.getClientDice(), ClientDiceLocations.EXTRACTED, numbers,false);
 
 
-            case 3: return new MoveData(NextAction.PLACE_DICE_TOOLCARD,ClientDiceLocations.EXTRACTED,ClientDiceLocations.WPC,null,tempExtractedDices,null,dice.getId(), ClientDiceLocations.EXTRACTED);
+            case 3: return new MoveData(NextAction.PLACE_DICE_TOOLCARD,ClientDiceLocations.EXTRACTED,ClientDiceLocations.WPC,null,tempExtractedDices,null,dice.getClientDice(), ClientDiceLocations.EXTRACTED);
 
         }
         return null;

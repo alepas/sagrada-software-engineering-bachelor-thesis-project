@@ -10,7 +10,7 @@ public class MoveData {
     public ClientWpc wpc=null;
     public ArrayList<ClientDice> extractedDices=null;
     public ClientRoundTrack roundTrack=null;
-    public Integer diceChosenId =null;
+    public ClientDice diceChosen =null;
     public ClientDiceLocations diceChosenLocation=null;
     public ArrayList<Integer> numbersToChoose=null;
     public boolean moveFinished=false;
@@ -18,7 +18,7 @@ public class MoveData {
     public Exception exception=null;
 
     public MoveData(NextAction nextAction, ClientDiceLocations wherePickNewDice, ClientDiceLocations wherePutNewDice,
-                    ClientWpc wpc, ArrayList<ClientDice> extractedDices, ClientRoundTrack roundTrack, Integer diceChosenId,
+                    ClientWpc wpc, ArrayList<ClientDice> extractedDices, ClientRoundTrack roundTrack, ClientDice diceChosen,
                     ClientDiceLocations diceChosenLocation, ArrayList<Integer> numbersToChoose, boolean moveFinished, boolean canceledToolCard, Exception exception) {
         this.nextAction = nextAction;
         this.wherePickNewDice = wherePickNewDice;
@@ -26,7 +26,7 @@ public class MoveData {
         this.wpc = wpc;
         this.extractedDices = extractedDices;
         this.roundTrack = roundTrack;
-        this.diceChosenId = diceChosenId;
+        this.diceChosen = diceChosen;
         this.diceChosenLocation = diceChosenLocation;
         this.numbersToChoose = numbersToChoose;
         this.moveFinished=moveFinished;
@@ -41,23 +41,23 @@ public class MoveData {
 
 
     public MoveData(NextAction nextAction, boolean moveFinished, ClientWpc wpc, ArrayList<ClientDice> extractedDices,
-                    ClientRoundTrack roundTrack, Integer diceChosenId, ClientDiceLocations diceChosenLocation){
+                    ClientRoundTrack roundTrack, ClientDice diceChosen, ClientDiceLocations diceChosenLocation){
         this.nextAction = nextAction;
         this.wpc = wpc;
         this.extractedDices = extractedDices;
         this.roundTrack = roundTrack;
-        this.diceChosenId = diceChosenId;
+        this.diceChosen = diceChosen;
         this.moveFinished=moveFinished;
         this.diceChosenLocation = diceChosenLocation;
     }
 
     public MoveData(NextAction nextAction, boolean moveFinished, ClientWpc wpc, ArrayList<ClientDice> extractedDices,
-                    ClientRoundTrack roundTrack, Integer diceChosenId, ClientDiceLocations diceChosenLocation, ArrayList<Integer> numbersToChoose){
+                    ClientRoundTrack roundTrack, ClientDice diceChosen, ClientDiceLocations diceChosenLocation, ArrayList<Integer> numbersToChoose){
         this.nextAction = nextAction;
         this.wpc = wpc;
         this.extractedDices = extractedDices;
         this.roundTrack = roundTrack;
-        this.diceChosenId = diceChosenId;
+        this.diceChosen = diceChosen;
         this.diceChosenLocation = diceChosenLocation;
         this.numbersToChoose = numbersToChoose;
         this.moveFinished=moveFinished;
@@ -65,30 +65,30 @@ public class MoveData {
 
 
     public MoveData(NextAction nextAction, ClientWpc wpc, ArrayList<ClientDice> extractedDices,
-                    ClientRoundTrack roundTrack, Integer diceChosenId, ClientDiceLocations diceChooenLocation, boolean canceledToolCard){
+                    ClientRoundTrack roundTrack, ClientDice diceChosen, ClientDiceLocations diceChooenLocation, boolean canceledToolCard){
         this.nextAction = nextAction;
         this.wpc = wpc;
         this.extractedDices = extractedDices;
         this.roundTrack = roundTrack;
-        this.diceChosenId = diceChosenId;
+        this.diceChosen = diceChosen;
         this.diceChosenLocation = diceChooenLocation;
         this.canceledToolCard = canceledToolCard;
     }
 
     public MoveData(NextAction nextAction, ClientWpc wpc, ArrayList<ClientDice> extractedDices,
-                    ClientRoundTrack roundTrack, Integer diceChosenId, ClientDiceLocations diceChooenLocation, ArrayList<Integer> numbersToChoose, boolean canceledToolCard){
+                    ClientRoundTrack roundTrack, ClientDice diceChosen, ClientDiceLocations diceChooenLocation, ArrayList<Integer> numbersToChoose, boolean canceledToolCard){
         this.nextAction = nextAction;
         this.wpc = wpc;
         this.extractedDices = extractedDices;
         this.roundTrack = roundTrack;
-        this.diceChosenId = diceChosenId;
+        this.diceChosen = diceChosen;
         this.diceChosenLocation = diceChooenLocation;
         this.numbersToChoose = numbersToChoose;
         this.canceledToolCard = canceledToolCard;
     }
 
     public MoveData(NextAction nextAction, boolean moveFinished, ClientDiceLocations wherePickNewDice, ClientDiceLocations wherePutNewDice,
-                    ClientWpc wpc, ArrayList<ClientDice> extractedDices, ClientRoundTrack roundTrack, Integer diceChosenId,
+                    ClientWpc wpc, ArrayList<ClientDice> extractedDices, ClientRoundTrack roundTrack, ClientDice diceChosen,
                     ArrayList<Integer> numbersToChoose) {
         this.nextAction = nextAction;
         this.wherePickNewDice = wherePickNewDice;
@@ -96,52 +96,52 @@ public class MoveData {
         this.wpc = wpc;
         this.extractedDices = extractedDices;
         this.roundTrack = roundTrack;
-        this.diceChosenId = diceChosenId;
+        this.diceChosen = diceChosen;
         this.numbersToChoose = numbersToChoose;
         this.moveFinished=moveFinished;
     }
 
     public MoveData(boolean moveFinished, ClientDiceLocations wherePickNewDice, ClientDiceLocations wherePutNewDice,
-                    ClientWpc wpc, ArrayList<ClientDice> extractedDices, ClientRoundTrack roundTrack, Integer diceChosenId,
+                    ClientWpc wpc, ArrayList<ClientDice> extractedDices, ClientRoundTrack roundTrack, ClientDice diceChosen,
                     ClientDiceLocations diceChosenLocation, ArrayList<Integer> numbersToChoose) {
         this.wherePickNewDice = wherePickNewDice;
         this.wherePutNewDice = wherePutNewDice;
         this.wpc = wpc;
         this.extractedDices = extractedDices;
         this.roundTrack = roundTrack;
-        this.diceChosenId = diceChosenId;
+        this.diceChosen = diceChosen;
         this.diceChosenLocation = diceChosenLocation;
         this.numbersToChoose = numbersToChoose;
         this.moveFinished=moveFinished;
     }
 
     public MoveData(boolean moveFinished, ClientWpc wpc, ArrayList<ClientDice> extractedDices,
-                    ClientRoundTrack roundTrack, Integer diceChosenId, ClientDiceLocations diceChosenLocation){
+                    ClientRoundTrack roundTrack, ClientDice diceChosen, ClientDiceLocations diceChosenLocation){
         this.wpc = wpc;
         this.extractedDices = extractedDices;
         this.roundTrack = roundTrack;
-        this.diceChosenId = diceChosenId;
+        this.diceChosen = diceChosen;
         this.moveFinished=moveFinished;
         this.diceChosenLocation = diceChosenLocation;
     }
 
     public MoveData(boolean moveFinished, ClientWpc wpc, ArrayList<ClientDice> extractedDices,
-                    ClientRoundTrack roundTrack, Integer diceChosenId, ClientDiceLocations diceChosenLocation, ArrayList<Integer> numbersToChoose){
+                    ClientRoundTrack roundTrack, ClientDice diceChosen, ClientDiceLocations diceChosenLocation, ArrayList<Integer> numbersToChoose){
         this.wpc = wpc;
         this.extractedDices = extractedDices;
         this.roundTrack = roundTrack;
-        this.diceChosenId = diceChosenId;
+        this.diceChosen = diceChosen;
         this.diceChosenLocation = diceChosenLocation;
         this.numbersToChoose = numbersToChoose;
         this.moveFinished=moveFinished;
     }
 
     public MoveData(boolean moveFinished, boolean canceledToolCard, ClientWpc wpc, ArrayList<ClientDice> extractedDices,
-                    ClientRoundTrack roundTrack, Integer diceChosenId, ClientDiceLocations diceChosenLocation, ArrayList<Integer> numbersToChoose){
+                    ClientRoundTrack roundTrack, ClientDice diceChosen, ClientDiceLocations diceChosenLocation, ArrayList<Integer> numbersToChoose){
         this.wpc = wpc;
         this.extractedDices = extractedDices;
         this.roundTrack = roundTrack;
-        this.diceChosenId = diceChosenId;
+        this.diceChosen = diceChosen;
         this.diceChosenLocation = diceChosenLocation;
         this.numbersToChoose = numbersToChoose;
         this.moveFinished=moveFinished;
@@ -200,13 +200,13 @@ public class MoveData {
     }
 
     public MoveData(NextAction nextAction, ClientDiceLocations wherePickNewDice, ClientDiceLocations wherePutNewDice,
-                    ClientWpc wpc, ArrayList<ClientDice> extractedDices, ClientRoundTrack roundTrack, Integer diceChosenId, ClientDiceLocations diceChosenLocation) {
+                    ClientWpc wpc, ArrayList<ClientDice> extractedDices, ClientRoundTrack roundTrack, ClientDice diceChosen, ClientDiceLocations diceChosenLocation) {
         this.wherePickNewDice = wherePickNewDice;
         this.wherePutNewDice = wherePutNewDice;
         this.wpc = wpc;
         this.extractedDices = extractedDices;
         this.roundTrack = roundTrack;
-        this.diceChosenId = diceChosenId;
+        this.diceChosen = diceChosen;
         this.diceChosenLocation = diceChosenLocation;
         this.numbersToChoose = numbersToChoose;
      this.nextAction=nextAction;

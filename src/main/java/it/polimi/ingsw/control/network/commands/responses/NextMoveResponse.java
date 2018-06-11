@@ -12,11 +12,11 @@ public class NextMoveResponse implements Response {
     public final ClientWpc wpc;
     public final ArrayList<ClientDice> extractedDices;
     public final ClientRoundTrack roundTrack;
-    public final Integer diceChosenId;
+    public final ClientDice diceChosen;
     public final Exception exception;
 
 
-    public NextMoveResponse(NextAction nextAction, ClientDiceLocations wherePickNewDice, ClientDiceLocations wherePutNewDice, ArrayList<Integer> numbersToChoose, ClientWpc wpc, ArrayList<ClientDice> extractedDices, ClientRoundTrack roundTrack, Integer diceChosenId, Exception exception) {
+    public NextMoveResponse(NextAction nextAction, ClientDiceLocations wherePickNewDice, ClientDiceLocations wherePutNewDice, ArrayList<Integer> numbersToChoose, ClientWpc wpc, ArrayList<ClientDice> extractedDices, ClientRoundTrack roundTrack, ClientDice diceChosen, Exception exception) {
         this.nextAction = nextAction;
         this.wherePickNewDice = wherePickNewDice;
         this.wherePutNewDice = wherePutNewDice;
@@ -24,7 +24,7 @@ public class NextMoveResponse implements Response {
         this.wpc = wpc;
         this.extractedDices = extractedDices;
         this.roundTrack = roundTrack;
-        this.diceChosenId = diceChosenId;
+        this.diceChosen = diceChosen;
         this.exception = exception;
     }
 
@@ -36,7 +36,7 @@ public class NextMoveResponse implements Response {
         wpc=null;
         extractedDices=null;
         roundTrack=null;
-        diceChosenId= null;
+        diceChosen = null;
         wherePutNewDice=null;
     }
 
