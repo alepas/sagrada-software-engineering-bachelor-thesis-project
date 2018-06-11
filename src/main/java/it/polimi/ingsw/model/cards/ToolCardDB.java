@@ -25,8 +25,8 @@ public class ToolCardDB {
         toolCards.put( ToolCardConstants.TOOLCARD2_ID,new ToolCard2());
         toolCards.put( ToolCardConstants.TOOLCARD3_ID,new ToolCard3());
         toolCards.put( ToolCardConstants.TOOLCARD4_ID,new ToolCard4());
-/*        toolCards.put( ToolCardConstants.TOOLCARD5_ID,new ToolCard5());
-        toolCards.put( ToolCardConstants.TOOLCARD6_ID,new ToolCard6());
+        toolCards.put( ToolCardConstants.TOOLCARD5_ID,new ToolCard5());
+/*        toolCards.put( ToolCardConstants.TOOLCARD6_ID,new ToolCard6());
         toolCards.put( ToolCardConstants.TOOLCARD7_ID,new ToolCard7());
         toolCards.put( ToolCardConstants.TOOLCARD8_ID,new ToolCard8());
         toolCards.put( ToolCardConstants.TOOLCARD9_ID,new ToolCard9());

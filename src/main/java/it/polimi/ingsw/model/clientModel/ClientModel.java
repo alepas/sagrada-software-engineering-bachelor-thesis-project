@@ -304,6 +304,7 @@ public class ClientModel implements Observer, NotificationHandler {
     public void handle(NewRoundNotification notification) {
         currentRound = notification.roundNumber;
         extractedDices = notification.extractedDices;
+        roundTrack=notification.roundTrack;
     }
 
     @Override

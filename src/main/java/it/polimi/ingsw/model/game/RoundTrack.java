@@ -142,4 +142,15 @@ public class RoundTrack implements Serializable {
         }
         return new ClientRoundTrack(currentRound, roundTrackTable);
     }
+
+    public int getNumberOfDices(){
+        int count=0;
+        for (int row = 0;  row< NUM_OF_ROUNDS; row++ ) {
+            for (int column = 0; column < NUM_OF_ROUNDS; column++)
+                if (isThereADice(row, column))
+                    count++;
+        }
+        return count;
+    }
+
 }

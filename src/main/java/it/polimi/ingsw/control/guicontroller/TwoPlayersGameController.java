@@ -1145,7 +1145,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
         int round = notification.roundNumber -1;
         nextRound(round, notification.extractedDices);
         roundTrackDices.clear();
-        updateRoundTrack(notification.roundTrack);
+        updateRoundTrack(clientModel.getRoundTrack());
     }
 
     @Override

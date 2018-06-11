@@ -72,7 +72,7 @@ public class ToolCard1 extends ToolCard {
             currentPlayer.setCardUsedBlockingTurn(this);
         }
         this.currentPlayer.setToolCardInUse(this);
-        updateClientWPC();
+        updateClientExtractedDices();
         if (currentGame.isSinglePlayerGame()) {
             singlePlayerGame=true;
             return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD,ClientDiceLocations.EXTRACTED);

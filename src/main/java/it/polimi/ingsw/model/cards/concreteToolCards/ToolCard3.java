@@ -65,7 +65,7 @@ public class ToolCard3 extends ToolCard {
             currentPlayer.setCardUsedBlockingTurn(this);
         }
         this.currentPlayer.setToolCardInUse(this);
-        updateClientWPC();
+        updateClientExtractedDices();
         if (currentGame.isSinglePlayerGame()) {
             singlePlayerGame=true;
             return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD,ClientDiceLocations.EXTRACTED);
@@ -183,7 +183,7 @@ public class ToolCard3 extends ToolCard {
                     return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD,ClientDiceLocations.EXTRACTED);
                 else return null;
             }
-            case 1: return new MoveData(NextAction.PLACE_DICE_TOOLCARD,ClientDiceLocations.WPC,ClientDiceLocations.WPC,tempClientWpc,tempExtractedDices,null,null, null);
+            case 1: return new MoveData(NextAction.PLACE_DICE_TOOLCARD,ClientDiceLocations.WPC,ClientDiceLocations.WPC,null,tempExtractedDices,null,null, null);
 
         }
         return null;
