@@ -3,6 +3,7 @@ package it.polimi.ingsw.control.network.rmi;
 import it.polimi.ingsw.control.ServerController;
 import it.polimi.ingsw.control.network.commands.responses.FindGameResponse;
 import it.polimi.ingsw.control.network.commands.responses.Response;
+import it.polimi.ingsw.control.network.commands.responses.UpdatedGameResponse;
 import it.polimi.ingsw.model.clientModel.ClientDiceLocations;
 import it.polimi.ingsw.model.clientModel.Position;
 import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
@@ -11,6 +12,7 @@ import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.UserNotInThisGameException;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
 import it.polimi.ingsw.model.game.Game;
+import it.polimi.ingsw.model.usersdb.DatabaseUsers;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -22,10 +24,13 @@ import java.util.Observer;
 public class RmiServer extends UnicastRemoteObject implements RemoteServer, Observer {
     private transient final ServerController controller;
     private transient HashMap<String, ArrayList<RemoteObserver>> observersByGame;
+    private transient HashMap<String, RemoteObserver> observersByUser;
 
     public RmiServer(ServerController controller) throws RemoteException {
         this.controller = controller;
         observersByGame = new HashMap<>();
+        observersByUser=new HashMap<>();
+
     };
 
     private void reconnectPlayer() {
@@ -45,10 +50,18 @@ public class RmiServer extends UnicastRemoteObject implements RemoteServer, Obse
     @Override
     public Response findGame(String userToken, int numPlayers, RemoteObserver observer) throws CannotFindUserInDBException, InvalidNumOfPlayersException, CannotCreatePlayerException {
         Response response = controller.findGame(userToken, numPlayers, this);
+        DatabaseUsers userdb=DatabaseUsers.getInstance();
+        String username=null;
+        RemoteObserver tempObs=null;
+        try {
+            username=userdb.getUsernameByToken(userToken);
+        } catch (CannotFindUserInDBException e) {
 
+        }
         String gameID = ((FindGameResponse) response).gameID;
         if (observersByGame.get(gameID) == null) observersByGame.put(gameID, new ArrayList<>());
         if (!observersByGame.get(gameID).contains(observer)) observersByGame.get(gameID).add(observer);
+        observersByUser.put(username,observer);
 
         return response;
     }
@@ -139,8 +152,23 @@ public class RmiServer extends UnicastRemoteObject implements RemoteServer, Obse
     }
 
     @Override
-    public Response findAlreadyStartedGame(String userToken) throws RemoteException, CannotFindGameForUserInDatabaseException {
-        return controller.findAlreadyStartedGame(userToken, this);
+    public Response findAlreadyStartedGame(String userToken, RemoteObserver observer) throws RemoteException, CannotFindGameForUserInDatabaseException {
+        Response response= controller.findAlreadyStartedGame(userToken, null);
+        DatabaseUsers userdb=DatabaseUsers.getInstance();
+        String username=null;
+        RemoteObserver tempObs=null;
+        try {
+            username=userdb.getUsernameByToken(userToken);
+        } catch (CannotFindUserInDBException e) {
+
+        }
+        String gameID = ((UpdatedGameResponse) response).gameID;
+        if (observersByGame.get(gameID) == null) observersByGame.put(gameID, new ArrayList<>());
+        if ((tempObs=observersByUser.get(username))!=null) observersByGame.get(gameID).remove(tempObs);
+        if (!observersByGame.get(gameID).contains(observer)) observersByGame.get(gameID).add(observer);
+        observersByUser.put(username,observer);
+
+        return response;
     }
 
 

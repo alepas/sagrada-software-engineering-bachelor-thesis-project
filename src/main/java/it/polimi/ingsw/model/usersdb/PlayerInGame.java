@@ -453,8 +453,8 @@ public class PlayerInGame {
                     return NextAction.WAIT_FOR_TURN;
                 }
             }
+            else return NextAction.MENU_ALL;
         }
-        return NextAction.MENU_ALL;
     }
 
 

@@ -144,7 +144,7 @@ public class ToolCard1 extends ToolCard {
         updateClientWPC();
         updateClientExtractedDices();
         movesNotifications.add(new DicePlacedNotification(username, this.dice.getClientDice(),pos,tempClientWpc,tempExtractedDices,null));
-        currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username,id,movesNotifications));
+        currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username,this.getClientToolcard(),movesNotifications));
         ClientWpc tempWpc=tempClientWpc;
         ArrayList<ClientDice> tempExtracted=tempExtractedDices;
         cleanCard();
@@ -197,7 +197,10 @@ public class ToolCard1 extends ToolCard {
     }
 
     private void updateClientExtractedDices(){
+        System.out.println(tempExtractedDices.toString());
+        System.out.println("prima temp");
         tempExtractedDices.clear();
+        System.out.println("dopo clear");
         for (Dice tempdice:currentPlayer.getUpdatedExtractedDices())
             tempExtractedDices.add(tempdice.getClientDice());
     }
@@ -209,7 +212,6 @@ public class ToolCard1 extends ToolCard {
     @Override
     protected void cleanCard(){
         currentPlayer.setToolCardInUse(null);
-        this.used=false;
         this.diceForSingleUser=null;
         this.currentPlayer=null;
         this.currentStatus=0;
@@ -219,8 +221,9 @@ public class ToolCard1 extends ToolCard {
         this.dice=null;
         this.singlePlayerGame=false;
         this.tempClientWpc=null;
-        this.tempExtractedDices=null;
+        this.tempExtractedDices=new ArrayList<>();
         this.oldDice=null;
+        this.movesNotifications=new ArrayList<>();
     }
 
     @Override

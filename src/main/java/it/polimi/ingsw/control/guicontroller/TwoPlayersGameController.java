@@ -2,18 +2,14 @@ package it.polimi.ingsw.control.guicontroller;
 
 import it.polimi.ingsw.control.network.NetworkClient;
 import it.polimi.ingsw.control.network.commands.notifications.*;
-import it.polimi.ingsw.control.network.commands.responses.*;
-import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.clientModel.*;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
 
-import it.polimi.ingsw.model.usersdb.PlayerInGame;
 import it.polimi.ingsw.view.Status;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -73,6 +69,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
     private Status state;
     private final Object waiter = new Object();
     private boolean isUsedToolCard = false;
+    private NextAction lastNextAction;
 
     @FXML private Label messageLabel;
     @FXML private Button personalAreaButton;
@@ -261,6 +258,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
             } catch (CannotFindPlayerInDatabaseException | PlayerNotAuthorizedException | CannotPerformThisMoveException e) {
                 e.printStackTrace();
             }
+            lastNextAction=NextAction.WAIT_FOR_TURN;
             stateAction(ANOTHER_PLAYER_TURN);
         });
 
@@ -281,8 +279,14 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
         try {
             NextAction nextAction = networkClient.getUpdatedGame(clientModel.getUserToken());
             System.out.println("stato ripristino: "+ nextAction);
-            if (nextAction == null) stateAction(ANOTHER_PLAYER_TURN);
-            else stateAction(Status.change(nextAction));
+            if (nextAction == null) {
+                lastNextAction=NextAction.WAIT_FOR_TURN;
+                stateAction(ANOTHER_PLAYER_TURN);
+            }
+            else {
+                lastNextAction=nextAction;
+                stateAction(Status.change(nextAction));
+            }
         } catch (CannotFindPlayerInDatabaseException e) {
             e.printStackTrace(); }
         dragAndDrop();
@@ -450,17 +454,19 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                 temp= networkClient.placeDiceForToolCard(clientModel.getUserToken(), id, position);
                 isUsedToolCard = false;
             }
+            lastNextAction=temp;
         } catch (CannotFindPlayerInDatabaseException | CannotPickPositionException |
                 CannotPickDiceException | PlayerNotAuthorizedException | CannotPerformThisMoveException e) {
             Platform.runLater(()->messageLabel.setText("Non è possibile posizionare il dado nella cella selezionata."));
-
-        } catch (NoToolCardInUseException e) {
-            messageLabel.setText("Non stai usando alcuna Tool Card!");
+            System.out.println(e.getMessage());
             if(isUsedToolCard) {
                 isUsedToolCard = false;
-                return NextAction.PLACE_DICE_TOOLCARD;
             }
-            else return NextAction.MENU_ONLY_PLACE_DICE;
+            System.out.println("ho preso la lastnextaction");
+            return lastNextAction;
+        } catch (NoToolCardInUseException e) {
+            messageLabel.setText("Non stai usando alcuna Tool Card!");
+            return lastNextAction;
         }
         return temp;
     }
@@ -529,6 +535,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                     }
                 }
             }
+            lastNextAction=NextAction.MENU_ALL;
             stateAction(MENU_ALL);
         });
         waitTurn.start();
@@ -775,6 +782,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
             extractDices.clear();
             setDices(extractedDices);
             dragAndDrop();
+            lastNextAction=NextAction.WAIT_FOR_TURN;
             stateAction(ANOTHER_PLAYER_TURN);
         });
     }
@@ -856,6 +864,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
      * dice from the extracted dices, from the round track or from the his/her schema.
      */
     private void pickDiceForToolCard(){
+        NextAction nextAction;
         ToolCardClientNextActionInfo info = clientModel.getToolCardClientNextActionInfo();
         switch (info.wherePickNewDice){
             case EXTRACTED:
@@ -888,6 +897,8 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
         }
     }
 
+
+
     /**
      * Calls the method pickDiceForToolCard in the networkClient.
      *
@@ -895,8 +906,9 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
      * @return the next action that the player can do
      */
     private NextAction pickDice(int id){
+        NextAction nextAction=null;
         try {
-            return networkClient.pickDiceForToolCard(clientModel.getUserToken(), id);
+            nextAction= networkClient.pickDiceForToolCard(clientModel.getUserToken(), id);
         } catch (CannotFindPlayerInDatabaseException e) {
             messageLabel.setText(e.getMessage());
         } catch (CannotPickDiceException e) {
@@ -907,8 +919,13 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
             messageLabel.setText(e.getMessage());
         } catch (CannotPerformThisMoveException e) {
             messageLabel.setText(e.getMessage());
+        } finally {
+            if (nextAction!=null) {
+                lastNextAction=nextAction;
+                return nextAction;
+            }
+            return lastNextAction;
         }
-        return null;
     }
 
     /**
@@ -951,23 +968,29 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
      * @param number is the number selected by the player
      */
     private void pickNumberForToolCard(int number){
+        NextAction nextAction;
         try {
-            NextAction nextAction = networkClient.pickNumberForToolCard(clientModel.getUserToken(), number);
-            stateAction(state.change(nextAction));
+             nextAction= networkClient.pickNumberForToolCard(clientModel.getUserToken(), number);
         } catch (CannotFindPlayerInDatabaseException e) {
             e.printStackTrace();
+            nextAction=lastNextAction;
         } catch ( NoToolCardInUseException | PlayerNotAuthorizedException |
                 CannotPerformThisMoveException |CannotPickNumberException e) {
             messageLabel.setText(e.getMessage());
+            nextAction=lastNextAction;
         }
+        lastNextAction=nextAction;
+        stateAction(state.change(nextAction));
         plusMinusPane.setVisible(false);
         changeNumberPane.setVisible(false);
+
+
     }
 
     /**
      * Sets disable all dices that are different from the one that as as id the diceChosenId
      */
-    private  void isChosenDiceIdActive(){
+    private void isChosenDiceIdActive(){
         ToolCardClientNextActionInfo info = clientModel.getToolCardClientNextActionInfo();
         if(info.diceChosenLocation == WPC) {
             for (ImageView dice : schemaDices) {
@@ -1016,8 +1039,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                 plusMinusPane.setVisible(false);
                 changeNumberPane.setVisible(false);
             }
-
-            stateAction(state.change(previousAction));
+            lastNextAction=previousAction;
 
         } catch (CannotCancelActionException e) {
             messageLabel.setText(e.getMessage());
@@ -1026,6 +1048,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
         } catch (CannotFindPlayerInDatabaseException e) {
             messageLabel.setText(e.getMessage());
         }
+        stateAction(state.change(lastNextAction));
     }
 
     private void changeSceneHandle(Event event, String path) {
@@ -1147,5 +1170,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
     public void handle(ToolCardDicePlacedNotification toolCardDicePlacedNotification) {}
 
     @Override
-    public void handle(ToolCardExtractedDicesModified toolCardExtractedDicesModified) {}
+    public void handle(ToolCardExtractedDicesModifiedNotification toolCardExtractedDicesModifiedNotification) {
+
+    }
 }

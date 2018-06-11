@@ -31,5 +31,5 @@ public interface NotificationHandler {
 
     void handle(ToolCardDicePlacedNotification toolCardDicePlacedNotification);
 
-    void handle(ToolCardExtractedDicesModified toolCardExtractedDicesModified);
+    void handle(ToolCardExtractedDicesModifiedNotification toolCardExtractedDicesModifiedNotification);
 }

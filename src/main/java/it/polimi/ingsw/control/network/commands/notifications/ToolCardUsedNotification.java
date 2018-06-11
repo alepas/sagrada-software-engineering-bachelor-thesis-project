@@ -1,15 +1,17 @@
 package it.polimi.ingsw.control.network.commands.notifications;
 
+import it.polimi.ingsw.model.clientModel.ClientToolCard;
+
 import java.util.ArrayList;
 
 public class ToolCardUsedNotification implements Notification {
     public final String username;
-    public final String cardId;
+    public final ClientToolCard toolCard;
     public final ArrayList<Notification> movesNotifications;
 
-    public ToolCardUsedNotification(String username, String cardId, ArrayList<Notification> movesNotifications) {
+    public ToolCardUsedNotification(String username, ClientToolCard toolCard, ArrayList<Notification> movesNotifications) {
         this.username = username;
-        this.cardId = cardId;
+        this.toolCard = toolCard;
         this.movesNotifications = movesNotifications;
     }
 

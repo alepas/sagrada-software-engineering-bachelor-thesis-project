@@ -529,9 +529,11 @@ public class DatabaseUsers {
         Game game;
         if (player!=null) {
             game = player.getGame();
+            if (observer!=null){
             game.deleteObserver(player.getObserver());
             game.addObserver(observer);
             player.setObserver(observer);
+            }
             return game;
         }
         return null;

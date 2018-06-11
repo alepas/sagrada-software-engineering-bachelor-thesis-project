@@ -113,7 +113,7 @@ public class ToolCard3 extends ToolCard {
         this.used = true;
         updateClientWPC();
         movesNotifications.add(new ToolCardDicePlacedNotification(username, tempDice.getClientDice(),pos,tempClientWpc,null,null));
-        currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username,id,movesNotifications));
+        currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username,this.getClientToolcard(),movesNotifications));
         ClientWpc tempWpc=tempClientWpc;
         cleanCard();
         return new MoveData(true,tempWpc,null,null);
@@ -162,7 +162,6 @@ public class ToolCard3 extends ToolCard {
     @Override
     protected void cleanCard(){
         currentPlayer.setToolCardInUse(null);
-        this.used=false;
         this.diceForSingleUser=null;
         this.currentPlayer=null;
         this.currentStatus=0;
@@ -171,7 +170,8 @@ public class ToolCard3 extends ToolCard {
         this.username=null;
         this.singlePlayerGame=false;
         this.tempClientWpc=null;
-        this.tempExtractedDices=null;
+        this.tempExtractedDices=new ArrayList<>();
+        this.movesNotifications=new ArrayList<>();
     }
 
     @Override

@@ -877,7 +877,7 @@ public class CliView implements Observer, NotificationHandler {
     }
 
     @Override
-    public void handle(ToolCardExtractedDicesModified toolCardExtractedDicesModified) {
+    public void handle(ToolCardExtractedDicesModifiedNotification toolCardExtractedDicesModifiedNotification) {
 
     }
 }

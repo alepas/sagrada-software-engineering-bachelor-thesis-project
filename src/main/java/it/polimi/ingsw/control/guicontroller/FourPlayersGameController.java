@@ -89,7 +89,7 @@ public class FourPlayersGameController implements NotificationHandler {
     }
 
     @Override
-    public void handle(ToolCardExtractedDicesModified toolCardExtractedDicesModified) {
+    public void handle(ToolCardExtractedDicesModifiedNotification toolCardExtractedDicesModifiedNotification) {
 
     }
 }

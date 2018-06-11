@@ -33,7 +33,8 @@ public class ClientModel implements Observer, NotificationHandler {
     private ClientRoundTrack roundTrack;
     private ToolCardClientNextActionInfo toolCardClientNextActionInfo;
 
-    private ClientModel() { }
+    private ClientModel() {
+    }
 
     public static synchronized ClientModel getInstance() {
         if (instance == null) {
@@ -44,7 +45,7 @@ public class ClientModel implements Observer, NotificationHandler {
         return instance;
     }
 
-    public void exitGame(){
+    public void exitGame() {
         this.gameID = null;
         this.gameStarted = false;
         this.gameActualPlayers = 0;
@@ -59,11 +60,11 @@ public class ClientModel implements Observer, NotificationHandler {
         this.currentTurn = 0;
         this.active = false;
         this.favour = 0;
-        this.roundTrack=null;
+        this.roundTrack = null;
         this.toolCardClientNextActionInfo = null;
     }
 
-    public void clean(){
+    public void clean() {
         this.userToken = null;
         this.user = null;
         this.observers = new ArrayList<>();
@@ -74,7 +75,7 @@ public class ClientModel implements Observer, NotificationHandler {
         if (!observers.contains(observer)) observers.add(observer);
     }
 
-    public void removeObserver(Observer observer){
+    public void removeObserver(Observer observer) {
         observers.remove(observer);
     }
 
@@ -183,11 +184,11 @@ public class ClientModel implements Observer, NotificationHandler {
         this.gamePublicObjectiveCards = gamePublicObjectiveCards;
     }
 
-    public ClientWpc getMyWpc(){
+    public ClientWpc getMyWpc() {
         return wpcByUsername.get(user.getUsername());
     }
 
-    public void setMyWpc(ClientWpc wpc){
+    public void setMyWpc(ClientWpc wpc) {
         wpcByUsername.put(user.getUsername(), wpc);
     }
 
@@ -216,31 +217,31 @@ public class ClientModel implements Observer, NotificationHandler {
     }
 
 
-    public boolean areAllPlayersInGame(){
+    public boolean areAllPlayersInGame() {
         return (gameActualPlayers != 0 && gameActualPlayers == gameNumPlayers);
     }
 
-    public boolean arePrivateObjectivesArrived(){
+    public boolean arePrivateObjectivesArrived() {
         return privateObjectives != null;
     }
 
-    public boolean areAllWpcsArrived(){
+    public boolean areAllWpcsArrived() {
         return wpcsArrived;
     }
 
-    public boolean allPlayersChooseWpc(){
+    public boolean allPlayersChooseWpc() {
         return (gameNumPlayers != 0 && wpcByUsername.size() == gameNumPlayers);
     }
 
-    public boolean isGameStarted(){
+    public boolean isGameStarted() {
         return gameStarted;
     }
 
-    public boolean areToolcardsArrived(){
+    public boolean areToolcardsArrived() {
         return gameToolCards != null;
     }
 
-    public boolean arePocsArrived(){
+    public boolean arePocsArrived() {
         return gamePublicObjectiveCards != null;
     }
 
@@ -253,12 +254,11 @@ public class ClientModel implements Observer, NotificationHandler {
     }
 
 
-
     //----------------------------------- Notification Handler -------------------------------------
     @Override
     public void update(Observable o, Object arg) {
         ((Notification) arg).handle(this);
-        for(Observer observer : observers){
+        for (Observer observer : observers) {
             observer.update(o, arg);
         }
     }
@@ -314,7 +314,9 @@ public class ClientModel implements Observer, NotificationHandler {
 
     @Override
     public void handle(ToolCardDiceChangedNotification notification) {
-
+        wpcByUsername.put(notification.username, notification.wpc);
+        if (notification.extractedDices != null) extractedDices = notification.extractedDices;
+        if (notification.roundTrack != null) roundTrack = notification.roundTrack;
     }
 
     @Override
@@ -327,7 +329,19 @@ public class ClientModel implements Observer, NotificationHandler {
 
     @Override
     public void handle(ToolCardUsedNotification notification) {
-
+        Integer index = null;
+        for (ClientToolCard toc : gameToolCards) {
+            if (toc.getId() == notification.toolCard.getId())
+                index = gameToolCards.indexOf(toc);
+            if (index == null)
+                return;
+            gameToolCards.set(index, notification.toolCard);
+        }
+        for (Notification noti: notification.movesNotifications){
+            if (noti instanceof ToolCardDicePlacedNotification) update(null,((ToolCardDicePlacedNotification)noti));
+            if (noti instanceof ToolCardDiceChangedNotification) update(null,((ToolCardDiceChangedNotification)noti));
+            if (noti instanceof ToolCardExtractedDicesModifiedNotification) update(null,((ToolCardExtractedDicesModifiedNotification)noti));
+        }
     }
 
     @Override
@@ -341,12 +355,14 @@ public class ClientModel implements Observer, NotificationHandler {
     }
 
     @Override
-    public void handle(ToolCardDicePlacedNotification toolCardDicePlacedNotification) {
-
+    public void handle(ToolCardDicePlacedNotification notification) {
+        wpcByUsername.put(notification.username, notification.wpc);
+        if (notification.newExtractedDices != null) extractedDices = notification.newExtractedDices;
+        if (notification.newRoundTrack != null) roundTrack = notification.newRoundTrack;
     }
 
     @Override
-    public void handle(ToolCardExtractedDicesModified toolCardExtractedDicesModified) {
-
+    public void handle(ToolCardExtractedDicesModifiedNotification notification) {
+        if (notification.newExtractedDices != null) extractedDices = notification.newExtractedDices;
     }
 }

@@ -7,11 +7,11 @@ import it.polimi.ingsw.model.clientModel.Position;
 
 import java.util.ArrayList;
 
-public class ToolCardExtractedDicesModified implements Notification {
+public class ToolCardExtractedDicesModifiedNotification implements Notification {
     public final String username;
     public final ArrayList<ClientDice> newExtractedDices;
 
-    public ToolCardExtractedDicesModified(String username, ArrayList<ClientDice> newExtractedDices) {
+    public ToolCardExtractedDicesModifiedNotification(String username, ArrayList<ClientDice> newExtractedDices) {
         this.username = username;
         this.newExtractedDices = newExtractedDices;
     }
