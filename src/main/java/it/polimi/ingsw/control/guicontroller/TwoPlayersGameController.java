@@ -482,9 +482,11 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
         try {
             NextAction nextAction = networkClient.useToolCard(clientModel.getUserToken(), id);
             System.out.println(nextAction);
+            lastNextAction=nextAction;
             stateAction(state.change(nextAction));
         } catch (CannotFindPlayerInDatabaseException | CannotPerformThisMoveException | PlayerNotAuthorizedException e) {
             e.printStackTrace();
+            stateAction(state.change(lastNextAction));
         }
     }
 
