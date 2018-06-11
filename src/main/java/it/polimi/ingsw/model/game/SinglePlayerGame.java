@@ -135,7 +135,7 @@ public class SinglePlayerGame extends Game {
 
         for (Dice dice : extractedDices) extractedClientDices.add(dice.getClientDice());
 
-        changeAndNotifyObservers(new NewRoundNotification(roundTrack.getCurrentRound(), extractedClientDices));
+        changeAndNotifyObservers(new NewRoundNotification(roundTrack.getCurrentRound(), extractedClientDices, roundTrack.getClientRoundTrack()));
 
         currentTurn = 0;
         nextTurn();

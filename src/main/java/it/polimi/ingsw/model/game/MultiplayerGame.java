@@ -143,12 +143,13 @@ public class MultiplayerGame extends Game {
 
         roundTrack.nextRound();
         if(roundTrack.getCurrentRound()<= NUM_OF_ROUNDS) {
+
             extractedDices = diceBag.extractDices(numPlayers);
             ArrayList<ClientDice> extractedClientDices = new ArrayList<>();
 
             for (Dice dice : extractedDices) extractedClientDices.add(dice.getClientDice());
 
-            changeAndNotifyObservers(new NewRoundNotification(roundTrack.getCurrentRound(), extractedClientDices));
+            changeAndNotifyObservers(new NewRoundNotification(roundTrack.getCurrentRound(), extractedClientDices, roundTrack.getClientRoundTrack()));
 
             currentTurn = 0;
 
