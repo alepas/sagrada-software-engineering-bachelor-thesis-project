@@ -241,13 +241,8 @@ public abstract class Game extends Observable implements Runnable {
 
     void extractToolCards() {
         ArrayList<String> ids = toolcardDB.getCardsIDs();
-        //TODO: rimuovere commento
-//        Collections.shuffle(ids);
-//        ArrayList<String> toolCardsExtracted = new ArrayList<>(ids.subList(0, numOfToolCards));
-        ArrayList<String> toolCardsExtracted = new ArrayList<>();
-        toolCardsExtracted.add("1");
-        toolCardsExtracted.add("2");
-        toolCardsExtracted.add("3");
+        Collections.shuffle(ids);
+        ArrayList<String> toolCardsExtracted = new ArrayList<>(ids.subList(0, numOfToolCards));
         ArrayList<ClientToolCard> clientToolCards = new ArrayList<>();
 
 

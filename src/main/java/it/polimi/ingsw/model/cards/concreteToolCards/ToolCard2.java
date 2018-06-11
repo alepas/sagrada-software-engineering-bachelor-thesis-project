@@ -54,6 +54,8 @@ public class ToolCard2 extends ToolCard {
         if (cardOnlyInFirstMove)
             if (player.isPlacedDiceInTurn())
                 throw new CannotUseToolCardException(id, 2);
+        if (player.getWPC().getNumOfDices()==0)
+            throw new CannotUseToolCardException(id, 5);
 
         this.currentPlayer = player;
         this.currentGame = player.getGame();
@@ -63,13 +65,12 @@ public class ToolCard2 extends ToolCard {
             currentPlayer.setCardUsedBlockingTurn(this);
         }
         this.currentPlayer.setToolCardInUse(this);
+        updateClientWPC();
         if (currentGame.isSinglePlayerGame()) {
             singlePlayerGame=true;
             return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD,ClientDiceLocations.EXTRACTED);
         }
         else {
-            System.out.println("ho settato toolcard2!");
-
             this.currentStatus = 1;
             return new MoveData(NextAction.PLACE_DICE_TOOLCARD,ClientDiceLocations.WPC,ClientDiceLocations.WPC);
 
@@ -116,7 +117,6 @@ public class ToolCard2 extends ToolCard {
         updateClientWPC();
         movesNotifications.add(new ToolCardDicePlacedNotification(username, tempDice.getClientDice(),pos,tempClientWpc,null,null));
         currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username,this.getClientToolcard(),movesNotifications));
-        System.out.println("ho posizionato il dado, capra!");
         ClientWpc tempWpc=tempClientWpc;
         cleanCard();
         return new MoveData(true,tempWpc,null,null);
@@ -136,7 +136,6 @@ public class ToolCard2 extends ToolCard {
             }
             case 1: {
                 if (!singlePlayerGame){
-                    System.out.println("sto cancellando la cartina bbbeella");
                     cleanCard();
                     return new MoveData(true,true);
 

@@ -72,6 +72,7 @@ public class ToolCard1 extends ToolCard {
             currentPlayer.setCardUsedBlockingTurn(this);
         }
         this.currentPlayer.setToolCardInUse(this);
+        updateClientWPC();
         if (currentGame.isSinglePlayerGame()) {
             singlePlayerGame=true;
             return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD,ClientDiceLocations.EXTRACTED);
@@ -161,17 +162,17 @@ public class ToolCard1 extends ToolCard {
                     cleanCard();
                     return new MoveData(true,true);
                 }
-                    return null;
+                return null;
             }
             case 1: {
                 if (!singlePlayerGame){
                     cleanCard();
                     return new MoveData(true,true);
-
                 }
                 currentGame.getExtractedDices().add(diceForSingleUser);
                 updateClientExtractedDices();
                 diceForSingleUser=null;
+                this.currentStatus=0;
                 return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD,ClientDiceLocations.EXTRACTED,null,null,tempExtractedDices,null,null, null);
             }
             case 2: {
@@ -198,9 +199,7 @@ public class ToolCard1 extends ToolCard {
 
     private void updateClientExtractedDices(){
         System.out.println(tempExtractedDices.toString());
-        System.out.println("prima temp");
         tempExtractedDices.clear();
-        System.out.println("dopo clear");
         for (Dice tempdice:currentPlayer.getUpdatedExtractedDices())
             tempExtractedDices.add(tempdice.getClientDice());
     }

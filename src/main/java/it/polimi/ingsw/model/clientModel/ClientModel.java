@@ -331,12 +331,12 @@ public class ClientModel implements Observer, NotificationHandler {
     public void handle(ToolCardUsedNotification notification) {
         Integer index = null;
         for (ClientToolCard toc : gameToolCards) {
-            if (toc.getId() == notification.toolCard.getId())
+            if (toc.getId().equals(notification.toolCard.getId()))
                 index = gameToolCards.indexOf(toc);
-            if (index == null)
-                return;
-            gameToolCards.set(index, notification.toolCard);
         }
+        if (index == null)
+            return;
+        gameToolCards.set(index, notification.toolCard);
         for (Notification noti: notification.movesNotifications){
             if (noti instanceof ToolCardDicePlacedNotification) update(null,((ToolCardDicePlacedNotification)noti));
             if (noti instanceof ToolCardDiceChangedNotification) update(null,((ToolCardDiceChangedNotification)noti));

@@ -386,6 +386,14 @@ public class Wpc {
         return count;
     }
 
+    public int getNumOfDices(){
+        //Restituisce il numero di dadi sulla wpc
+        int count = 0;
+        for(Cell cell: schema){
+            if(cell.getDice()!= null) count++;
+        }
+        return count;
+    }
 
     /**
      * Counts the cells having dice = null.

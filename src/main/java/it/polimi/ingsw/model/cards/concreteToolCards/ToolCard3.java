@@ -54,6 +54,8 @@ public class ToolCard3 extends ToolCard {
         if (cardOnlyInFirstMove)
             if (player.isPlacedDiceInTurn())
                 throw new CannotUseToolCardException(id, 2);
+        if (player.getWPC().getNumOfDices()==0)
+            throw new CannotUseToolCardException(id, 5);
 
         this.currentPlayer = player;
         this.currentGame = player.getGame();
@@ -63,6 +65,7 @@ public class ToolCard3 extends ToolCard {
             currentPlayer.setCardUsedBlockingTurn(this);
         }
         this.currentPlayer.setToolCardInUse(this);
+        updateClientWPC();
         if (currentGame.isSinglePlayerGame()) {
             singlePlayerGame=true;
             return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD,ClientDiceLocations.EXTRACTED);
@@ -133,10 +136,8 @@ public class ToolCard3 extends ToolCard {
             }
             case 1: {
                 if (!singlePlayerGame){
-                    System.out.println("sto cancellando la cartina bbbeella");
                     cleanCard();
                     return new MoveData(true,true);
-
                 }
                 currentGame.getExtractedDices().add(diceForSingleUser);
                 updateClientExtractedDices();
@@ -182,7 +183,7 @@ public class ToolCard3 extends ToolCard {
                     return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD,ClientDiceLocations.EXTRACTED);
                 else return null;
             }
-            case 1: return new MoveData(NextAction.PLACE_DICE_TOOLCARD,ClientDiceLocations.WPC,ClientDiceLocations.WPC,null,tempExtractedDices,null,null, null);
+            case 1: return new MoveData(NextAction.PLACE_DICE_TOOLCARD,ClientDiceLocations.WPC,ClientDiceLocations.WPC,tempClientWpc,tempExtractedDices,null,null, null);
 
         }
         return null;
