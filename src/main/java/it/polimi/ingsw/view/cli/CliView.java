@@ -696,12 +696,16 @@ public class CliView implements Observer, NotificationHandler {
     private void placeDiceForToolcard(){
         NextAction nextAction = null;
         ToolCardClientNextActionInfo info = controller.getToolcardNextActionInfo();
-
         Position pos = null;
+        int id;
+
+        //TODO: Mostrare dado scelto (in attesa che mi metta il dado e non l'id)
+        if (info.diceChosen == null) id = pickDice(info.wherePickNewDice);
+        else id = info.diceChosen.getDiceID(); //TODO: Mostra dado scelto
 
         do {
             if (info.wherePutNewDice.equals(ClientDiceLocations.WPC)) pos = selectWpcPosition();
-            nextAction = controller.placeDiceForToolCard(info.diceChosenId, pos);
+            nextAction = controller.placeDiceForToolCard(id, pos);
         } while (nextAction == null);
 
         changeState(nextAction);
