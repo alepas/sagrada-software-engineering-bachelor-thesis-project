@@ -440,7 +440,6 @@ public class PlayerInGame {
         if (placedDiceInTurn) {
             if (toolCardUsedInTurn) {
                 clearPlayerTurn();
-                game.nextTurn();
                 return NextAction.MENU_ONLY_ENDTURN;
             } else return NextAction.MENU_ONLY_TOOLCARD;
         } else {
@@ -449,7 +448,6 @@ public class PlayerInGame {
                     return NextAction.MENU_ONLY_PLACE_DICE;
                 else {
                     clearPlayerTurn();
-                    game.nextTurn();
                     return NextAction.MENU_ONLY_ENDTURN;
                 }
             }
