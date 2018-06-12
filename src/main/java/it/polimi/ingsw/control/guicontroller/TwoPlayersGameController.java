@@ -1212,9 +1212,11 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
     }
 
 
-    private void updateGraphicExtractedDices() {
+    private synchronized void updateGraphicExtractedDices() {
         int tempIndex = -1;
         int newDiceIndex = -1;
+        int tempPosition=-1;
+        Node tempNode;
 
         ArrayList<String> extractedorderedIds = new ArrayList<>();
         for (ClientDice dice : clientModel.getExtractedDices()) {
@@ -1231,7 +1233,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
             for (int i = 0; i < extractedDicesGrid.getChildren().size(); i++) {
                 if (!extractedorderedIds.contains(extractedDicesGrid.getChildren().get(i).getId())) {
 
-                    /*extractDices.remove(extractedDicesGrid.getChildren().get(i));*/
+                    extractDices.remove(extractedDicesGrid.getChildren().get(i));
                     extractedDicesGrid.getChildren().remove(i);
                 }
             }
@@ -1239,27 +1241,29 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
             int lenght = extractedDicesGrid.getChildren().size();
             for (int i = 0; i < lenght; i++) {
                 tempIndex = extractedorderedIds.indexOf(extractedDicesGrid.getChildren().get(0).getId());
+                tempNode=extractedDicesGrid.getChildren().get(0);
+                tempPosition= extractedDicesGrid.getRowIndex(tempNode);
                 if (tempIndex != -1) {
-                    extractDices.remove(extractedDicesGrid.getChildren().get(0));
+                    extractDices.remove(tempNode);
                     extractedDicesGrid.getChildren().remove(0);
                     ImageView dice = setDiceStyle(clientModel.getExtractedDices().get(tempIndex));
                     dice.setFitHeight(100);
                     dice.setFitWidth(100);
-                    extractDices.add(tempIndex, dice);
-                    extractedDicesGrid.add(dice, 0, i);
+                    extractDices.add(dice);
+                    extractedDicesGrid.add(dice, 0, tempPosition);
                 } else {
                     for (int j = 0; j < extractedorderedIds.size(); j++) {
                         if (!extractedDicesImageViewIds.contains(extractedorderedIds.get(j)))
                             newDiceIndex = j;
                     }
                     if (newDiceIndex != -1) {
-                        extractDices.remove(extractedDicesGrid.getChildren().get(0));
+                        extractDices.remove(tempNode);
                         extractedDicesGrid.getChildren().remove(0);
                         ImageView dice = setDiceStyle(clientModel.getExtractedDices().get(newDiceIndex));
                         dice.setFitHeight(100);
                         dice.setFitWidth(100);
-                        extractDices.add(tempIndex, dice);
-                        extractedDicesGrid.add(dice, 0, i);
+                        extractDices.add(dice);
+                        extractedDicesGrid.add(dice, 0, tempPosition);
                     }
                 }
 
@@ -1268,15 +1272,15 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
         }
     }
 
-    private void updateGraphicRoundTrack() {
+    private synchronized void updateGraphicRoundTrack() {
         updateRoundTrack(clientModel.getRoundTrack());
     }
 
-    private void updateGraphicMyWpc() {
+    private synchronized void updateGraphicMyWpc() {
         fillWpc(firstWpcGrid, clientModel.getMyWpc());
     }
 
-    private void updateGraphicsCurrentUser() {
+    private synchronized void updateGraphicsCurrentUser() {
         updateGraphicExtractedDices();
         updateGraphicMyWpc();
         updateGraphicRoundTrack();
