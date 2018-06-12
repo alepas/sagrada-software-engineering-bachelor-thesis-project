@@ -325,7 +325,6 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                 playTurn();
                 break;
             case MENU_ONLY_PLACEDICE:
-                cancelActionButton.setVisible(false);
                 possibleActionPlaceDice();
                 break;
             case MENU_ONLY_TOOLCARD:
@@ -335,7 +334,6 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                 possibleActionEndTurn();
                 break;
             case INTERRUPT_TOOLCARD:
-                //stopToolCard();
                 cancelLastOperation();
                 break;
             case SELECT_DICE_TOOLCARD:
@@ -385,6 +383,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
      */
     private void dragAndDrop() {
         for (ImageView dice : extractDices) {
+            System.out.println("drag: "+ dice);
             dice.setOnDragDetected(event -> {
                 Dragboard db = dice.startDragAndDrop(TransferMode.MOVE);
                 ClipboardContent content = new ClipboardContent();
@@ -418,7 +417,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
 
             dice.setOnDragDone(event -> {
                 if (event.getTransferMode() == TransferMode.MOVE) {
-                    Platform.runLater(() -> extractedDicesGrid.getChildren().remove(dice));
+                    Platform.runLater(() -> messageLabel.setText("Posionato correttamente!") );
                 } else
                     dice.setVisible(true);
                 event.consume();
@@ -445,8 +444,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    schemaDices.clear();
-                    fillWpc(firstWpcGrid, clientModel.getMyWpc());
+                    updateGraphicMyWpc();
                     for (ClientCell cells : clientModel.getMyWpc().getSchema()) {
                         if (cells.getCellDice() != null && cells.getCellDice().getDiceID() == id) success = true;
                     }
@@ -479,12 +477,8 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
             lastNextAction = nextAction;
         } catch (CannotFindPlayerInDatabaseException | CannotPickPositionException |
                 CannotPickDiceException | PlayerNotAuthorizedException | CannotPerformThisMoveException e) {
-            Platform.runLater(() -> messageLabel.setText("Non è possibile posizionare il dado nella cella selezionata."));
-            System.out.println(e.getMessage());
-            if (isUsedToolCard) {
-                isUsedToolCard = false;
-            }
-            System.out.println("ho preso la lastnextaction");
+            Platform.runLater(() -> messageLabel.setText(e.getMessage()));
+            if (isUsedToolCard) isUsedToolCard = false;
             return lastNextAction;
         } catch (NoToolCardInUseException e) {
             messageLabel.setText("Non stai usando alcuna Tool Card!");
@@ -820,9 +814,14 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
      * end the turn.
      */
     private void possibleActionPlaceDice() {
-        for (Node dice : extractedDicesGrid.getChildren())
+        for (Node dice : extractedDicesGrid.getChildren()) {
             dice.setDisable(false);
+            System.out.println(dice);
+        }
+        for(ImageView im: extractDices)
+            System.out.println(im);
         extractedDicesGrid.setDisable(false);
+        cancelActionButton.setVisible(false);
         useTool1.setDisable(true);
         useTool2.setDisable(true);
         useTool3.setDisable(true);
@@ -857,15 +856,14 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                 case EXTRACTED:
                     messageLabel.setText("Scegli un dado dalla riserva e posizionalo.");
                     for (Node dice : extractedDicesGrid.getChildren()) {
-
-                        if (!dice.getId().equals(String.valueOf(info.diceChosen.getDiceID())))
-                            dice.setDisable(true);
-                        else {
-                            for (ClientDice clientDice : clientModel.getExtractedDices()) {
-                                if (String.valueOf(clientDice.getDiceID()).equals(dice.getId()))
-                                    changeDiceStyle(dice, clientDice);
+                            if (!dice.getId().equals(String.valueOf(info.diceChosen.getDiceID())))
+                                dice.setDisable(true);
+                            else {
+                                for (ClientDice clientDice : clientModel.getExtractedDices()) {
+                                    if (String.valueOf(clientDice.getDiceID()).equals(dice.getId()))
+                                        changeDiceStyle(dice, clientDice);
+                                }
                             }
-                        }
                     }
                     break;
             }
@@ -899,9 +897,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                 extractedDicesGrid.setDisable(false);
                 messageLabel.setText("Clicca su un dado della riserva!");
                 for (ImageView extractDice : extractDices) {
-                    System.out.println("ehi");
                     extractDice.setOnMouseClicked(event -> {
-                        System.out.println("ciao");
                         makeSelectedDiceVisible(extractDice);
                         stateAction(change(pickDice(Integer.parseInt(extractDice.getId()))));
                     });
@@ -969,7 +965,6 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
         String col = clientDice.getDiceColor().toString().toLowerCase();
         String num = String.valueOf(clientDice.getDiceNumber());
         String style = col.concat(num);
-        System.out.println("stile " + style);
         dice.getStyleClass().clear();
         dice.getStyleClass().add(style);
     }
@@ -1099,14 +1094,13 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
         Platform.runLater(() -> {
             switch (location) {
                 case WPC:
-                    fillWpc(firstWpcGrid, clientModel.getMyWpc());
+                    updateGraphicMyWpc();
                     break;
                 case ROUNDTRACK:
-                    roundTrackGrid.getChildren().clear();
                     updateRoundTrack(clientModel.getRoundTrack());
                     break;
                 case EXTRACTED:
-                    setDices(clientModel.getExtractedDices());
+                    updateGraphicExtractedDices();
                     break;
             }
         });
@@ -1152,7 +1146,8 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
      * @param roundTrack is the arraylist of all dices inside the RoundTrack
      */
     private void updateRoundTrack(ClientRoundTrack roundTrack) {
-        roundTrackGrid.getChildren().removeAll(roundTrackGrid.getChildren());
+        roundTrackDices.clear();
+        roundTrackGrid.getChildren().clear();
         ClientDice[][] dice = roundTrack.getAllDices();
         Platform.runLater(() -> {
             for (int row = 0; row < NUM_OF_ROUNDS; row++) {
@@ -1165,7 +1160,6 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                         roundTrackDices.add(image);
                     }
                 }
-                System.out.println(roundTrackDices);
             }
         });
 
@@ -1215,9 +1209,9 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
     private synchronized void updateGraphicExtractedDices() {
         int tempIndex = -1;
         int newDiceIndex = -1;
-        int tempPosition=-1;
-        Node tempNode;
-
+        int tempPosition = -1;
+        Node tempNode = null;
+        extractDices.clear();
         ArrayList<String> extractedorderedIds = new ArrayList<>();
         for (ClientDice dice : clientModel.getExtractedDices()) {
             extractedorderedIds.add(String.valueOf(dice.getDiceID()));
@@ -1232,8 +1226,10 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
 
             for (int i = 0; i < extractedDicesGrid.getChildren().size(); i++) {
                 if (!extractedorderedIds.contains(extractedDicesGrid.getChildren().get(i).getId())) {
-
-                    extractDices.remove(extractedDicesGrid.getChildren().get(i));
+                    for(ImageView image: extractDices){
+                        if(image.getId().equals(String.valueOf(extractedDicesGrid.getChildren().get(i).getId())))
+                            extractDices.remove(image);
+                    }
                     extractedDicesGrid.getChildren().remove(i);
                 }
             }
@@ -1241,10 +1237,13 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
             int lenght = extractedDicesGrid.getChildren().size();
             for (int i = 0; i < lenght; i++) {
                 tempIndex = extractedorderedIds.indexOf(extractedDicesGrid.getChildren().get(0).getId());
-                tempNode=extractedDicesGrid.getChildren().get(0);
+                tempNode = extractedDicesGrid.getChildren().get(0);
                 tempPosition= extractedDicesGrid.getRowIndex(tempNode);
                 if (tempIndex != -1) {
-                    extractDices.remove(tempNode);
+                    for(ImageView image: extractDices){
+                        if(image.getId().equals(String.valueOf(tempNode.getId())))
+                            extractDices.remove(image);
+                    }
                     extractedDicesGrid.getChildren().remove(0);
                     ImageView dice = setDiceStyle(clientModel.getExtractedDices().get(tempIndex));
                     dice.setFitHeight(100);
@@ -1257,7 +1256,10 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                             newDiceIndex = j;
                     }
                     if (newDiceIndex != -1) {
-                        extractDices.remove(tempNode);
+                        for(ImageView image: extractDices){
+                            if(image.getId().equals(String.valueOf(tempNode.getId())))
+                                extractDices.remove(image);
+                        }
                         extractedDicesGrid.getChildren().remove(0);
                         ImageView dice = setDiceStyle(clientModel.getExtractedDices().get(newDiceIndex));
                         dice.setFitHeight(100);
@@ -1330,13 +1332,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
         System.out.println("Round: " + notification.roundNumber);
         int round = notification.roundNumber - 1;
         nextRound(round, notification.extractedDices);
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                updateRoundTrack(clientModel.getRoundTrack());
-            }
-        });
-
+        Platform.runLater(()-> updateRoundTrack(clientModel.getRoundTrack()));
     }
 
     @Override
@@ -1350,11 +1346,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
 
     @Override
     public void handle(ToolCardDiceChangedNotification notification) {
-        if (clientModel.isActive()) {
-            Platform.runLater(() -> {
-                updateGraphicsCurrentUser();
-            });
-        }
+        if (clientModel.isActive()) Platform.runLater(() -> updateGraphicsCurrentUser());
     }
 
     @Override
