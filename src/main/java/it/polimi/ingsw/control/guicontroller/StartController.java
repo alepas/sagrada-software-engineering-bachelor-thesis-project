@@ -20,10 +20,6 @@ import java.net.ConnectException;
 
 public class StartController {
 
-    @FXML private Button cliButton;
-
-    @FXML private Button guiButton;
-
     @FXML
     private Button rmiButton;
 
@@ -38,24 +34,6 @@ public class StartController {
 
 
     public void initialize() {
-        //TODO: togliere il LaunchCli
-        cliButton.setOnAction(event -> {
-            Stage window = (Stage) cliButton.getScene().getWindow();
-            window.close();
-            try {
-                LaunchCli.main();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        });
-
-        guiButton.setOnAction(event -> {
-            guiButton.setVisible(false);
-            cliButton.setVisible(false);
-            rmiButton.setVisible(true);
-            socketButton.setVisible(true);
-        });
 
         rmiButton.setOnAction(event -> {
             try {

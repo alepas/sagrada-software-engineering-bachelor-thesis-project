@@ -88,6 +88,13 @@ public class SignInController {
             } catch (InterruptedException e) {
                 //TODO
             }
+            if(clientModel.getUsername() == null){
+                Platform.runLater(()->{
+                    signInErrorLabel.setVisible(true);
+                    signInUsername.clear();
+                    signInPassword.clear();
+                });
+            }
             Platform.runLater(()->{
                 try {
                     int numPlayers = networkClient.findAlreadyStartedGame(clientModel.getUserToken());

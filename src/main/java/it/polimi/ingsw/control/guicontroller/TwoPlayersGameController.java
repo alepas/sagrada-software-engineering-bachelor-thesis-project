@@ -383,7 +383,6 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
      */
     private void dragAndDrop() {
         for (ImageView dice : extractDices) {
-            System.out.println("drag: "+ dice);
             dice.setOnDragDetected(event -> {
                 Dragboard db = dice.startDragAndDrop(TransferMode.MOVE);
                 ClipboardContent content = new ClipboardContent();
@@ -417,7 +416,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
 
             dice.setOnDragDone(event -> {
                 if (event.getTransferMode() == TransferMode.MOVE) {
-                    Platform.runLater(() -> messageLabel.setText("Posionato correttamente!") );
+                    Platform.runLater(() -> extractedDicesGrid.setDisable(false));
                 } else
                     dice.setVisible(true);
                 event.consume();
@@ -508,8 +507,8 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
     }
 
     /**
-     * Sets an <code>AnchorPane</code>, with the same <code>styleClass</code> of the Card that the user want to zoom,
-     * inside the <codez>zoomedCard</code> pane which has been defined in the fxml. Both the zoomedCard and the zoomCardBackButton
+     * Sets an AnchorPane, with the same styleClass of the Card that the user want to zoom,
+     * inside the zoomedCard pane which has been defined in the fxml. Both the zoomedCard and the zoomCardBackButton
      * are setted to visible.
      *
      * @param id ID of the toolCard or the PrivateObjectCard that the user wants to zoom
@@ -974,7 +973,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
      */
     private void selectNumberToolCard() {
         ToolCardClientNextActionInfo info = clientModel.getToolCardClientNextActionInfo();
-        for (ClientDice clientDice : clientModel.getExtractedDices()) {
+       /* for (ClientDice clientDice : clientModel.getExtractedDices()) {
             for (ImageView dice : extractDices) {
                 if (dice.getId().equals(String.valueOf(clientDice.getDiceID()))) {
                     System.out.println("id: " + dice.getId());
@@ -982,7 +981,9 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                 }
 
             }
-        }
+        }*/
+       //todo:
+        System.out.println(info.numbersToChoose);
         if (info.numbersToChoose.size() == 2) {
             messageLabel.setText("Aggiungi 1 o sottrai 1");
             plusMinusPane.setVisible(true);
@@ -1124,7 +1125,6 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                     makeSelectedDiceLessVisible(info.diceChosenLocation);
                     break;
                 case SELECT_NUMBER_TOOLCARD:
-
                     plusMinusPane.setVisible(true);
                     break;
             }
