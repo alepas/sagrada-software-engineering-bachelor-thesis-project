@@ -93,10 +93,6 @@ public class MultiplayerGame extends Game {
         playGame();
     }
 
-    private void playGame() {
-        nextRound();
-    }
-
     private void waitPlayers(int time){
         try {
             Thread.sleep(time);
@@ -124,17 +120,8 @@ public class MultiplayerGame extends Game {
         players = (PlayerInGame[]) playersList.toArray(players);
     }
 
-
-    @Override
-    public void endGame() {
-        DatabaseGames.getInstance().removeGame(this);
-        for (PlayerInGame player : players) {
-            try {
-                DatabaseUsers.getInstance().removePlayerInGameFromDB(player);
-            } catch (CannotFindPlayerInDatabaseException e) {
-                e.printStackTrace();
-            }
-        }
+    private void playGame() {
+        nextRound();
     }
 
     @Override
@@ -142,17 +129,14 @@ public class MultiplayerGame extends Game {
         for (Dice dice : extractedDices) roundTrack.addDice(dice);
 
         roundTrack.nextRound();
-        if(roundTrack.getCurrentRound()<= NUM_OF_ROUNDS) {
-
+        if(roundTrack.getCurrentRound() <= GameConstants.NUM_OF_ROUNDS) {
             extractedDices = diceBag.extractDices(numPlayers);
+
             ArrayList<ClientDice> extractedClientDices = new ArrayList<>();
-
             for (Dice dice : extractedDices) extractedClientDices.add(dice.getClientDice());
-
             changeAndNotifyObservers(new NewRoundNotification(roundTrack.getCurrentRound(), extractedClientDices, roundTrack.getClientRoundTrack()));
 
             currentTurn = 0;
-
             if (roundPlayer < players.length - 1) roundPlayer++;
             else roundPlayer = 0;
             turnPlayer = roundPlayer;
@@ -167,8 +151,17 @@ public class MultiplayerGame extends Game {
         players[turnPlayer].setNotActive();
         if (currentTurn < GameConstants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME*numPlayers) {
             turnPlayer = nextPlayer();
-            players[turnPlayer].setActive();
             currentTurn++;
+
+            if ((players[turnPlayer].getTurnForRound() == 2) && (players[turnPlayer].getCardUsedBlockingTurn() != null)) {
+                changeAndNotifyObservers(new PlayerSkipTurnNotification(players[turnPlayer].getUser(), players[turnPlayer].getCardUsedBlockingTurn().getID()));
+                if (currentTurn < GameConstants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME*numPlayers) {
+                    turnPlayer = nextPlayer();
+                    currentTurn++;
+                } else nextRound();
+            }
+
+            players[turnPlayer].setActive();
             changeAndNotifyObservers(new NextTurnNotification(currentTurn, players[turnPlayer].getUser()));
         } else {
             nextRound();
@@ -266,6 +259,17 @@ public class MultiplayerGame extends Game {
         endGame();
     }
 
+    @Override
+    public void endGame() {
+        DatabaseGames.getInstance().removeGame(this);
+        for (PlayerInGame player : players) {
+            try {
+                DatabaseUsers.getInstance().removePlayerInGameFromDB(player);
+            } catch (CannotFindPlayerInDatabaseException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     @Override
     public boolean isSinglePlayerGame() {

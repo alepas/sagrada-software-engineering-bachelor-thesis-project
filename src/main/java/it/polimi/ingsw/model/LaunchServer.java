@@ -6,6 +6,7 @@ import it.polimi.ingsw.control.network.rmi.RmiServer;
 import it.polimi.ingsw.control.network.socket.SocketServer;
 import it.polimi.ingsw.model.cards.PocDB;
 import it.polimi.ingsw.model.cards.ToolCardDB;
+import it.polimi.ingsw.model.constants.GameConstants;
 import it.polimi.ingsw.model.constants.NetworkConstants;
 import it.polimi.ingsw.model.wpc.WpcDB;
 
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 
 public class LaunchServer {
 
@@ -46,10 +48,11 @@ public class LaunchServer {
 
         //Avvio di RMI
         try {
-            Registry registry = LocateRegistry.getRegistry();
-            RemoteServer remoteServer = new RmiServer(new ServerController(null));
+            RmiServer remoteServer = new RmiServer(new ServerController(null));
+            RemoteServer stub = (RemoteServer) UnicastRemoteObject.exportObject(remoteServer, NetworkConstants.RMI_SERVER_PORT);
 
-            registry.rebind(NetworkConstants.RMI_CONTROLLER_NAME, remoteServer);
+            Registry registry = LocateRegistry.createRegistry(NetworkConstants.RMI_SERVER_PORT);
+            registry.rebind(NetworkConstants.RMI_CONTROLLER_NAME, stub);
             System.out.println(">>> RMI Server is running");
         } catch (RemoteException e){
             System.out.println(">>> " + e.getMessage());
