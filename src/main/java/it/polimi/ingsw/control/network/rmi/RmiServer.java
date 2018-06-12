@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 
-public class RmiServer extends UnicastRemoteObject implements RemoteServer, Observer {
+public class RmiServer implements RemoteServer, Observer {
     private transient final ServerController controller;
     private transient HashMap<String, ArrayList<RemoteObserver>> observersByGame;
     private transient HashMap<String, RemoteObserver> observersByUser;

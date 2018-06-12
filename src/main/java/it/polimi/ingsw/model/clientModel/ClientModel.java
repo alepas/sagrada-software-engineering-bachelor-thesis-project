@@ -330,19 +330,12 @@ public class ClientModel implements Observer, NotificationHandler {
 
     @Override
     public void handle(ToolCardUsedNotification notification) {
-        Integer index = null;
-        for (ClientToolCard toc : gameToolCards) {
-            if (toc.getId().equals(notification.toolCard.getId()))
-                index = gameToolCards.indexOf(toc);
+        String id = notification.toolCard.getId();
+        for (ClientToolCard card : gameToolCards) {
+            if (card.getId().equals(id)) gameToolCards.set(gameToolCards.indexOf(card), notification.toolCard);
         }
-        if (index == null)
-            return;
-        gameToolCards.set(index, notification.toolCard);
-        for (Notification noti: notification.movesNotifications){
-            if (noti instanceof ToolCardDicePlacedNotification) update(null,((ToolCardDicePlacedNotification)noti));
-            if (noti instanceof ToolCardDiceChangedNotification) update(null,((ToolCardDiceChangedNotification)noti));
-            if (noti instanceof ToolCardExtractedDicesModifiedNotification) update(null,((ToolCardExtractedDicesModifiedNotification)noti));
-        }
+
+        for (Notification not: notification.movesNotifications) not.handle(this);
     }
 
     @Override

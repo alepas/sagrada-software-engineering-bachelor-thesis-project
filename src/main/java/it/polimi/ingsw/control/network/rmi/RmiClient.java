@@ -22,7 +22,7 @@ public class RmiClient extends NetworkClient {
     private final RemoteServer remoteServer;
 
     public RmiClient() throws NotBoundException, RemoteException{
-        Registry registry = LocateRegistry.getRegistry(NetworkConstants.SERVER_ADDRESS, Registry.REGISTRY_PORT);
+        Registry registry = LocateRegistry.getRegistry(NetworkConstants.SERVER_ADDRESS, NetworkConstants.RMI_SERVER_PORT);
         remoteServer = (RemoteServer) registry.lookup(NetworkConstants.RMI_CONTROLLER_NAME);
     }
 

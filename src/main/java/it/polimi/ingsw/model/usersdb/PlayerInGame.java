@@ -210,7 +210,7 @@ public class PlayerInGame {
             }
         }
         if (dice == null)
-            throw new CannotPickDiceException(username, dice.getDiceNumber(), dice.getDiceColor(), ClientDiceLocations.EXTRACTED, 0);
+            throw new CannotPickDiceException(username, diceId, ClientDiceLocations.EXTRACTED, 0);
         if (wpc.addDiceWithAllRestrictions(dice, pos) == false)
             throw new CannotPickPositionException(username, pos);
         game.getExtractedDices().remove(dice);
