@@ -1346,7 +1346,9 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
 
     @Override
     public void handle(ToolCardDiceChangedNotification notification) {
-        if (clientModel.isActive()) Platform.runLater(() -> updateGraphicsCurrentUser());
+        Platform.runLater(() -> {
+            //TODO: scrivi la mossa fatta
+        });
     }
 
     @Override
@@ -1362,7 +1364,17 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
 
     @Override
     public void handle(ToolCardUsedNotification notification) {
-        //uso per mettere la stellina sulla toolcard
+        Platform.runLater(() -> {
+            //uso per mettere la stellina sulla toolcard
+            if (notification.username.equals(secondUserLabel.getText())) //o è il terzo o il quarto giocatore
+                fillWpc(secondWpcGrid, clientModel.getWpcByUsername().get(notification.username));
+            updateGraphicsCurrentUser();
+            //TODO: inserire testo "hai usato toolcard"
+
+            if (!notification.username.equals(username)) {
+                for (Notification not : notification.movesNotifications) not.handle(this);
+            }
+        });
     }
 
     @Override
@@ -1379,17 +1391,15 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
     @Override
     public void handle(ToolCardDicePlacedNotification toolCardDicePlacedNotification) {
         Platform.runLater(() -> {
-            String user = toolCardDicePlacedNotification.username;
-            if (user.equals(secondUserLabel.getText())) //o è il terzo o il quarto giocatore
-                fillWpc(secondWpcGrid, toolCardDicePlacedNotification.wpc);
-            updateGraphicRoundTrack();
-            updateGraphicExtractedDices();
+            //TODO: scrivi la mossa fatta
         });
     }
 
 
     @Override
     public void handle(ToolCardExtractedDicesModifiedNotification toolCardExtractedDicesModifiedNotification) {
-
+        Platform.runLater(() -> {
+            //TODO: scrivi la mossa fatta
+        });
     }
 }

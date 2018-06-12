@@ -15,7 +15,7 @@ public class SocketServer {
     public SocketServer(int port) throws IOException {
         serverSocket = new ServerSocket(port);
         pool = Executors.newCachedThreadPool();
-        System.out.println(">>> Listening\tAddress: " + NetworkConstants.SERVER_ADDRESS + "\tPort: " + port);
+        System.out.println(">>> Socket server's listening\tAddress: " + NetworkConstants.SERVER_ADDRESS + "\tPort: " + port);
     }
 
     public void run() throws IOException {

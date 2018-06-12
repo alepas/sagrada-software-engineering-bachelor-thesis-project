@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.cards.concreteToolCards;
 
 import it.polimi.ingsw.control.network.commands.notifications.ToolCardDiceChangedNotification;
 import it.polimi.ingsw.control.network.commands.notifications.DicePlacedNotification;
+import it.polimi.ingsw.control.network.commands.notifications.ToolCardDicePlacedNotification;
 import it.polimi.ingsw.control.network.commands.notifications.ToolCardUsedNotification;
 import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.clientModel.*;
@@ -41,8 +42,6 @@ public class ToolCard1 extends ToolCard {
         this.dice=null;
         this.singlePlayerGame=false;
         numbers=new ArrayList<>();
-        numbers.add(-1);
-        numbers.add(1);
         tempExtractedDices=new ArrayList<>();
         movesNotifications=new ArrayList<>();
     }
@@ -103,6 +102,12 @@ public class ToolCard1 extends ToolCard {
         Dice tempDice=currentPlayer.dicePresentInLocation(diceId,ClientDiceLocations.EXTRACTED).getDice();
         this.dice= tempDice;
         currentStatus=2;
+        int tempNum=this.dice.getDiceNumber();
+        if (tempNum<6)
+            numbers.add(1);
+
+        if (tempNum>1)
+            numbers.add(-1);
         return new MoveData(NextAction.SELECT_NUMBER_TOOLCARD,null,null,null, tempDice.getClientDice(), ClientDiceLocations.EXTRACTED, numbers,false);
     }
 
@@ -125,7 +130,7 @@ public class ToolCard1 extends ToolCard {
         }
         currentStatus=3;
         updateClientExtractedDices();
-        movesNotifications.add(new ToolCardDiceChangedNotification(username,oldDice.getClientDice(),dice.getClientDice(),ClientDiceLocations.EXTRACTED,ClientDiceLocations.EXTRACTED,tempExtractedDices));
+        movesNotifications.add(new ToolCardDiceChangedNotification(username,oldDice.getClientDice(),dice.getClientDice(),ClientDiceLocations.EXTRACTED,ClientDiceLocations.EXTRACTED));
         return new MoveData(NextAction.PLACE_DICE_TOOLCARD,ClientDiceLocations.EXTRACTED,ClientDiceLocations.WPC,null,tempExtractedDices,null,dice.getClientDice(), ClientDiceLocations.EXTRACTED);
     }
 
@@ -144,9 +149,8 @@ public class ToolCard1 extends ToolCard {
         this.used = true;
         updateClientWPC();
         updateClientExtractedDices();
-        movesNotifications.add(new DicePlacedNotification(username, this.dice.getClientDice(),pos,tempClientWpc,tempExtractedDices,null));
-        currentPlayer.getGame().changeAndNotifyObservers(new DicePlacedNotification(username, this.dice.getClientDice(),pos,tempClientWpc,tempExtractedDices,currentPlayer.getGame().getRoundTrack().getClientRoundTrack()));
-        currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username,this.getClientToolcard(),movesNotifications));
+        movesNotifications.add(new ToolCardDicePlacedNotification(username, this.dice.getClientDice(),pos));
+        currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username,this.getClientToolcard(),movesNotifications,tempClientWpc,tempExtractedDices,null));
         ClientWpc tempWpc=tempClientWpc;
         ArrayList<ClientDice> tempExtracted=tempExtractedDices;
         cleanCard();

@@ -108,7 +108,7 @@ public class ToolCard5 extends ToolCard {
             currentGame.getExtractedDices().add(fromRoundTrack.getDice());
             updateClientExtractedDices();
             updateClientRoundTrack();
-            movesNotifications.add(new ToolCardDiceChangedNotification(username, fromExtracted.getDice().getClientDice(), fromRoundTrack.getDice().getClientDice(), ClientDiceLocations.EXTRACTED, ClientDiceLocations.ROUNDTRACK, tempExtractedDices, tempRoundTrack));
+            movesNotifications.add(new ToolCardDiceChangedNotification(username, fromExtracted.getDice().getClientDice(), fromRoundTrack.getDice().getClientDice(), ClientDiceLocations.EXTRACTED, ClientDiceLocations.ROUNDTRACK));
             return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, ClientDiceLocations.WPC, null, tempExtractedDices, tempRoundTrack, fromRoundTrack.getDice().getClientDice(), ClientDiceLocations.EXTRACTED);
         } else throw new CannotPerformThisMoveException(username, 2, false);
     }
@@ -134,8 +134,8 @@ public class ToolCard5 extends ToolCard {
         this.used = true;
         updateClientWPC();
         updateClientExtractedDices();
-        movesNotifications.add(new DicePlacedNotification(username, this.fromRoundTrack.getDice().getClientDice(), pos, tempClientWpc, tempExtractedDices, null));
-        currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications));
+        movesNotifications.add(new ToolCardDicePlacedNotification(username, this.fromRoundTrack.getDice().getClientDice(), pos));
+        currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications,tempClientWpc,tempExtractedDices,tempRoundTrack));
         ClientWpc tempWpc = tempClientWpc;
         ArrayList<ClientDice> tempExtracted = tempExtractedDices;
         cleanCard();

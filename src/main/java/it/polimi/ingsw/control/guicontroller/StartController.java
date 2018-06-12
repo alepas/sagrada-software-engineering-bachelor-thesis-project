@@ -38,11 +38,12 @@ public class StartController {
 
 
     public void initialize() {
+        //TODO: togliere il LaunchCli
         cliButton.setOnAction(event -> {
             Stage window = (Stage) cliButton.getScene().getWindow();
             window.close();
             try {
-                LaunchCli.main(null);
+                LaunchCli.main();
             } catch (IOException e) {
                 e.printStackTrace();
             }

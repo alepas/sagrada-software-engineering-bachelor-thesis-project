@@ -5,19 +5,19 @@ import it.polimi.ingsw.control.network.commands.notifications.*;
 import it.polimi.ingsw.model.clientModel.*;
 import it.polimi.ingsw.view.Status;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 
 public class CliView implements Observer, NotificationHandler {
-    private Scanner fromKeyBoard;
+    private BufferedReader fromKeyBoard;
     private final CliRender cliRender;
     private int strNum = 0;
-
-    private boolean interruptThread = true;
 
     private Timer timer = new Timer();
     private Task task = null;
     private final Object waiter = new Object();
-    private final Object prova = new Object();       //TODO: Attualmente utilizzato in stopHere, da eliminare
 
     private Status state;
 
@@ -26,29 +26,26 @@ public class CliView implements Observer, NotificationHandler {
 
     public CliView(CliController controller) {
         this.controller = controller;
-        this.fromKeyBoard = new Scanner(System.in);
+        this.fromKeyBoard = new BufferedReader(new InputStreamReader(System.in));
         this.cliRender = new CliRender();
     }
 
-    private String userInput() {
-        return fromKeyBoard.nextLine();
+    //Restituisce null se c'è stata un'eccezione
+    public String userInput() {
+        try {
+            // wait until we have data to complete a readLine()
+            while (!fromKeyBoard.ready()) {
+                Thread.sleep(200);
+            }
+            return fromKeyBoard.readLine();
+        } catch (InterruptedException | IOException e) {
+            return null;
+        }
     }
 
     public void displayText(String text) { System.out.println(">>> " + text); }
 
     public void printText(String text) { System.out.println(text); }
-
-    private void stopHere() {
-        int stopHere = 0;
-        synchronized (prova) {
-            try {
-                displayText("Stop here");
-                while (stopHere==0) prova.wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     private void startNewTask(int taskTime){
         task = new Task(taskTime, waiter);
@@ -67,7 +64,7 @@ public class CliView implements Observer, NotificationHandler {
         task = null;
     }
 
-    public void changeState(NextAction action) {
+    private void changeState(NextAction action) {
         state = state.change(action);
     }
 
@@ -309,11 +306,9 @@ public class CliView implements Observer, NotificationHandler {
     private void chooseWpcPhase() {
         Thread requestWpcThread = new Thread(() -> {
             do {
-                interruptThread = true;
                 displayText("Seleziona la wpc che vuoi utilizzare");
-                String wpcID = userInput();
-                interruptThread = false;
-                controller.pickWpc(wpcID);
+                String wpcID = userInput();     //Restituisce null se viene interrotto
+                if (wpcID != null) controller.pickWpc(wpcID);
             } while (controller.getMyWpc() == null);
             if (!controller.allPlayersChooseWpc()) displayText("Attendo che gli altri giocatori selezionino la wpc");
         });
@@ -337,7 +332,7 @@ public class CliView implements Observer, NotificationHandler {
                     waiter.wait();
                 }
 
-                if (interruptThread) requestWpcThread.interrupt();
+                requestWpcThread.interrupt();
                 deleteTask();
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -383,7 +378,7 @@ public class CliView implements Observer, NotificationHandler {
             displayText("Cosa vuoi fare?");
             int i = showStandardActions();
             displayText(++i + ") Posiziona dado");
-            displayText(++i + ") Usa toolcard");
+            displayText(++i + ") Usa toolcard (Favours rimasti: " + controller.getFavour() + ")");
             displayText(++i + ") Passa turno");
         } while (!listenToResponseAndPerformAction(possibleActions));
     }
@@ -413,7 +408,7 @@ public class CliView implements Observer, NotificationHandler {
         do{
             displayText("Cosa vuoi fare?");
             int i = showStandardActions();
-            displayText(++i + ") Usa toolcard");
+            displayText(++i + ") Usa toolcard (Favours rimasti: " + controller.getFavour() + ")");
             displayText(++i + ") Passa turno");
         } while (!listenToResponseAndPerformAction(possibleActions));
     }
@@ -701,7 +696,11 @@ public class CliView implements Observer, NotificationHandler {
 
         //TODO: Mostrare dado scelto (in attesa che mi metta il dado e non l'id)
         if (info.diceChosen == null) id = pickDice(info.wherePickNewDice);
-        else id = info.diceChosen.getDiceID(); //TODO: Mostra dado scelto
+        else {
+            displayText("Stai per posizionare il dado");
+            printText(cliRender.renderDice(info.diceChosen));
+            id = info.diceChosen.getDiceID(); //TODO: Mostra dado scelto
+        }
 
         do {
             if (info.wherePutNewDice.equals(ClientDiceLocations.WPC)) pos = selectWpcPosition();
@@ -843,11 +842,6 @@ public class CliView implements Observer, NotificationHandler {
     }
 
     @Override
-    public void handle(ToolCardDiceChangedNotification notification) {
-
-    }
-
-    @Override
     public void handle(DicePlacedNotification notification) {
         printText("\n" + cliRender.renderWpc(notification.wpc, false));
         displayText(notification.username + " ha posizionato il dado " + notification.dice.getDiceID() +
@@ -858,20 +852,17 @@ public class CliView implements Observer, NotificationHandler {
         }
     }
 
-
-
     @Override
     public void handle(ToolCardUsedNotification notification) {
-
+        if (!notification.username.equals(controller.getUser())){
+            displayText(notification.username + " ha usato la toolcard " + notification.toolCard.getId()
+                + " (" + notification.toolCard.getName() + ")");
+            for(Notification not : notification.movesNotifications) not.handle(this);
+        }
     }
 
     @Override
-    public void handle(PlayerSkipTurnNotification notification) {
-
-    }
-
-    @Override
-    public void handle(ScoreNotification notification) {
+    public void handle(ToolCardDiceChangedNotification notification) {
 
     }
 
@@ -882,6 +873,16 @@ public class CliView implements Observer, NotificationHandler {
 
     @Override
     public void handle(ToolCardExtractedDicesModifiedNotification toolCardExtractedDicesModifiedNotification) {
+
+    }
+
+    @Override
+    public void handle(PlayerSkipTurnNotification notification) {
+
+    }
+
+    @Override
+    public void handle(ScoreNotification notification) {
 
     }
 }

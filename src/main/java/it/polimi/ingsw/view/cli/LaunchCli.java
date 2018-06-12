@@ -15,7 +15,7 @@ public class LaunchCli {
 
     private enum Tecnology { SOCKET, RMI }
 
-    public static void main(String[] args) throws IOException {
+    public static void main() throws IOException {
         String answer;
         Tecnology tecnology = null;
 
@@ -57,7 +57,7 @@ public class LaunchCli {
         } while (tecnology == null);
     }
 
-    private static void startSocketClient() throws IOException{
+    private static void startSocketClient() throws IOException {
         SocketClient client = NetworkClient.getNewSocketInstance(
                 NetworkConstants.SERVER_ADDRESS, NetworkConstants.SOCKET_SERVER_PORT);
 

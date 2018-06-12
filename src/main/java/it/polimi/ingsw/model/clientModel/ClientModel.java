@@ -315,9 +315,6 @@ public class ClientModel implements Observer, NotificationHandler {
 
     @Override
     public void handle(ToolCardDiceChangedNotification notification) {
-        wpcByUsername.put(notification.username, notification.wpc);
-        if (notification.extractedDices != null) extractedDices = notification.extractedDices;
-        if (notification.roundTrack != null) roundTrack = notification.roundTrack;
     }
 
     @Override
@@ -331,6 +328,9 @@ public class ClientModel implements Observer, NotificationHandler {
     @Override
     public void handle(ToolCardUsedNotification notification) {
         String id = notification.toolCard.getId();
+        wpcByUsername.put(notification.username, notification.wpc);
+        if (notification.newExtractedDices != null) extractedDices = notification.newExtractedDices;
+        if (notification.newRoundTrack != null) roundTrack = notification.newRoundTrack;
         for (ClientToolCard card : gameToolCards) {
             if (card.getId().equals(id)) gameToolCards.set(gameToolCards.indexOf(card), notification.toolCard);
         }
@@ -350,13 +350,10 @@ public class ClientModel implements Observer, NotificationHandler {
 
     @Override
     public void handle(ToolCardDicePlacedNotification notification) {
-        wpcByUsername.put(notification.username, notification.wpc);
-        if (notification.newExtractedDices != null) extractedDices = notification.newExtractedDices;
-        if (notification.newRoundTrack != null) roundTrack = notification.newRoundTrack;
+
     }
 
     @Override
     public void handle(ToolCardExtractedDicesModifiedNotification notification) {
-        if (notification.newExtractedDices != null) extractedDices = notification.newExtractedDices;
     }
 }

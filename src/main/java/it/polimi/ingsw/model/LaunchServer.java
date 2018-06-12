@@ -53,7 +53,7 @@ public class LaunchServer {
 
             Registry registry = LocateRegistry.createRegistry(NetworkConstants.RMI_SERVER_PORT);
             registry.rebind(NetworkConstants.RMI_CONTROLLER_NAME, stub);
-            System.out.println(">>> RMI Server is running");
+            System.out.println(">>> RMI Server is running\t\tAddress: " + NetworkConstants.SERVER_ADDRESS + "\tPort: " + NetworkConstants.RMI_SERVER_PORT);
         } catch (RemoteException e){
             System.out.println(">>> " + e.getMessage());
         }

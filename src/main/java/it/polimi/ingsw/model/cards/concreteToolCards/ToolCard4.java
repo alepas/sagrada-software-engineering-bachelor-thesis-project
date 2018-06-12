@@ -122,7 +122,7 @@ public class ToolCard4 extends ToolCard {
             firstDiceFinalPos=pos;
             this.currentStatus=2;
             updateClientWPC();
-            movesNotifications.add(new ToolCardDicePlacedNotification(username, tempDice.getClientDice(), pos, tempClientWpc, null, null));
+            movesNotifications.add(new ToolCardDicePlacedNotification(username, tempDice.getClientDice(), pos));
             return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.WPC, ClientDiceLocations.WPC, tempClientWpc, null, null, null, null);
 
         }
@@ -140,8 +140,8 @@ public class ToolCard4 extends ToolCard {
             }
             this.used = true;
             updateClientWPC();
-            movesNotifications.add(new ToolCardDicePlacedNotification(username, tempDice.getClientDice(), pos, tempClientWpc, null, null));
-            currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications));
+            movesNotifications.add(new ToolCardDicePlacedNotification(username, tempDice.getClientDice(), pos));
+            currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications,tempClientWpc,tempExtractedDices,null));
             ClientWpc tempWpc = tempClientWpc;
             cleanCard();
             return new MoveData(true, tempWpc, null, null);

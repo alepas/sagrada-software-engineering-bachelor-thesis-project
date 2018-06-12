@@ -13,7 +13,7 @@ import java.io.IOException;
 
 public class LaunchGui extends Application {
 
-    public static void main(String[] args) {
+    public static void main() {
             Application.launch(LaunchGui.class, (String) null);
         }
 
