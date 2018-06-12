@@ -103,7 +103,6 @@ public class ToolCard5 extends ToolCard {
         } else if (currentStatus == 2) {
             this.fromRoundTrack = currentPlayer.dicePresentInLocation(diceId, ClientDiceLocations.ROUNDTRACK);
             currentStatus = 3;
-
             currentGame.getExtractedDices().remove(fromExtracted.getDice());
             currentGame.getRoundTrack().swapDice(fromExtracted.getDice(), fromRoundTrack.getPosition());
             currentGame.getExtractedDices().add(fromRoundTrack.getDice());
@@ -180,7 +179,7 @@ public class ToolCard5 extends ToolCard {
                 this.fromRoundTrack = null;
                 this.currentStatus = 2;
                 movesNotifications.remove(movesNotifications.size()-1);
-                return new MoveData(NextAction.SELECT_DICE_TOOLCARD, ClientDiceLocations.WPC, null, null, tempExtractedDices, tempRoundTrack, fromExtracted.getDice().getClientDice(),ClientDiceLocations.EXTRACTED);
+                return new MoveData(NextAction.SELECT_DICE_TOOLCARD, ClientDiceLocations.ROUNDTRACK, null, null, tempExtractedDices, tempRoundTrack, fromExtracted.getDice().getClientDice(),ClientDiceLocations.EXTRACTED);
             }
 
         }

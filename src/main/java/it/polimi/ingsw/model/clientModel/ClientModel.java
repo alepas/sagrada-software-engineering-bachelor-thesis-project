@@ -60,7 +60,7 @@ public class ClientModel implements Observer, NotificationHandler {
         this.currentTurn = 0;
         this.active = false;
         this.favour = 0;
-        this.roundTrack = null;
+        this.roundTrack=null;
         this.toolCardClientNextActionInfo = null;
     }
 
