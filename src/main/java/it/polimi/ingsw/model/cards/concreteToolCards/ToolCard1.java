@@ -103,11 +103,12 @@ public class ToolCard1 extends ToolCard {
         this.dice= tempDice;
         currentStatus=2;
         int tempNum=this.dice.getDiceNumber();
+        if (tempNum>1)
+            numbers.add(-1);
         if (tempNum<6)
             numbers.add(1);
 
-        if (tempNum>1)
-            numbers.add(-1);
+
         return new MoveData(NextAction.SELECT_NUMBER_TOOLCARD,null,null,null, tempDice.getClientDice(), ClientDiceLocations.EXTRACTED, numbers,false);
     }
 
@@ -183,6 +184,7 @@ public class ToolCard1 extends ToolCard {
             case 2: {
                 this.dice=null;
                 this.currentStatus=1;
+                this.numbers.clear();
                 return new MoveData(NextAction.SELECT_DICE_TOOLCARD,ClientDiceLocations.EXTRACTED);
 
             }
@@ -228,6 +230,7 @@ public class ToolCard1 extends ToolCard {
         this.tempExtractedDices=new ArrayList<>();
         this.oldDice=null;
         this.movesNotifications=new ArrayList<>();
+        this.numbers.clear();
     }
 
     @Override
