@@ -229,12 +229,15 @@ public class PlayerInGame {
         if (!active)
             throw new PlayerNotAuthorizedException(username);
         if (toolCardInUse != null) {
+            if (!toolCardInUse.isMoveCancellable())
+                throw new CannotCancelActionException(username, null, 1);
+
             ToolCard oldCard = toolCardInUse;
             temp = toolCardInUse.cancelAction();
             if (temp.canceledToolCard) {
                 favours += lastFavoursRemoved;
-                allowPlaceDiceAfterCard=true;
-                cardUsedBlockingTurn=null;
+                allowPlaceDiceAfterCard = true;
+                cardUsedBlockingTurn = null;
 
                 if (!placedDiceInTurn)
                     temp.setNextAction(NextAction.MENU_ALL);
@@ -449,8 +452,7 @@ public class PlayerInGame {
                     clearPlayerTurn();
                     return NextAction.MENU_ONLY_ENDTURN;
                 }
-            }
-            else return NextAction.MENU_ALL;
+            } else return NextAction.MENU_ALL;
         }
     }
 

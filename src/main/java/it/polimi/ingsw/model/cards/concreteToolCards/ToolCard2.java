@@ -61,6 +61,7 @@ public class ToolCard2 extends ToolCard {
         this.currentGame = player.getGame();
         this.username = player.getUser();
         currentPlayer.setAllowPlaceDiceAfterCard(allowPlaceDiceAfterCard);
+        this.moveCancellable=true;
         if (cardBlocksNextTurn) {
             currentPlayer.setCardUsedBlockingTurn(this);
         }
@@ -85,6 +86,7 @@ public class ToolCard2 extends ToolCard {
             if (tempDice.getDiceColor()!=colorForDiceSingleUser)
                 throw new CannotPickDiceException(username, tempDice.getDiceNumber(), tempDice.getDiceColor(),ClientDiceLocations.EXTRACTED, 1);
             this.currentStatus = 1;
+            this.moveCancellable=true;
             this.diceForSingleUser= tempDice;
             currentGame.getExtractedDices().remove(this.diceForSingleUser);
             updateClientExtractedDices();
@@ -174,6 +176,8 @@ public class ToolCard2 extends ToolCard {
         this.tempClientWpc=null;
         this.tempExtractedDices=new ArrayList<>();
         this.movesNotifications=new ArrayList<>();
+        this.moveCancellable=false;
+
     }
 
     @Override

@@ -69,6 +69,7 @@ public class ToolCard5 extends ToolCard {
         this.currentGame = player.getGame();
         this.username = player.getUser();
         currentPlayer.setAllowPlaceDiceAfterCard(allowPlaceDiceAfterCard);
+        this.moveCancellable=true;
         if (cardBlocksNextTurn) {
             currentPlayer.setCardUsedBlockingTurn(this);
         }
@@ -92,6 +93,7 @@ public class ToolCard5 extends ToolCard {
             if (tempDice.getDiceColor() != colorForDiceSingleUser)
                 throw new CannotPickDiceException(username, tempDice.getDiceNumber(), tempDice.getDiceColor(), ClientDiceLocations.EXTRACTED, 1);
             this.currentStatus = 1;
+            this.moveCancellable=true;
             this.diceForSingleUser = tempDice;
             currentGame.getExtractedDices().remove(this.diceForSingleUser);
             updateClientExtractedDices();
@@ -99,10 +101,12 @@ public class ToolCard5 extends ToolCard {
         } else if (currentStatus == 1) {
             this.fromExtracted = currentPlayer.dicePresentInLocation(diceId, ClientDiceLocations.EXTRACTED);
             currentStatus = 2;
+            this.moveCancellable=true;
             return new MoveData(NextAction.SELECT_DICE_TOOLCARD, ClientDiceLocations.ROUNDTRACK, null, null, null, null, fromExtracted.getDice().getClientDice(), ClientDiceLocations.EXTRACTED);
         } else if (currentStatus == 2) {
             this.fromRoundTrack = currentPlayer.dicePresentInLocation(diceId, ClientDiceLocations.ROUNDTRACK);
             currentStatus = 3;
+            this.moveCancellable=true;
             currentGame.getExtractedDices().remove(fromExtracted.getDice());
             currentGame.getRoundTrack().swapDice(fromExtracted.getDice(), fromRoundTrack.getPosition());
             currentGame.getExtractedDices().add(fromRoundTrack.getDice());
@@ -131,6 +135,7 @@ public class ToolCard5 extends ToolCard {
             throw new CannotPickPositionException(username, pos);
         currentGame.getExtractedDices().remove(this.fromRoundTrack.getDice());
         currentStatus = 4;
+        this.moveCancellable=false;
         this.used = true;
         updateClientWPC();
         updateClientExtractedDices();
@@ -188,8 +193,11 @@ public class ToolCard5 extends ToolCard {
     }
 
     private void updateClientExtractedDices() {
-        for (Dice tempdice : currentPlayer.getUpdatedExtractedDices())
+        for (Dice tempdice : currentPlayer.getUpdatedExtractedDices()) {
             tempExtractedDices.add(tempdice.getClientDice());
+            System.out.print("color: "+tempdice.getDiceColor().name());
+            System.out.println(" num: "+tempdice.getDiceNumber());
+        }
     }
 
     private void updateClientRoundTrack() {
