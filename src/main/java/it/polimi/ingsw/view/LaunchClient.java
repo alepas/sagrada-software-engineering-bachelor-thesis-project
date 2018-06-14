@@ -14,48 +14,49 @@ public class LaunchClient {
     }
 
     public static void main(String[] args) {
-        System.out.println("                                                                                                                                 \n" +
-                "                                                                                                       dddddddd                  \n" +
-                "   SSSSSSSSSSSSSSS                                                                                     d::::::d                  \n" +
-                " SS:::::::::::::::S                                                                                    d::::::d                  \n" +
-                "S:::::SSSSSS::::::S                                                                                    d::::::d                  \n" +
-                "S:::::S     SSSSSSS                                                                                    d:::::d                   \n" +
-                "S:::::S              aaaaaaaaaaaaa     ggggggggg   gggggrrrrr   rrrrrrrrr   aaaaaaaaaaaaa      ddddddddd:::::d   aaaaaaaaaaaaa   \n" +
-                "S:::::S              a::::::::::::a   g:::::::::ggg::::gr::::rrr:::::::::r  a::::::::::::a   dd::::::::::::::d   a::::::::::::a  \n" +
-                " S::::SSSS           aaaaaaaaa:::::a g:::::::::::::::::gr:::::::::::::::::r aaaaaaaaa:::::a d::::::::::::::::d   aaaaaaaaa:::::a \n" +
-                "  SS::::::SSSSS               a::::ag::::::ggggg::::::ggrr::::::rrrrr::::::r         a::::ad:::::::ddddd:::::d            a::::a \n" +
-                "    SSS::::::::SS      aaaaaaa:::::ag:::::g     g:::::g  r:::::r     r:::::r  aaaaaaa:::::ad::::::d    d:::::d     aaaaaaa:::::a \n" +
-                "       SSSSSS::::S   aa::::::::::::ag:::::g     g:::::g  r:::::r     rrrrrrraa::::::::::::ad:::::d     d:::::d   aa::::::::::::a \n" +
-                "            S:::::S a::::aaaa::::::ag:::::g     g:::::g  r:::::r           a::::aaaa::::::ad:::::d     d:::::d  a::::aaaa::::::a \n" +
-                "            S:::::Sa::::a    a:::::ag::::::g    g:::::g  r:::::r          a::::a    a:::::ad:::::d     d:::::d a::::a    a:::::a \n" +
-                "SSSSSSS     S:::::Sa::::a    a:::::ag:::::::ggggg:::::g  r:::::r          a::::a    a:::::ad::::::ddddd::::::dda::::a    a:::::a \n" +
-                "S::::::SSSSSS:::::Sa:::::aaaa::::::a g::::::::::::::::g  r:::::r          a:::::aaaa::::::a d:::::::::::::::::da:::::aaaa::::::a \n" +
-                "S:::::::::::::::SS  a::::::::::aa:::a gg::::::::::::::g  r:::::r           a::::::::::aa:::a d:::::::::ddd::::d a::::::::::aa:::a\n" +
-                " SSSSSSSSSSSSSSS     aaaaaaaaaa  aaaa   gggggggg::::::g  rrrrrrr            aaaaaaaaaa  aaaa  ddddddddd   ddddd  aaaaaaaaaa  aaaa\n" +
-                "                                                g:::::g                                                                          \n" +
-                "                                    gggggg      g:::::g                                                                          \n" +
-                "                                    g:::::gg   gg:::::g                                                                          \n" +
-                "                                     g::::::ggg:::::::g                                                                          \n" +
-                "                                      gg:::::::::::::g                                                                           \n" +
-                "                                        ggg::::::ggg                                                                             \n" +
-                "                                           gggggg                                                                                \n");
+//        printLogo();
 
         String answer;
         do {
             System.out.println(">>> Voui usare cli o gui? (Digita \"quit\" per uscire)");
             answer = userInput().toLowerCase();
 
-            if (answer.equals("cli")) {
+            if (answer.equals("cli") || answer.equals("c")) {
                 try {
                     LaunchCli.main();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-            if (answer.equals("gui")) {
+            if (answer.equals("gui") || answer.equals("g")) {
                 LaunchGui.main();
             }
-        } while (!answer.equals("quit"));
+        } while (!answer.equals("quit") && !answer.equals("q"));
+    }
+
+    private static void printLogo() {
+        System.out.println( "888888b.                                                         888                 \n" +
+                            "888  \"88b                                                        888                 \n" +
+                            "888  .88P                                                        888                 \n" +
+                            "8888888K.   .d88b.  88888b.  888  888  .d88b.  88888b.  888  888 888888 .d88b.       \n" +
+                            "888  \"Y88b d8P  Y8b 888 \"88b 888  888 d8P  Y8b 888 \"88b 888  888 888   d88\"\"88b      \n" +
+                            "888    888 88888888 888  888 Y88  88P 88888888 888  888 888  888 888   888  888      \n" +
+                            "888   d88P Y8b.     888  888  Y8bd8P  Y8b.     888  888 Y88b 888 Y88b. Y88..88P      \n" +
+                            "8888888P\"   \"Y8888  888  888   Y88P    \"Y8888  888  888  \"Y88888  \"Y888 \"Y88P\"       \n" +
+                            "                                                                                     \n" +
+                            "                                                                                     \n" +
+                            "                                                                                     \n" +
+                            "d8b                .d8888b.                                         888              \n" +
+                            "Y8P               d88P  Y88b                                        888              \n" +
+                            "                  Y88b.                                             888              \n" +
+                            "888 88888b.        \"Y888b.    8888b.   .d88b.  888d888 8888b.   .d88888  8888b.      \n" +
+                            "888 888 \"88b          \"Y88b.     \"88b d88P\"88b 888P\"      \"88b d88\" 888     \"88b     \n" +
+                            "888 888  888            \"888 .d888888 888  888 888    .d888888 888  888 .d888888     \n" +
+                            "888 888  888      Y88b  d88P 888  888 Y88b 888 888    888  888 Y88b 888 888  888     \n" +
+                            "888 888  888       \"Y8888P\"  \"Y888888  \"Y88888 888    \"Y888888  \"Y88888 \"Y888888     \n" +
+                            "                                           888                                       \n" +
+                            "                                      Y8b d88P                                       \n" +
+                            "                                       \"Y88P\"                                        \n");
     }
 
 

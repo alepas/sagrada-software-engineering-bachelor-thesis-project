@@ -14,6 +14,7 @@ public class CliView implements Observer, NotificationHandler {
     private BufferedReader fromKeyBoard;
     private final CliRender cliRender;
     private int strNum = 0;
+    private boolean isInterruptable = true;
 
     private Timer timer = new Timer();
     private Task task = null;
@@ -308,7 +309,9 @@ public class CliView implements Observer, NotificationHandler {
             do {
                 displayText("Seleziona la wpc che vuoi utilizzare");
                 String wpcID = userInput();     //Restituisce null se viene interrotto
+                isInterruptable = false;
                 if (wpcID != null) controller.pickWpc(wpcID);
+                isInterruptable = true;
             } while (controller.getMyWpc() == null);
             if (!controller.allPlayersChooseWpc()) displayText("Attendo che gli altri giocatori selezionino la wpc");
         });
@@ -332,7 +335,7 @@ public class CliView implements Observer, NotificationHandler {
                     waiter.wait();
                 }
 
-                requestWpcThread.interrupt();
+                if (isInterruptable) requestWpcThread.interrupt();
                 deleteTask();
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -480,7 +483,11 @@ public class CliView implements Observer, NotificationHandler {
 
             case END_TURN:
                 printText("\n");
-                return controller.passTurn();
+                if (controller.passTurn()) {
+                    state = Status.UNKNOWN;
+                    return true;
+                }
+                return false;
 
             default:
                 displayText("Passata azione non standard");

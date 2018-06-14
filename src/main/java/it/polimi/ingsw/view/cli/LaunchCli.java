@@ -20,12 +20,11 @@ public class LaunchCli {
         Tecnology tecnology = null;
 
         do {
-            System.out.println(">>> Quale tecnologia vuoi usare? socket/rmi");
-            System.out.println(">>> Digita \"quit\" per uscire");
+            System.out.println(">>> Vuoi usare socket o rmi? (Digita \"quit\" per uscire)");
             answer = userInput().toLowerCase();
-            if (answer.equals("socket")) tecnology = Tecnology.SOCKET;
-            if (answer.equals("rmi")) tecnology = Tecnology.RMI;
-            if (answer.equals("quit")) break;
+            if (answer.equals("socket") || answer.equals("s")) tecnology = Tecnology.SOCKET;
+            if (answer.equals("rmi") || answer.equals("r")) tecnology = Tecnology.RMI;
+            if (answer.equals("quit") || answer.equals("q")) return;
             if (tecnology == null) {
                 System.out.println(">>> Istruzione non riconosciuta. Perfavore inserisci \"socket\" o \"rmi\"");
                 continue;

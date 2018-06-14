@@ -18,10 +18,6 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class LaunchServer {
 
-
-    // NOTA: Prima di far partire il server eseguire il comando './launch_registry.sh' dal terminale di intellij
-    // e aspettare un minuto circa (tempo necessario affinchè il registry sia caricato)
-
     public static void main(String[] args) throws IOException {
         //Caricamento delle wpc
         WpcDB.getInstance();
@@ -54,8 +50,15 @@ public class LaunchServer {
             Registry registry = LocateRegistry.createRegistry(NetworkConstants.RMI_SERVER_PORT);
             registry.rebind(NetworkConstants.RMI_CONTROLLER_NAME, stub);
             System.out.println(">>> RMI Server is running\t\tAddress: " + NetworkConstants.SERVER_ADDRESS + "\tPort: " + NetworkConstants.RMI_SERVER_PORT);
+            while (true) Thread.sleep(100*1000);            //Utilizzato per non far terminare questo thread: vedi nota sotto
         } catch (RemoteException e){
             System.out.println(">>> " + e.getMessage());
+        } catch (InterruptedException e) {
+            System.out.println("RMI interrotto");
         }
+
+
+        /* NOTA: Se il thread dovesse terminare non vi sarebbe più alcun oggetto che punti all'RmiServer,
+           pertanto il garbage collector provvederà a rimuoverlo e i client non potrebbero più invocarlo */
     }
 }
