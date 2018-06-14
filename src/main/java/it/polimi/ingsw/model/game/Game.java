@@ -207,7 +207,7 @@ public abstract class Game extends Observable implements Runnable {
         try {
             System.out.println("Sto aspettando che i giocatori scelgano le wpc");
             waitForWpcs.start();
-            waitForWpcs.join(GameConstants.CHOOSE_WPC_WAITING_TIME);
+            waitForWpcs.join(GameConstants.CHOOSE_WPC_WAITING_TIME + GameConstants.TASK_DELAY);
             System.out.println("Ho smesso di aspettare che i giocatori scelgano le wpc");
             if (waitForWpcs.isAlive()) {
                 waitForWpcs.interrupt();
@@ -251,8 +251,6 @@ public abstract class Game extends Observable implements Runnable {
         ArrayList<String> toolCardsExtracted = new ArrayList<>(ids.subList(0, numOfToolCards));
         ArrayList<ClientToolCard> clientToolCards = new ArrayList<>();
 
-
-        //Toolcard sono nulle??
         for (String id : toolCardsExtracted){
             ToolCard card = toolcardDB.getCardByID(id);
             toolCards.add(card);
