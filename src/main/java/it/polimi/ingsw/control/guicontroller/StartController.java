@@ -66,7 +66,7 @@ public class StartController {
                 NetworkConstants.SOCKET_SERVER_PORT);
 
         ((SocketClient) networkClient).init();
-        //((SocketClient) networkClient).close();
+
     }
 
     private void changeButton(){

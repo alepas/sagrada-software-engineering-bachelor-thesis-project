@@ -164,7 +164,10 @@ public class SetNewGameController implements Observer, NotificationHandler {
     private GridPane secondWPC;
 
 
-
+    /**
+     * Initializes the beginning anchor pane of this controller, contains all the lambdas related to the action that the
+     * player can do by clicking on buttons or other elements in the scene.
+     */
     @FXML
     void initialize() {
 
@@ -177,6 +180,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
         twoPlayersBox.setToggleGroup(group);
         threePlayersBox.setToggleGroup(group);
         fourPlayersBox.setToggleGroup(group);
+        selectionArea.getChildren().addAll(lab, lab1, lab2, lab3);
 
         createGameButton.setOnAction(event -> {
             if (soloPlayerBox.isSelected()) {
@@ -235,6 +239,12 @@ public class SetNewGameController implements Observer, NotificationHandler {
     }
 
 
+    /**
+     * Calls the network mathod that sets a new available game or put the new player inside an already exixting game with
+     * some available places.
+     *
+     * @param numPlayers is the number of players that the user wants inside the game that is going to play
+     */
     private void findGame(int numPlayers) {
         Platform.runLater(() -> {
             try {
@@ -260,7 +270,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
                         " di " + clientModel.getGameNumPlayers() + " necessari.");
                 lab1.setLayoutX(100);
                 lab1.setLayoutY(340);
-                selectionArea.getChildren().addAll(lab, lab1);
+
                 SettingOfGame();
             }
         });
@@ -275,6 +285,10 @@ public class SetNewGameController implements Observer, NotificationHandler {
     }
 
 
+    /**
+     * Waits the other player to start the game, every time a new player enters the game a label with his/her name appears.
+     * The same happen every time somebody is disconnecting.
+     */
     private void waitPlayers() {
         TranslateTransition transition = new TranslateTransition();
         ImageView image = new ImageView();
@@ -297,14 +311,13 @@ public class SetNewGameController implements Observer, NotificationHandler {
                             lab2.setText(newPlayer + " é entrato in partita!");
                             lab2.setLayoutX(100);
                             lab2.setLayoutY(360);
-                            selectionArea.getChildren().add(lab2);
+
                             playerIn = false;
                         }
                         if(playerOut){
                             lab3.setText(newPlayer + " é uscito dalla partita!");
                             lab3.setLayoutX(100);
                             lab3.setLayoutY(340);
-                            selectionArea.getChildren().add(lab3);
                             playerOut= false;
                         }
                         newPlayer = null;
@@ -320,6 +333,13 @@ public class SetNewGameController implements Observer, NotificationHandler {
     }
 
 
+    /**
+     * Makes a small animation while the player is waiting the beginning of the game. it has been done to show to the
+     * user that something is working and that the scene doens't have problems.
+     *
+     * @param image is the smal element that will move
+     * @param transition is the type of movement that the small dice does
+     */
     private void diceAnimation(ImageView image, TranslateTransition transition) {
         Platform.runLater(()->{
             image.getStyleClass().add("violet5");
@@ -339,6 +359,10 @@ public class SetNewGameController implements Observer, NotificationHandler {
     }
 
 
+    /**
+     * waits that the four randoms schemas arrive; when the thread takes the lock it starts the setting machine of the
+     * schemas.
+     */
     private void waitWPC() {
         Thread waitingWPC = new Thread(() -> {
             while (!areWpcExtracted) {
@@ -407,6 +431,11 @@ public class SetNewGameController implements Observer, NotificationHandler {
     }
 
 
+    /**
+     * Sets visible as many circles as many favours the schema has.
+     *
+     * @param favours is the numebr of favours of the 4th schema.
+     */
     private void setFourthWpcFavours(int favours) {
         switch (favours) {
             case 3:
@@ -427,6 +456,11 @@ public class SetNewGameController implements Observer, NotificationHandler {
     }
 
 
+    /**
+     * Sets visible as many cyrcles as many favours the schema has.
+     *
+     * @param favours is the numebr of favours of the 3rd schema.
+     */
     private void setThirdWpcFavours(int favours) {
         switch (favours) {
             case 3:
@@ -447,6 +481,11 @@ public class SetNewGameController implements Observer, NotificationHandler {
     }
 
 
+    /**
+     * Sets visible as many cyrcles as many favours the schema has.
+     *
+     * @param favours is the numebr of favours of the 2nd schema.
+     */
     private void setSecondWpcFavours(int favours) {
         switch (favours) {
             case 3:
@@ -466,7 +505,11 @@ public class SetNewGameController implements Observer, NotificationHandler {
         }
     }
 
-
+    /**
+     * Sets visible as many cyrcles as many favours the schema has.
+     *
+     * @param favours is the numebr of favours of the 1st schema.
+     */
     private void setFirstWpcFavours(int favours) {
         switch (favours) {
             case 3:
@@ -565,6 +608,11 @@ public class SetNewGameController implements Observer, NotificationHandler {
     }
 
 
+    /**
+     * when all game parameters have been settled the window change scene; it depends on the actual players number.
+     *
+     * @param event is the event necessry to change scene
+     */
     private void playGame(Event event) {
         Thread startGame = new Thread(() -> {
             while (!pocExtracted || !toolExtracted || (clientModel.getGameNumPlayers() != clientModel.getWpcByUsername().size()) || !privateObjExtractd) {

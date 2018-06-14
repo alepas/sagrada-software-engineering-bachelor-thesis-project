@@ -1,10 +1,10 @@
 package it.polimi.ingsw.control.guicontroller;
 
 import it.polimi.ingsw.control.network.NetworkClient;
+import it.polimi.ingsw.control.network.commands.notifications.NotificationHandler;
 import it.polimi.ingsw.model.clientModel.ClientModel;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotFindGameForUserInDatabaseException;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotLoginUserException;
-import it.polimi.ingsw.model.usersdb.PlayerInGame;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,7 +19,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Observer;
 
+import static java.lang.Thread.sleep;
 
 
 public class SignInController {
@@ -36,9 +38,10 @@ public class SignInController {
     @FXML private Button backButton;
 
     @FXML private Label signInErrorLabel;
+    private final Object waiter = new Object();
 
 
-    public void initialize( ) {
+    public void initialize( )  {
         networkClient = NetworkClient.getInstance();
         clientModel = ClientModel.getInstance();
 
@@ -84,9 +87,9 @@ public class SignInController {
                 });
             }
             try {
-                Thread.sleep(500);
+                sleep(500);
             } catch (InterruptedException e) {
-                //TODO
+                e.printStackTrace();
             }
             if(clientModel.getUsername() == null){
                 Platform.runLater(()->{
@@ -120,4 +123,5 @@ public class SignInController {
         });
         signIn.start();
     }
+
 }
