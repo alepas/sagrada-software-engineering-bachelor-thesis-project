@@ -24,7 +24,7 @@ public class UpdatedGameResponse implements Response {
     public final ToolCardClientNextActionInfo nextActionInfo;
 
     public UpdatedGameResponse(Exception exception) {
-        this.exception = null;
+        this.exception = exception;
         this.gameID = null;
         this.gameActualPlayers = 0;
         this.gameNumPlayers = 0;

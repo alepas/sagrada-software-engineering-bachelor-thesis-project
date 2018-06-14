@@ -175,6 +175,7 @@
 
                 <Label fx:id="firstUserLabel" layoutX="570.0" layoutY="100.0" styleClass="TitleLabel" textAlignment="CENTER" />
                 <Label fx:id="secondUserLabel" layoutX="157.0" layoutY="140.0" styleClass="TitleLabel" />
+                <Label fx:id="thirdUserLabel" layoutX="157.0" layoutY="140.0" styleClass="TitleLabel" />
 
                 <GridPane fx:id="toolCardGrid" layoutX="1056.0" layoutY="46.0" prefHeight="639.0" prefWidth="330.0" vgap="5.0" visible="false">
                     <columnConstraints>

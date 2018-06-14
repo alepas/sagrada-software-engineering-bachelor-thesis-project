@@ -29,6 +29,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.util.*;
 
@@ -184,6 +185,9 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
 
     @FXML
     private MenuItem privateObjectiveButton;
+    @FXML  private Label thirdUserLabel;
+    @FXML private  Label thirdFavourLabel;
+    @FXML private GridPane thirdWpcGrid;
 
     /**
      * Replaces the constructor, it cointains also all the events done cliking the some objects in the view
@@ -303,7 +307,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                 lastNextAction = NextAction.WAIT_FOR_TURN;
                 stateAction(ANOTHER_PLAYER_TURN);
             } else {
-                updateRoundTrack(clientModel.getRoundTrack());
+                updateGraphicRoundTrack();
                 lastNextAction = nextAction;
                 stateAction(Objects.requireNonNull(Status.change(nextAction)));
             }
@@ -675,6 +679,24 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                 }
                 break;
             case 3:
+                int numPlayer = 1;
+                for (String wpcUser : wpc.keySet()) {
+                    if (wpcUser.equals(username)) {
+                        firstUserLabel.setText(username);
+                        firstFavourLabel.setText(String.valueOf(wpc.get(username).getFavours()).concat("X"));
+                        fillWpc(firstWpcGrid, wpc.get(wpcUser));
+                    } else if(!wpcUser.equals(username) && numPlayer == 1) {
+                        secondUserLabel.setText(wpcUser);
+                        secondFavourLabel.setText(String.valueOf(wpc.get(wpcUser).getFavours()).concat("X"));
+                        fillWpc(secondWpcGrid, wpc.get(wpcUser));
+                        numPlayer = 2;
+                    }
+                    else if(!wpcUser.equals(username) && numPlayer == 2) {
+                        thirdUserLabel.setText(wpcUser);
+                        thirdFavourLabel.setText(String.valueOf(wpc.get(wpcUser).getFavours()).concat("X"));
+                        fillWpc(thirdWpcGrid, wpc.get(wpcUser));
+                    }
+                }
                 break;
             case 4:
                 break;
@@ -784,7 +806,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
      */
     private void nextRound() {
         Platform.runLater(() -> {
-            updateRoundTrack(clientModel.getRoundTrack());
+            updateGraphicRoundTrack();
             setDices(clientModel.getExtractedDices());
             dragAndDrop();
             lastNextAction = NextAction.WAIT_FOR_TURN;
@@ -847,6 +869,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                 case EXTRACTED:
                     messageLabel.setText("Scegli un dado dalla riserva e posizionalo.");
                     for (Node dice : extractedDicesGrid.getChildren()) {
+                        if (info.diceChosen != null){
                             if (!dice.getId().equals(String.valueOf(info.diceChosen.getDiceID())))
                                 dice.setDisable(true);
                             else {
@@ -855,6 +878,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                                         changeDiceStyle(dice, clientDice);
                                 }
                             }
+                        }
                     }
                     break;
             }
@@ -872,7 +896,6 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
         String col = clientDice.getDiceColor().toString().toLowerCase();
         String num = String.valueOf(clientDice.getDiceNumber());
         String style = col.concat(num);
-        System.out.println("stile " + style);
         dice.getStyleClass().remove(dice.getStyle());
         dice.getStyleClass().add(style);
     }
@@ -996,6 +1019,8 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
         if (info.numbersToChoose.size() <= 2) {
             messageLabel.setText("Aggiungi 1 o sottrai 1");
             plusMinusPane.setVisible(true);
+            plusOneIcon.setVisible(true);
+            minusOneIcon.setVisible(true);
             if(info.numbersToChoose.size() == 1){
                 if(info.numbersToChoose.get(0) == 1) minusOneIcon.setVisible(false);
                 else plusOneIcon.setVisible(false);
@@ -1104,19 +1129,17 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
      * the dice selected come back to the original style.
      */
     private void makeSelectedDiceLessVisible(ClientDiceLocations location) {
-        Platform.runLater(() -> {
-            switch (location) {
-                case WPC:
-                    updateGraphicMyWpc();
-                    break;
-                case ROUNDTRACK:
-                    updateRoundTrack(clientModel.getRoundTrack());
-                    break;
-                case EXTRACTED:
-                    updateGraphicExtractedDices();
-                    break;
+         switch (location) {
+             case WPC:
+                 updateGraphicMyWpc();
+                 break;
+             case EXTRACTED:
+                 updateGraphicRoundTrack();
+                 updateGraphicExtractedDices();
+                 for(ImageView dice: extractDices)
+                     dice.setDisable(false);
+                 break;
             }
-        });
     }
 
     /**
@@ -1153,30 +1176,6 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
     }
 
 
-    /**
-     * Sets all the dices inside the Round Track
-     *
-     * @param roundTrack is the arraylist of all dices inside the RoundTrack
-     */
-    private void updateRoundTrack(ClientRoundTrack roundTrack) {
-        roundTrackDices.clear();
-        roundTrackGrid.getChildren().clear();
-        ClientDice[][] dice = roundTrack.getAllDices();
-        Platform.runLater(() -> {
-            for (int row = 0; row < NUM_OF_ROUNDS; row++) {
-                for (int column = 0; column < NUM_OF_ROUNDS; column++) {
-                    if (dice[column][row] != null) {
-                        ImageView image = setDiceStyle(dice[column][row]);
-                        image.setFitHeight(30);
-                        image.setFitWidth(30);
-                        roundTrackGrid.add(image, column, row);
-                        roundTrackDices.add(image);
-                    }
-                }
-            }
-        });
-
-    }
 
     //-------------------------------------- End Game Methods ------------------------------------------
 
@@ -1218,15 +1217,16 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
         });
     }
 
+    //-------------------------------------- Update Methods ------------------------------------------
 
     /**
      * updates the extraced dices: if the size is > than the client model extraced ones it deletes the dices that are not
      * in the client model; if is = it searches for the different ones.
      */
     private synchronized void updateGraphicExtractedDices() {
-        int tempIndex;
+        int tempIndex = -1;
         int newDiceIndex = -1;
-        int tempPosition;
+        int tempPosition = -1;
         Node tempNode;
         extractDices.clear();
         ArrayList<String> extractedorderedIds = new ArrayList<>();
@@ -1250,10 +1250,12 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                     extractedDicesGrid.getChildren().remove(i);
                 }
             }
+
         } else {
             int lenght = extractedDicesGrid.getChildren().size();
             for (int i = 0; i < lenght; i++) {
                 tempIndex = extractedorderedIds.indexOf(extractedDicesGrid.getChildren().get(0).getId());
+                System.out.println("id: " +tempIndex);
                 tempNode = extractedDicesGrid.getChildren().get(0);
                 tempPosition= extractedDicesGrid.getRowIndex(tempNode);
                 if (tempIndex != -1) {
@@ -1268,6 +1270,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                     extractDices.add(dice);
                     extractedDicesGrid.add(dice, 0, tempPosition);
                 } else {
+                    System.out.println("ehi");
                     for (int j = 0; j < extractedorderedIds.size(); j++) {
                         if (!extractedDicesImageViewIds.contains(extractedorderedIds.get(j)))
                             newDiceIndex = j;
@@ -1290,10 +1293,34 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
         }
     }
 
-    private synchronized void updateGraphicRoundTrack() { updateRoundTrack(clientModel.getRoundTrack()); }
-
+    /**
+     * Sets all the dices inside the Round Track.
+     */
+    private synchronized void updateGraphicRoundTrack() {
+        ClientRoundTrack roundTrack = clientModel.getRoundTrack();
+        roundTrackDices.clear();
+        roundTrackGrid.getChildren().clear();
+        ClientDice[][] dice = roundTrack.getAllDices();
+        for (int row = 0; row < NUM_OF_ROUNDS; row++) {
+            for (int column = 0; column < NUM_OF_ROUNDS; column++) {
+                if (dice[column][row] != null) {
+                    ImageView image = setDiceStyle(dice[column][row]);
+                    image.setFitHeight(30);
+                    image.setFitWidth(30);
+                    roundTrackGrid.add(image, column, row);
+                    roundTrackDices.add(image);
+                }
+            }
+        }
+    }
+    /**
+     * Calls the filler of the schema.
+     */
     private synchronized void updateGraphicMyWpc() { fillWpc(firstWpcGrid, clientModel.getMyWpc()); }
 
+    /**
+     * Updates all the graphic elements.
+     */
     private synchronized void updateGraphicsCurrentUser() {
         updateGraphicExtractedDices();
         updateGraphicMyWpc();
@@ -1378,6 +1405,10 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                 fillWpc(secondWpcGrid, clientModel.getWpcByUsername().get(notification.username));
                 updateGraphicExtractedDices();
             }
+            else if (notification.username.equals(thirdUserLabel.getText())){
+                fillWpc(thirdWpcGrid, clientModel.getWpcByUsername().get(notification.username));
+                updateGraphicExtractedDices();
+            }
             //TODO: inserire testo "hai usato toolcard"
 
             if (!notification.username.equals(username)) {
@@ -1400,11 +1431,13 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
     @Override
     public void handle(ToolCardDicePlacedNotification toolCardDicePlacedNotification) {
         Platform.runLater(() -> {
-            System.out.println("colore " +toolCardDicePlacedNotification.dice.getDiceColor());
-            System.out.println("numero "+ toolCardDicePlacedNotification.dice.getDiceNumber());
             String user = toolCardDicePlacedNotification.username;
             String id = String.valueOf(toolCardDicePlacedNotification.dice.getDiceID());
             if (user.equals(secondUserLabel.getText())){
+                updateGraphicRoundTrack();
+            }
+            else if (user.equals(thirdUserLabel.getText())){
+                fillWpc(thirdWpcGrid, clientModel.getWpcByUsername().get(user));
                 updateGraphicRoundTrack();
             }
             for(int i= 0; i< extractedDicesGrid.getChildren().size(); i++) {
