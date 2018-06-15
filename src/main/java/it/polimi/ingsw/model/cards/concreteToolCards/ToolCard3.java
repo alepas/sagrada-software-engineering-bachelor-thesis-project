@@ -15,8 +15,6 @@ import it.polimi.ingsw.model.wpc.DiceAndPosition;
 import java.util.ArrayList;
 
 public class ToolCard3 extends ToolCard {
-    private ArrayList<ClientDice> tempExtractedDices;
-    private ClientWpc tempClientWpc;
 
 
     public ToolCard3() {
@@ -35,8 +33,10 @@ public class ToolCard3 extends ToolCard {
         this.stoppable = false;
         this.currentGame = null;
         this.username = null;
-        tempExtractedDices=new ArrayList<>();
-        movesNotifications=new ArrayList<>();
+        this.tempExtractedDices=new ArrayList<>();
+        this.movesNotifications=new ArrayList<>();
+        this.tempClientWpc=null;
+        this.tempRoundTrack=null;
 
     }
 
@@ -148,18 +148,8 @@ public class ToolCard3 extends ToolCard {
                 return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD,ClientDiceLocations.EXTRACTED,null,null,tempExtractedDices,null,null, null);
             }
         }
-        return null;
+        throw new CannotCancelActionException(username,id,1);
 
-    }
-
-    private void updateClientExtractedDices(){
-        tempExtractedDices.clear();
-        for (Dice tempdice:currentPlayer.getUpdatedExtractedDices())
-            tempExtractedDices.add(tempdice.getClientDice());
-    }
-
-    private void updateClientWPC(){
-        tempClientWpc=currentPlayer.getWPC().getClientWpc();
     }
 
     @Override

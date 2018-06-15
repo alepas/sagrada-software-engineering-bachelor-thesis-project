@@ -14,7 +14,6 @@ import it.polimi.ingsw.model.usersdb.PlayerInGame;
 import java.util.ArrayList;
 
 public class ToolCard7 extends ToolCard {
-    private ArrayList<ClientDice> tempExtractedDices;
 
 
     public ToolCard7() {
@@ -53,7 +52,7 @@ public class ToolCard7 extends ToolCard {
             if (player.isPlacedDiceInTurn())
                 throw new CannotUseToolCardException(id, 2);
         if (player.getTurnForRound()!=2)
-            throw new CannotUseToolCardException(id, 2);
+            throw new CannotUseToolCardException(id, 8);
 
         this.currentPlayer = player;
         this.currentGame = player.getGame();
@@ -150,12 +149,6 @@ public class ToolCard7 extends ToolCard {
         }
         throw new CannotCancelActionException(username,id,1);
 
-    }
-
-    private void updateClientExtractedDices() {
-        tempExtractedDices.clear();
-        for (Dice tempdice : currentPlayer.getUpdatedExtractedDices())
-            tempExtractedDices.add(tempdice.getClientDice());
     }
 
 

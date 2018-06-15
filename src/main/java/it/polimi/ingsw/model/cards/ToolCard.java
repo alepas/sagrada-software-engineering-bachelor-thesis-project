@@ -1,8 +1,7 @@
 package it.polimi.ingsw.model.cards;
 
 import it.polimi.ingsw.control.network.commands.notifications.Notification;
-import it.polimi.ingsw.model.clientModel.ClientToolCard;
-import it.polimi.ingsw.model.clientModel.Position;
+import it.polimi.ingsw.model.clientModel.*;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
@@ -31,6 +30,9 @@ public abstract class ToolCard implements Cloneable{
     protected boolean singlePlayerGame=false;
     protected String username=null;
     protected ArrayList<Notification> movesNotifications;
+    protected ArrayList<ClientDice> tempExtractedDices;
+    protected ClientWpc tempClientWpc;
+    protected ClientRoundTrack tempRoundTrack;
 
 
     public abstract ToolCard getToolCardCopy();
@@ -78,6 +80,23 @@ public abstract class ToolCard implements Cloneable{
     protected abstract void cleanCard();
 
     public abstract MoveData getNextMove();
+
+
+    protected void updateClientExtractedDices(){
+        tempExtractedDices.clear();
+        for (Dice tempdice:currentPlayer.getUpdatedExtractedDices())
+            tempExtractedDices.add(tempdice.getClientDice());
+    }
+
+    protected void updateClientWPC(){
+        tempClientWpc=currentPlayer.getWPC().getClientWpc();
+    }
+
+    protected void updateClientRoundTrack() {
+        tempRoundTrack = currentGame.getRoundTrack().getClientRoundTrack();
+    }
+
+
 
 
 }

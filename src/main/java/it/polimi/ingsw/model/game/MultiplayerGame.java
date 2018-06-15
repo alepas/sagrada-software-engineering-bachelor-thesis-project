@@ -130,6 +130,8 @@ public class MultiplayerGame extends Game {
 
         roundTrack.nextRound();
         if(roundTrack.getCurrentRound() <= GameConstants.NUM_OF_ROUNDS) {
+            for (PlayerInGame player: players)
+                player.clearPlayerRound();
             extractedDices = diceBag.extractDices(numPlayers);
 
             ArrayList<ClientDice> extractedClientDices = new ArrayList<>();
@@ -153,14 +155,16 @@ public class MultiplayerGame extends Game {
             turnPlayer = nextPlayer();
             currentTurn++;
 
-            if ((players[turnPlayer].getTurnForRound() == 2) && (players[turnPlayer].getCardUsedBlockingTurn() != null)) {
+            if ((players[turnPlayer].getTurnForRound() == 1) && (players[turnPlayer].getCardUsedBlockingTurn() != null)) {
                 changeAndNotifyObservers(new PlayerSkipTurnNotification(players[turnPlayer].getUser(), players[turnPlayer].getCardUsedBlockingTurn().getID()));
                 if (currentTurn < GameConstants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME*numPlayers) {
                     turnPlayer = nextPlayer();
                     currentTurn++;
-                } else nextRound();
+                } else {
+                    nextRound();
+                    return;
+                }
             }
-
             players[turnPlayer].setActive();
             changeAndNotifyObservers(new NextTurnNotification(currentTurn, players[turnPlayer].getUser()));
         } else {

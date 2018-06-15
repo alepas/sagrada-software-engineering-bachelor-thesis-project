@@ -19,9 +19,7 @@ import java.util.ArrayList;
 public class ToolCard1 extends ToolCard {
     private Dice dice;
     private Dice oldDice;
-    private ArrayList<ClientDice> tempExtractedDices;
     ArrayList<Integer> numbers;
-    private ClientWpc tempClientWpc;
 
     public ToolCard1() {
         this.id = ToolCardConstants.TOOLCARD1_ID;
@@ -205,19 +203,10 @@ public class ToolCard1 extends ToolCard {
                 return new MoveData(NextAction.SELECT_NUMBER_TOOLCARD,null,tempExtractedDices,null,this.dice.getClientDice(), ClientDiceLocations.EXTRACTED, numbers,false);
             }
         }
-        return null;
+        throw new CannotCancelActionException(username,id,1);
 
     }
 
-    private void updateClientExtractedDices(){
-        tempExtractedDices.clear();
-        for (Dice tempdice:currentPlayer.getUpdatedExtractedDices())
-            tempExtractedDices.add(tempdice.getClientDice());
-    }
-
-    private void updateClientWPC(){
-        tempClientWpc=currentPlayer.getWPC().getClientWpc();
-    }
 
     @Override
     protected void cleanCard(){

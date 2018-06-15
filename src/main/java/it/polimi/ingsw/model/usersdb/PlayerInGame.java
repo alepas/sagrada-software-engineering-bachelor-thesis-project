@@ -124,17 +124,17 @@ public class PlayerInGame {
     }
 
     public void incrementTurnsForRound() {
-        if (turnForRound < 3) {
+        if ((turnForRound == 1) && (cardUsedBlockingTurn != null)) {
+            clearPlayerRound();
             turnForRound++;
-        } else if (turnForRound == 3) {
+        }else if (turnForRound <2) {
+            turnForRound++;
+            clearPlayerTurn();
+        } else if (turnForRound == 2) {
             clearPlayerRound();
             turnForRound++;
         }
-        if ((turnForRound == 2) && (cardUsedBlockingTurn != null)) {
-            game.changeAndNotifyObservers(new PlayerSkipTurnNotification(username, cardUsedBlockingTurn.getID()));
-            clearPlayerTurn();
-            game.nextTurn();
-        }
+
 
     }
 
@@ -289,22 +289,25 @@ public class PlayerInGame {
                 if (favours >= 2) {
                     favours = favours - 2;
                     lastFavoursRemoved = 2;
-                    tempResponse = card.setCard(this);
                 } else throw new CannotUseToolCardException(cardID, 1);
             } else {
                 System.out.println("l'utente ha favours: " + favours);
                 if (favours >= 1) {
                     favours = favours - 1;
                     lastFavoursRemoved = 1;
-                    tempResponse = card.setCard(this);
+
                 } else throw new CannotUseToolCardException(cardID, 1);
+            }
+            try {
+                tempResponse = card.setCard(this);
+            }catch (CannotUseToolCardException e){
+                favours+=lastFavoursRemoved;
+                throw e;
             }
         } else {
             tempResponse = card.setCard(this);
         }
-        if (tempResponse.moveFinished) {
-            tempResponse.setNextAction(incrementActionInTurn(true));
-        }
+        updateNextMoveAfterToolCard(tempResponse);
         return tempResponse;
     }
 
@@ -318,10 +321,7 @@ public class PlayerInGame {
         MoveData tempResponse;
 
         tempResponse = toolCardInUse.pickDice(diceId);
-        if (tempResponse.moveFinished) {
-            incrementActionInTurn(true);
-            tempResponse.setNextAction(incrementActionInTurn(true));
-        }
+        updateNextMoveAfterToolCard(tempResponse);
         return tempResponse;
     }
 
@@ -332,9 +332,7 @@ public class PlayerInGame {
             throw new NoToolCardInUseException(username);
         MoveData tempResponse;
         tempResponse = toolCardInUse.placeDice(diceId, pos);
-        if (tempResponse.moveFinished) {
-            tempResponse.setNextAction(incrementActionInTurn(true));
-        }
+        updateNextMoveAfterToolCard(tempResponse);
         return tempResponse;
     }
 
@@ -345,10 +343,7 @@ public class PlayerInGame {
         if (toolCardInUse == null)
             throw new NoToolCardInUseException(username);
         MoveData tempResponse = toolCardInUse.pickNumber(num);
-        if (tempResponse.moveFinished) {
-            incrementActionInTurn(true);
-            tempResponse.setNextAction(incrementActionInTurn(true));
-        }
+        updateNextMoveAfterToolCard(tempResponse);
         return tempResponse;
     }
 
@@ -441,7 +436,6 @@ public class PlayerInGame {
 
         if (placedDiceInTurn) {
             if (toolCardUsedInTurn) {
-                clearPlayerTurn();
                 return NextAction.MENU_ONLY_ENDTURN;
             } else return NextAction.MENU_ONLY_TOOLCARD;
         } else {
@@ -449,7 +443,6 @@ public class PlayerInGame {
                 if (allowPlaceDiceAfterCard)
                     return NextAction.MENU_ONLY_PLACE_DICE;
                 else {
-                    clearPlayerTurn();
                     return NextAction.MENU_ONLY_ENDTURN;
                 }
             } else return NextAction.MENU_ALL;
@@ -463,10 +456,9 @@ public class PlayerInGame {
         lastFavoursRemoved = 0;
         allowPlaceDiceAfterCard = true;
 
-
     }
 
-    private void clearPlayerRound() {
+    public void clearPlayerRound() {
         turnForRound = 0;
         cardUsedBlockingTurn = null;
         clearPlayerTurn();
@@ -498,4 +490,17 @@ public class PlayerInGame {
         throw new CannotPickDiceException(username, diceId, null, 0);
     }
 
+
+    private void updateNextMoveAfterToolCard(MoveData tempResponse){
+        if (tempResponse.moveFinished) {
+            tempResponse.setNextAction(incrementActionInTurn(true));
+        }
+        else if (tempResponse.canceledToolCard){
+            favours += lastFavoursRemoved;
+            allowPlaceDiceAfterCard = true;
+            cardUsedBlockingTurn = null;
+            placedDiceInTurn=true;
+            tempResponse.setNextAction(NextAction.MENU_ONLY_TOOLCARD);
+        }
+    }
 }

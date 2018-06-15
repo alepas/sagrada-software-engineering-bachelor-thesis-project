@@ -266,28 +266,16 @@ public class GameController implements Observer, NotificationHandler {
 
         //by clicking on the use button the player starts to use the the related tool card
         useTool1.setOnAction(event -> {
-            try {
                 useToolCard(toolCardsIDs.get(0).getId());
-            } catch (CannotUseToolCardException e) {
-                e.printStackTrace();
-            }
         });
 
         useTool2.setOnAction(event -> {
-            try {
                 useToolCard(toolCardsIDs.get(1).getId());
-            } catch (CannotUseToolCardException e) {
-                e.printStackTrace();
-            }
+
         });
 
         useTool3.setOnAction(event -> {
-            try {
                 useToolCard(toolCardsIDs.get(2).getId());
-
-            } catch (CannotUseToolCardException e) {
-                e.printStackTrace();
-            }
         });
 
         //by clicking on the end button the player pass his/her turn
@@ -498,9 +486,8 @@ public class GameController implements Observer, NotificationHandler {
      * Calls the corresponding method in the networkClient
      *
      * @param id it's the toolCard's id
-     * @throws CannotUseToolCardException suppose it's the same of the second one
      */
-    private void useToolCard(String id) throws CannotUseToolCardException {
+    private void useToolCard(String id) {
         cancelActionButton.setVisible(true);
         endTurnButton.setVisible(false);
         try {
@@ -509,7 +496,7 @@ public class GameController implements Observer, NotificationHandler {
             lastNextAction = nextAction;
             updateGraphicsCurrentUser();
             stateAction(Objects.requireNonNull(change(nextAction)));
-        } catch (CannotFindPlayerInDatabaseException | CannotPerformThisMoveException | PlayerNotAuthorizedException e) {
+        } catch (CannotFindPlayerInDatabaseException | CannotPerformThisMoveException | PlayerNotAuthorizedException | CannotUseToolCardException e) {
             message1Label.setText(e.getMessage());
             stateAction(Objects.requireNonNull(change(lastNextAction)));
         }
@@ -907,7 +894,7 @@ public class GameController implements Observer, NotificationHandler {
                     messageLabel.setText("Scegli un dado dallo schema e posizionalo.");
                     extractedDicesGrid.setDisable(true);
                     break;
-                case EXTRACTED:
+         /*       case EXTRACTED:
                     messageLabel.setText("Scegli un dado dalla riserva e posizionalo.");
                     for (Node dice : extractedDicesGrid.getChildren()) {
                         if (info.diceChosen != null){
@@ -922,7 +909,32 @@ public class GameController implements Observer, NotificationHandler {
                         }
                     }
                     break;
-            }
+            }*/
+
+                    case EXTRACTED:
+                        messageLabel.setText("Scegli un dado dalla riserva e posizionalo.");
+                        extractedDicesGrid.setDisable(false);
+                        if (info.diceChosen != null) {
+                            for (Node dice : extractedDicesGrid.getChildren()) {
+                                if (!dice.getId().equals(String.valueOf(info.diceChosen.getDiceID())))
+                                    dice.setDisable(true);
+                                else {
+                                    dice.setDisable(false);
+                                    for (ClientDice clientDice : clientModel.getExtractedDices()) {
+                                        if (String.valueOf(clientDice.getDiceID()).equals(dice.getId()))
+                                            changeDiceStyle(dice, clientDice);
+                                    }
+                                }
+                            }
+
+                        } else {
+                            for (Node dice : extractedDicesGrid.getChildren())
+                                dice.setDisable(false);
+
+                        }
+                        break;
+                }
+
             dragAndDrop();
         });
     }
@@ -1192,13 +1204,15 @@ public class GameController implements Observer, NotificationHandler {
                 case SELECT_NUMBER_TOOLCARD:
                     plusMinusPane.setVisible(true);
                     break;
+                case MENU_ONLY_TOOLCARD:
+                    isUsedToolCard = false;
+                    break;
+                case MENU_ONLY_PLACE_DICE:
+                    isUsedToolCard = false;
+                    break;
             }
             lastNextAction = previousAction;
-        } catch (CannotCancelActionException e) {
-            messageLabel.setText(e.getMessage());
-        } catch (PlayerNotAuthorizedException e) {
-            messageLabel.setText(e.getMessage());
-        } catch (CannotFindPlayerInDatabaseException e) {
+        } catch (CannotCancelActionException | PlayerNotAuthorizedException | CannotFindPlayerInDatabaseException e) {
             messageLabel.setText(e.getMessage());
         }
 
@@ -1424,9 +1438,9 @@ public class GameController implements Observer, NotificationHandler {
             String id = String.valueOf(notification.dice.getDiceID());
             if (user.equals(secondUserLabel.getText()))
                 fillWpc(secondWpcGrid, notification.wpc);
-            else if ( user.equals(thirdUserLabel.getText()) && thirdUserLabel.getText()!= null)
+            else if ( thirdUserLabel!= null && user.equals(thirdUserLabel.getText()))
                 fillWpc(thirdWpcGrid, notification.wpc);
-            else if ( user.equals(fourthUserLabel.getText()) && fourthUserLabel.getText()!= null)
+            else if ( fourthUserLabel!= null && user.equals(fourthUserLabel.getText()) )
                 fillWpc(fourthWpcGrid, notification.wpc);
             for(int i= 0; i< extractedDicesGrid.getChildren().size(); i++) {
                 if (extractedDicesGrid.getChildren().get(i).getId().equals(id))

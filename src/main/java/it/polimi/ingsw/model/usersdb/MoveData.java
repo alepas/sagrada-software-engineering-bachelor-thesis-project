@@ -16,6 +16,7 @@ public class MoveData {
     public boolean moveFinished=false;
     public boolean canceledToolCard =false;
     public Exception exception=null;
+    public String message=null;
 
     public MoveData(NextAction nextAction, ClientDiceLocations wherePickNewDice, ClientDiceLocations wherePutNewDice,
                     ClientWpc wpc, ArrayList<ClientDice> extractedDices, ClientRoundTrack roundTrack, ClientDice diceChosen,

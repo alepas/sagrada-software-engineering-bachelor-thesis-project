@@ -19,9 +19,6 @@ import java.util.ArrayList;
 public class ToolCard5 extends ToolCard {
     private DiceAndPosition fromExtracted;
     private DiceAndPosition fromRoundTrack;
-    private ArrayList<ClientDice> tempExtractedDices;
-    private ClientRoundTrack tempRoundTrack;
-    private ClientWpc tempClientWpc;
 
     public ToolCard5() {
         this.id = ToolCardConstants.TOOLCARD5_ID;
@@ -192,19 +189,6 @@ public class ToolCard5 extends ToolCard {
 
     }
 
-    private void updateClientExtractedDices() {
-        tempExtractedDices.clear();
-        for (Dice tempdice : currentPlayer.getUpdatedExtractedDices())
-            tempExtractedDices.add(tempdice.getClientDice());
-    }
-
-    private void updateClientRoundTrack() {
-        tempRoundTrack = currentGame.getRoundTrack().getClientRoundTrack();
-    }
-
-    private void updateClientWPC() {
-        tempClientWpc = currentPlayer.getWPC().getClientWpc();
-    }
 
     @Override
     protected void cleanCard() {

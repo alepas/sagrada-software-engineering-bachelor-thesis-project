@@ -16,10 +16,8 @@ import it.polimi.ingsw.model.usersdb.PlayerInGame;
 import java.util.ArrayList;
 
 public class ToolCard6 extends ToolCard {
-    private ArrayList<ClientDice> tempExtractedDices;
     private Dice dice;
     private Dice oldDice;
-    private ClientWpc tempClientWpc;
 
     public ToolCard6() {
 
@@ -164,19 +162,8 @@ public class ToolCard6 extends ToolCard {
                 return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD, ClientDiceLocations.EXTRACTED, null, null, tempExtractedDices, null, null, null);
             }
         }
-        return null;
+        throw new CannotCancelActionException(username,id,1);
 
-    }
-
-    private void updateClientExtractedDices() {
-        tempExtractedDices.clear();
-        for (Dice tempdice : currentPlayer.getUpdatedExtractedDices())
-            tempExtractedDices.add(tempdice.getClientDice());
-    }
-
-
-    private void updateClientWPC() {
-        tempClientWpc = currentPlayer.getWPC().getClientWpc();
     }
 
 

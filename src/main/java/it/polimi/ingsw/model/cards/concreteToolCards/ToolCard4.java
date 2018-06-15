@@ -17,8 +17,6 @@ import it.polimi.ingsw.model.wpc.Wpc;
 import java.util.ArrayList;
 
 public class ToolCard4 extends ToolCard {
-    private ClientWpc tempClientWpc;
-    private ArrayList<ClientDice> tempExtractedDices;
     private DiceAndPosition firstDiceInitial;
     private Position firstDiceFinalPos;
     private DiceAndPosition secondDiceInitial;
@@ -190,20 +188,9 @@ public class ToolCard4 extends ToolCard {
                 return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.WPC, ClientDiceLocations.WPC, null, tempExtractedDices, null, null, null);
             }
         }
-        return null;
+        throw new CannotCancelActionException(username,id,1);
 
     }
-
-    private void updateClientExtractedDices() {
-        tempExtractedDices.clear();
-        for (Dice tempdice : currentPlayer.getUpdatedExtractedDices())
-            tempExtractedDices.add(tempdice.getClientDice());
-    }
-
-    private void updateClientWPC() {
-        tempClientWpc = currentPlayer.getWPC().getClientWpc();
-    }
-
 
     @Override
     protected void cleanCard() {

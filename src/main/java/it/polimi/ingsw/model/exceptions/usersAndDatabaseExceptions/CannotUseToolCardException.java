@@ -24,6 +24,11 @@ public class CannotUseToolCardException extends Exception{
             return "Can't setCard the Tool Card "+ cardID +"because don't have enough dices on the wpc";
         else if (cause==6)
             return "Can't setCard the Tool Card "+ cardID +"because don't have enough dices on the roundtrack";
+        else if (cause==7)
+            return "Impossibile utilizzare la Tool Card "+ cardID +"nel secondo turno del round";
+        else if (cause==8)
+            return "Impossibile utilizzare la Tool Card "+ cardID +"nel primo turno del round";
+
 
 
 
