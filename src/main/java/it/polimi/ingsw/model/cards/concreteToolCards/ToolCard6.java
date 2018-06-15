@@ -169,6 +169,7 @@ public class ToolCard6 extends ToolCard {
     }
 
     private void updateClientExtractedDices() {
+        tempExtractedDices.clear();
         for (Dice tempdice : currentPlayer.getUpdatedExtractedDices())
             tempExtractedDices.add(tempdice.getClientDice());
     }
