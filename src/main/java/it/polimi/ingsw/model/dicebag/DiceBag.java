@@ -50,20 +50,20 @@ public class DiceBag {
      *
      * @return the new dice
      */
-     private Dice pickDice() {
+     Dice pickDice() {
         Color color;
         do {
             color = Color.randomColor();
         } while(!checkColor(color));
         switch (color){
             case RED:
-                redDices--;
+                redDices --;
                 break;
             case BLUE:
-                blueDices--;
+                blueDices --;
                 break;
             case GREEN:
-                greenDices--;
+                greenDices --;
                 break;
             case VIOLET:
                 violetDices--;
@@ -109,23 +109,23 @@ public class DiceBag {
         Color color = dice.getDiceColor();
         switch (color) {
             case RED:
-                if (redDices <= 18)
+                if (redDices < 18)
                     redDices++;
                 break;
             case BLUE:
-                if (blueDices <= 18)
+                if (blueDices < 18)
                     blueDices++;
                 break;
             case GREEN:
-                if (greenDices <= 18)
+                if (greenDices < 18)
                     greenDices++;
                 break;
             case VIOLET:
-                if (violetDices <= 18)
+                if (violetDices < 18)
                     violetDices++;
                 break;
             case YELLOW:
-                if (yellowDices <= 18)
+                if (yellowDices < 18)
                     yellowDices++;
                 break;
         }

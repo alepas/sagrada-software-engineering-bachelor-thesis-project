@@ -40,9 +40,12 @@ import static it.polimi.ingsw.model.clientModel.ClientDiceLocations.WPC;
 import static it.polimi.ingsw.view.Status.*;
 import static java.lang.Thread.sleep;
 
-public class TwoPlayersGameController implements Observer, NotificationHandler {
+public class GameController implements Observer, NotificationHandler {
 
-
+    @FXML private GridPane fourthWpcGrid;
+    @FXML private Label fourthFavourLabel;
+    @FXML private Label fourthUserLabel;
+    @FXML private ImageView diceBagIcon;
     @FXML private ImageView usedTool3Icon;
     @FXML private ImageView usedTool2Icon;
     @FXML private Label secondWpcNameLabel;
@@ -662,6 +665,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
      * associated to the specific controller.
      */
     private void setWpc() {
+        int numPlayer = 1;
         switch (wpc.size()) {
             case 1:
                 firstUserLabel.setText(username);
@@ -684,7 +688,6 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                 }
                 break;
             case 3:
-                int numPlayer = 1;
                 for (String wpcUser : wpc.keySet()) {
                     if (wpcUser.equals(username)) {
                         firstUserLabel.setText(username);
@@ -706,6 +709,31 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                 }
                 break;
             case 4:
+                for (String wpcUser : wpc.keySet()) {
+                    if (wpcUser.equals(username)) {
+                        firstUserLabel.setText(username);
+                        firstFavourLabel.setText(String.valueOf(wpc.get(username).getFavours()).concat("X"));
+                        firstWpcNameLabel.setText(ClientWpcConstants.setWpcName(wpc.get(username).getWpcID()));
+                        fillWpc(firstWpcGrid, wpc.get(wpcUser));
+                    } else if(!wpcUser.equals(username) && numPlayer == 1) {
+                        secondUserLabel.setText(wpcUser);
+                        secondFavourLabel.setText(String.valueOf(wpc.get(wpcUser).getFavours()).concat("X"));
+                        secondWpcNameLabel.setText(ClientWpcConstants.setWpcName(wpc.get(wpcUser).getWpcID()));
+                        fillWpc(secondWpcGrid, wpc.get(wpcUser));
+                        numPlayer = 2;
+                    }
+                    else if(!wpcUser.equals(username) && numPlayer == 2) {
+                        thirdUserLabel.setText(wpcUser);
+                        thirdFavourLabel.setText(String.valueOf(wpc.get(wpcUser).getFavours()).concat("X"));
+                        fillWpc(thirdWpcGrid, wpc.get(wpcUser));
+                        numPlayer = 3;
+                    }
+                    else if(!wpcUser.equals(username) && numPlayer == 3) {
+                        fourthUserLabel.setText(wpcUser);
+                        fourthFavourLabel.setText(String.valueOf(wpc.get(wpcUser).getFavours()).concat("X"));
+                        fillWpc(fourthWpcGrid, wpc.get(wpcUser));
+                    }
+                }
                 break;
         }
 
@@ -741,8 +769,14 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                     dice.setFitWidth(70);
                     dice.setFitHeight(70);
                 } else {
-                    dice.setFitWidth(50);
-                    dice.setFitHeight(50);
+                    if(clientModel.getGameNumPlayers() == 2) {
+                        dice.setFitWidth(50);
+                        dice.setFitHeight(50);
+                    }
+                    else{
+                        dice.setFitWidth(43);
+                        dice.setFitHeight(43);
+                    }
                 }
                 cellXY.getChildren().add(dice);
             }
@@ -1272,7 +1306,6 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                     extractDices.add(dice);
                     extractedDicesGrid.add(dice, 0, tempPosition);
                 } else {
-                    System.out.println("ehi");
                     for (int j = 0; j < extractedorderedIds.size(); j++) {
                         if (!extractedDicesImageViewIds.contains(extractedorderedIds.get(j)))
                             newDiceIndex = j;
@@ -1388,6 +1421,10 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
             String id = String.valueOf(notification.dice.getDiceID());
             if (user.equals(secondUserLabel.getText()))
                 fillWpc(secondWpcGrid, notification.wpc);
+            else if ( user.equals(thirdUserLabel.getText()) && thirdUserLabel.getText()!= null)
+                fillWpc(thirdWpcGrid, notification.wpc);
+            else if ( user.equals(fourthUserLabel.getText()) && fourthUserLabel.getText()!= null)
+                fillWpc(fourthWpcGrid, notification.wpc);
             for(int i= 0; i< extractedDicesGrid.getChildren().size(); i++) {
                 if (extractedDicesGrid.getChildren().get(i).getId().equals(id))
                     extractedDicesGrid.getChildren().remove(i);
@@ -1406,14 +1443,17 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
             else if(notification.toolCard.getId().equals(toolCardsIDs.get(2).getId()))
                 usedTool3Icon.setVisible(true);
 
-            firstFavourLabel.setText(String.valueOf(clientModel.getFavour()));
-            //uso per mettere la stellina sulla toolcard
+            firstFavourLabel.setText(String.valueOf(clientModel.getFavour())+ "X");
             if (notification.username.equals(secondUserLabel.getText())) {
                 fillWpc(secondWpcGrid, clientModel.getWpcByUsername().get(notification.username));
                 updateGraphicExtractedDices();
             }
-            else if (notification.username.equals(thirdUserLabel.getText())){
+            else if ( thirdUserLabel != null && notification.username.equals(thirdUserLabel.getText())){
                 fillWpc(thirdWpcGrid, clientModel.getWpcByUsername().get(notification.username));
+                updateGraphicExtractedDices();
+            }
+            else if ( fourthUserLabel != null && notification.username.equals(fourthUserLabel.getText())){
+                fillWpc(fourthWpcGrid, clientModel.getWpcByUsername().get(notification.username));
                 updateGraphicExtractedDices();
             }
             if (!notification.username.equals(username)) {

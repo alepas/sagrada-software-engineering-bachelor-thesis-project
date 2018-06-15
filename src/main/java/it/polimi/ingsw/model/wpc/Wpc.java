@@ -72,9 +72,8 @@ public class Wpc {
 
 
     /**
-     *
      * @param dice is the object the player want to add to a schema's cell
-     * @return true is it possible to add the dice in the chosen position
+     * @return true if there is at least a cell where it is possible to add the dice
      */
     public boolean isDicePlaceable(Dice dice) {
         Position pos;
@@ -109,10 +108,10 @@ public class Wpc {
      * in the chosen position
      */
     public boolean addDiceWithAllRestrictions(Dice dice, Position pos) {
-        Cell cell=getCellFromPosition(pos);
-        if (cell==null)
+        Cell cell = getCellFromPosition(pos);
+        if (cell == null)
             return false;
-        if(cell.getDice()!=null)
+        if(cell.getDice()!= null)
             return false;
         if (!firstDicePutted) {
             if (checkFirstTurnRestriction(cell)&&checkCellRestriction(cell,dice)) {
@@ -249,11 +248,13 @@ public class Wpc {
      * @param pos is the position selected
      * @return the cell associated to the given postion
      */
-    private Cell getCellFromPosition(Position pos){
+    Cell getCellFromPosition(Position pos){
         if (pos.getColumn() >= COLS_NUMBER)
             return null;
         if (pos.getRow() >= ROWS_NUMBER)
             return null;
+
+        System.out.println(schema.get(pos.getRow()*WpcConstants.COLS_NUMBER+pos.getColumn()));
         return schema.get(pos.getRow()*WpcConstants.COLS_NUMBER+pos.getColumn());
     }
 

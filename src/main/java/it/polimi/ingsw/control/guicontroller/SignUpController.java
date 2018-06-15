@@ -1,7 +1,6 @@
 package it.polimi.ingsw.control.guicontroller;
 
 import it.polimi.ingsw.control.network.NetworkClient;
-import it.polimi.ingsw.model.clientModel.ClientModel;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotRegisterUserException;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -18,14 +17,10 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-/*JOptionPane errorlabel = new JOptionPane();
-  errorlabel.setFont( new java.awt.Font("Ariel", 0, 12));
-  errorlabel.showMessageDialog(null, "Error", "ERRORE",  JOptionPane.ERROR_MESSAGE);*/
 
 public class SignUpController {
 
     private NetworkClient networkClient;
-    private ClientModel clientModel;
 
     @FXML private PasswordField signUpPassword;
 
@@ -37,9 +32,11 @@ public class SignUpController {
 
     @FXML private Label signUpErrorLabel;
 
+    /**
+     *Initializes the sign up scene, contains the lambdas related to the button in the main scene.
+     */
     public void  initialize(){
         networkClient = NetworkClient.getInstance();
-        clientModel = ClientModel.getInstance();
 
         signUpButton.setOnAction(event->{
                 String username = signUpUsername.getText();
@@ -55,7 +52,12 @@ public class SignUpController {
         backButton.setOnAction(event -> changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/StartingScene.fxml"));
     }
 
-
+    /**
+     * Changes the scene in the window.
+     *
+     * @param event the event related to the desire of the player to change scene
+     * @param path is the path of the next scene
+     */
     private void changeSceneHandle(ActionEvent event, String path) {
         AnchorPane nextNode = new AnchorPane();
         try {
@@ -70,27 +72,28 @@ public class SignUpController {
     }
 
 
+    /**
+     * Calls the create account method in the network. If the clientModel username is null the player must re-introduce
+     * both username and password because he/she could have done a mistake; if it is different from null it calls the
+     * next scene.
+     *
+     * @param username is the string inserted by the player
+     * @param password is the password string inserted by the player
+     * @param event is the event related to the action done by the user on the create account button
+     */
     private void createAccount(String username, String password, ActionEvent event) {
         Thread signUp = new Thread(()->{
             try {
                 networkClient.createUser(username, password);
+                Platform.runLater(() -> changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/SetNewGameScene.fxml"));
             } catch (CannotRegisterUserException e) {
-                e.printStackTrace();
+                Platform.runLater(()->{
+                signUpErrorLabel.setText(e.getMessage());
+                signUpErrorLabel.setVisible(true);
+                signUpUsername.clear();
+                signUpPassword.clear();
+                });
             }
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                //TODO
-            }
-
-            Platform.runLater(() -> {
-                if (clientModel.getUsername() == null) {
-                    signUpErrorLabel.setVisible(true);
-                    signUpUsername.clear();
-                    signUpPassword.clear();
-                }
-                else changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/SetNewGameScene.fxml");
-            });
         });
         signUp.start();
     }

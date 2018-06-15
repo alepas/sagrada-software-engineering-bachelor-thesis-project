@@ -30,7 +30,7 @@ public class Dice implements Serializable {
      * @param number is the new object's number
      * @param id is the new object's id
      */
-    private Dice(Color color, int number, int id) {
+    Dice(Color color, int number, int id) {
         this.color = color;
         this.number = number;
         this.id = id;

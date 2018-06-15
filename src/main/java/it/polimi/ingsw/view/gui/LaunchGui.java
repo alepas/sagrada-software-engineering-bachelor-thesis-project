@@ -13,12 +13,16 @@ import java.io.IOException;
 
 public class LaunchGui extends Application {
 
+    /**
+     * Launches the window.
+     */
     public static void main() {
             Application.launch(LaunchGui.class, (String) null);
         }
 
     /**
-     * Opens the main window with the first scene and turns on the music
+     * Opens the main window with the first scene and turns on the music.
+     *
      * @param stage is the window that will be open.
      * @throws IOException necessary exception
      */

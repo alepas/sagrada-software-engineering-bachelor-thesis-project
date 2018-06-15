@@ -11,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -32,6 +33,8 @@ public class StartController {
     @FXML
     private Button socketButton;
 
+    @FXML
+    private Label errorLabel;
 
     public void initialize() {
 
@@ -39,8 +42,7 @@ public class StartController {
             try {
                 NetworkClient.getNewRmiInstance();
             } catch (Exception e) {
-                System.out.println(">>> Impossibile stabilire connessione RMI con il Server");
-                e.printStackTrace();
+                errorLabel.setText("Impossibile stabilire connessione RMI con il Server.");
             }
             changeButton();
         });
@@ -49,7 +51,7 @@ public class StartController {
             try {
                 startSocketClient();
             } catch (ConnectException e) {
-                System.out.println(">>> Impossibile stabilire connessione Socket con il Server");
+                errorLabel.setText("Impossibile stabilire connessione Socket con il Server.");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -69,6 +71,9 @@ public class StartController {
 
     }
 
+    /**
+     * Sets visible the sign in/up button and invisible the rmi/socket button
+     */
     private void changeButton(){
         rmiButton.setVisible(false);
         socketButton.setVisible(false);
@@ -76,6 +81,13 @@ public class StartController {
         signUpButton.setVisible(true);
     }
 
+
+    /**
+     * Changes the scene in the window.
+     *
+     * @param event the event related to the desire of the player to change scene
+     * @param path is the path of the next scene
+     */
     private void changeSceneHandle(ActionEvent event, String path) {
         AnchorPane nextNode = new AnchorPane();
         try {

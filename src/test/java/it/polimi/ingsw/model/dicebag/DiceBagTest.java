@@ -4,18 +4,37 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class DiceBagTest {
     private DiceBag diceBag;
-    private Dice dice;
+    private Dice violetDice;
+    private Dice bluDice;
+    private Dice redDice;
+    private Dice yellowDice;
+    private Dice greenDice;
 
     @Before
     public void before() {
         diceBag = new DiceBag();
-        dice = mock(Dice.class);
-        when(dice.getDiceColor()).thenReturn(Color.VIOLET);
+        violetDice = mock(Dice.class);
+        when(violetDice.getDiceColor()).thenReturn(Color.VIOLET);
+
+        bluDice = mock(Dice.class);
+        when(bluDice.getDiceColor()).thenReturn(Color.BLUE);
+
+        redDice = mock(Dice.class);
+        when(redDice.getDiceColor()).thenReturn(Color.RED);
+
+        yellowDice = mock(Dice.class);
+        when(yellowDice.getDiceColor()).thenReturn(Color.YELLOW);
+
+        greenDice = mock(Dice.class);
+        when(greenDice.getDiceColor()).thenReturn(Color.GREEN);
     }
 
     @Test
@@ -29,17 +48,58 @@ public class DiceBagTest {
     }
 
     @Test
-    public void checkDicesExtraction(){
-        int numplayer = 1;
-        int numplayers = 3;
-        diceBag.extractDices(numplayer);
-        Assert.assertEquals(4, diceBag.extractDices(numplayer).size());
-        //Assert.assertEquals(86, (diceBag.getBlueDices() + diceBag.getGreenDices()+ diceBag.getRedDices() + diceBag.getVioletDices() + diceBag.getYellowDices()));
-        diceBag.extractDices(numplayers);
-        Assert.assertEquals(7, diceBag.extractDices(numplayers).size());
-        int i = diceBag.getVioletDices();
-        diceBag.reInsertDice(dice);
-        Assert.assertEquals(i+1, diceBag.getVioletDices());
+    public void checkDicesExtraction() {
+        int soloplayer = 1;
+        int twoPlayers = 2;
+        int threePlayers = 3;
+        int fourPlayers = 4;
+        Assert.assertEquals(4, diceBag.extractDices(soloplayer).size());
+        Assert.assertEquals(86, (diceBag.getBlueDices() + diceBag.getGreenDices() + diceBag.getRedDices() + diceBag.getVioletDices() + diceBag.getYellowDices()));
+
+        Assert.assertEquals(5, diceBag.extractDices(twoPlayers).size());
+        Assert.assertEquals(81, (diceBag.getBlueDices() + diceBag.getGreenDices() + diceBag.getRedDices() + diceBag.getVioletDices() + diceBag.getYellowDices()));
+
+        Assert.assertEquals(7, diceBag.extractDices(threePlayers).size());
+        Assert.assertEquals(74, (diceBag.getBlueDices() + diceBag.getGreenDices() + diceBag.getRedDices() + diceBag.getVioletDices() + diceBag.getYellowDices()));
+
+        Assert.assertEquals(9, diceBag.extractDices(fourPlayers).size());
+        Assert.assertEquals(65, (diceBag.getBlueDices() + diceBag.getGreenDices() + diceBag.getRedDices() + diceBag.getVioletDices() + diceBag.getYellowDices()));
     }
+
+    /**
+     * Checks if the number of dices is increased of one when a dice of the same color is reintroduces
+     */
+    @Test
+    public void reInsertDiceTest() {
+        int numPlayers = 4;
+        diceBag.extractDices(numPlayers);
+        diceBag.extractDices(numPlayers);
+
+        int i = diceBag.getVioletDices();
+        diceBag.reInsertDice(violetDice);
+        if(i == 18) Assert.assertEquals(i, diceBag.getVioletDices());
+        else Assert.assertEquals(i+1, diceBag.getVioletDices());
+
+        i = diceBag.getBlueDices();
+        diceBag.reInsertDice(bluDice);
+        if(i == 18) Assert.assertEquals( i, diceBag.getBlueDices());
+        else Assert.assertEquals( i+1, diceBag.getBlueDices());
+
+        i = diceBag.getRedDices();
+        diceBag.reInsertDice(redDice);
+        if(i == 18) Assert.assertEquals( i, diceBag.getRedDices());
+        else Assert.assertEquals( i+1, diceBag.getRedDices());
+
+        i = diceBag.getGreenDices();
+        diceBag.reInsertDice(greenDice);
+        if(i == 18) Assert.assertEquals( i, diceBag.getGreenDices());
+        else Assert.assertEquals( i+1, diceBag.getGreenDices());
+
+        i = diceBag.getYellowDices();
+        diceBag.reInsertDice(yellowDice);
+        if(i == 18) Assert.assertEquals( i, diceBag.getYellowDices());
+        else Assert.assertEquals( i+1, diceBag.getYellowDices());
+    }
+
 }
 

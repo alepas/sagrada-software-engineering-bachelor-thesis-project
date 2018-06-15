@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
 
-<AnchorPane maxHeight="705.0" maxWidth="1200.0" minHeight="705.0" minWidth="1200.0" prefHeight="705.0" prefWidth="1200.0" styleClass="Scene" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.control.guicontroller.TwoPlayersGameController">
+<AnchorPane maxHeight="705.0" maxWidth="1200.0" minHeight="705.0" minWidth="1200.0" prefHeight="705.0" prefWidth="1200.0" styleClass="Scene" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.control.guicontroller.GameController">
    <children>
        <ImageView fitHeight="705.0" fitWidth="1200.0">
           <image>
@@ -126,7 +126,7 @@
          
                      <AnchorPane prefHeight="19.0" prefWidth="55.0" style="-fx-background-color: black;" GridPane.columnIndex="4" GridPane.rowIndex="4">
             <children>
-                            <Label fx:id="secondFavourLabel" layoutX="16.0" layoutY="1.0" prefHeight="0.0" prefWidth="0.0" styleClass="FavoursLabel" />
+                            <Label fx:id="secondFavourLabel" layoutX="16.0" layoutY="1.0" styleClass="FavoursLabel" />
                             <Circle layoutX="42.0" layoutY="11.0" radius="6.0" styleClass="Favours" />
             </children>
                      </AnchorPane>
@@ -349,6 +349,11 @@
               </AnchorPane>
       
               <Button fx:id="cancelActionButton" layoutX="724.0" layoutY="641.0" styleClass="Button" text="Torna Indietro" visible="false" />
+            <ImageView fx:id="diceBagIcon" fitHeight="368.0" fitWidth="339.0" layoutX="321.0" layoutY="134.0" visible="false">
+               <image>
+                  <Image url="@background/dicebag.png" />
+               </image>
+            </ImageView>
       </children>
        </AnchorPane>
    </children>

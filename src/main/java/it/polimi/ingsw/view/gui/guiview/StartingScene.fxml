@@ -5,6 +5,7 @@
 
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
+
 <AnchorPane stylesheets="@style.css" prefWidth="900.0" prefHeight="705.0" xmlns="http://javafx.com/javafx/8"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.control.guicontroller.StartController">
 
@@ -19,6 +20,8 @@
     <Button fx:id="signUpButton" styleClass="FirstSceneButton" layoutX="391.0" layoutY="475.0" text="Sign up" visible="false"/>
 
     <Button fx:id="signInButton" styleClass="FirstSceneButton" layoutX="391.0" layoutY="345.0" text="Sign in" visible="false"/>
+
+    <Label fx:id="errorLabel" styleClass="Label" layoutX="391.0" layoutY="555.0" wrapText="true"/>
 
 
 </AnchorPane>

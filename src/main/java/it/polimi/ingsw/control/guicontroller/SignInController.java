@@ -1,7 +1,6 @@
 package it.polimi.ingsw.control.guicontroller;
 
 import it.polimi.ingsw.control.network.NetworkClient;
-import it.polimi.ingsw.control.network.commands.notifications.NotificationHandler;
 import it.polimi.ingsw.model.clientModel.ClientModel;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotFindGameForUserInDatabaseException;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotLoginUserException;
@@ -19,10 +18,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.Observer;
-
-import static java.lang.Thread.sleep;
-
 
 public class SignInController {
 
@@ -38,9 +33,11 @@ public class SignInController {
     @FXML private Button backButton;
 
     @FXML private Label signInErrorLabel;
-    private final Object waiter = new Object();
 
 
+    /**
+     *Initializes the sign in scene, contains the lambdas related to the button in the main scene.
+     */
     public void initialize( )  {
         networkClient = NetworkClient.getInstance();
         clientModel = ClientModel.getInstance();
@@ -61,6 +58,59 @@ public class SignInController {
     }
 
 
+    /**
+     * Calls the login method in the network. If the clientModel username is null the player must re-introduce
+     * both username and password because he/she could have done a mistake; if it is different from null it calls the
+     * next scene.
+     *
+     * @param username is the string inserted by the player
+     * @param password is the password string inserted by the player
+     * @param event is the event related to the action done by the user on the login button
+     */
+    private void loginUser(String username, String password, ActionEvent event) {
+        Thread signIn = new Thread(()->{
+            try {
+                networkClient.login(username, password);
+                Platform.runLater(()->{
+                    try {
+                        int numPlayers = networkClient.findAlreadyStartedGame(clientModel.getUserToken());
+                        switch (numPlayers){
+                            case 1:
+                                break;
+                            case 2:
+                                changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/TwoPlayersGameScene.fxml");
+                                break;
+                            case 3:
+                                changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/ThreePlayersGameScene.fxml");
+                                break;
+                            case 4:
+                                changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/FourPlayersGameScene.fxml");
+                                break;
+                        }
+                    } catch (CannotFindGameForUserInDatabaseException e) {
+                        changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/SetNewGameScene.fxml");
+                    }
+                });
+            } catch (CannotLoginUserException e) {
+                Platform.runLater(()->{
+                    signInErrorLabel.setText(e.getMessage());
+                    signInErrorLabel.setVisible(true);
+                    signInUsername.clear();
+                    signInPassword.clear();
+                });
+            }
+
+        });
+        signIn.start();
+    }
+
+
+    /**
+     * Changes the scene in the window.
+     *
+     * @param event the event related to the desire of the player to change scene
+     * @param path is the path of the next scene
+     */
     private void changeSceneHandle(ActionEvent event, String path) {
         AnchorPane nextNode = new AnchorPane();
         try {
@@ -73,55 +123,4 @@ public class SignInController {
         window.setScene(scene);
         window.show();
     }
-
-
-    private void loginUser(String username, String password, ActionEvent event) {
-        Thread signIn = new Thread(()->{
-            try {
-                networkClient.login(username, password);
-            } catch (CannotLoginUserException e) {
-                Platform.runLater(()->{
-                    signInErrorLabel.setVisible(true);
-                    signInUsername.clear();
-                    signInPassword.clear();
-                });
-            }
-            try {
-                sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            if(clientModel.getUsername() == null){
-                Platform.runLater(()->{
-                    signInErrorLabel.setVisible(true);
-                    signInUsername.clear();
-                    signInPassword.clear();
-                });
-            }
-            Platform.runLater(()->{
-                try {
-                    int numPlayers = networkClient.findAlreadyStartedGame(clientModel.getUserToken());
-                    switch (numPlayers){
-                        case 1:
-                            break;
-                        case 2:
-                            changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/TwoPlayersGameScene.fxml");
-                            break;
-                        case 3:
-                            changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/ThreePlayersGameScene.fxml");
-                            break;
-                        case 4:
-                            changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/FourPlayersGameScene.fxml");
-                            break;
-                    }
-                } catch (CannotFindGameForUserInDatabaseException e) {
-                    changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/SetNewGameScene.fxml");
-                }
-
-
-            });
-        });
-        signIn.start();
-    }
-
 }
