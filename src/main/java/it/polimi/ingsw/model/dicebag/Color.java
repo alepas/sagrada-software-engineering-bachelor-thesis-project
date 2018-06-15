@@ -6,13 +6,23 @@ import java.util.Random;
 
 public enum Color implements Serializable {
     VIOLET, BLUE, RED, YELLOW, GREEN;
-    //violet = 0; blue = 1; red = 2; yellow = 3; green = 4
 
+    /**
+     * Chooses in a randomize way a color.
+     *
+     * @return a color
+     */
     public static Color randomColor(){
         Random randomColor = new Random ();
         return values()[randomColor.nextInt(5)];
     }
 
+    /**
+     * swtich case constructor that associate to the string an enum's color.
+     *
+     * @param stringColor is the string coming from the the XML parser
+     * @return the enum's color associated to the XML string
+     */
     public static Color parseColor(String stringColor) {
         Color color;
         switch (stringColor){
@@ -38,6 +48,10 @@ public enum Color implements Serializable {
         return color;
     }
 
+    /**
+     * @param color is the color of an element
+     * @return the client color associated to the color
+     */
     public static ClientColor getClientColor(Color color){
         if (color == null) return null;
         switch (color){
@@ -55,6 +69,10 @@ public enum Color implements Serializable {
         return null;
     }
 
+    /**
+     * @param color is the client color
+     * @return the color associated to the client one
+     */
     public static Color getColorFromClientColor(ClientColor color){
         if (color == null) return null;
         switch (color){

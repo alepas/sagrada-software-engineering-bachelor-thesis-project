@@ -22,7 +22,7 @@ public class PublicObjectiveCard9  extends PublicObjectiveCard {
     public int calculateScore(Wpc wpc){
         ArrayList<ArrayList<Dice>> rows= new ArrayList<>();
         for (int row = 0; row < WpcConstants.ROWS_NUMBER; row++){
-            rows.add(wpc.getRows(row));
+            rows.add(wpc.getRowDices(row));
             if (rows.get(row).size() != WpcConstants.COLS_NUMBER)
                 return -1;
 

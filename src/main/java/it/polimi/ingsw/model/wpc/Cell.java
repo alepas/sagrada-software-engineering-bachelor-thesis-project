@@ -9,6 +9,12 @@ public class Cell {
     private int number;
     private Position position;
 
+    /**
+     * Sets all attributes of the new object
+     * @param position is the position of the new object cell
+     * @param color is the color related to the new object
+     * @param number is the number related to the new object
+     */
     Cell(Position position, Color color, int number){
         dice = null;
         this.color = color;
@@ -31,9 +37,7 @@ public class Cell {
         return number;
     }
 
-    public Dice getDice( ){
-        return dice;
-    }
+    public Dice getDice( ){ return dice; }
 
     public Position getCellPosition( ){
         return position;
@@ -43,9 +47,11 @@ public class Cell {
         dice = addedDice;
     }
 
-    //metodo chiamato nel momento in cui voglio spostare un dado dalla sua cella
-    //usato sia quando voglio spostare dado da una cella all'altra sia quando
-    //voglio sostiurlo a uno nal roundtrack
+    /**
+     * removes the dice from the object.
+     *
+     * @return the dice removed in a position
+     */
     public Dice removeDice ( ){
         Dice removedDice = getDice();
         dice = null;

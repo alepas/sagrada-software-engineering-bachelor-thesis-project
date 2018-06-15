@@ -10,6 +10,7 @@ import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.exceptions.wpcExceptions.NotExistingCellException;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static it.polimi.ingsw.model.constants.WpcConstants.COLS_NUMBER;
 import static it.polimi.ingsw.model.constants.WpcConstants.ROWS_NUMBER;
@@ -18,11 +19,18 @@ import static it.polimi.ingsw.model.constants.WpcConstants.ROWS_NUMBER;
 public class Wpc {
     private  String id;
     private  int favours;
-    public ArrayList<Cell> schema = new ArrayList<>();
-    boolean firstDicePutted=false;
-    boolean onlyFirstDice=false;
+    ArrayList<Cell> schema = new ArrayList<>();
+    private boolean firstDicePutted=false;
+    private boolean onlyFirstDice=false;
 
 
+    /**
+     * creates the new object wpc
+     *
+     * @param id is the id of the new object schema
+     * @param favours is the number of favours of the schema
+     * @param schema is the Arraylist composed by cell's objects
+     */
     Wpc(String id, int favours, ArrayList<Cell> schema) {
         this.id = id;
         this.favours = favours;
@@ -31,12 +39,17 @@ public class Wpc {
     }
 
 
+    /**
+     * @return the new object with is a copy of this.
+     */
     public Wpc copyWpc(){
         return new Wpc(id,favours,schema);
     }
 
 
-
+    /**
+     * @return an object equivalent to this but for the client model
+     */
     public ClientWpc getClientWpc(){
         ArrayList<ClientCell> cells = new ArrayList<>();
         for(Cell cell : schema){
@@ -58,6 +71,11 @@ public class Wpc {
     public String getId(){ return id; }
 
 
+    /**
+     *
+     * @param dice is the object the player want to add to a schema's cell
+     * @return true is it possible to add the dice in the chosen position
+     */
     public boolean isDicePlaceable(Dice dice) {
         Position pos;
         for (Cell cell : schema) {
@@ -82,6 +100,14 @@ public class Wpc {
         return false;
     }
 
+    /**
+     * Controls if it is possible to add the dice in the position selected by the player.
+     *
+     * @param dice chosen by the player
+     * @param pos is the position where the player wants to add the dice
+     * @return true if the dice has been set correctly in the chosen position, false if it was not possible to add the dice
+     * in the chosen position
+     */
     public boolean addDiceWithAllRestrictions(Dice dice, Position pos) {
         Cell cell=getCellFromPosition(pos);
         if (cell==null)
@@ -111,11 +137,29 @@ public class Wpc {
     }
 
 
+    /**
+     * Checks, by the given parameters, if it is possible to add the dice in the chosen position
+     *
+     * @param dice is the dice chosen by the player
+     * @param pos is the position where the player would like to add the dice
+     * @param ColorRestr if it's true it means that the color restrictions must be considered, if it's false it is
+     *                   possible to add a dice on a cell with a color that is different from his or close to a dice
+     *                   with the same color.
+     * @param ValueRestr if it's true it means that the number restrictions must be considered, if it's false it is
+     *                   possible to add a dice on a cell with a number that is different from his or close to a dice
+     *                   with the same number.
+     * @param PlacementRestr if it's true it means the placement must fallow all the game rules
+     * @param atLeastADiceNear if it's true it means that there must be at least a dice on of the cells close to the
+     *                         chosen one
+     * @param noDicesNear if it's true it means that there must not be dices in the cells close to the chosen one
+     * @return true iff it is possible to add the dice in the chosen position, false if it is not possible.
+     */
     public boolean addDicePersonalizedRestrictions(Dice dice, Position pos, boolean ColorRestr, boolean ValueRestr, boolean PlacementRestr, boolean atLeastADiceNear, boolean noDicesNear){
         Cell cell=getCellFromPosition(pos);
         boolean condition=true;
-
+        assert cell != null;
         if (!firstDicePutted) {
+
             if (!checkFirstTurnRestriction(cell)) {
                 return false;
             }
@@ -153,10 +197,17 @@ public class Wpc {
     }
 
 
+    /**
+     * Removes the dice from the chosen position, if the dice was the only one inside the schema sets to false the
+     * boolean related to the rules which wants the first dice been added in particular areas
+     *
+     * @param position is the position where is the dice the player wants to remove
+     * @return the removed dice
+     */
     public Dice removeDice(Position position){
-        Dice dice=null;
         Cell cell=getCellFromPosition(position);
-        dice=cell.getDice();
+        assert cell != null;
+        Dice dice = cell.getDice();
         cell.removeDice();
         if (onlyFirstDice){
             firstDicePutted=false;
@@ -166,10 +217,14 @@ public class Wpc {
     }
 
 
-    public Dice getDiceFromPosition(Position pos){
-        return getCellFromPosition(pos).getDice();
-    }
+    public Dice getDiceFromPosition(Position pos){ return Objects.requireNonNull(getCellFromPosition(pos)).getDice(); }
 
+    /**
+     * Creates a new object dice and position with the dice related to the id and his position.
+     *
+     * @param diceId is the ID of the dice selected
+     * @return the new object dice and position
+     */
     public DiceAndPosition getDiceAndPosition(int diceId){
         Dice tempDice;
         for(Cell cell: schema) {
@@ -183,17 +238,21 @@ public class Wpc {
     }
 
     public Position getPositionFromDice(int diceID){
-        for(Cell cell: schema) {
+        for(Cell cell : schema) {
             if (cell.getDice().getId() == diceID)
                 return cell.getCellPosition();
         }
         return null;
     }
 
+    /**
+     * @param pos is the position selected
+     * @return the cell associated to the given postion
+     */
     private Cell getCellFromPosition(Position pos){
-        if (pos.getColumn()>=COLS_NUMBER)
+        if (pos.getColumn() >= COLS_NUMBER)
             return null;
-        if (pos.getRow()>=ROWS_NUMBER)
+        if (pos.getRow() >= ROWS_NUMBER)
             return null;
         return schema.get(pos.getRow()*WpcConstants.COLS_NUMBER+pos.getColumn());
     }
@@ -208,16 +267,25 @@ public class Wpc {
     }
 
 
+    /**
+     * @param cell is the cell chosen by the player
+     * @return true if the cell is a border one
+     */
     private boolean checkFirstTurnRestriction(Cell cell) {
-        //controllo che, durante il primo turno, il dado sia posizionato solo sul bordo della wpc
         int row = cell.getCellPosition().getRow();
         int column = cell.getCellPosition().getColumn();
         return row == 0 || column == 0 || row == ROWS_NUMBER - 1 || column == COLS_NUMBER - 1;
     }
 
 
+    /**
+     * Checks is the placement respect the vale and color restrictions.
+     *
+     * @param cell is the cell where the user wnats to place the dice
+     * @param dice is the dice chosen by the user
+     * @return true iff it is possible to add the dice in the chosen cell
+     */
     private boolean checkCellRestriction(Cell cell, Dice dice){
-        //controllo che il dado possa essere inserito nella cella selezionata secondo le restrizioni di questa
         if (cell.getDice()== null) {
             if (cell.getNumber() == 0 && cell.getColor()!=null)
                 return (cell.getColor().equals(dice.getDiceColor()));
@@ -231,6 +299,13 @@ public class Wpc {
     }
 
 
+    /**
+     * Checks if a dice can be add to the chosen cell without caring of the color restriction
+     *
+     * @param cell is the cell chosen by the user
+     * @param dice is the dice chosen by the user
+     * @return true if it is possible to add the dice in the cell
+     */
     private boolean checkOnlyNumberCellRestriction(Cell cell, Dice dice){
         //pennello per eglomise: impone che sia considerata sulla cella solo la restrizione di numero e non quella di colore
         if (cell.getDice()!= null)
@@ -240,7 +315,13 @@ public class Wpc {
         return cell.getNumber() == dice.getDiceNumber();
     }
 
-
+    /**
+     * Checks if a dice can be add to the chosen cell without caring of the number restriction
+     *
+     * @param cell is the cell chosen by the user
+     * @param dice is the dice chosen by the user
+     * @return true if it is possible to add the dice in the cell
+     */
     private boolean checkOnlyColorCellRestriction(Cell cell, Dice dice){
         //Alesatore per lamine di rame: impone che sia considerata sulla cella solo la restrizione di colore e non quella di numero
         if (cell.getDice()!= null)
@@ -252,32 +333,59 @@ public class Wpc {
     }
 
 
+    /**
+     * Checks if there's at least a dice in an adjacent cell.
+     *
+     * @param orthoCell list of all the cells orthogonal to the chosen one
+     * @param dice is the chosen dice
+     * @return false if an adjacent dice has same color of number to the chosen one
+     */
     private boolean checkAdjacentDiceRestriction(ArrayList<Cell> orthoCell, Dice dice){
         boolean condition=true;
         for(Cell cell: orthoCell) {
             if (cell.getDice()!= null)
-                condition&=!checkDiceEquivalence(cell.getDice(), dice);
+                condition &= !checkDiceEquivalence(cell.getDice(), dice);
         }
         return condition;
     }
 
 
+    /**
+     * Checks if the schema's cell is orthogonally adjacent to the cell where the player wants to place a dice.
+     *
+     * @param cell is a cell of the schema
+     * @param row is the row of the chosen cell
+     * @param column is the column of the chosen cell
+     * @return true if the cell is adjacent to the chosen one
+     */
     private boolean isOrthogonallyAdjacentCell(Cell cell, int row, int column){
-        //verifico se la cella è ortogonalmente adiacente a quella sotto esame
         int adjacentRow = cell.getCellPosition().getRow();
         int adjacentColumn = cell.getCellPosition().getColumn();
         return ((adjacentRow == row && (adjacentColumn == (column + 1) || adjacentColumn == (column - 1)))
                 || (adjacentColumn == column && (adjacentRow== row-1 || adjacentRow == row+1)));
     }
 
+    /**
+     * Checks if the schema's cell is diagonally adjacent to the cell where the player wants to place a dice.
+     *
+     * @param cell is a cell of the schema
+     * @param row is the row of the chosen cell
+     * @param column is the column of the chosen cell
+     * @return true if the cell is adjacent to the chosen one
+     */
     private boolean isDiagonallyAdjacentCell(Cell cell, int row, int column){
         int adjacentRow = cell.getCellPosition().getRow();
         int adjacentColumn = cell.getCellPosition().getColumn();
         return  (((adjacentRow==row-1)&&((adjacentColumn==column-1)||(adjacentColumn==column+1)))
                 ||((adjacentRow==row+1)&&((adjacentColumn==column-1)||(adjacentColumn==column+1))));
-
     }
 
+    /**
+     *  Finds all the orthogonal cells to the chosen one
+     *
+     * @param position is the chosen cell position
+     * @return the list of all orthogonal cells to the chosen one
+     */
     private ArrayList<Cell> getOrthogonallyAdjacentCells(Position position){
         ArrayList<Cell> orthoCells=new ArrayList<>();
         for(Cell schemaCell: this.schema) {
@@ -287,6 +395,13 @@ public class Wpc {
         return orthoCells;
     }
 
+
+    /**
+     * Finds all the diagonal cells to the chosen one
+     *
+     * @param position is the chosen cell position
+     * @return the list of all cells diagonal to the chosen one
+     */
     private ArrayList<Cell> getDiagonallyAdjacentCells(Position position){
         ArrayList<Cell> diagCells=new ArrayList<>();
         for(Cell schemaCell: this.schema) {
@@ -295,7 +410,15 @@ public class Wpc {
         }
         return diagCells;
     }
-    
+
+
+    /**
+     * Checks if there' s at least a dice in an adjacent cell.
+     *
+     * @param orthoCells list of cells orthogonally adjacent to the chosen cell
+     * @param diagCells list of cells diagonally adjacent to the chosen cell
+     * @return true if there is at least a dice in one of those cells
+     */
     private boolean isThereAtLeastADiceNear(ArrayList<Cell> orthoCells,ArrayList<Cell> diagCells) {
         for(Cell cell: orthoCells) {
             if (cell.getDice()!= null)
@@ -309,14 +432,23 @@ public class Wpc {
     }
 
 
+    /**
+     * checks if the two dices are equivalent or not.
+     *
+     * @param cellDice is the dice in a cell adjacent to the chosen one
+     * @param dice is the dice chosen by the user
+     * @return true if the two dices have same number or color or both
+     */
     private boolean checkDiceEquivalence(Dice cellDice, Dice dice){
-        //controlla se il dado della cella adiacente ha colore o numero uguale  a quello del dado che si desidera inserire
         return dice.getDiceNumber() == cellDice.getDiceNumber() || dice.getDiceColor().equals(cellDice.getDiceColor());
     }
 
 
+    /**
+     * @param row a row of the schema
+     * @return a list composed by all dices in the chosen row
+     */
     public ArrayList<Dice> getRowDices(int row){
-        //restituisce tutti i dadi presenti in una riga
         ArrayList<Dice> rowDices = new ArrayList<>();
 
         for(Cell cell: schema){
@@ -327,18 +459,11 @@ public class Wpc {
         return rowDices;
     }
 
-    public ArrayList<Dice>getRows(int row){
-        ArrayList<Dice> rowArray = new ArrayList<>();
-        for(Cell cell: schema){
-            if (cell.getCellPosition().getRow() == row)
-                rowArray.add(cell.getDice());
-        }
-        return rowArray;
-    }
-
-
+    /**
+     * @param column a column of the schema
+     * @return a list composed by all dices in the chosen column
+     */
     public ArrayList<Dice> getColDices(int column){
-        //restituisce tutti i dadi presenti in una colonna
         ArrayList<Dice> columnDices = new ArrayList<>();
 
         for(Cell cell: schema) {
@@ -350,9 +475,10 @@ public class Wpc {
     }
 
 
-
+    /**
+     * @return the list of all dices in the schema
+     */
     public ArrayList<Dice> getWpcDices(){
-        //restituisce tutti i dadi presenti sulla wpc
         ArrayList<Dice>  WPCDices = new ArrayList<>();
 
         for(Cell cell: schema){
@@ -363,8 +489,11 @@ public class Wpc {
     }
 
 
+    /**
+     * @param shade is the dice number
+     * @return how many dices are there in the schema with the chosen number
+     */
     public int numDicesOfShade(int shade){
-        //Restituisce il numero di dadi sulla wpc che hanno il numero uguale a shade
         int count = 0;
 
         for (Dice dice : getWpcDices()){
@@ -375,8 +504,11 @@ public class Wpc {
     }
 
 
+    /**
+     * @param color the dice color
+     * @return how many dices are there in the schema with the chosen color
+     */
     public int numDicesOfColor(Color color){
-        //Restituisce il numero di dadi sulla wpc che hanno il colore uguale a color
         int count = 0;
 
         for (Dice dice : getWpcDices()){
@@ -386,8 +518,10 @@ public class Wpc {
         return count;
     }
 
+    /**
+     * @return how many dices are there are in the schema
+     */
     public int getNumOfDices(){
-        //Restituisce il numero di dadi sulla wpc
         int count = 0;
         for(Cell cell: schema){
             if(cell.getDice()!= null) count++;

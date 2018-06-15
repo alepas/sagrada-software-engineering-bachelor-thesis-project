@@ -58,7 +58,8 @@
             <RowConstraints prefHeight="50.0" />
         </rowConstraints>
 
-        <Label fx:id="wpc0Name" styleClass="Label" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" />
+        <Label fx:id="wpc0Name" styleClass="Label"  textAlignment="CENTER" contentDisplay="TOP"
+               GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" />
 
         <AnchorPane prefHeight="15.0" prefWidth="65.0" style="-fx-background-color: black;" GridPane.columnIndex="4" GridPane.rowIndex="4">
             <Circle layoutX="30.0" layoutY="12.0" radius="6.0" styleClass="Favours" />
@@ -86,7 +87,8 @@
             <RowConstraints prefHeight="50.0" />
         </rowConstraints>
 
-        <Label fx:id="wpc1Name" styleClass="Label" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" />
+        <Label fx:id="wpc1Name" styleClass="Label"  textAlignment="CENTER" contentDisplay="TOP"
+               GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" />
 
         <AnchorPane prefHeight="15.0" prefWidth="65.0" style="-fx-background-color: black;" GridPane.columnIndex="4" GridPane.rowIndex="4">
             <Circle layoutX="30.0" layoutY="12.0" radius="6.0" styleClass="Favours" />
@@ -114,7 +116,8 @@
             <RowConstraints prefHeight="50.0" />
         </rowConstraints>
 
-        <Label fx:id="wpc2Name" contentDisplay="TOP" prefHeight="17.0" prefWidth="224.0" styleClass="Label" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" />
+        <Label fx:id="wpc2Name" contentDisplay="TOP" styleClass="Label" textAlignment="CENTER"
+               GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" />
 
         <AnchorPane prefHeight="15.0" prefWidth="65.0" style="-fx-background-color: black;" GridPane.columnIndex="4" GridPane.rowIndex="4">
             <Circle layoutX="30.0" layoutY="12.0" radius="6.0" styleClass="Favours" />
@@ -143,7 +146,8 @@
         </rowConstraints>
 
 
-        <Label fx:id="wpc3Name" contentDisplay="TOP" prefHeight="17.0" prefWidth="224.0" styleClass="Label" text="nome della wpc" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" />
+        <Label fx:id="wpc3Name" contentDisplay="TOP" styleClass="Label" textAlignment="CENTER"
+               GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" />
 
         <AnchorPane prefHeight="15.0" prefWidth="65.0" style="-fx-background-color: black;" GridPane.columnIndex="4" GridPane.rowIndex="4">
             <Circle layoutX="30.0" layoutY="12.0" radius="6.0" styleClass="Favours" />

@@ -33,9 +33,15 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
+import static it.polimi.ingsw.model.clientModel.ClientWpcConstants.setWpcName;
 import static java.lang.String.valueOf;
 
 public class SetNewGameController implements Observer, NotificationHandler {
+
+    private String wpc0ID;
+    private String wpc1ID;
+    private String wpc2ID;
+    private String wpc3ID;
 
     private final Object playerWaiter = new Object();
     private final Object cardWaiter = new Object();
@@ -214,13 +220,13 @@ public class SetNewGameController implements Observer, NotificationHandler {
         personalAreaButton.setOnAction(event -> changeSceneHandle(event,
                 "/it/polimi/ingsw/view/gui/guiview/PersonalAreaScene.fxml"));
 
-        firstWPC.setOnMouseClicked(event -> pickWpc(event, wpc0Name.getText()));
+        firstWPC.setOnMouseClicked(event -> pickWpc(event, wpc0ID));
 
-        secondWPC.setOnMouseClicked(event -> pickWpc(event, wpc1Name.getText()));
+        secondWPC.setOnMouseClicked(event -> pickWpc(event, wpc1ID));
 
-        thirdWPC.setOnMouseClicked(event -> pickWpc(event, wpc2Name.getText()));
+        thirdWPC.setOnMouseClicked(event -> pickWpc(event, wpc2ID));
 
-        fourthWPC.setOnMouseClicked(event -> pickWpc(event, wpc3Name.getText()));
+        fourthWPC.setOnMouseClicked(event -> pickWpc(event, wpc3ID));
     }
 
 
@@ -240,7 +246,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
 
 
     /**
-     * Calls the network mathod that sets a new available game or put the new player inside an already exixting game with
+     * Calls the network method that sets a new available game or put the new player inside an already exixting game with
      * some available places.
      *
      * @param numPlayers is the number of players that the user wants inside the game that is going to play
@@ -380,25 +386,26 @@ public class SetNewGameController implements Observer, NotificationHandler {
                         ClientWpc wpc = userWpcs.get(i);
                         switch (i) {
                             case 0:
-                                wpc0Name.setText(wpc.getWpcID());
+                                wpc0ID = wpc.getWpcID();
+                                wpc0Name.setText(setWpcName(wpc.getWpcID()));
                                 setWpc(firstWPC, wpc);
                                 setFirstWpcFavours(wpc.getFavours());
                                 break;
-
                             case 1:
-                                wpc1Name.setText(wpc.getWpcID());
+                                wpc1ID = wpc.getWpcID();
+                                wpc1Name.setText(setWpcName(wpc.getWpcID()));
                                 setWpc(secondWPC, wpc);
                                 setSecondWpcFavours(wpc.getFavours());
                                 break;
-
                             case 2:
-                                wpc2Name.setText(wpc.getWpcID());
+                                wpc2ID = wpc.getWpcID();
+                                wpc2Name.setText(setWpcName(wpc.getWpcID()));
                                 setWpc(thirdWPC, wpc);
                                 setThirdWpcFavours(wpc.getFavours());
                                 break;
-
                             case 3:
-                                wpc3Name.setText(wpc.getWpcID());
+                                wpc3ID = wpc.getWpcID();
+                                wpc3Name.setText(setWpcName(wpc.getWpcID()));
                                 setWpc(fourthWPC, wpc);
                                 setFourthWpcFavours(wpc.getFavours());
                                 break;

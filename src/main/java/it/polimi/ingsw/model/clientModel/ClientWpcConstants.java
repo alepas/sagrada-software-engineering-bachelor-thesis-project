@@ -1,6 +1,6 @@
-package it.polimi.ingsw.view.gui;
+package it.polimi.ingsw.model.clientModel;
 
-public class WpcConstants {
+public class ClientWpcConstants {
     private static final String WPC1= "Virtus";
     private static final String WPC2= "Kaleidoscopic Dreams";
     private static final String WPC3= "Vialux";

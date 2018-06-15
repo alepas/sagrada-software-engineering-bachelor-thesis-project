@@ -327,6 +327,7 @@
                     <children>
                         <Label layoutX="75.0" layoutY="6.0" text="Message Area" wrapText="true" />
                         <Label fx:id="messageLabel" layoutX="98.0" layoutY="46.0" wrapText="true" />
+                        <Label fx:id="message1Label" layoutX="98.0" layoutY = "26.0" wrapText="true"/>
                     </children>
                 </AnchorPane>
 

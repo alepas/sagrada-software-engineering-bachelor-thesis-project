@@ -14,8 +14,9 @@ public class DiceBag {
     private int violetDices;
 
 
-    //quando costruisco il sacco nella partita multiplayer passerò al costruttore
-    // l'int numDices =2*numplayers +1
+    /**
+     * Initializes the dice bag with 18 dices for each color, sets the id generator equals to zero.
+     */
     public DiceBag(){
         diceIdGenerator = 0;
         yellowDices = INITIAL_DICE_NUMBER;
@@ -25,18 +26,30 @@ public class DiceBag {
         violetDices = INITIAL_DICE_NUMBER;
     }
 
+    /**
+     * creates as many dices as the value given by the formula numplayers*2-1.
+     *
+     * @param numPlayers is the number of players of the game related to the object
+     * @return an arrayList composed by the dices created
+     */
     public ArrayList<Dice> extractDices(int numPlayers){
         int numOfDices;
         ArrayList<Dice> extractedDices = new ArrayList<>();
         if(numPlayers == 1)
             numOfDices = SOLO_PLAYER_DICES;
         else
-            numOfDices = numPlayers*2 +1; //costante computata
+            numOfDices = numPlayers*2 +1;
         for (int i = 0; i < numOfDices; i++)
             extractedDices.add(pickDice());
         return extractedDices;
     }
 
+    /**
+     * Calls the dice's constructor after choosing the dice color in a random way. It decreases the parameter related to
+     * the chosen color iff the checkColor method returns true.
+     *
+     * @return the new dice
+     */
      private Dice pickDice() {
         Color color;
         do {
@@ -62,12 +75,17 @@ public class DiceBag {
         return new Dice(color, setDiceID());
     }
 
-    //id per riconoscere il dado, valore sequenziale, non tiene conto del numero totale dei dadi
+
     private int setDiceID() { return diceIdGenerator++; }
 
 
-    //nell enum ogni val è associato ad un valore numerico tramite color.ordinal() recupero tale valore
-    //utile per fare il check
+    /**
+     * Checks if are still available dices of the color passed as parameter.
+     *
+     * @param color is the random color choosen for the new dice
+     * @return a boolean: if it is true it means that it is possible to create a new dice with the chosen color,
+     * if it is false the method above will have to call again the random method to chose a new one
+     */
     private boolean checkColor(Color color){
         if (color == Color.VIOLET)
             return (violetDices > 0);
@@ -81,7 +99,12 @@ public class DiceBag {
             return (greenDices > 0);
     }
 
-    //Diluente per pasta salda: reinserisco un dado nel sacchetto
+
+    /**
+     *This method is related to a tool card; it add one to the integer related to the color of the dice chosen.
+     *
+     * @param dice is the object that has been chosen by the player
+     */
     public void reInsertDice(Dice dice){
         Color color = dice.getDiceColor();
         switch (color) {

@@ -58,8 +58,8 @@
 
 .Label{
     -fx-font-size: 14px;
-    -fx-alignment: center;
-    -fx-text-alignment: center;
+    -fx-alignment: CENTER;
+    -fx-text-alignment: CENTER;
     -fx-text-fill:  #4a626d;
     -fx-word-wrap: normal;
 }
@@ -560,7 +560,7 @@
 }
 
 
-.ChangeNumberCircle{
+.ChangeNumberImage{
     -fx-fill: #ffffff;
     -fx-stroke: BLACK;
     -fx-stroke-type: INSIDE;

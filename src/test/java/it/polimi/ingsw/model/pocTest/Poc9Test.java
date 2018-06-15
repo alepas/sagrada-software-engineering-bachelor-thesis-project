@@ -190,7 +190,7 @@ public class Poc9Test {
         row0Dices.add(dice2);
         row0Dices.add(dice3);
         row0Dices.add(dice4);
-        when(wpc.getRows(0)).thenReturn(row0Dices);
+        when(wpc.getRowDices(0)).thenReturn(row0Dices);
 
         row1Dices.clear();
         row1Dices.add(dice5);
@@ -198,7 +198,7 @@ public class Poc9Test {
         row1Dices.add(dice7);
         row1Dices.add(null);
         row1Dices.add(dice9);
-        when(wpc.getRows(1)).thenReturn(row1Dices);
+        when(wpc.getRowDices(1)).thenReturn(row1Dices);
 
         row2Dices.clear();
         row2Dices.add(dice10);
@@ -206,7 +206,7 @@ public class Poc9Test {
         row2Dices.add(dice12);
         row2Dices.add(dice13);
         row2Dices.add(dice14);
-        when(wpc.getRows(2)).thenReturn(row2Dices);
+        when(wpc.getRowDices(2)).thenReturn(row2Dices);
 
         row3Dices.clear();
         row3Dices.add(dice15);
@@ -214,7 +214,7 @@ public class Poc9Test {
         row3Dices.add(dice17);
         row3Dices.add(dice18);
         row3Dices.add(dice19);
-        when(wpc.getRows(3)).thenReturn(row3Dices);
+        when(wpc.getRowDices(3)).thenReturn(row3Dices);
 
 
         when(wpc.numDicesOfColor(Color.BLUE)).thenReturn(3);

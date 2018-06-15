@@ -6,6 +6,7 @@ import it.polimi.ingsw.model.clientModel.*;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
 
 import it.polimi.ingsw.view.Status;
+import it.polimi.ingsw.model.clientModel.ClientWpcConstants;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -29,7 +30,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.util.*;
 
@@ -43,6 +43,12 @@ import static java.lang.Thread.sleep;
 public class TwoPlayersGameController implements Observer, NotificationHandler {
 
 
+    @FXML private ImageView usedTool3Icon;
+    @FXML private ImageView usedTool2Icon;
+    @FXML private Label secondWpcNameLabel;
+    @FXML private ImageView usedTool1Icon;
+    @FXML private Label firstWpcNameLabel;
+    @FXML private Label message1Label;
     @FXML
     private AnchorPane roundTrackPane;
     @FXML
@@ -69,9 +75,9 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
     private Circle sixCircle;
 
     @FXML
-    private Circle minusOneIcon;
+    private ImageView minusOneIcon;
     @FXML
-    private Circle plusOneIcon;
+    private ImageView plusOneIcon;
     private NetworkClient networkClient;
     private ClientModel clientModel;
     private String username;
@@ -207,6 +213,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
         //set all the elements in the game view
         startGame();
 
+        //menuButton: if the player choose to see the tool cards he/she activate this lambda by clicking on the Tool Cards button
         toolCardButton.setOnAction(event -> {
             pocGrid.setVisible(false);
             privateObjPane.setVisible(false);
@@ -214,6 +221,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
             toolCardGrid.setVisible(true);
         });
 
+        //menuButton: if the player choose to see the public Objective cards he/she activate this lambda by clicking on the POC button
         pocButton.setOnAction(event -> {
             privateObjPane.setVisible(false);
             toolCardGrid.setVisible(false);
@@ -221,6 +229,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
             roundTrackPane.setVisible(false);
         });
 
+        //menuButton: if the player choose to see the Round Track he/she activate this lambda by clicking on the Round Track button
         roundTrackButton.setOnAction(event -> {
             privateObjPane.setVisible(false);
             toolCardGrid.setVisible(false);
@@ -228,6 +237,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
             roundTrackPane.setVisible(true);
         });
 
+        //menuButton: if the player choose to see his/her private color he/she activate this lambda by clicking on the Private Obj button
         privateObjectiveButton.setOnAction(event -> {
             pocGrid.setVisible(false);
             toolCardGrid.setVisible(false);
@@ -235,6 +245,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
             roundTrackPane.setVisible(false);
         });
 
+        //by clicking on the zoom button the player sees the related tool Card or the related POC bigger
         zoomTool1.setOnAction(event -> setZoomedCard("tool".concat(toolCardsIDs.get(0).getId())));
 
         zoomTool2.setOnAction(event -> setZoomedCard("tool".concat(toolCardsIDs.get(1).getId())));
@@ -247,8 +258,10 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
 
         zoomPoc3.setOnAction(event -> setZoomedCard("poc".concat(pocIDs.get(2).getId())));
 
+        //by clicking on the back button th zooming area isn't visible anymore
         zoomCardBackButton.setOnAction(event -> zoomedCard.setVisible(false));
 
+        //by clicking on the use button the player starts to use the the related tool card
         useTool1.setOnAction(event -> {
             try {
                 useToolCard(toolCardsIDs.get(0).getId());
@@ -274,26 +287,30 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
             }
         });
 
-
+        //by clicking on the end button the player pass his/her turn
         endTurnButton.setOnAction(event -> {
-
             try {
                 networkClient.passTurn(clientModel.getUserToken());
-
             } catch (CannotFindPlayerInDatabaseException | PlayerNotAuthorizedException | CannotPerformThisMoveException e) {
-                e.printStackTrace();
+                message1Label.setText(e.getMessage());
             }
             lastNextAction = NextAction.WAIT_FOR_TURN;
             stateAction(ANOTHER_PLAYER_TURN);
         });
 
+        //by clicking on the cancel button the player goes back to the previous action
         cancelActionButton.setOnAction(event -> stateAction(INTERRUPT_TOOLCARD));
 
+        //by clicking on the personal area button the player changes scene and goes to the area containing all his/her info
         personalAreaButton.setOnAction(event -> changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/PersonalAreaScene.fxml"));
 
+        //by clicking on the new game button the player starts a new game
         newGameButton.setOnAction(event -> changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/SetNewGameScene.fxml"));
     }
 
+    /**
+     * Calls all the setting methods, if the player is coming back after a disconnection it sets the last action.
+     */
     private void startGame() {
         setToolCard();
         setPoc();
@@ -317,6 +334,11 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
         dragAndDrop();
     }
 
+    /**
+     * Class different methods depending on the state in which the player game is.
+     *
+     * @param state is the state in which the player is.
+     */
     private synchronized void stateAction(Status state) {
         System.out.println("state: "+state);
         switch (state) {
@@ -359,28 +381,10 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
         }
     }
 
-    /*private void stopToolCard() {
-        try {
-            NextAction nextAction = networkClient.stopToolCard(clientModel.getUserToken());
-            updateGraphicsCurrentUser();
-            stateAction(Objects.requireNonNull(Status.change(nextAction)));
-        } catch (CannotFindPlayerInDatabaseException e) {
-            messageLabel.setText(e.getMessage());
-        } catch (PlayerNotAuthorizedException e) {
-            messageLabel.setText(e.getMessage());
-        } catch (CannotStopToolCardException e) {
-            messageLabel.setText(e.getMessage());
-        } catch (NoToolCardInUseException e) {
-            messageLabel.setText(e.getMessage());
-        }
-        cancelActionButton.setVisible(true);
-    }*/
-
-
     /**
      * This method contains four different actions which make the drag and drop action possible.
      * It has the goal to support the movement of a dice from the dice area to the schema player in a correct way.
-     * <p>
+     *
      * This method doesn't need parameters and return void.
      */
     private void dragAndDrop() {
@@ -477,11 +481,11 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
             lastNextAction = nextAction;
         } catch (CannotFindPlayerInDatabaseException | CannotPickPositionException |
                 CannotPickDiceException | PlayerNotAuthorizedException | CannotPerformThisMoveException e) {
-            Platform.runLater(() -> messageLabel.setText(e.getMessage()));
+            Platform.runLater(() -> message1Label.setText(e.getMessage()));
             if (isUsedToolCard) isUsedToolCard = false;
             return lastNextAction;
         } catch (NoToolCardInUseException e) {
-            messageLabel.setText("Non stai usando alcuna Tool Card!");
+            message1Label.setText("Non stai usando alcuna Tool Card!");
             return lastNextAction;
         }
         return nextAction;
@@ -495,14 +499,15 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
      */
     private void useToolCard(String id) throws CannotUseToolCardException {
         cancelActionButton.setVisible(true);
+        endTurnButton.setVisible(false);
         try {
             NextAction nextAction = networkClient.useToolCard(clientModel.getUserToken(), id);
-            System.out.println("use Toolcard next Action " +nextAction);
+            message1Label.setText("Stai usando la ToolCard" + id + "!");
             lastNextAction = nextAction;
             updateGraphicsCurrentUser();
             stateAction(Objects.requireNonNull(change(nextAction)));
         } catch (CannotFindPlayerInDatabaseException | CannotPerformThisMoveException | PlayerNotAuthorizedException e) {
-            e.printStackTrace();
+            message1Label.setText(e.getMessage());
             stateAction(Objects.requireNonNull(change(lastNextAction)));
         }
     }
@@ -543,6 +548,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                     useTool1.setDisable(true);
                     useTool2.setDisable(true);
                     useTool3.setDisable(true);
+                    endTurnButton.setVisible(true);
                     endTurnButton.setDisable(true);
                     cancelActionButton.setVisible(false);
                 });
@@ -569,8 +575,9 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
         Platform.runLater(() -> {
             if (turn.equals("3")) messageLabel.setText("Tocca ancora a te!");
             else messageLabel.setText("Tocca a te!");
-
+            message1Label.setText("");
             roundLabel.setText("Round numero " + round + ", turno di " + username);
+            endTurnButton.setVisible(true);
             endTurnButton.setDisable(false);
             cancelActionButton.setVisible(false);
             for (Node dice : extractedDicesGrid.getChildren())
@@ -582,7 +589,6 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
             dragAndDrop();
         });
     }
-
 
     /**
      * Sets in the extractedDicesGrid an ImageView for each dice which is in the ArrayList.
@@ -603,7 +609,6 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
         extractedDicesGrid.setDisable(false);
     }
 
-
     /**
      * Sets the privateObjPane's id with the concat of a symbolic string and the color which correspond to the private
      * objective assigned to the player.
@@ -617,9 +622,8 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
         }
     }
 
-
     /**
-     * Sets an anchorpane inside the pocGrid foreach POC selected at the biginning of the game.
+     * Sets an anchor pane inside the pocGrid foreach POC selected at the beginning of the game.
      */
     private void setPoc() {
         for (int poc = 0; poc < pocIDs.size(); poc++) {
@@ -633,7 +637,6 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
             });
         }
     }
-
 
     /**
      * Sets an anchorpane inside the toolCardGrid foreach toolCard selected at the biginning of the game.
@@ -654,7 +657,6 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
         }
     }
 
-
     /**
      * Chooses in which Grid must be set each schema: the firstWpcGrid is always associated to the schema of the username
      * associated to the specific controller.
@@ -664,16 +666,19 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
             case 1:
                 firstUserLabel.setText(username);
                 fillWpc(firstWpcGrid, wpc.get(username));
+                firstWpcNameLabel.setText(ClientWpcConstants.setWpcName(wpc.get(username).getWpcID()));
                 break;
             case 2:
                 for (String wpcUser : wpc.keySet()) {
                     if (wpcUser.equals(username)) {
                         firstUserLabel.setText(username);
                         firstFavourLabel.setText(String.valueOf(wpc.get(username).getFavours()).concat("X"));
+                        firstWpcNameLabel.setText(ClientWpcConstants.setWpcName(wpc.get(username).getWpcID()));
                         fillWpc(firstWpcGrid, wpc.get(wpcUser));
                     } else {
                         secondUserLabel.setText(wpcUser);
                         secondFavourLabel.setText(String.valueOf(wpc.get(wpcUser).getFavours()).concat("X"));
+                        secondWpcNameLabel.setText(ClientWpcConstants.setWpcName(wpc.get(wpcUser).getWpcID()));
                         fillWpc(secondWpcGrid, wpc.get(wpcUser));
                     }
                 }
@@ -684,10 +689,12 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                     if (wpcUser.equals(username)) {
                         firstUserLabel.setText(username);
                         firstFavourLabel.setText(String.valueOf(wpc.get(username).getFavours()).concat("X"));
+                        firstWpcNameLabel.setText(ClientWpcConstants.setWpcName(wpc.get(username).getWpcID()));
                         fillWpc(firstWpcGrid, wpc.get(wpcUser));
                     } else if(!wpcUser.equals(username) && numPlayer == 1) {
                         secondUserLabel.setText(wpcUser);
                         secondFavourLabel.setText(String.valueOf(wpc.get(wpcUser).getFavours()).concat("X"));
+                        secondWpcNameLabel.setText(ClientWpcConstants.setWpcName(wpc.get(wpcUser).getWpcID()));
                         fillWpc(secondWpcGrid, wpc.get(wpcUser));
                         numPlayer = 2;
                     }
@@ -703,7 +710,6 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
         }
 
     }
-
 
     /**
      * Sets an anchorPane in each position of the gridPane foreach Clientcell in the schema: it calls both
@@ -745,7 +751,6 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
             dragAndDrop();
     }
 
-
     /**
      * sets the ImageView with all the information of the dice given as parameter.
      *
@@ -762,7 +767,6 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
         image.setId(id);
         return image;
     }
-
 
     /**
      * Sets the style of a cell:
@@ -798,7 +802,6 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
         else cell.getStyleClass().add("white");
     }
 
-
     /**
      * Moves all dices left during the round in the Round Track, removes them from the extractedDicesGrid and calls a
      * few methods to start the new round.
@@ -818,20 +821,22 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
      * It's called when the player has placed a dice; the only things he/she can do are pass the turn or use a tool card.
      */
     private void possibleActionUseToolCard() {
+        endTurnButton.setVisible(true);
         cancelActionButton.setVisible(false);
         extractedDicesGrid.setDisable(true);
         messageLabel.setText("Usa una ToolCard o termina il turno!");
     }
-
 
     /**
      * It's called when the player as already used a toolcard, the only things he/she can do are to placea dice or to
      * end the turn.
      */
     private void possibleActionPlaceDice() {
+        message1Label.setText("");
         for (Node dice : extractedDicesGrid.getChildren())
             dice.setDisable(false);
         extractedDicesGrid.setDisable(false);
+        endTurnButton.setVisible(true);
         cancelActionButton.setVisible(false);
         useTool1.setDisable(true);
         useTool2.setDisable(true);
@@ -839,12 +844,14 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
         messageLabel.setText("Posiziona un dado o passa il turno!");
     }
 
-
     /**
      * the player has done all the possible actions that could do; this method set disable all elements of the window
      * except for the pass turn Button
      */
     private void possibleActionEndTurn() {
+        message1Label.setText("");
+        endTurnButton.setVisible(true);
+        cancelActionButton.setVisible(false);
         for (Node dice : extractedDicesGrid.getChildren())
             dice.setDisable(true);
         extractedDicesGrid.setDisable(true);
@@ -945,7 +952,6 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
         }
     }
 
-
     /**
      * Calls the method pickDiceForToolCard in the networkClient.
      *
@@ -1008,13 +1014,8 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
     private void selectNumberToolCard() {
         ToolCardClientNextActionInfo info = clientModel.getToolCardClientNextActionInfo();
         for (ClientDice clientDice : clientModel.getExtractedDices()) {
-            for (ImageView dice : extractDices) {
-                if (dice.getId().equals(String.valueOf(clientDice.getDiceID()))) {
-                    System.out.println("id: " + dice.getId());
-                    changeStyle(dice, clientDice);
-                }
-
-            }
+            for (ImageView dice : extractDices){
+                if (dice.getId().equals(String.valueOf(clientDice.getDiceID()))) changeStyle(dice, clientDice);}
         }
         if (info.numbersToChoose.size() <= 2) {
             messageLabel.setText("Aggiungi 1 o sottrai 1");
@@ -1048,7 +1049,6 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
         }
     }
 
-
     /**
      * Calls the network method that will call the server method which increase, decrease or modify the dice number.
      *
@@ -1058,12 +1058,9 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
         NextAction nextAction;
         try {
             nextAction = networkClient.pickNumberForToolCard(clientModel.getUserToken(), number);
-        } catch (CannotFindPlayerInDatabaseException e) {
-            e.printStackTrace();
-            nextAction = lastNextAction;
-        } catch (NoToolCardInUseException | PlayerNotAuthorizedException |
-                CannotPerformThisMoveException | CannotPickNumberException e) {
-            messageLabel.setText(e.getMessage());
+        } catch (CannotFindPlayerInDatabaseException | NoToolCardInUseException |
+                PlayerNotAuthorizedException | CannotPerformThisMoveException | CannotPickNumberException e) {
+            message1Label.setText(e.getMessage());
             nextAction = lastNextAction;
         }
         lastNextAction = nextAction;
@@ -1126,7 +1123,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
     }
 
     /**
-     * the dice selected come back to the original style.
+     * The selected dice comes back to the original style.
      */
     private void makeSelectedDiceLessVisible(ClientDiceLocations location) {
          switch (location) {
@@ -1149,7 +1146,6 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
         ToolCardClientNextActionInfo info = clientModel.getToolCardClientNextActionInfo();
         try {
             NextAction previousAction = networkClient.cancelAction(clientModel.getUserToken());
-            System.out.println("PrevAction: " + previousAction);
             switch (previousAction) {
                 case MENU_ALL:
                     isUsedToolCard = false;
@@ -1179,6 +1175,12 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
 
     //-------------------------------------- End Game Methods ------------------------------------------
 
+    /**
+     * Changes the scene in the window.
+     *
+     * @param event the event related to the desire of the player to change scene
+     * @param path is the path of the next scene
+     */
     private void changeSceneHandle(Event event, String path) {
         AnchorPane nextNode = new AnchorPane();
         try {
@@ -1313,6 +1315,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
             }
         }
     }
+
     /**
      * Calls the filler of the schema.
      */
@@ -1376,9 +1379,6 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
 
     @Override
     public void handle(ToolCardDiceChangedNotification notification) {
-        Platform.runLater(() -> {
-            //TODO: scrivi la mossa fatta
-        });
     }
 
     @Override
@@ -1388,7 +1388,6 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
             String id = String.valueOf(notification.dice.getDiceID());
             if (user.equals(secondUserLabel.getText()))
                 fillWpc(secondWpcGrid, notification.wpc);
-           // updateGraphicExtractedDices();
             for(int i= 0; i< extractedDicesGrid.getChildren().size(); i++) {
                 if (extractedDicesGrid.getChildren().get(i).getId().equals(id))
                     extractedDicesGrid.getChildren().remove(i);
@@ -1400,8 +1399,16 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
     @Override
     public void handle(ToolCardUsedNotification notification) {
         Platform.runLater(() -> {
+            if(notification.toolCard.getId().equals(toolCardsIDs.get(0).getId()))
+                usedTool1Icon.setVisible(true);
+            else if(notification.toolCard.getId().equals(toolCardsIDs.get(1).getId()))
+                usedTool2Icon.setVisible(true);
+            else if(notification.toolCard.getId().equals(toolCardsIDs.get(2).getId()))
+                usedTool3Icon.setVisible(true);
+
+            firstFavourLabel.setText(String.valueOf(clientModel.getFavour()));
             //uso per mettere la stellina sulla toolcard
-            if (notification.username.equals(secondUserLabel.getText())) {//o è il terzo o il quarto giocatore
+            if (notification.username.equals(secondUserLabel.getText())) {
                 fillWpc(secondWpcGrid, clientModel.getWpcByUsername().get(notification.username));
                 updateGraphicExtractedDices();
             }
@@ -1409,8 +1416,6 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                 fillWpc(thirdWpcGrid, clientModel.getWpcByUsername().get(notification.username));
                 updateGraphicExtractedDices();
             }
-            //TODO: inserire testo "hai usato toolcard"
-
             if (!notification.username.equals(username)) {
                 for (Notification not : notification.movesNotifications) not.handle(this);
             }
@@ -1433,9 +1438,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
         Platform.runLater(() -> {
             String user = toolCardDicePlacedNotification.username;
             String id = String.valueOf(toolCardDicePlacedNotification.dice.getDiceID());
-            if (user.equals(secondUserLabel.getText())){
-                updateGraphicRoundTrack();
-            }
+            if (user.equals(secondUserLabel.getText())) updateGraphicRoundTrack();
             else if (user.equals(thirdUserLabel.getText())){
                 fillWpc(thirdWpcGrid, clientModel.getWpcByUsername().get(user));
                 updateGraphicRoundTrack();
