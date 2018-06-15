@@ -195,10 +195,10 @@ public class ToolCard4 extends ToolCard {
     }
 
     private void updateClientExtractedDices() {
+        tempExtractedDices.clear();
         for (Dice tempdice : currentPlayer.getUpdatedExtractedDices())
             tempExtractedDices.add(tempdice.getClientDice());
     }
-
 
     private void updateClientWPC() {
         tempClientWpc = currentPlayer.getWPC().getClientWpc();

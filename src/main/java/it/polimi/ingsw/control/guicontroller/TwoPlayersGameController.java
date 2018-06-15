@@ -1253,7 +1253,7 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                 }
             }
 
-        } else {
+        } else if (extractedDicesGrid.getChildren().size() == extractedorderedIds.size()){
             int lenght = extractedDicesGrid.getChildren().size();
             for (int i = 0; i < lenght; i++) {
                 tempIndex = extractedorderedIds.indexOf(extractedDicesGrid.getChildren().get(0).getId());
@@ -1292,6 +1292,9 @@ public class TwoPlayersGameController implements Observer, NotificationHandler {
                 }
 
             }
+        }
+        else {
+        //TODO caso in cui restituisco un dado ai dadi estratti
         }
     }
 

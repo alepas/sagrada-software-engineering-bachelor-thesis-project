@@ -210,7 +210,6 @@ public class ToolCard1 extends ToolCard {
     }
 
     private void updateClientExtractedDices(){
-        System.out.println(tempExtractedDices.toString());
         tempExtractedDices.clear();
         for (Dice tempdice:currentPlayer.getUpdatedExtractedDices())
             tempExtractedDices.add(tempdice.getClientDice());

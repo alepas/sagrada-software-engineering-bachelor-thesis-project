@@ -328,7 +328,7 @@ public class ClientModel implements Observer, NotificationHandler {
     @Override
     public void handle(ToolCardUsedNotification notification) {
         String id = notification.toolCard.getId();
-        wpcByUsername.put(notification.username, notification.wpc);
+        if (notification.wpc != null) wpcByUsername.put(notification.username, notification.wpc);
         if (notification.newExtractedDices != null) extractedDices = notification.newExtractedDices;
         if (notification.newRoundTrack != null) roundTrack = notification.newRoundTrack;
         for (ClientToolCard card : gameToolCards) {

@@ -193,11 +193,9 @@ public class ToolCard5 extends ToolCard {
     }
 
     private void updateClientExtractedDices() {
-        for (Dice tempdice : currentPlayer.getUpdatedExtractedDices()) {
+        tempExtractedDices.clear();
+        for (Dice tempdice : currentPlayer.getUpdatedExtractedDices())
             tempExtractedDices.add(tempdice.getClientDice());
-            System.out.print("color: "+tempdice.getDiceColor().name());
-            System.out.println(" num: "+tempdice.getDiceNumber());
-        }
     }
 
     private void updateClientRoundTrack() {
