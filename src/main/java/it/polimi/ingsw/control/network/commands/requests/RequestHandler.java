@@ -34,7 +34,7 @@ public interface RequestHandler {
 
     Response handle(UpdatedGameRequest request);
 
-    Response handle(ToolCardStopRequest toolCardStopRequest);
+    Response handle(ToolCardInteruptRequest toolCardInteruptRequest);
 
     Response handle(CancelActionRequest cancelActionRequest);
 

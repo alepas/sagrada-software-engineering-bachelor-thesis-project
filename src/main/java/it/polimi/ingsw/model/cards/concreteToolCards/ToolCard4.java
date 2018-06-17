@@ -214,17 +214,21 @@ public class ToolCard4 extends ToolCard {
         switch (currentStatus) {
             case 0: {
                 if (singlePlayerGame)
-                    return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD, ClientDiceLocations.EXTRACTED);
+                    return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD, ClientDiceLocations.EXTRACTED,tempExtractedDices);
                 else return null;
             }
             case 1:
                 return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.WPC, ClientDiceLocations.WPC, null, tempExtractedDices, null, null, null);
             case 2:
-                return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.WPC, ClientDiceLocations.WPC, tempClientWpc, null, null, null, null);
+                return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.WPC, ClientDiceLocations.WPC, tempClientWpc, tempExtractedDices, null, null, null);
 
         }
         return null;
     }
 
+    @Override
+    public MoveData interuptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException {
+        throw new CannotInteruptToolCardException(username,id);
+    }
 
 }

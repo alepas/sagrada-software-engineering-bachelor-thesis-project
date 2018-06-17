@@ -100,10 +100,9 @@ public class ToolCard6 extends ToolCard {
             if (currentPlayer.getWPC().isDicePlaceable(dice))
                 return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, ClientDiceLocations.WPC, null, tempExtractedDices, null, this.dice.getClientDice(), ClientDiceLocations.EXTRACTED);
             else {
-                ArrayList<ClientDice> tempExtracted = tempExtractedDices;
-                this.used = true;
-                cleanCard();
-                return new MoveData(true, null, tempExtracted, null);
+               this.currentStatus=30;
+               String text="Il dado non può essere posizionato sulla Window Pattern Card. È stato riposizionato nei dadi estratti.";
+               return new MoveData(NextAction.INTERRUPT_TOOLCARD,text,false,false);
             }
         } else throw new CannotPerformThisMoveException(username, 2, false);
 
@@ -189,7 +188,7 @@ public class ToolCard6 extends ToolCard {
         switch (currentStatus) {
             case 0: {
                 if (singlePlayerGame)
-                    return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD, ClientDiceLocations.EXTRACTED);
+                    return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD, ClientDiceLocations.EXTRACTED,tempExtractedDices);
                 else return null;
             }
             case 1:
@@ -200,4 +199,16 @@ public class ToolCard6 extends ToolCard {
         return null;
     }
 
+    @Override
+    public MoveData interuptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException {
+        if (currentStatus!=30)
+            throw new CannotInteruptToolCardException(username,id);
+        if (value!=ToolCardInteruptValues.OK)
+            throw new CannotInteruptToolCardException(username, id);
+        updateClientExtractedDices();
+        ArrayList<ClientDice> tempExtracted = tempExtractedDices;
+        this.used = true;
+        cleanCard();
+        return new MoveData(true, null, tempExtracted, null);
+    }
 }

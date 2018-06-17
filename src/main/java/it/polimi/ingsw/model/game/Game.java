@@ -275,7 +275,7 @@ public abstract class Game extends Observable implements Runnable {
         changeAndNotifyObservers(new PocsExtractedNotification(clientPocs));
     }
 
-    DiceBag getDiceBag() {
+    public DiceBag getDiceBag() {
         return diceBag;
     }
 

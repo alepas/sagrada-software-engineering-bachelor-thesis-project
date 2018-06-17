@@ -2,10 +2,9 @@ package it.polimi.ingsw.control.network.rmi;
 
 import it.polimi.ingsw.control.network.NetworkClient;
 import it.polimi.ingsw.control.network.commands.responses.*;
-import it.polimi.ingsw.model.cards.ToolCard;
-import it.polimi.ingsw.model.clientModel.ClientDiceLocations;
 import it.polimi.ingsw.model.clientModel.NextAction;
 import it.polimi.ingsw.model.clientModel.Position;
+import it.polimi.ingsw.model.clientModel.ToolCardInteruptValues;
 import it.polimi.ingsw.model.constants.NetworkConstants;
 import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
@@ -188,9 +187,9 @@ public class RmiClient extends NetworkClient {
     }
 
     @Override
-    public NextAction stopToolCard(String userToken) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotStopToolCardException, NoToolCardInUseException {
+    public NextAction interuptToolCard(String userToken, ToolCardInteruptValues value) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotInteruptToolCardException, NoToolCardInUseException {
         try {
-            ToolCardResponse response = (ToolCardResponse) remoteServer.stopToolCard(userToken);
+            ToolCardResponse response = (ToolCardResponse) remoteServer.interuptToolCard(userToken, value);
             response.handle(this);
             return response.nextAction;
         } catch (RemoteException e) {

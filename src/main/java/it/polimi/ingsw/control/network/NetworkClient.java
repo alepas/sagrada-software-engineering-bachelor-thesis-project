@@ -60,7 +60,7 @@ public abstract class NetworkClient implements ResponseHandler {
     public abstract NextAction pickNumberForToolCard(String userToken, int number) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPickNumberException, CannotPerformThisMoveException;
 
     //TODO
-    public abstract NextAction stopToolCard (String userToken) throws  CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotStopToolCardException, NoToolCardInUseException;
+    public abstract NextAction interuptToolCard(String userToken, ToolCardInteruptValues value) throws  CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotInteruptToolCardException, NoToolCardInUseException;
 
 
 
@@ -132,7 +132,7 @@ public abstract class NetworkClient implements ResponseHandler {
     public void handle(ToolCardResponse response){
         if (response.exception == null){
             ToolCardClientNextActionInfo info = new ToolCardClientNextActionInfo(response.wherePickNewDice,
-                response.wherePutNewDice, response.numbersToChoose, response.diceChosen, response.diceChosenLocation);
+                response.wherePutNewDice, response.numbersToChoose, response.diceChosen, response.diceChosenLocation, response.stringForStopToolCard, response.bothYesAndNo, response.showBackButton);
 
             clientModel.setToolCardClientNextActionInfo(info);
             if (response.wpc != null) clientModel.setMyWpc(response.wpc);

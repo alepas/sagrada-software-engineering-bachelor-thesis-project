@@ -16,7 +16,9 @@ public class MoveData {
     public boolean moveFinished=false;
     public boolean canceledToolCard =false;
     public Exception exception=null;
-    public String message=null;
+    public String messageForStop=null;
+    public boolean bothYesAndNo=false;
+    public boolean showBackButton=false;
 
     public MoveData(NextAction nextAction, ClientDiceLocations wherePickNewDice, ClientDiceLocations wherePutNewDice,
                     ClientWpc wpc, ArrayList<ClientDice> extractedDices, ClientRoundTrack roundTrack, ClientDice diceChosen,
@@ -64,6 +66,12 @@ public class MoveData {
         this.moveFinished=moveFinished;
     }
 
+    public MoveData(NextAction nextAction, String messageForStop, boolean bothYesAndNo, boolean showBackButton) {
+        this.nextAction = nextAction;
+        this.messageForStop = messageForStop;
+        this.bothYesAndNo = bothYesAndNo;
+        this.showBackButton = showBackButton;
+    }
 
     public MoveData(NextAction nextAction, ClientWpc wpc, ArrayList<ClientDice> extractedDices,
                     ClientRoundTrack roundTrack, ClientDice diceChosen, ClientDiceLocations diceChooenLocation, boolean canceledToolCard){
@@ -195,6 +203,13 @@ public class MoveData {
         this.nextAction=nextAction;
         this.wherePickNewDice=wherePickNewDice;
     }
+
+    public MoveData(NextAction nextAction, ClientDiceLocations wherePickNewDice, ArrayList<ClientDice> extractedDices){
+        this.nextAction=nextAction;
+        this.wherePickNewDice=wherePickNewDice;
+        this.extractedDices=extractedDices;
+    }
+
 
     public void setNextAction(NextAction nextAction) {
         this.nextAction = nextAction;

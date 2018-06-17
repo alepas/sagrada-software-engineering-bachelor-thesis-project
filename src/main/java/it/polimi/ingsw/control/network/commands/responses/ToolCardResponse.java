@@ -15,8 +15,12 @@ public class ToolCardResponse implements Response {
     public final ClientDice diceChosen;
     public final ClientDiceLocations diceChosenLocation;
     public final Exception exception;
+    public final String stringForStopToolCard;
+    public final boolean bothYesAndNo;
+    public final boolean showBackButton;
 
-    public ToolCardResponse(NextAction nextAction, ClientDiceLocations wherePickNewDice, ClientDiceLocations wherePutNewDice, ArrayList<Integer> numbersToChoose, ClientWpc wpc, ArrayList<ClientDice> extractedDices, ClientRoundTrack roundTrack, ClientDice diceChosen, ClientDiceLocations diceChosenLocation, Exception exception) {
+
+    public ToolCardResponse(NextAction nextAction, ClientDiceLocations wherePickNewDice, ClientDiceLocations wherePutNewDice, ArrayList<Integer> numbersToChoose, ClientWpc wpc, ArrayList<ClientDice> extractedDices, ClientRoundTrack roundTrack, ClientDice diceChosen, ClientDiceLocations diceChosenLocation, Exception exception, String stringForStopToolCard, boolean bothYesAndNo, boolean showBackButton) {
         this.nextAction = nextAction;
         this.wherePickNewDice = wherePickNewDice;
         this.wherePutNewDice = wherePutNewDice;
@@ -27,6 +31,9 @@ public class ToolCardResponse implements Response {
         this.diceChosen = diceChosen;
         this.diceChosenLocation = diceChosenLocation;
         this.exception = exception;
+        this.stringForStopToolCard = stringForStopToolCard;
+        this.bothYesAndNo = bothYesAndNo;
+        this.showBackButton = showBackButton;
     }
 
     public ToolCardResponse(Exception exception) {
@@ -40,6 +47,9 @@ public class ToolCardResponse implements Response {
         diceChosen = null;
         wherePutNewDice=null;
         diceChosenLocation=null;
+        stringForStopToolCard = null;
+        bothYesAndNo = false;
+        showBackButton = false;
     }
 
     @Override

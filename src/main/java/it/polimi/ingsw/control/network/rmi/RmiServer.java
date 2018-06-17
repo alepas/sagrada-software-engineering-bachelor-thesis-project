@@ -4,8 +4,8 @@ import it.polimi.ingsw.control.ServerController;
 import it.polimi.ingsw.control.network.commands.responses.FindGameResponse;
 import it.polimi.ingsw.control.network.commands.responses.Response;
 import it.polimi.ingsw.control.network.commands.responses.UpdatedGameResponse;
-import it.polimi.ingsw.model.clientModel.ClientDiceLocations;
 import it.polimi.ingsw.model.clientModel.Position;
+import it.polimi.ingsw.model.clientModel.ToolCardInteruptValues;
 import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
@@ -15,7 +15,6 @@ import it.polimi.ingsw.model.game.Game;
 import it.polimi.ingsw.model.usersdb.DatabaseUsers;
 
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observable;
@@ -127,8 +126,8 @@ public class RmiServer implements RemoteServer, Observer {
     }
 
     @Override
-    public Response stopToolCard(String userToken) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotStopToolCardException, NoToolCardInUseException {
-        return controller.stopToolCard(userToken);
+    public Response interuptToolCard(String userToken, ToolCardInteruptValues value) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotInteruptToolCardException, NoToolCardInUseException {
+        return controller.interuptToolCard(userToken, value);
     }
 
     @Override

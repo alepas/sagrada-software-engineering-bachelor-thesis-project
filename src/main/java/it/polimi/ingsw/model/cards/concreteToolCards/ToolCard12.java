@@ -3,6 +3,7 @@ package it.polimi.ingsw.model.cards.concreteToolCards;
 
 import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.clientModel.Position;
+import it.polimi.ingsw.model.clientModel.ToolCardInteruptValues;
 import it.polimi.ingsw.model.constants.ToolCardConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
@@ -52,6 +53,11 @@ public class ToolCard12 extends ToolCard {
 
     @Override
     public MoveData pickNumber(int number) throws CannotPickNumberException, CannotPerformThisMoveException {
+        return null;
+    }
+
+    @Override
+    public MoveData interuptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException {
         return null;
     }
 

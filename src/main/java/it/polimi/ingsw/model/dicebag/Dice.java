@@ -78,4 +78,28 @@ public class Dice implements Serializable {
         return new Dice(color,number,id);
     }
 
+    public void turnDiceOppositeSide(){
+        switch (this.number){
+            case 1: {
+                this.number = 6;
+                return;
+            }case 2: {
+                this.number = 5;
+                return;
+            } case 3: {
+                this.number = 4;
+                return;
+            } case 4: {
+                this.number = 3;
+                return;
+            } case 5: {
+                this.number = 2;
+                return;
+            } case 6: {
+                this.number = 1;
+                return;
+            }
+        }
+    }
+
 }

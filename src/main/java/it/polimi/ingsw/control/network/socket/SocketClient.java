@@ -3,11 +3,10 @@ package it.polimi.ingsw.control.network.socket;
 import it.polimi.ingsw.control.network.NetworkClient;
 import it.polimi.ingsw.control.network.commands.requests.*;
 import it.polimi.ingsw.control.network.commands.responses.*;
-import it.polimi.ingsw.model.cards.ToolCard;
-import it.polimi.ingsw.model.clientModel.ClientDiceLocations;
 import it.polimi.ingsw.model.clientModel.ClientModel;
 import it.polimi.ingsw.model.clientModel.NextAction;
 import it.polimi.ingsw.model.clientModel.Position;
+import it.polimi.ingsw.model.clientModel.ToolCardInteruptValues;
 import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
@@ -265,6 +264,25 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
         }
     }
 
+    @Override
+    public NextAction interuptToolCard(String userToken, ToolCardInteruptValues value) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotInteruptToolCardException, NoToolCardInUseException {
+        request(new ToolCardInteruptRequest(userToken, value));
+
+        ToolCardResponse response = (ToolCardResponse) waitResponse();
+        assert response != null;
+        Exception e = response.exception;
+
+        if (e != null){
+            if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
+            if (e instanceof PlayerNotAuthorizedException) throw (PlayerNotAuthorizedException) e;
+            if (e instanceof CannotInteruptToolCardException) throw  (CannotInteruptToolCardException) e;
+            if (e instanceof NoToolCardInUseException ) throw  (NoToolCardInUseException) e;
+            return null;
+        } else {
+            return response.nextAction;
+        }
+    }
+
 
     @Override
     public void getUpdatedExtractedDices(String userToken) throws CannotFindPlayerInDatabaseException {
@@ -332,24 +350,6 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
         }
     }
 
-    @Override
-    public NextAction stopToolCard(String userToken) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotStopToolCardException, NoToolCardInUseException {
-        request(new ToolCardStopRequest(userToken));
-
-        ToolCardResponse response = (ToolCardResponse) waitResponse();
-        assert response != null;
-        Exception e = response.exception;
-
-        if (e != null){
-            if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
-            if (e instanceof PlayerNotAuthorizedException) throw (PlayerNotAuthorizedException) e;
-            if (e instanceof CannotStopToolCardException ) throw  (CannotStopToolCardException) e;
-            if (e instanceof NoToolCardInUseException ) throw  (NoToolCardInUseException) e;
-            return null;
-        } else {
-            return response.nextAction;
-        }
-    }
 
     @Override
     public int findAlreadyStartedGame(String userToken) throws CannotFindGameForUserInDatabaseException {

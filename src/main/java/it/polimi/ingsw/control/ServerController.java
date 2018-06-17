@@ -112,9 +112,9 @@ public class ServerController {
         return convertMoveDataToToolCardResponse(player.pickNumberForToolCard(number));
     }
 
-    public Response stopToolCard (String userToken) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotStopToolCardException, NoToolCardInUseException {
+    public Response interuptToolCard(String userToken, ToolCardInteruptValues value) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotInteruptToolCardException, NoToolCardInUseException {
         PlayerInGame currentPlayer=databaseUsers.getPlayerInGameFromToken(userToken);
-        return convertMoveDataToToolCardResponse(currentPlayer.stopToolCard());
+        return convertMoveDataToToolCardResponse(currentPlayer.interuptToolCard(value));
     }
 
 
@@ -194,7 +194,7 @@ public class ServerController {
         tempPrivateObjects.toArray(clientColors);
         MoveData nextActionMove=currentPlayer.getNextMove();
         ToolCardClientNextActionInfo toolCardClientNextActionInfo=new ToolCardClientNextActionInfo(nextActionMove.wherePickNewDice,nextActionMove.wherePutNewDice,
-                nextActionMove.numbersToChoose,nextActionMove.diceChosen, nextActionMove.diceChosenLocation);
+                nextActionMove.numbersToChoose,nextActionMove.diceChosen, nextActionMove.diceChosenLocation, nextActionMove.messageForStop, nextActionMove.bothYesAndNo, nextActionMove.showBackButton);
         return new UpdatedGameResponse(tempGame.getID(),tempGame.numActualPlayers(),tempGame.getNumPlayers(),clientColors,wpcHashMap,clientToolCards,clientPocs,
                 tempGame.getRoundTrack().getCurrentRound(),clientDices,tempGame.getCurrentTurn(),currentPlayer.isActive(),currentPlayer.getFavours(),
                 tempGame.getRoundTrack().getClientRoundTrack(),nextActionMove.nextAction,toolCardClientNextActionInfo);
@@ -224,7 +224,7 @@ public class ServerController {
 
     private ToolCardResponse convertMoveDataToToolCardResponse(MoveData moveData){
         return new ToolCardResponse(moveData.nextAction,moveData.wherePickNewDice,moveData.wherePutNewDice,moveData.numbersToChoose,moveData.wpc,
-                moveData.extractedDices,moveData.roundTrack,moveData.diceChosen,moveData.diceChosenLocation,moveData.exception);
+                moveData.extractedDices,moveData.roundTrack,moveData.diceChosen,moveData.diceChosenLocation,moveData.exception, moveData.messageForStop, moveData.bothYesAndNo,moveData.showBackButton);
     }
 
 

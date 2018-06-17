@@ -67,13 +67,8 @@ public abstract class ToolCard implements Cloneable{
         return new ClientToolCard(id, name, description, used);
     }
 
-    public MoveData stopToolCard() throws CannotStopToolCardException {
-        if (stoppable) {
-            cleanCard();
-            return new MoveData(true);
-        } else throw new CannotStopToolCardException(username, id);
+    public abstract MoveData interuptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException;
 
-    }
 
     public abstract MoveData cancelAction() throws CannotCancelActionException;
 

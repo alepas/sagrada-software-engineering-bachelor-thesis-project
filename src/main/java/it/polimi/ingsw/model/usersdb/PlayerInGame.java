@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model.usersdb;
 
 import it.polimi.ingsw.control.network.commands.notifications.DicePlacedNotification;
-import it.polimi.ingsw.control.network.commands.notifications.PlayerSkipTurnNotification;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.clientModel.*;
@@ -249,15 +248,13 @@ public class PlayerInGame {
 
     }
 
-    public synchronized MoveData stopToolCard() throws PlayerNotAuthorizedException, NoToolCardInUseException, CannotStopToolCardException {
+    public synchronized MoveData interuptToolCard(ToolCardInteruptValues value) throws PlayerNotAuthorizedException, NoToolCardInUseException, CannotInteruptToolCardException {
         if (!active)
             throw new PlayerNotAuthorizedException(username);
         if (toolCardInUse == null)
             throw new NoToolCardInUseException(username);
-        MoveData tempResponse = toolCardInUse.stopToolCard();
-        if (tempResponse.moveFinished == true) {
-            tempResponse.setNextAction(incrementActionInTurn(true));
-        }
+        MoveData tempResponse = toolCardInUse.interuptToolCard(value);
+        updateNextMoveAfterToolCard(tempResponse);
         return tempResponse;
     }
 

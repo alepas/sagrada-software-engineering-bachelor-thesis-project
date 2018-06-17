@@ -236,10 +236,10 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
     }
 
     @Override
-    public Response handle(ToolCardStopRequest toolCardStopRequest) {
+    public Response handle(ToolCardInteruptRequest request) {
         try {
-            return controller.stopToolCard(toolCardStopRequest.userToken);
-        } catch (CannotFindPlayerInDatabaseException | PlayerNotAuthorizedException | CannotStopToolCardException | NoToolCardInUseException e) {
+            return controller.interuptToolCard(request.userToken,request.value );
+        } catch (CannotFindPlayerInDatabaseException | PlayerNotAuthorizedException | CannotInteruptToolCardException | NoToolCardInUseException e) {
             return new ToolCardResponse(e);
         }
     }

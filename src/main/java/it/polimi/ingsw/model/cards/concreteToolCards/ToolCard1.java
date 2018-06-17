@@ -138,6 +138,11 @@ public class ToolCard1 extends ToolCard {
     }
 
     @Override
+    public MoveData interuptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException {
+        throw new CannotInteruptToolCardException(username,id);
+    }
+
+    @Override
     public MoveData placeDice(int diceId, Position pos) throws CannotPerformThisMoveException, CannotPickPositionException, CannotPickDiceException {
         if(currentStatus!=3)
             throw new CannotPerformThisMoveException(currentPlayer.getUser(),2,false);
@@ -233,11 +238,11 @@ public class ToolCard1 extends ToolCard {
         switch (currentStatus){
             case 0: {
                 if (singlePlayerGame)
-                    return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD,ClientDiceLocations.EXTRACTED);
+                    return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD,ClientDiceLocations.EXTRACTED,tempExtractedDices);
                 else return null;
             }
             case 1: return new MoveData(NextAction.SELECT_DICE_TOOLCARD,ClientDiceLocations.EXTRACTED,null,null,tempExtractedDices,null,null, null);
-            case 2: return new MoveData(NextAction.SELECT_NUMBER_TOOLCARD,null,null,null,this.dice.getClientDice(), ClientDiceLocations.EXTRACTED, numbers,false);
+            case 2: return new MoveData(NextAction.SELECT_NUMBER_TOOLCARD,null,tempExtractedDices,null,this.dice.getClientDice(), ClientDiceLocations.EXTRACTED, numbers,false);
 
 
             case 3: return new MoveData(NextAction.PLACE_DICE_TOOLCARD,ClientDiceLocations.EXTRACTED,ClientDiceLocations.WPC,null,tempExtractedDices,null,dice.getClientDice(), ClientDiceLocations.EXTRACTED);

@@ -50,7 +50,7 @@ public class DiceBag {
      *
      * @return the new dice
      */
-     Dice pickDice() {
+     public Dice pickDice() {
         Color color;
         do {
             color = Color.randomColor();

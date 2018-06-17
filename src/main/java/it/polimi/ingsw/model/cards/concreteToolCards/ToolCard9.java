@@ -169,7 +169,7 @@ public class ToolCard9 extends ToolCard {
         switch (currentStatus) {
             case 0: {
                 if (singlePlayerGame)
-                    return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD, ClientDiceLocations.EXTRACTED);
+                    return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD, ClientDiceLocations.EXTRACTED,tempExtractedDices);
                 else return null;
             }
             case 1:
@@ -179,4 +179,9 @@ public class ToolCard9 extends ToolCard {
         return null;
     }
 
+
+    @Override
+    public MoveData interuptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException {
+        throw new CannotInteruptToolCardException(username,id);
+    }
 }

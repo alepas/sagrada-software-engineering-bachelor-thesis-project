@@ -45,6 +45,7 @@ public class ToolCard2 extends ToolCard {
     }
 
 
+
     @Override
     public MoveData setCard(PlayerInGame player) throws CannotUseToolCardException {
         if ((currentPlayer != null) || (currentStatus != 0)) {
@@ -175,7 +176,7 @@ public class ToolCard2 extends ToolCard {
         switch (currentStatus){
             case 0: {
                 if (singlePlayerGame)
-                    return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD,ClientDiceLocations.EXTRACTED);
+                    return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD,ClientDiceLocations.EXTRACTED,tempExtractedDices);
                 else return null;
             }
             case 1: return new MoveData(NextAction.PLACE_DICE_TOOLCARD,ClientDiceLocations.WPC,ClientDiceLocations.WPC,null,tempExtractedDices,null,null, null);
@@ -184,5 +185,10 @@ public class ToolCard2 extends ToolCard {
         return null;
     }
 
+
+    @Override
+    public MoveData interuptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException {
+        throw new CannotInteruptToolCardException(username,id);
+    }
 
 }

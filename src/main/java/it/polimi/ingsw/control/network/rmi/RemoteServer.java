@@ -1,8 +1,8 @@
 package it.polimi.ingsw.control.network.rmi;
 
 import it.polimi.ingsw.control.network.commands.responses.Response;
-import it.polimi.ingsw.model.clientModel.ClientDiceLocations;
 import it.polimi.ingsw.model.clientModel.Position;
+import it.polimi.ingsw.model.clientModel.ToolCardInteruptValues;
 import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
@@ -43,7 +43,7 @@ public interface RemoteServer extends Remote {
 
     Response getUpdatedGame(String userToken) throws RemoteException, CannotFindPlayerInDatabaseException;
 
-    Response stopToolCard (String userToken) throws RemoteException, CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotStopToolCardException, NoToolCardInUseException;
+    Response interuptToolCard(String userToken, ToolCardInteruptValues value) throws RemoteException, CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotInteruptToolCardException, NoToolCardInUseException;
 
     Response cancelAction (String userToken) throws RemoteException, CannotCancelActionException, PlayerNotAuthorizedException, CannotFindPlayerInDatabaseException;
 
