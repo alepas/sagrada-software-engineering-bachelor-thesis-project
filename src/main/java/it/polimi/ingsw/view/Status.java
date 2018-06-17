@@ -20,6 +20,7 @@ public enum Status {
     PLACE_DICE,
     PLACE_DICE_TOOLCARD,
     INTERRUPT_TOOLCARD,
+    CANCEL_ACTION_TOOLCARD,
     SELECT_DICE_TOOLCARD,
     SELECT_NUMBER_TOOLCARD,
     MENU_ALL,
@@ -35,6 +36,8 @@ public enum Status {
                 return PLACE_DICE_TOOLCARD;
             case INTERRUPT_TOOLCARD:
                 return INTERRUPT_TOOLCARD;
+            case CANCEL_ACTION_TOOLCARD:
+                return CANCEL_ACTION_TOOLCARD;
             case SELECT_DICE_TOOLCARD:
                 return SELECT_DICE_TOOLCARD;
             case SELECT_NUMBER_TOOLCARD:

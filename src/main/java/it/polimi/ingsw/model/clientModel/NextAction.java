@@ -5,6 +5,7 @@ import java.io.Serializable;
 public enum NextAction implements Serializable {
     PLACE_DICE_TOOLCARD,
     INTERRUPT_TOOLCARD,
+    CANCEL_ACTION_TOOLCARD,
     SELECT_DICE_TOOLCARD,
     SELECT_NUMBER_TOOLCARD,
     MENU_ALL,

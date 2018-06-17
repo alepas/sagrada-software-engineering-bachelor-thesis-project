@@ -52,9 +52,9 @@ public class Cell {
      *
      * @return the dice removed in a position
      */
-    public Dice removeDice ( ){
-        Dice removedDice = getDice();
-        dice = null;
+    Dice removeDice(){
+        Dice removedDice = this.getDice();
+        this.dice = null;
         return removedDice;
     }
 }

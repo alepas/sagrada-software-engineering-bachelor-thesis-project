@@ -1,16 +1,16 @@
 package it.polimi.ingsw.control.network.commands.requests;
 
 import it.polimi.ingsw.control.network.commands.responses.Response;
+import it.polimi.ingsw.model.clientModel.ToolCardInteruptValues;
 
-public class ToolCardStopRequest implements Request {
+public class ToolCardInteruptRequest implements Request {
     public final String userToken;
+    public final ToolCardInteruptValues value;
 
-
-    public ToolCardStopRequest(String userToken) {
+    public ToolCardInteruptRequest(String userToken, ToolCardInteruptValues value) {
         this.userToken = userToken;
-
+        this.value = value;
     }
-
 
 
 

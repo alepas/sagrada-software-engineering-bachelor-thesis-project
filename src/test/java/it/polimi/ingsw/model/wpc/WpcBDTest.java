@@ -1,15 +1,18 @@
 package it.polimi.ingsw.model.wpc;
 
 
-import org.junit.Assert;
+import it.polimi.ingsw.model.clientModel.ClientWpc;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 
 public class WpcBDTest {
     static private WpcDB allWpc0, allWpc1;
-    private Wpc wpc;
 
     @Before
     public void Before(){
@@ -17,13 +20,35 @@ public class WpcBDTest {
         allWpc1 = WpcDB.getInstance("src/main/resources/wpc/wpc_schema");
     }
 
+    /**
+     * Tests if it read it create a correct instance and if it reads and stores in a correct way the wpcs
+     */
     @Test
     public void getInstanceTest() {
-        Assert.assertNotNull(allWpc0);
-        Assert.assertNotNull(allWpc1);
-        Assert.assertEquals(allWpc0, allWpc1);
-        allWpc1.getWpcIDs();
-        allWpc1.getWpcByID("10");
+        assertNotNull(allWpc0);
+        assertNotNull(allWpc1);
+        assertEquals(allWpc0, allWpc1);
+
+        assertEquals(24, allWpc1.getWpcIDs().size());
+        assertEquals(5, allWpc1.getWpcByID("1").getFavours());
+
+        ClientWpc clientWpc = allWpc1.getClientWpcByID("14");
+        Wpc wpc = allWpc1.getWpcByID("14");
+
+        assertEquals(wpc.getId(), clientWpc.getWpcID());
+        assertEquals(wpc.getFavours(), clientWpc.getFavours());
+
+        for(int i = 0; i< 20; i ++){
+            assertEquals(wpc.getClientWpc().getSchema().get(i).getCellColor(), clientWpc.getSchema().get(i).getCellColor());
+            assertEquals(wpc.getClientWpc().getSchema().get(i).getCellNumber(), clientWpc.getSchema().get(i).getCellNumber());
+        }
+
+        for(int j = 0; j < 24; j++){
+            assertTrue( Integer.parseInt(allWpc1.getWpcIDs().get(j)) <= 24 );
+            assertTrue(Integer.parseInt(allWpc1.getWpcIDs().get(j)) > 0);
+        }
+
     }
+
 
 }

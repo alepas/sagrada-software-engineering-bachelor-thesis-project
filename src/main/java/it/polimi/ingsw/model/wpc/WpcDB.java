@@ -21,16 +21,20 @@ public class WpcDB {
     private HashMap<String, Wpc> map;
 
     public static WpcDB getInstance(){
-        if (instance==null) instance = new WpcDB("src/main/resources/wpc/wpc_schema");
+        if (instance == null) instance = new WpcDB("src/main/resources/wpc/wpc_schema");
         return instance;
 
     }
 
     public static WpcDB getInstance(String pathOfWpcFile){
-        if (instance==null) instance = new WpcDB(pathOfWpcFile);
+        if (instance == null) instance = new WpcDB(pathOfWpcFile);
         return instance;
     }
 
+    /**
+     * Reads the XML file and for each node saves the attributes. At the end it creates wpc objects
+     * @param pathFile is the path where is the XML file
+     */
     private WpcDB(String pathFile){
         map = new HashMap<>();
 
@@ -139,27 +143,18 @@ public class WpcDB {
                     schema.clear();
                 }
             }
-        }catch (SAXException e) {
-            e.printStackTrace();
-        }catch (IOException e) {
-            e.printStackTrace();
-        }catch (Exception e){
+        } catch (Exception e){
             e.printStackTrace();
         }
     }
 
 
+    /**
+     * @param ID is the id of the chosen schema
+     * @return the copy of the schema related to the chosen id
+     */
     public Wpc getWpcByID(String ID){
-        //dato l'id selezionato dal giocatore si chiama il costruttore che genera una copia della wpc
         Wpc originalWpc=map.get(ID);
-       /* for(Cell cell: originalWpc.schema){
-            System.out.println("riga: "+ cell.getCellPosition().getRow());
-            System.out.println("colonna: "+ cell.getCellPosition().getColumn());
-            System.out.println("colore: "+ cell.getColor());
-            System.out.println("numero: "+ cell.getNumber());
-            System.out.println("---------");
-        }*/
-
         return originalWpc.copyWpc();
     }
 
@@ -168,10 +163,7 @@ public class WpcDB {
     }
 
     public ArrayList<String> getWpcIDs() {
-        ArrayList<String> ids= new ArrayList(map.keySet());
-       /* for(String s: a)
-            System.out.println(s);*/
-        return ids;
+        return (ArrayList<String>) new ArrayList(map.keySet());
     }
 
 }

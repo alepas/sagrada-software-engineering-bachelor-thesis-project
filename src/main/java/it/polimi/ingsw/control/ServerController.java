@@ -102,8 +102,9 @@ public class ServerController {
     }
 
     public Response placeDiceForToolCard(String userToken, int diceId, Position position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException, CannotPickDiceException {
+        Position pos = null;
         PlayerInGame player=databaseUsers.getPlayerInGameFromToken(userToken);
-        Position pos=new Position(position.getRow(),position.getColumn());
+        if(position != null) pos=new Position(position.getRow(),position.getColumn());
         return convertMoveDataToToolCardResponse(player.placeDiceForToolCard(diceId, pos));
     }
 

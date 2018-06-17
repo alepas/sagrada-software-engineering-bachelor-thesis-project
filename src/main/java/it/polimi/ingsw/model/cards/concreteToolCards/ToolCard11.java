@@ -155,9 +155,11 @@ public class ToolCard11 extends ToolCard {
             currentGame.getDiceBag().reInsertDice(oldDiceExtracted);
             currentGame.getExtractedDices().remove(oldDiceExtracted);
             chosenDice = currentGame.getDiceBag().pickDice();
+            System.out.println(chosenDice.getDiceColor());
+            System.out.println(chosenDice.getDiceNumber());
             currentGame.getExtractedDices().add(chosenDice);
             updateClientExtractedDices();
-            return new MoveData(NextAction.SELECT_NUMBER_TOOLCARD, null, null, null, chosenDice.getClientDice(), ClientDiceLocations.EXTRACTED, numbers, false);
+            return new MoveData(NextAction.SELECT_NUMBER_TOOLCARD, null, tempExtractedDices, null, chosenDice.getClientDice(), ClientDiceLocations.EXTRACTED, numbers, false);
         }
 
         if (currentStatus == 3) {

@@ -1,23 +1,31 @@
-package it.polimi.ingsw.model.pocTest;
+package it.polimi.ingsw.model.cards.concretePublicObjectiveCards;
 
-
-import it.polimi.ingsw.model.cards.concretePublicObjectiveCards.PublicObjectiveCard9;
-import it.polimi.ingsw.model.constants.POCConstants;
+import it.polimi.ingsw.model.wpc.Wpc;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
-import it.polimi.ingsw.model.wpc.Wpc;
-import org.junit.Assert;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 
+import static it.polimi.ingsw.model.constants.POCConstants.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class Poc9Test {
+public class PocTest {
+    private PublicObjectiveCard1 card1;
+    private PublicObjectiveCard2 card2;
+    private PublicObjectiveCard3 card3;
+    private PublicObjectiveCard4 card4;
+    private PublicObjectiveCard5 card5;
+    private PublicObjectiveCard6 card6;
+    private PublicObjectiveCard7 card7;
+    private PublicObjectiveCard8 card8;
+    private PublicObjectiveCard9 card9;
+    private PublicObjectiveCard10 card10;
 
-    private PublicObjectiveCard9 card;
     private Wpc wpc;
     private ArrayList<Dice> wpcDices = new ArrayList<>();
     private ArrayList<Dice> col0Dices = new ArrayList<>();
@@ -30,12 +38,23 @@ public class Poc9Test {
     private ArrayList<Dice> row2Dices = new ArrayList<>();
     private ArrayList<Dice> row3Dices = new ArrayList<>();
 
+    /**
+     * Creates a mock wpc, not the schema but all dices and thei position in the schema
+     */
     @Before
     public void before(){
-        card = new PublicObjectiveCard9();
+        card1 = new PublicObjectiveCard1();
+        card2 = new PublicObjectiveCard2();
+        card3 = new PublicObjectiveCard3();
+        card4 = new PublicObjectiveCard4();
+        card5 = new PublicObjectiveCard5();
+        card6 = new PublicObjectiveCard6();
+        card7 = new PublicObjectiveCard7();
+        card8 = new PublicObjectiveCard8();
+        card9 = new PublicObjectiveCard9();
+        card10 = new PublicObjectiveCard10();
 
         wpc = mock(Wpc.class);
-
 
 
         Dice dice0 = mock(Dice.class);
@@ -138,7 +157,7 @@ public class Poc9Test {
         wpcDices.add(dice17);
 
         Dice dice18 = mock(Dice.class);
-        when(dice18.getDiceColor()).thenReturn(Color.RED);
+        when(dice18.getDiceColor()).thenReturn(Color.GREEN);
         when(dice18.getDiceNumber()).thenReturn(4);
         wpcDices.add(dice18);
 
@@ -148,6 +167,7 @@ public class Poc9Test {
         wpcDices.add(dice19);
 
         when(wpc.getWpcDices()).thenReturn(wpcDices);
+
 
         col0Dices.clear();
         col0Dices.add(dice0);
@@ -194,9 +214,9 @@ public class Poc9Test {
 
         row1Dices.clear();
         row1Dices.add(dice5);
-        row1Dices.add(null);
+        row1Dices.add(dice6);
         row1Dices.add(dice7);
-        row1Dices.add(null);
+        row1Dices.add(dice8);
         row1Dices.add(dice9);
         when(wpc.getRowDices(1)).thenReturn(row1Dices);
 
@@ -217,6 +237,7 @@ public class Poc9Test {
         when(wpc.getRowDices(3)).thenReturn(row3Dices);
 
 
+
         when(wpc.numDicesOfColor(Color.BLUE)).thenReturn(3);
         when(wpc.numDicesOfColor(Color.RED)).thenReturn(4);
         when(wpc.numDicesOfColor(Color.YELLOW)).thenReturn(3);
@@ -231,8 +252,75 @@ public class Poc9Test {
         when(wpc.numDicesOfShade(6)).thenReturn(4);
     }
 
+    /**
+     * Tests if, given a wpc at the end of the game, the related method counts in a correct way points related to the
+     * number of all different colors in a same row.
+     */
     @Test
-    public void poc9Test(){
-        Assert.assertEquals(7*POCConstants.POC9_SCORE, card.calculateScore(wpc));
+    public void poc1Test(){
+        assertEquals(2*POC1_SCORE, card1.calculateScore(wpc));
     }
+
+    /**
+     * Tests if, given a wpc at the end of the game, the related method counts in a correct way points related to the
+     * number of all different colors in a same column.
+     */
+    @Test
+    public void poc2Test(){ assertEquals(POC2_SCORE, card2.calculateScore(wpc)); }
+
+    /**
+     * Tests if, given a wpc at the end of the game, the related method counts in a correct way points related to the
+     * number of all different numbers in a same row.
+     */
+    @Test
+    public void poc3Test() { assertEquals(2*POC3_SCORE, card3.calculateScore(wpc)); }
+
+    /**
+     * Tests if, given a wpc at the end of the game, the related method counts in a correct way points related to the
+     * number of all different numbers in a same column.
+     */
+    @Test
+    public void poc4Test(){ assertEquals(2*POC4_SCORE, card4.calculateScore(wpc)); }
+
+    /**
+     * Tests if, given a wpc at the end of the game, the related method counts in a correct way points related to the
+     * number of tuplas of dices with 1 and 2.
+     */
+    @Test
+    public void poc5Test(){ assertEquals(2*POC5_SCORE, card5.calculateScore(wpc)); }
+
+    /**
+     * Tests if, given a wpc at the end of the game, the related method counts in a correct way points related to the
+     * number of tuplas of dices with 3 and 4.
+     */
+    @Test
+    public void poc6Test(){ assertEquals( 2*POC6_SCORE, card6.calculateScore(wpc));}
+
+    /**
+     * Tests if, given a wpc at the end of the game, the related method counts in a correct way points related to the
+     * number of tuplas of dices with 5 and 6.
+     */
+    @Test
+    public void poc7Test(){ assertEquals(2*POC7_SCORE, card7.calculateScore(wpc));}
+
+    /**
+     * Tests if, given a wpc at the end of the game, the related method counts in a correct way points related to the
+     * number of groups of dices with all different numbers.
+     */
+    @Test
+    public void poc8Test(){assertEquals(2*POC8_SCORE, card8.calculateScore(wpc));}
+
+    /**
+     * Tests if, given a wpc at the end of the game, the related method counts in a correct way points related to the
+     * number of dices of the same color on the same diagonal.
+     */
+    @Test
+    public void poc9Test(){assertEquals(9*POC9_SCORE, card9.calculateScore(wpc));}
+
+    /**
+     * Tests if, given a wpc at the end of the game, the related method counts in a correct way points related to the
+     * number of groups of dices with all different colors.
+     */
+    @Test
+    public void poc10Test(){assertEquals(2*POC10_SCORE, card10.calculateScore(wpc));}
 }
