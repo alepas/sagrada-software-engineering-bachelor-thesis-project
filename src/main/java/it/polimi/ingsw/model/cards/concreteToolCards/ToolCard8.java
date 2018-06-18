@@ -24,7 +24,6 @@ public class ToolCard8 extends ToolCard {
         this.colorForDiceSingleUser = Color.RED;
         this.allowPlaceDiceAfterCard = false;
         this.cardBlocksNextTurn = true;
-        this.maxCancelStatus = 3;
         this.cardOnlyInFirstMove = false;
         this.used = false;
         this.diceForSingleUser = null;
@@ -62,7 +61,6 @@ public class ToolCard8 extends ToolCard {
         this.currentGame = player.getGame();
         this.username = player.getUser();
         currentPlayer.setAllowPlaceDiceAfterCard(allowPlaceDiceAfterCard);
-        this.moveCancellable = true;
         if (cardBlocksNextTurn) {
             currentPlayer.setCardUsedBlockingTurn(this);
         }
@@ -93,7 +91,6 @@ public class ToolCard8 extends ToolCard {
                 throw new CannotPickPositionException(username, pos);
             }
             currentPlayer.getUpdatedExtractedDices().remove(tempDice);
-            this.moveCancellable = false;
             updateClientWPC();
             updateClientExtractedDices();
             movesNotifications.add(new ToolCardDicePlacedNotification(username, tempDice.getClientDice(), pos));
@@ -118,7 +115,6 @@ public class ToolCard8 extends ToolCard {
                 throw new CannotPickPositionException(username, pos);
             }
             currentPlayer.getUpdatedExtractedDices().remove(tempDice);
-            this.moveCancellable = false;
             updateClientWPC();
             updateClientExtractedDices();
             movesNotifications.add(new ToolCardDicePlacedNotification(username, tempDice.getClientDice(), pos));
@@ -140,7 +136,6 @@ public class ToolCard8 extends ToolCard {
             if (tempDice.getDiceColor() != colorForDiceSingleUser)
                 throw new CannotPickDiceException(username, tempDice.getDiceNumber(), tempDice.getDiceColor(), ClientDiceLocations.EXTRACTED, 1);
             this.currentStatus = 1;
-            moveCancellable = true;
             this.diceForSingleUser = tempDice;
             currentGame.getExtractedDices().remove(this.diceForSingleUser);
             updateClientExtractedDices();
@@ -162,7 +157,7 @@ public class ToolCard8 extends ToolCard {
                     cleanCard();
                     return new MoveData(true, true);
                 }
-                return null;
+                throw new CannotCancelActionException(username, id, 2);
             }
             case 1: {
                 if (!singlePlayerGame) {

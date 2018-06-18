@@ -29,7 +29,6 @@ public class ToolCard4 extends ToolCard {
         this.colorForDiceSingleUser = Color.YELLOW;
         this.allowPlaceDiceAfterCard = true;
         this.cardBlocksNextTurn = false;
-        this.maxCancelStatus = 2;
         this.cardOnlyInFirstMove = false;
         this.used = false;
         this.diceForSingleUser = null;
@@ -67,7 +66,6 @@ public class ToolCard4 extends ToolCard {
         this.currentGame = player.getGame();
         this.username = player.getUser();
         currentPlayer.setAllowPlaceDiceAfterCard(allowPlaceDiceAfterCard);
-        this.moveCancellable=true;
         if (cardBlocksNextTurn) {
             currentPlayer.setCardUsedBlockingTurn(this);
         }
@@ -91,7 +89,6 @@ public class ToolCard4 extends ToolCard {
             if (tempDice.getDiceColor() != colorForDiceSingleUser)
                 throw new CannotPickDiceException(username, tempDice.getDiceNumber(), tempDice.getDiceColor(), ClientDiceLocations.EXTRACTED, 1);
             this.currentStatus = 1;
-            this.moveCancellable=true;
             this.diceForSingleUser = tempDice;
             currentGame.getExtractedDices().remove(this.diceForSingleUser);
             updateClientExtractedDices();
@@ -121,7 +118,6 @@ public class ToolCard4 extends ToolCard {
             }
             firstDiceFinalPos=pos;
             this.currentStatus=2;
-            this.moveCancellable=true;
             updateClientWPC();
             movesNotifications.add(new ToolCardDicePlacedNotification(username, tempDice.getClientDice(), pos));
             return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.WPC, ClientDiceLocations.WPC, tempClientWpc, null, null, null, null);
@@ -141,7 +137,6 @@ public class ToolCard4 extends ToolCard {
             }
             this.used = true;
             updateClientWPC();
-            this.moveCancellable=false;
             movesNotifications.add(new ToolCardDicePlacedNotification(username, tempDice.getClientDice(), pos));
             currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications,tempClientWpc,tempExtractedDices,null));
             ClientWpc tempWpc = tempClientWpc;
@@ -163,7 +158,7 @@ public class ToolCard4 extends ToolCard {
                     cleanCard();
                     return new MoveData(true,true);
                 }
-                return null;
+                throw new CannotCancelActionException(username, id, 2);
             }
             case 1: {
                 if (!singlePlayerGame){

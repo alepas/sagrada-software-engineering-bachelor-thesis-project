@@ -23,13 +23,14 @@ public class CannotCancelActionException extends Exception{
         String temp;
         switch (mode) {
             case 0:
-                return "Can't cancelCard the current action for user " + user;
+                return "Impossibile cancellare l'azione per il giocatore corrente: " + user;
             case 1:
-                return "Can't cancelCard the current action for user " + user + " because you have to complete the action for this tool card: " + cardID;
+                return "Impossibile cancellare l'azione per il giocatore corrente (" + user + ").\r\n Le azioni richieste dalla toolcard " + cardID+" devono essere completate.";
             case 2:
-                return "Can't cancelCard the setCard of the Tool Card " + cardID +" for the user " + user;
+                return "Impossibile cancellare la toolcard " + cardID +" per il giocatore " + user;
             case 3:
-                return "Can't cancelCard the current action for user " + user + " due to an internal problem in card: " + cardID;
+                return "Impossibile cancellare l'azione per il giocatore " + user + " a causa di un problema interno nella toolcard: " + cardID;
+
 
         }
         return null;

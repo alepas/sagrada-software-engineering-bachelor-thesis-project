@@ -27,7 +27,6 @@ public class ToolCard5 extends ToolCard {
         this.colorForDiceSingleUser = Color.GREEN;
         this.allowPlaceDiceAfterCard = false;
         this.cardBlocksNextTurn = false;
-        this.maxCancelStatus = 3;
         this.cardOnlyInFirstMove = true;
         this.used = false;
         this.diceForSingleUser = null;
@@ -66,7 +65,6 @@ public class ToolCard5 extends ToolCard {
         this.currentGame = player.getGame();
         this.username = player.getUser();
         currentPlayer.setAllowPlaceDiceAfterCard(allowPlaceDiceAfterCard);
-        this.moveCancellable=true;
         if (cardBlocksNextTurn) {
             currentPlayer.setCardUsedBlockingTurn(this);
         }
@@ -90,7 +88,7 @@ public class ToolCard5 extends ToolCard {
             if (tempDice.getDiceColor() != colorForDiceSingleUser)
                 throw new CannotPickDiceException(username, tempDice.getDiceNumber(), tempDice.getDiceColor(), ClientDiceLocations.EXTRACTED, 1);
             this.currentStatus = 1;
-            this.moveCancellable=true;
+
             this.diceForSingleUser = tempDice;
             currentGame.getExtractedDices().remove(this.diceForSingleUser);
             updateClientExtractedDices();
@@ -98,12 +96,12 @@ public class ToolCard5 extends ToolCard {
         } else if (currentStatus == 1) {
             this.fromExtracted = currentPlayer.dicePresentInLocation(diceId, ClientDiceLocations.EXTRACTED);
             currentStatus = 2;
-            this.moveCancellable=true;
+
             return new MoveData(NextAction.SELECT_DICE_TOOLCARD, ClientDiceLocations.ROUNDTRACK, null, null, null, null, fromExtracted.getDice().getClientDice(), ClientDiceLocations.EXTRACTED);
         } else if (currentStatus == 2) {
             this.fromRoundTrack = currentPlayer.dicePresentInLocation(diceId, ClientDiceLocations.ROUNDTRACK);
             currentStatus = 3;
-            this.moveCancellable=true;
+
             currentGame.getExtractedDices().remove(fromExtracted.getDice());
             currentGame.getRoundTrack().swapDice(fromExtracted.getDice(), fromRoundTrack.getPosition());
             currentGame.getExtractedDices().add(fromRoundTrack.getDice());
@@ -132,7 +130,7 @@ public class ToolCard5 extends ToolCard {
             throw new CannotPickPositionException(username, pos);
         currentGame.getExtractedDices().remove(this.fromRoundTrack.getDice());
         currentStatus = 4;
-        this.moveCancellable=false;
+
         this.used = true;
         updateClientWPC();
         updateClientExtractedDices();
@@ -153,7 +151,7 @@ public class ToolCard5 extends ToolCard {
                     cleanCard();
                     return new MoveData(true,true);
                 }
-                return null;
+                throw new CannotCancelActionException(username, id, 2);
             }
             case 1: {
                 if (!singlePlayerGame){

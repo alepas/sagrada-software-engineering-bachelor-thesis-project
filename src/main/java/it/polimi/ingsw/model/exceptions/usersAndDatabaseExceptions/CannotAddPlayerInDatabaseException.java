@@ -10,7 +10,7 @@ public class CannotAddPlayerInDatabaseException extends Exception{
     public String getMessage() {
 
 
-        return "There has been an internal problem adding the current player in game";
+        return "Impossibile inserire il player corrente nella partita a causa di un errore interno.";
     }
 
 

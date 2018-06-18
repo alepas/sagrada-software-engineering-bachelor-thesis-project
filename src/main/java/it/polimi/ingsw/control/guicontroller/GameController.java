@@ -1254,6 +1254,8 @@ public class GameController implements Observer, NotificationHandler {
      * different parameter.
      */
     private void createAlert() {
+        updateGraphicsCurrentUser();
+        isChosenDiceIdActive();
         ToolCardClientNextActionInfo info = clientModel.getToolCardClientNextActionInfo();
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -1261,17 +1263,25 @@ public class GameController implements Observer, NotificationHandler {
         //alert.getDialogPane().setUndecorated(true);
         ButtonType yesButton = new ButtonType("Si");
         ButtonType noButton = new ButtonType("No");
-        ButtonType backButton = new ButtonType("Torna Indietro");
+        ButtonType okButton=new ButtonType("OK");
+        ButtonType backButton = new ButtonType("Indietro");
         alert.setContentText(info.stringForStopToolCard);
+        System.out.println(info.showBackButton);
 
-        if (info.showBackButton) alert.getButtonTypes().setAll(backButton);
-        else if (info.bothYesAndNo) alert.getButtonTypes().setAll(yesButton, noButton);
+
+        if (info.bothYesAndNo&&info.showBackButton) alert.getButtonTypes().setAll(yesButton, noButton, backButton);
+        if (info.bothYesAndNo&&!info.showBackButton) alert.getButtonTypes().setAll(yesButton, noButton);
+        if (!info.bothYesAndNo&&info.showBackButton) alert.getButtonTypes().setAll(okButton, backButton);
+        if (!info.bothYesAndNo&&!info.showBackButton) alert.getButtonTypes().setAll(okButton);
+
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == yesButton) interruptToolCard(YES);
         else if (result.get() == noButton) interruptToolCard(NO);
-        else if (result.get() == backButton) interruptToolCard(OK);
+        else if (result.get() == okButton) interruptToolCard(OK);
+        else if (result.get() == backButton) stateAction(CANCEL_ACTION_TOOLCARD);
     }
+
 
     private void interruptToolCard(ToolCardInteruptValues value){
         NextAction nextAction = lastNextAction;

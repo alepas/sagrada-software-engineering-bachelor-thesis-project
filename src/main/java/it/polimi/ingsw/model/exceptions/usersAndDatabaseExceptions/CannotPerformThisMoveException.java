@@ -16,21 +16,22 @@ public class CannotPerformThisMoveException extends Exception{
     public String getMessage() {
         String nameOfMove;
         if (endTurn)
-            nameOfMove="end the current turn";
-        else nameOfMove="perform this move";
+            nameOfMove="terminare il turno corrente";
+        else nameOfMove="eseguire la mossa";
 
         if (cause==0)
-            return "Can't "+nameOfMove+" for "+user+" because there is a move pending: placing a dice. Complete or cancelCard this move befor end the turn.";
+            return "Impossibile "+nameOfMove+" per il giocatore "+user+".\r\nC'è una mossa che deve essere terminata: posizionare un dado. Completala o cancella la mossa per terminare il turno.";
 
         else if (cause==1)
-            return "Can't "+nameOfMove+" for "+user+" because there is a move pending: using a card. Complete or cancelCard this move befor end the turn.";
+            return "Impossibile "+nameOfMove+" per il giocatore "+user+"\n" +
+                    "C'è una mossa che deve essere terminata: stai utilizzando una toolcard. Completala o cancella la ToolCard per terminare il turno.";
         else if (cause==2)
-            return "Can't perform this move because it's unavailable right now. Follow the steps on screen";
+            return "Impossibile eseguire questa mossa perchè non è disponibile in questo momento.\r\nSegui i prossimi passi visualizzati a schermo";
 
         else if (cause==3)
-            return "Can't perform this move because you had already done it in this turn. Follow the steps on screen";
+            return "Impossibile eseguire questa mossa perchè è già stata eseguita nel turno corrente.\r\nSegui i prossimi passi visualizzati a schermo";
 
-        return "Can't "+nameOfMove+" for "+user+" because it's impossible.";
+        return "Impossibile "+nameOfMove+" per il giocatore "+user+".";
     }
 
 

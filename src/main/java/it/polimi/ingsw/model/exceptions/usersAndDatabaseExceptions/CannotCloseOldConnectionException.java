@@ -11,12 +11,12 @@ public class CannotCloseOldConnectionException extends Exception{
     @Override
     public String getMessage() {
         if (cause==0)
-            return "There has been an internal problem closing the old connection for the user "+user+".";
+            return "C'è stato un problema nella chiusura della connessione precedente per l'utente "+user+".";
 
         else if (cause==1)
-            return "Can't find old socket connection for user "+user+".";
+            return "Impossibile trovare una connessione precedente attraverso Socket per l'utente "+user+".";
 
-        return "There has been an internal problem closing the old connection for the user "+user+".";
+        return "C'è stato un problema interno nel chiudere la precedente connessione per l'utente "+user+".";
     }
 
 

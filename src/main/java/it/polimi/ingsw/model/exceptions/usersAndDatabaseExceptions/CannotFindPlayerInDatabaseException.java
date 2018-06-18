@@ -10,7 +10,7 @@ public class CannotFindPlayerInDatabaseException extends Exception{
     public String getMessage() {
 
 
-        return "There has been an internal problem finding the current player in game";
+        return "Impossibile trovare il giocatore nel database.";
     }
 
 

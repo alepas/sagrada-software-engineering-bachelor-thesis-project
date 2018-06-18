@@ -8,7 +8,7 @@ public class PlayerNotAuthorizedException extends Exception{
     }
     @Override
     public String getMessage() {
-       return "The player "+user+" cannot do this action right now. The current turn is of another player";
+       return "Il giocatore "+user+" non può eseguire azioni in questo momento.\r\nÈ il turno di un altro giocatore.";
     }
 
 

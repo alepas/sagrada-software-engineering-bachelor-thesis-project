@@ -12,7 +12,7 @@ public class CannotPickPositionException extends Exception{
     }
     @Override
     public String getMessage() {
-        return "Position not valid";
+        return "La posizione scelta non è valida.";
 
     }
 

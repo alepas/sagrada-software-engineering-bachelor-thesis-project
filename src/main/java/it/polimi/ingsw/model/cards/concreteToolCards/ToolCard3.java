@@ -24,7 +24,6 @@ public class ToolCard3 extends ToolCard {
         this.colorForDiceSingleUser = Color.RED;
         this.allowPlaceDiceAfterCard = true;
         this.cardBlocksNextTurn = false;
-        this.maxCancelStatus = 1;
         this.cardOnlyInFirstMove = false;
         this.used = false;
         this.diceForSingleUser = null;
@@ -61,7 +60,6 @@ public class ToolCard3 extends ToolCard {
         this.currentGame = player.getGame();
         this.username = player.getUser();
         currentPlayer.setAllowPlaceDiceAfterCard(allowPlaceDiceAfterCard);
-        this.moveCancellable=true;
         if (cardBlocksNextTurn) {
             currentPlayer.setCardUsedBlockingTurn(this);
         }
@@ -86,7 +84,6 @@ public class ToolCard3 extends ToolCard {
             if (tempDice.getDiceColor()!=colorForDiceSingleUser)
                 throw new CannotPickDiceException(username, tempDice.getDiceNumber(), tempDice.getDiceColor(),ClientDiceLocations.EXTRACTED, 1);
             this.currentStatus = 1;
-            this.moveCancellable=true;
             this.diceForSingleUser= tempDice;
             currentGame.getExtractedDices().remove(this.diceForSingleUser);
             updateClientExtractedDices();
@@ -134,7 +131,7 @@ public class ToolCard3 extends ToolCard {
                     cleanCard();
                     return new MoveData(true,true);
                 }
-                return null;
+                throw new CannotCancelActionException(username, id, 2);
             }
             case 1: {
                 if (!singlePlayerGame){

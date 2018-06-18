@@ -8,7 +8,7 @@ public class CannotFindUserInDBException extends Exception{
     }
     @Override
     public String getMessage() {
-       return "Can't find the User "+user;
+       return "Impossibile trovare l'utente "+user+" nel database.";
     }
 
 

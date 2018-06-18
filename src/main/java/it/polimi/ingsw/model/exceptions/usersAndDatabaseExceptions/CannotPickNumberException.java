@@ -10,7 +10,7 @@ public class CannotPickNumberException extends Exception{
     }
     @Override
     public String getMessage() {
-        return "Can't pick the color";
+        return "Impossibile selezionare il numero "+number+".";
 
     }
 
