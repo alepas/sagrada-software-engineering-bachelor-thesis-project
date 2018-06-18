@@ -10,14 +10,22 @@ import it.polimi.ingsw.model.wpc.Wpc;
 import java.util.ArrayList;
 
 public class PublicObjectiveCard1 extends PublicObjectiveCard {
-    //COLORI DIVERSI - RIGA
 
+    /**
+     * Constructor of POC 1.
+     */
     public PublicObjectiveCard1(){
         this.id = POCConstants.POC1_ID;
         this.name = POCConstants.POC1_NAME;
         this.description = POCConstants.POC1_DESCRIPTION;
     }
 
+    /**
+     * Adds 6 points to the wpc's score for each row with all different colors.
+     *
+     * @param wpc is the schema on which must be calculate the score
+     * @return the score related to this poc card
+     */
     @Override
     public int calculateScore(Wpc wpc) {
         int score = 0;
@@ -32,6 +40,14 @@ public class PublicObjectiveCard1 extends PublicObjectiveCard {
         return score;
     }
 
+
+    /**
+     * Checks if all dices in the same row have different colors or not.
+     *
+     * @param dices in the same row
+     * @return true if the 5 dices have 5 different colors, false if the row is not complete (arrayList.size()<5 ) or if
+     * there are at least two dices with the same color.
+     */
     private boolean allColorsAreDifferent(ArrayList<Dice> dices){
         ArrayList<Color> extractedColors = new ArrayList<>();
 

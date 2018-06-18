@@ -5,14 +5,22 @@ import it.polimi.ingsw.model.constants.POCConstants;
 import it.polimi.ingsw.model.wpc.Wpc;
 
 public class PublicObjectiveCard7  extends PublicObjectiveCard {
-    //SFUMATURE SCURE
 
+    /**
+     * Constructor of POC 7.
+     */
     public PublicObjectiveCard7(){
         this.id = POCConstants.POC7_ID;
         this.name = POCConstants.POC7_NAME;
         this.description = POCConstants.POC7_DESCRIPTION;
     }
 
+    /**
+     * Adds 2 points to the wpc's score for each couple of dices with number 5 and 6.
+     *
+     * @param wpc is the schema on which must be calculate the score
+     * @return the score related to this poc card
+     */
     @Override
     public int calculateScore(Wpc wpc) {
         int score = 0;

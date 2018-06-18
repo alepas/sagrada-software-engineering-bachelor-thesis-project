@@ -427,11 +427,9 @@ public class Wpc {
     public ArrayList<Dice> getRowDices(int row){
         ArrayList<Dice> rowDices = new ArrayList<>();
 
-        for(Cell cell: schema){
-            if (cell.getCellPosition().getRow() == row && cell.getDice() != null) {
+        for(Cell cell: schema)
+            if (cell.getCellPosition().getRow() == row)
                 rowDices.add(cell.getDice());
-            }
-        }
 
         return rowDices;
     }

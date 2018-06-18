@@ -18,7 +18,7 @@ public class LaunchClient {
 
         String answer;
         do {
-            System.out.println(">>> Voui usare cli o gui? (Digita \"quit\" per uscire)");
+            System.out.println(">>> Vuoi usare cli o gui? (Digita \"quit\" per uscire)");
             answer = userInput().toLowerCase();
 
             if (answer.equals("cli") || answer.equals("c")) {
