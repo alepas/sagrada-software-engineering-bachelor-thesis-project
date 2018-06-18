@@ -96,23 +96,7 @@ public class ToolCard11 extends ToolCard {
             updateClientExtractedDices();
            printExtractedDices();
             return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, ClientDiceLocations.DICEBAG, null, tempExtractedDices, null, null, null);
-            //return new MoveData(NextAction.SELECT_DICE_TOOLCARD,ClientDiceLocations.EXTRACTED,null,null,tempExtractedDices,null,null, null);
         }
-/*        if (currentStatus == 1) {
-            oldDiceExtracted = currentPlayer.dicePresentInLocation(diceId, ClientDiceLocations.EXTRACTED).getDice();
-            currentStatus=2;
-            moveCancellable=false;
-            currentGame.getDiceBag().reInsertDice(oldDiceExtracted);
-            currentGame.getExtractedDices().remove(oldDiceExtracted);
-            chosenDice=currentGame.getDiceBag().pickDice();
-            currentGame.getExtractedDices().add(chosenDice);
-            updateClientExtractedDices();
-            System.out.println("numbers");
-            System.out.println(numbers.toString());
-            //movesNotifications.add(new ToolCardDiceChangedNotification(username,tempDice.getClientDice(),chosenDice.getClientDice(),ClientDiceLocations.EXTRACTED,ClientDiceLocations.DICEBAG));
-            return new MoveData(NextAction.SELECT_NUMBER_TOOLCARD,null,tempExtractedDices,null, chosenDice.getClientDice(), ClientDiceLocations.EXTRACTED, numbers,false);
-        }*/
-
         else throw new CannotPerformThisMoveException(username, 2, false);
     }
 
@@ -139,8 +123,7 @@ public class ToolCard11 extends ToolCard {
             return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, ClientDiceLocations.WPC, null, tempExtractedDices, null, chosenDice.getClientDice(), ClientDiceLocations.EXTRACTED);
         this.currentStatus=30;
         String text="Il dado non può essere posizionato sulla Window Pattern Card. Continuando verrà riposizionato nei dadi estratti";
-        return new MoveData(NextAction.INTERRUPT_TOOLCARD,text,false,true);
-
+        return new MoveData(NextAction.INTERRUPT_TOOLCARD,text,false,true,null,tempExtractedDices,null, chosenDice.getClientDice(),ClientDiceLocations.EXTRACTED,null,false);
     }
 
     @Override
@@ -273,12 +256,15 @@ public class ToolCard11 extends ToolCard {
             }
             case 1:
                 return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, ClientDiceLocations.DICEBAG, null, tempExtractedDices, null, null, null);
-            case 2:
-                return new MoveData(NextAction.SELECT_NUMBER_TOOLCARD, null, tempExtractedDices, null, chosenDice.getClientDice(), ClientDiceLocations.EXTRACTED, numbers, false);
+            case 20:
+                String text="Vuoi scegliere un valore e posizionare il dado estratto? Premi su Yes per posizionarlo, No per lasciarlo nei dadi estratti e terminare il tuo turno.";
+                return new MoveData(NextAction.INTERRUPT_TOOLCARD,text,true,false,null,tempExtractedDices,null, chosenDice.getClientDice(),ClientDiceLocations.EXTRACTED,null,false);
+            case 2: return new MoveData(NextAction.SELECT_NUMBER_TOOLCARD, null, tempExtractedDices, null, chosenDice.getClientDice(), ClientDiceLocations.EXTRACTED, numbers, false);
+
+            case 30: String text2="Il dado non può essere posizionato sulla Window Pattern Card. Continuando verrà riposizionato nei dadi estratti";
+                return new MoveData(NextAction.INTERRUPT_TOOLCARD,text2,false,true);
             case 3:
-                if (currentPlayer.getWPC().isDicePlaceable(chosenDice))
-                    return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, ClientDiceLocations.WPC, null, tempExtractedDices, null, chosenDice.getClientDice(), ClientDiceLocations.EXTRACTED);
-                return null;
+                return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, ClientDiceLocations.WPC, null, tempExtractedDices, null, chosenDice.getClientDice(), ClientDiceLocations.EXTRACTED);
         }
         return null;
     }
