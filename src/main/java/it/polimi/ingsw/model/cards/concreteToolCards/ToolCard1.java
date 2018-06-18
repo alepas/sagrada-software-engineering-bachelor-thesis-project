@@ -28,7 +28,6 @@ public class ToolCard1 extends ToolCard {
         this.colorForDiceSingleUser=Color.VIOLET;
         this.allowPlaceDiceAfterCard=false;
         this.cardBlocksNextTurn=false;
-        this.maxCancelStatus=3;
         this.cardOnlyInFirstMove=true;
         this.used=false;
         this.diceForSingleUser=null;
@@ -65,7 +64,6 @@ public class ToolCard1 extends ToolCard {
         this.currentGame = player.getGame();
         this.username = player.getUser();
         currentPlayer.setAllowPlaceDiceAfterCard(allowPlaceDiceAfterCard);
-        moveCancellable=true;
         if (cardBlocksNextTurn) {
             currentPlayer.setCardUsedBlockingTurn(this);
         }
@@ -90,7 +88,6 @@ public class ToolCard1 extends ToolCard {
             if (tempDice.getDiceColor()!=colorForDiceSingleUser)
                 throw new CannotPickDiceException(username, tempDice.getDiceNumber(), tempDice.getDiceColor(),ClientDiceLocations.EXTRACTED, 1);
             this.currentStatus = 1;
-            moveCancellable=true;
             this.diceForSingleUser= tempDice;
             currentGame.getExtractedDices().remove(this.diceForSingleUser);
             updateClientExtractedDices();
@@ -102,7 +99,6 @@ public class ToolCard1 extends ToolCard {
         Dice tempDice=currentPlayer.dicePresentInLocation(diceId,ClientDiceLocations.EXTRACTED).getDice();
         this.dice= tempDice;
         currentStatus=2;
-        moveCancellable=true;
         int tempNum=this.dice.getDiceNumber();
         if (tempNum>1)
             numbers.add(-1);
@@ -131,7 +127,6 @@ public class ToolCard1 extends ToolCard {
             throw new CannotPickNumberException(username,number);
         }
         currentStatus=3;
-        moveCancellable=true;
         updateClientExtractedDices();
         movesNotifications.add(new ToolCardDiceChangedNotification(username,oldDice.getClientDice(),dice.getClientDice(),ClientDiceLocations.EXTRACTED,ClientDiceLocations.EXTRACTED));
         return new MoveData(NextAction.PLACE_DICE_TOOLCARD,ClientDiceLocations.EXTRACTED,ClientDiceLocations.WPC,null,tempExtractedDices,null,dice.getClientDice(), ClientDiceLocations.EXTRACTED);
@@ -154,7 +149,6 @@ public class ToolCard1 extends ToolCard {
             throw new CannotPickPositionException(username, pos);
         currentGame.getExtractedDices().remove(this.dice);
         currentStatus=4;
-        moveCancellable=false;
         this.used = true;
         updateClientWPC();
         updateClientExtractedDices();
@@ -176,7 +170,7 @@ public class ToolCard1 extends ToolCard {
                     cleanCard();
                     return new MoveData(true,true);
                 }
-                return null;
+                throw new CannotCancelActionException(username, id, 2);
             }
             case 1: {
                 if (!singlePlayerGame){
@@ -229,7 +223,6 @@ public class ToolCard1 extends ToolCard {
         this.oldDice=null;
         this.movesNotifications=new ArrayList<>();
         this.numbers.clear();
-        moveCancellable=false;
 
     }
 

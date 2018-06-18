@@ -11,10 +11,10 @@ public class CannotRegisterUserException extends Exception{
     @Override
     public String getMessage() {
         if (cause==0)
-        return "Can't create the new user " + user +" due to an internal problem";
+        return "Impossibile creare un nuovo utente \"" + user +"\" a causa di un problema interno.";
         else if (cause==1)
-            return "The username "+user+" has been already used. \r\nCan't register a new user with the same username.";
-        else return "There has been an internal problem in the user registration process.\r\nUser "+ user +"can't be created";
+            return "L'username \""+user+"\" è stato già scelto.\r\nImpossibile registrare un nuovo utente con lo stesso username.";
+        else return "C'è stato un errore nel processo di registrazione.\r\nL'utente "+ user +" non può essere creato.";
     }
     public int getErrorId() {
         return cause;

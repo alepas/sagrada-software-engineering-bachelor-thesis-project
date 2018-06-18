@@ -228,9 +228,6 @@ public class PlayerInGame {
         if (!active)
             throw new PlayerNotAuthorizedException(username);
         if (toolCardInUse != null) {
-            if (!toolCardInUse.isMoveCancellable())
-                throw new CannotCancelActionException(username, null, 1);
-
             ToolCard oldCard = toolCardInUse;
             temp = toolCardInUse.cancelAction();
             if (temp.canceledToolCard) {

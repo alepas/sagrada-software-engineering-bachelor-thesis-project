@@ -10,7 +10,7 @@ public class CannotFindGameForUserInDatabaseException extends Exception{
     public String getMessage() {
 
 
-        return "There is no game in database for user";
+        return "Impossibile trovare una partita nel database per il giocatore.";
     }
 
 

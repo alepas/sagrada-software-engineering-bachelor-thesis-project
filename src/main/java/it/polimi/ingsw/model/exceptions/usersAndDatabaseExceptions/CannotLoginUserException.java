@@ -11,16 +11,16 @@ public class CannotLoginUserException extends Exception{
     @Override
     public String getMessage() {
         if (cause==0)
-            return "Can't log in the user " + user + " due to an internal problem";
+            return "Impossibile eseguire l'accesso per l'utente " + user + " a causa di un problema interno";
 
         else if (cause==1)
-            return "The password for " + user + " is wrong. \r\nPlease try again.";
+            return "La password per l'utente " + user + " è sbagliata. \r\nProva nuovamente.";
         else if (cause==2)
-            return "The user " + user + " does not exist.";
+            return "L'utente " + user + " non esiste.";
         if (cause==3)
-            return "Can't log in the user " + user+ " because we were not able to close the old connection.";
+            return "Impossibile eseguire l'accesso per l'utente " + user+ ".\r\nC'è stato un problema nel chiudere la connessione precedente.";
 
-        else return "There has been an internal problem in the user log in process.";
+        else return "C'è stato un problema interno nel processo di login.";
     }
 
     public int getErrorId() {

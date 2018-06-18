@@ -23,8 +23,6 @@ public abstract class ToolCard implements Cloneable{
     protected Dice diceForSingleUser;
     protected int currentStatus;
     protected boolean stoppable;
-    protected boolean moveCancellable;
-    protected int maxCancelStatus;
     protected PlayerInGame currentPlayer=null;
     protected Game currentGame=null;
     protected boolean singlePlayerGame=false;
@@ -49,10 +47,6 @@ public abstract class ToolCard implements Cloneable{
 
     public String getDescription() {
         return description;
-    }
-
-    public boolean isMoveCancellable() {
-        return moveCancellable;
     }
 
     public Boolean hasBeenUsed() { return used; }

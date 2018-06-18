@@ -10,7 +10,7 @@ public class CannotInteruptToolCardException extends Exception{
     }
     @Override
     public String getMessage() {
-        return "Can't stop the toolCard: "+cardId+" from user "+user;
+        return "Impossibile rispondere al messaggio della ToolCard: "+cardId+" con il valore inviato dall'utente "+user+".";
 
     }
 

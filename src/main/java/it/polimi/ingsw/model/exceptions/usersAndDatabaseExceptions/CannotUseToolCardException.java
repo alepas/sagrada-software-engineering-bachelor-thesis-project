@@ -11,19 +11,19 @@ public class CannotUseToolCardException extends Exception{
     @Override
     public String getMessage() {
         if (cause==0)
-        return "Can't setCard the Tool Card " + cardID+" because it isn't avaiable for this game.";
+        return "Impossibile scegliere la Tool Card " + cardID+" perchè non è disponibile nella partita corrente.";
         else if (cause==1)
-            return "Can't setCard the Tool Card" + cardID+" because the user does not have enough favours.";
+            return "Impossibile scegliere la Tool Card " + cardID+" perchè il giocatore non ha abbastanza favours.";
         else if (cause==2)
-            return "Can't setCard the Tool Card "+ cardID +"because it must be used before placing a dice";
+            return "Impossibile scegliere la Tool Card "+ cardID +" perchè va utilizzata prima di posizionare un dado";
         else if (cause==3)
-            return "Can't setCard the Tool Card "+ cardID +"because the dice selected is not of the right color";
+            return "Impossibile utilizzare la Tool Card "+ cardID +" perchè il dado selezionato non è del colore corretto";
         else if (cause==4)
-            return "Can't setCard the Tool Card "+ cardID +"because you have already used a toolcard";
+            return "Impossibile scegliere la Tool Card "+ cardID +" perchè hai già utilizzato una Tool Card in questo turno.";
         else if (cause==5)
-            return "Can't setCard the Tool Card "+ cardID +"because don't have enough dices on the wpc";
+            return "Impossibile utilizzare la Tool Card "+ cardID +" perchè non ci sono dadi a sufficienza sulla Window Pattern Card.";
         else if (cause==6)
-            return "Can't setCard the Tool Card "+ cardID +"because don't have enough dices on the roundtrack";
+            return "Impossibile utilizzare la Tool Card "+ cardID +" perchè non ci sono dadi a sufficienza sulla Window Pattern Card.";
         else if (cause==7)
             return "Impossibile utilizzare la Tool Card "+ cardID +"nel secondo turno del round";
         else if (cause==8)
@@ -32,7 +32,7 @@ public class CannotUseToolCardException extends Exception{
 
 
 
-        else return "There has been an internal problem in the user registration process.\r\nUser "+cardID+"can't be created";
+        else return "C'è stato un problema interno nell'utilizzo della Tool Card "+cardID+".";
     }
 
 
