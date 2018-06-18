@@ -15,7 +15,11 @@ public class RoundTrack implements Serializable {
     private int currentRound;
     private Dice[][] dicesNotUsed;
 
-    //array di arraylist in questo modo posso aggiungere tutti i dadi che voglio in modo dinamico
+
+    /**
+     * Constructor of the class, at the beginning of the game all dices are null. The matrix has dimension 10x10
+     * because, if all players pass all turns all dices (max 90) must be inside the roundTrack.
+     */
     public RoundTrack(){
         currentRound = 0;
         dicesNotUsed = new Dice[NUM_OF_ROUNDS][NUM_OF_ROUNDS];
@@ -31,18 +35,31 @@ public class RoundTrack implements Serializable {
     }
 
 
+    /**
+     * @param row in the matrix
+     * @param column in the matrix
+     * @return true if there's a dice in the given position, false if the matrix doesn't contain any dice in the chosen
+     * position
+     */
     private Boolean isThereADice(int row, int column){
         return dicesNotUsed[row][column]!= null;
     }
 
-    //TODO: Ricerca per id
+
+    /**
+     * @param row in the matrix
+     * @param column in the matrix
+     * @return the dice in the given position
+     */
     private Dice getDice(int row, int column){
         return dicesNotUsed[row][column];    
     }
-    
-    
-    public ArrayList<Dice> getDicesNotUsed() {
-        //restituisce tutti i dadi presenti sul Round Track
+
+
+    /**
+     * @return an arrayList composed by all the dices inside the roundTrack
+     */
+    ArrayList<Dice> getDicesNotUsed() {
         ArrayList<Dice> allRoundTrackDices = new ArrayList<>();
 
         for (int row = 0;  row< NUM_OF_ROUNDS; row++ ) {
@@ -54,23 +71,34 @@ public class RoundTrack implements Serializable {
         return allRoundTrackDices;
     }
 
+
+    /**
+     * Adds one to the current round.
+     */
     void nextRound( ){
         currentRound++;
     }
 
+
+    /**
+     * Adds the new dice in the first available position.
+     *
+     * @param dice that must be add to the roundTrack
+     */
     void addDice(Dice dice){
-            int column = currentRound - 1;
-            int row = 0;
+            int row = currentRound - 1;
+            int column = 0;
             
             do {
-                row++;
-            }while(isThereADice(row,column) && row < NUM_OF_ROUNDS);
+                column++;
+            }while(isThereADice(column,row) && column < NUM_OF_ROUNDS);
             
-            dicesNotUsed[row][column] = dice;
+            dicesNotUsed[column][row] = dice;
                 
     }
 
-    public Position getPositionFromDice(Dice roundTrackDice) {
+
+    /*public Position getPositionFromDice(Dice roundTrackDice) {
         for (int row = 0; row < NUM_OF_ROUNDS; row++) {
 
             for (int column = 0; column < NUM_OF_ROUNDS; column++)
@@ -80,45 +108,42 @@ public class RoundTrack implements Serializable {
                     }
         }
         return null;
-    }
+    }*/
 
-    Dice swapDice(Dice addedDice, Dice roundTrackDice, int round){
-        Dice removedDice = null;
-        int column = round - 1;
 
-        for (int row = 0; row < NUM_OF_ROUNDS; row++) {
-            if (getDice(row, column).equals(roundTrackDice)) {
-                removedDice = dicesNotUsed[row][column];
-                dicesNotUsed[row][column] = addedDice;
-            }
-        }
-        
-        return removedDice;
-    }
-
+    /**
+     * Removes a dice selected by his position and places at the same position a new dice.
+     *
+     * @param addedDice is the dice that must be add to the roundTrack
+     * @param position is the position of the dice that must be removed
+     * @return the removed dice
+     */
     public Dice swapDice (Dice addedDice, Position position){
-        Dice removedDice = null;
-        removedDice = dicesNotUsed[position.getRow()][position.getColumn()];
+        Dice removedDice = dicesNotUsed[position.getRow()][position.getColumn()];
         dicesNotUsed[position.getRow()][position.getColumn()] = addedDice;
         return removedDice;
 
     }
 
+    /**
+     * @param diceId is the ID of a chosen dice
+     * @return the dice and position associated to the with the chosen id
+     */
     public DiceAndPosition getDiceAndPosition(int diceId){
         for (int row = 0; row < NUM_OF_ROUNDS; row++) {
 
-            for (int column = 0; column < NUM_OF_ROUNDS; column++)
+            for (int column = 0; column < NUM_OF_ROUNDS; column++) {
                 if (isThereADice(row, column))
-                    if (getDice(row, column).getId()==diceId) {
-                        return new DiceAndPosition(getDice(row,column),new Position(row,column));
-                    }
+                    if (getDice(row, column).getId() == diceId)
+                        return new DiceAndPosition(getDice(row, column), new Position(row, column));
+            }
         }
         return null;
     }
 
 
     
-    public ArrayList<Dice> getRoundDices ( int round) {
+    /*public ArrayList<Dice> getRoundDices ( int round) {
         ArrayList<Dice> roundNotUsedDices = new ArrayList<>();
         int column = round - 1;
 
@@ -128,8 +153,13 @@ public class RoundTrack implements Serializable {
         }
         
         return roundNotUsedDices;
-    }
+    }*/
 
+    /**
+     * Creates a clientRoundTrack exactly equals to this.
+     *
+     * @return the clientRoundTrack
+     */
     public ClientRoundTrack getClientRoundTrack(){
         ClientDice[][] roundTrackTable=new ClientDice[NUM_OF_ROUNDS][NUM_OF_ROUNDS];
         for (int i=0; i<NUM_OF_ROUNDS; i++){
@@ -143,6 +173,12 @@ public class RoundTrack implements Serializable {
         return new ClientRoundTrack(currentRound, roundTrackTable);
     }
 
+
+    /**
+     * Counts how many dices there are in the roundTrack.
+     *
+     * @return the number of dices inside the roundTrack
+     */
     public int getNumberOfDices(){
         int count=0;
         for (int row = 0;  row< NUM_OF_ROUNDS; row++ ) {

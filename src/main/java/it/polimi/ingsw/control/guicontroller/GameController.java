@@ -1231,7 +1231,7 @@ public class GameController implements Observer, NotificationHandler {
                     makeSelectedDiceLessVisible(info.diceChosenLocation);
                     break;
                 case SELECT_NUMBER_TOOLCARD:
-                    if(plusMinus) plusMinusPane.setVisible(true);
+                    if(info.numbersToChoose.size() <= 2) plusMinusPane.setVisible(true);
                     else changeNumberPane.setVisible(true);
                     break;
                 case MENU_ONLY_TOOLCARD:
@@ -1553,6 +1553,9 @@ public class GameController implements Observer, NotificationHandler {
         setScore(scores);
     }
 
+    /**
+     * @param toolCardDicePlacedNotification is the notification that arrives
+     */
     @Override
     public void handle(ToolCardDicePlacedNotification toolCardDicePlacedNotification) {
         Platform.runLater(() -> {
