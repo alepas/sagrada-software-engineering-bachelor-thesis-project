@@ -59,9 +59,6 @@ public class ToolCard11 extends ToolCard {
         if (cardOnlyInFirstMove)
             if (player.isPlacedDiceInTurn())
                 throw new CannotUseToolCardException(id, 2);
-        if (player.getWPC().getNumOfDices() == 0)
-            throw new CannotUseToolCardException(id, 5);
-
         this.currentPlayer = player;
         this.currentGame = player.getGame();
         this.username = player.getUser();
@@ -72,6 +69,7 @@ public class ToolCard11 extends ToolCard {
         }
         this.currentPlayer.setToolCardInUse(this);
         updateClientExtractedDices();
+        printExtractedDices();
         if (currentGame.isSinglePlayerGame()) {
             singlePlayerGame = true;
             return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD, ClientDiceLocations.EXTRACTED);
@@ -96,6 +94,7 @@ public class ToolCard11 extends ToolCard {
             this.diceForSingleUser = tempDice;
             currentGame.getExtractedDices().remove(this.diceForSingleUser);
             updateClientExtractedDices();
+           printExtractedDices();
             return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, ClientDiceLocations.DICEBAG, null, tempExtractedDices, null, null, null);
             //return new MoveData(NextAction.SELECT_DICE_TOOLCARD,ClientDiceLocations.EXTRACTED,null,null,tempExtractedDices,null,null, null);
         }
@@ -134,6 +133,7 @@ public class ToolCard11 extends ToolCard {
         currentStatus = 3;
         moveCancellable = true;
         updateClientExtractedDices();
+        printExtractedDices();
         movesNotifications.add(new ToolCardDiceChangedNotification(username, oldDiceExtracted.getClientDice(), chosenDice.getClientDice(), ClientDiceLocations.EXTRACTED, ClientDiceLocations.DICEBAG));
         if (currentPlayer.getWPC().isDicePlaceable(chosenDice))
             return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, ClientDiceLocations.WPC, null, tempExtractedDices, null, chosenDice.getClientDice(), ClientDiceLocations.EXTRACTED);
@@ -150,7 +150,7 @@ public class ToolCard11 extends ToolCard {
             if (pos != null) {
                 throw new CannotPerformThisMoveException(currentPlayer.getUser(), 2, false);
             }
-            currentStatus = 2;
+            currentStatus = 20;
             moveCancellable = false;
             currentGame.getDiceBag().reInsertDice(oldDiceExtracted);
             currentGame.getExtractedDices().remove(oldDiceExtracted);
@@ -159,7 +159,9 @@ public class ToolCard11 extends ToolCard {
             System.out.println(chosenDice.getDiceNumber());
             currentGame.getExtractedDices().add(chosenDice);
             updateClientExtractedDices();
-            return new MoveData(NextAction.SELECT_NUMBER_TOOLCARD, null, tempExtractedDices, null, chosenDice.getClientDice(), ClientDiceLocations.EXTRACTED, numbers, false);
+            printExtractedDices();
+            String text="Vuoi scegliere un valore e posizionare il dado estratto? Premi su Yes per posizionarlo, No per lasciarlo nei dadi estratti e terminare il tuo turno.";
+            return new MoveData(NextAction.INTERRUPT_TOOLCARD,text,true,false,null,tempExtractedDices,null, chosenDice.getClientDice(),ClientDiceLocations.EXTRACTED,null,false);
         }
 
         if (currentStatus == 3) {
@@ -175,6 +177,7 @@ public class ToolCard11 extends ToolCard {
             this.used = true;
             updateClientWPC();
             updateClientExtractedDices();
+            printExtractedDices();
             movesNotifications.add(new ToolCardDicePlacedNotification(username, this.chosenDice.getClientDice(), pos));
             currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, tempExtractedDices, null));
             ClientWpc tempWpc = tempClientWpc;
@@ -205,6 +208,12 @@ public class ToolCard11 extends ToolCard {
                 diceForSingleUser = null;
                 this.currentStatus = 0;
                 return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD, ClientDiceLocations.EXTRACTED, null, null, tempExtractedDices, null, null, null);
+            }
+            case 2:{
+                currentStatus=20;
+                updateClientExtractedDices();
+                String text="Vuoi scegliere un valore e posizionare il dado estratto? Premi su Yes per posizionarlo, No per lasciarlo nei dadi estratti e terminare il tuo turno.";
+                return new MoveData(NextAction.INTERRUPT_TOOLCARD,text,true,false,null,tempExtractedDices,null, chosenDice.getClientDice(),ClientDiceLocations.EXTRACTED,null,false);
             }
             case 3: {
                 try {
@@ -276,13 +285,37 @@ public class ToolCard11 extends ToolCard {
 
     @Override
     public MoveData interuptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException {
+        if (currentStatus==20){
+            currentStatus=2;
+            updateClientExtractedDices();
+            if (value==ToolCardInteruptValues.YES)
+            return new MoveData(NextAction.SELECT_NUMBER_TOOLCARD, null, tempExtractedDices, null, chosenDice.getClientDice(), ClientDiceLocations.EXTRACTED, numbers, false);
+            if (value!=ToolCardInteruptValues.NO)
+                throw new CannotInteruptToolCardException(username, id);
+            ArrayList<ClientDice> tempExtracted = tempExtractedDices;
+            movesNotifications.add(new ToolCardDiceChangedNotification(username, oldDiceExtracted.getClientDice(), chosenDice.getClientDice(), ClientDiceLocations.EXTRACTED, ClientDiceLocations.DICEBAG));
+            currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, tempExtractedDices, null));
+            this.used = true;
+            cleanCard();
+            return new MoveData(true, null, tempExtracted, null);
+        }
+
         if (currentStatus != 30)
             throw new CannotInteruptToolCardException(username, id);
         updateClientExtractedDices();
         ArrayList<ClientDice> tempExtracted = tempExtractedDices;
+        currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, tempExtractedDices, null));
         this.used = true;
         cleanCard();
         return new MoveData(true, null, tempExtracted, null);
     }
+
+    private void printExtractedDices(){
+        System.out.print("Dices:");
+        for (ClientDice dice: tempExtractedDices)
+            System.out.print(" id: "+dice.getDiceID());
+        System.out.println("");
+    }
+
 
 }

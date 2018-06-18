@@ -234,4 +234,22 @@ public class MoveData {
         this.nextAction=nextAction;
     }
 
+
+    public MoveData(NextAction nextAction, String messageForStop, boolean bothYesAndNo, boolean showBackButton, ClientWpc wpc, ArrayList<ClientDice> extractedDices,
+                    ClientRoundTrack roundTrack, ClientDice diceChosen, ClientDiceLocations diceChooenLocation, ArrayList<Integer> numbersToChoose, boolean canceledToolCard){
+        this.nextAction = nextAction;
+        this.messageForStop = messageForStop;
+        this.bothYesAndNo = bothYesAndNo;
+        this.showBackButton = showBackButton;
+        this.wpc = wpc;
+        this.extractedDices = extractedDices;
+        this.roundTrack = roundTrack;
+        this.diceChosen = diceChosen;
+        this.diceChosenLocation = diceChooenLocation;
+        this.numbersToChoose = numbersToChoose;
+        this.canceledToolCard = canceledToolCard;
+    }
+
+
+
 }
