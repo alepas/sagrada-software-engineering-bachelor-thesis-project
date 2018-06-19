@@ -23,11 +23,14 @@ public class CannotUseToolCardException extends Exception{
         else if (cause==5)
             return "Impossibile utilizzare la Tool Card "+ cardID +" perchè non ci sono dadi a sufficienza sulla Window Pattern Card.";
         else if (cause==6)
-            return "Impossibile utilizzare la Tool Card "+ cardID +" perchè non ci sono dadi a sufficienza sulla Window Pattern Card.";
+            return "Impossibile utilizzare la Tool Card "+ cardID +" perchè non ci sono dadi a sufficienza sul RoundTrack.";
         else if (cause==7)
-            return "Impossibile utilizzare la Tool Card "+ cardID +"nel secondo turno del round";
+            return "Impossibile utilizzare la Tool Card "+ cardID +"nel secondo turno del round.";
         else if (cause==8)
-            return "Impossibile utilizzare la Tool Card "+ cardID +"nel primo turno del round";
+            return "Impossibile utilizzare la Tool Card "+ cardID +"nel primo turno del round.";
+        else if (cause ==9)
+            return "Impossibile utilizzare la Tool Card "+ cardID+".";
+
 
 
 

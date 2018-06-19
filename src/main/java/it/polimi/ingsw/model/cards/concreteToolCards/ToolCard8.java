@@ -26,16 +26,7 @@ public class ToolCard8 extends ToolCard {
         this.cardBlocksNextTurn = true;
         this.cardOnlyInFirstMove = false;
         this.used = false;
-        this.diceForSingleUser = null;
-        this.currentPlayer = null;
-        this.currentStatus = 0;
-        this.stoppable = false;
-        this.currentGame = null;
-        this.username = null;
-        this.tempExtractedDices = new ArrayList<>();
-        this.movesNotifications = new ArrayList<>();
-        this.tempClientWpc = null;
-        this.tempRoundTrack = null;
+        defaultClean();
     }
 
 
@@ -99,10 +90,10 @@ public class ToolCard8 extends ToolCard {
                 System.out.println("ho posto per mettere un altro dado");
                 return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, ClientDiceLocations.WPC, tempClientWpc, tempExtractedDices, null, null, null);
             } else {
-                this.currentStatus=30;
-                String text="Nessun dado tra quelli estratti può essere posizionato sulla Window Pattern Card.\n" +
+                this.currentStatus = 30;
+                String text = "Nessun dado tra quelli estratti può essere posizionato sulla Window Pattern Card.\n" +
                         "Il primo piazzamento è considerato valido. L'utilizzo della toolCard è stato annullato.";
-                return new MoveData(NextAction.INTERRUPT_TOOLCARD,text,false,false);
+                return new MoveData(NextAction.INTERRUPT_TOOLCARD, text, false, false);
             }
 
         } else if ((currentStatus == 2) || (currentStatus == 10)) {
@@ -132,14 +123,7 @@ public class ToolCard8 extends ToolCard {
     @Override
     public MoveData pickDice(int diceId) throws CannotPickDiceException, CannotPerformThisMoveException {
         if ((currentStatus == 0) && (singlePlayerGame)) {
-            Dice tempDice = currentPlayer.dicePresentInLocation(diceId, ClientDiceLocations.EXTRACTED).getDice();
-            if (tempDice.getDiceColor() != colorForDiceSingleUser)
-                throw new CannotPickDiceException(username, tempDice.getDiceNumber(), tempDice.getDiceColor(), ClientDiceLocations.EXTRACTED, 1);
-            this.currentStatus = 1;
-            this.diceForSingleUser = tempDice;
-            currentGame.getExtractedDices().remove(this.diceForSingleUser);
-            updateClientExtractedDices();
-            return new MoveData(NextAction.SELECT_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, null, null, tempExtractedDices, null, null, null);
+            return pickDiceInitializeSingleUserToolCard(diceId, NextAction.SELECT_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, null);
         } else throw new CannotPerformThisMoveException(username, 2, false);
     }
 
@@ -152,24 +136,8 @@ public class ToolCard8 extends ToolCard {
     @Override
     public MoveData cancelAction() throws CannotCancelActionException {
         switch (currentStatus) {
-            case 0: {
-                if (singlePlayerGame) {
-                    cleanCard();
-                    return new MoveData(true, true);
-                }
-                throw new CannotCancelActionException(username, id, 2);
-            }
-            case 1: {
-                if (!singlePlayerGame) {
-                    cleanCard();
-                    return new MoveData(true, true);
-                }
-                currentGame.getExtractedDices().add(diceForSingleUser);
-                updateClientExtractedDices();
-                diceForSingleUser = null;
-                this.currentStatus = 0;
-                return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD, ClientDiceLocations.EXTRACTED, null, null, tempExtractedDices, null, null, null);
-            }
+            case 0: return cancelStatusZero();
+            case 1: return cancelStatusOne();
 
             case 2: {
                 throw new CannotCancelActionException(username, id, 1);
@@ -185,17 +153,7 @@ public class ToolCard8 extends ToolCard {
 
     @Override
     protected void cleanCard() {
-        currentPlayer.setToolCardInUse(null);
-        this.diceForSingleUser = null;
-        this.currentPlayer = null;
-        this.currentStatus = 0;
-        this.stoppable = false;
-        this.currentGame = null;
-        this.username = null;
-        this.singlePlayerGame = false;
-        this.tempClientWpc = null;
-        this.tempExtractedDices = new ArrayList<>();
-        this.movesNotifications = new ArrayList<>();
+        defaultClean();
     }
 
     @Override
@@ -218,7 +176,7 @@ public class ToolCard8 extends ToolCard {
     public MoveData interuptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException {
         if (currentStatus != 30)
             throw new CannotInteruptToolCardException(username, id);
-        if (value!=ToolCardInteruptValues.OK)
+        if (value != ToolCardInteruptValues.OK)
             throw new CannotInteruptToolCardException(username, id);
         this.used = false;
         updateClientExtractedDices();
