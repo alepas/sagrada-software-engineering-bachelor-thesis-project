@@ -172,5 +172,11 @@ public abstract class ToolCard implements Cloneable {
         this.movesNotifications = new ArrayList<>();
     }
 
+    protected MoveData defaultNextMoveStatusZero(){
+        if (singlePlayerGame)
+            return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD, ClientDiceLocations.EXTRACTED, tempExtractedDices);
+        else return null;
+    }
+
 
 }

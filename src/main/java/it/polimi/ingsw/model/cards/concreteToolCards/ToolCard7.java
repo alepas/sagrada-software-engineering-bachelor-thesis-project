@@ -135,11 +135,7 @@ public class ToolCard7 extends ToolCard {
     @Override
     public MoveData getNextMove() {
         switch (currentStatus) {
-            case 0: {
-                if (singlePlayerGame)
-                    return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD, ClientDiceLocations.EXTRACTED, tempExtractedDices);
-                else return null;
-            }
+            case 0:  return defaultNextMoveStatusZero();
         }
         return null;
     }

@@ -26,10 +26,10 @@ public class PlayerInGame {
     private Game game;
     private Color[] privateObjs;
     private int favours;
-    private boolean active = false;
+    private boolean active;
     private Wpc wpc;
     private int turnForRound;
-    private ToolCard toolCardInUse = null;
+    private ToolCard toolCardInUse;
     private int lastFavoursRemoved;
     private boolean toolCardUsedInTurn;
     private boolean placedDiceInTurn;
@@ -56,7 +56,8 @@ public class PlayerInGame {
         toolCardUsedInTurn = false;
         lastFavoursRemoved = 0;
         turnForRound = 0;
-
+        toolCardInUse=null;
+        cardUsedBlockingTurn=null;
     }
 
     public Observer getObserver() {
@@ -141,14 +142,10 @@ public class PlayerInGame {
         return wpc;
     }
 
-    public boolean setWPC(String id) {
-        if (wpc == null) {
+    public void setWPC(String id) {
             WpcDB dbWpc = WpcDB.getInstance();
             wpc = dbWpc.getWpcByID(id).copyWpc();
             favours = wpc.getFavours();
-            return true;
-        } else return false;
-
     }
 
 
@@ -210,7 +207,7 @@ public class PlayerInGame {
         }
         if (dice == null)
             throw new CannotPickDiceException(username, diceId, ClientDiceLocations.EXTRACTED, 0);
-        if (wpc.addDiceWithAllRestrictions(dice, pos) == false)
+        if (!wpc.addDiceWithAllRestrictions(dice, pos))
             throw new CannotPickPositionException(username, pos);
         game.getExtractedDices().remove(dice);
         ArrayList<ClientDice> tempExtractedDices = getClientExtractedDices();
@@ -228,17 +225,16 @@ public class PlayerInGame {
         if (!active)
             throw new PlayerNotAuthorizedException(username);
         if (toolCardInUse != null) {
-            ToolCard oldCard = toolCardInUse;
             temp = toolCardInUse.cancelAction();
+            if (temp==null)
+                throw new CannotCancelActionException(username, null, 3);
             if (temp.canceledToolCard) {
                 favours += lastFavoursRemoved;
                 allowPlaceDiceAfterCard = true;
                 cardUsedBlockingTurn = null;
-
                 if (!placedDiceInTurn)
                     temp.setNextAction(NextAction.MENU_ALL);
                 else temp.setNextAction(NextAction.MENU_ONLY_TOOLCARD);
-
             }
             return temp;
         } else throw new CannotCancelActionException(username, null, 0);
@@ -285,7 +281,6 @@ public class PlayerInGame {
                     lastFavoursRemoved = 2;
                 } else throw new CannotUseToolCardException(cardID, 1);
             } else {
-                System.out.println("l'utente ha favours: " + favours);
                 if (favours >= 1) {
                     favours = favours - 1;
                     lastFavoursRemoved = 1;
@@ -376,21 +371,8 @@ public class PlayerInGame {
         incrementTurnsForRound();
     }
 
-
-    public boolean isToolCardUsedInTurn() {
-        return toolCardUsedInTurn;
-    }
-
-    public void setToolCardUsedInTurn(boolean toolCardUsedInTurn) {
-        this.toolCardUsedInTurn = toolCardUsedInTurn;
-    }
-
     public boolean isPlacedDiceInTurn() {
         return placedDiceInTurn;
-    }
-
-    public void setPlacedDiceInTurn(boolean placedDiceInTurn) {
-        this.placedDiceInTurn = placedDiceInTurn;
     }
 
     public boolean isAllowPlaceDiceAfterCard() {
@@ -433,13 +415,11 @@ public class PlayerInGame {
                 return NextAction.MENU_ONLY_ENDTURN;
             } else return NextAction.MENU_ONLY_TOOLCARD;
         } else {
-            if (toolCardUsedInTurn) {
                 if (allowPlaceDiceAfterCard)
                     return NextAction.MENU_ONLY_PLACE_DICE;
                 else {
                     return NextAction.MENU_ONLY_ENDTURN;
                 }
-            } else return NextAction.MENU_ALL;
         }
     }
 

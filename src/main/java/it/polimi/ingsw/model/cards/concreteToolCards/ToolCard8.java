@@ -123,7 +123,17 @@ public class ToolCard8 extends ToolCard {
     @Override
     public MoveData pickDice(int diceId) throws CannotPickDiceException, CannotPerformThisMoveException {
         if ((currentStatus == 0) && (singlePlayerGame)) {
-            return pickDiceInitializeSingleUserToolCard(diceId, NextAction.SELECT_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, null);
+            Dice tempDice = currentPlayer.dicePresentInLocation(diceId, ClientDiceLocations.EXTRACTED).getDice();
+            if (tempDice.getDiceColor() != colorForDiceSingleUser)
+                throw new CannotPickDiceException(username, tempDice.getDiceNumber(), tempDice.getDiceColor(), ClientDiceLocations.EXTRACTED, 1);
+            this.diceForSingleUser = tempDice;
+            currentGame.getExtractedDices().remove(this.diceForSingleUser);
+            updateClientExtractedDices();
+            if (currentPlayer.isPlacedDiceInTurn())
+                this.currentStatus = 10;
+            else this.currentStatus = 1;
+            System.out.println("non ho ancora messo nessun dado, ne devo mettere 2");
+            return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, ClientDiceLocations.WPC, null, tempExtractedDices, null, null, null);
         } else throw new CannotPerformThisMoveException(username, 2, false);
     }
 
@@ -136,8 +146,10 @@ public class ToolCard8 extends ToolCard {
     @Override
     public MoveData cancelAction() throws CannotCancelActionException {
         switch (currentStatus) {
-            case 0: return cancelStatusZero();
-            case 1: return cancelStatusOne();
+            case 0:
+                return cancelStatusZero();
+            case 1:
+                return cancelStatusOne();
 
             case 2: {
                 throw new CannotCancelActionException(username, id, 1);
@@ -158,6 +170,21 @@ public class ToolCard8 extends ToolCard {
 
     @Override
     public MoveData getNextMove() {
+        switch (currentStatus) {
+            case 0:
+                return defaultNextMoveStatusZero();
+            case 1:
+            case 10:
+                return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, ClientDiceLocations.WPC, null, tempExtractedDices, null, null, null);
+            case 2:
+                return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, ClientDiceLocations.WPC, tempClientWpc, tempExtractedDices, null, null, null);
+
+            case 30:
+                String text = "Nessun dado tra quelli estratti può essere posizionato sulla Window Pattern Card.\n" +
+                        "Il primo piazzamento è considerato valido. L'utilizzo della toolCard è stato annullato.";
+                return new MoveData(NextAction.INTERRUPT_TOOLCARD, text, false, false);
+
+        }
         return null;
     }
 
