@@ -66,7 +66,7 @@ public class Wpc {
         return favours;
     }
 
-    ArrayList<Cell> getSchema() {
+    public ArrayList<Cell> getSchema() {
         return schema;
     }
 
@@ -80,15 +80,15 @@ public class Wpc {
      * @return true if there is at least a cell where it is possible to add the dice
      */
     public boolean isDicePlaceable(Dice dice) {
-        Position pos;
+        Position position;
         for (Cell cell : schema) {
             if (cell.getDice() == null) {
-                pos = cell.getCellPosition();
+                position = cell.getCellPosition();
                 if (!firstDicePutted) {
                     if (checkFirstTurnRestriction(cell) && checkCellRestriction(cell, dice)) return true;
                 } else {
-                    ArrayList<Cell> orthoCells = getOrthogonallyAdjacentCells(pos);
-                    ArrayList<Cell> diagCells = getDiagonallyAdjacentCells(pos);
+                    ArrayList<Cell> orthoCells = getOrthogonallyAdjacentCells(position);
+                    ArrayList<Cell> diagCells = getDiagonallyAdjacentCells(position);
                     if (checkCellRestriction(cell, dice)
                             && checkAdjacentDiceRestriction(orthoCells, dice)
                             && isThereAtLeastADiceNear(orthoCells, diagCells)) return true;
@@ -433,12 +433,19 @@ public class Wpc {
      */
     public ArrayList<Dice> getRowDicesAndEmptySpaces(int row) {
         ArrayList<Dice> rowDices = new ArrayList<>();
-
-        for (Cell cell : schema)
-            if (cell.getCellPosition().getRow() == row)
-                if (cell.getDice() != null)
+        System.out.println("cell ");
+        for (Cell cell : schema) {
+            if (cell.getCellPosition().getRow() == row) {
+                rowDices.add(cell.getDice());
+            }
+           /* if (cell.getCellPosition().getRow() == row) {
+                if (cell.getDice() != null) {
                     rowDices.add(cell.getDice());
+
+                }
                 else rowDices.add(null);
+            }*/
+        }
 
         return rowDices;
     }

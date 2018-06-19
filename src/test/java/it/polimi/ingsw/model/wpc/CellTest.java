@@ -4,10 +4,11 @@ import it.polimi.ingsw.model.clientModel.Position;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 
 public class CellTest {
@@ -32,25 +33,25 @@ public class CellTest {
 
     @Test
     public void checkCellConstructor(){
-        Assert.assertEquals(cellNumber, cell.getNumber());
-        Assert.assertEquals(cellColor, cell.getColor());
-        Assert.assertEquals(position, cell.getCellPosition());
-        Assert.assertNull(cell.getDice());
+        assertEquals(cellNumber, cell.getNumber());
+        assertEquals(cellColor, cell.getColor());
+        assertEquals(position, cell.getCellPosition());
+        assertNull(cell.getDice());
     }
 
     @Test
     public void check2ndCellConstructor(){
-        Assert.assertEquals(cell.getNumber(), cell1.getNumber());
-        Assert.assertEquals(cell.getColor(), cell1.getColor());
-        Assert.assertEquals(cell.getCellPosition(), cell1.getCellPosition());
-        Assert.assertNull(cell1.getDice());
+        assertEquals(cell.getNumber(), cell1.getNumber());
+        assertEquals(cell.getColor(), cell1.getColor());
+        assertEquals(cell.getCellPosition(), cell1.getCellPosition());
+        assertNull(cell1.getDice());
     }
 
     @Test
     public void checkSetAndRemoveDice(){
         cell.setDice(dice);
-        Assert.assertEquals( dice, cell.getDice());
+        assertEquals( dice, cell.getDice());
         cell.removeDice();
-        Assert.assertEquals(null, cell.getDice());
+        assertNull(cell.getDice());
     }
 }

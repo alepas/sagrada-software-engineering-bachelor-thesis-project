@@ -59,7 +59,7 @@ public class RoundTrack implements Serializable {
     /**
      * @return an arrayList composed by all the dices inside the roundTrack
      */
-    ArrayList<Dice> getDicesNotUsed() {
+    public ArrayList<Dice> getDicesNotUsed() {
         ArrayList<Dice> allRoundTrackDices = new ArrayList<>();
 
         for (int row = 0;  row< NUM_OF_ROUNDS; row++ ) {
@@ -181,7 +181,7 @@ public class RoundTrack implements Serializable {
      */
     public int getNumberOfDices(){
         int count=0;
-        for (int row = 0;  row< NUM_OF_ROUNDS; row++ ) {
+        for (int row = 0;  row < NUM_OF_ROUNDS; row++ ) {
             for (int column = 0; column < NUM_OF_ROUNDS; column++)
                 if (isThereADice(row, column))
                     count++;

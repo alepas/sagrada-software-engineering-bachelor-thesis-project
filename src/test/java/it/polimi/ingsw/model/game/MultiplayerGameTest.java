@@ -26,6 +26,9 @@ public class MultiplayerGameTest {
         game = new MultiplayerGame(defaulNumPlayers);
     }
 
+    /**
+     * Checks if the constructor creates a correct object
+     */
     @Test
     public void checkMultiPlayerGameConstructor(){
         Assert.assertEquals(0, game.getToolCards().size());

@@ -92,7 +92,6 @@ public class GameController implements Observer, NotificationHandler {
     private HashMap<String, ClientWpc> wpc;
     private final Object waiter = new Object();
     private boolean isUsedToolCard = false;
-    private boolean plusMinus = false;
     private NextAction lastNextAction;
 
     @FXML
@@ -341,6 +340,8 @@ public class GameController implements Observer, NotificationHandler {
                 possibleActionEndTurn();
                 break;
             case INTERRUPT_TOOLCARD:
+                updateGraphicsCurrentUser();
+                isChosenDiceIdActive();
                 createAlert();
                 break;
             case CANCEL_ACTION_TOOLCARD:
@@ -894,7 +895,6 @@ public class GameController implements Observer, NotificationHandler {
      * end the turn.
      */
     private void possibleActionPlaceDice() {
-        plusMinus = false;
         message1Label.setText("");
         for (Node dice : extractedDicesGrid.getChildren())
             dice.setDisable(false);
@@ -912,7 +912,6 @@ public class GameController implements Observer, NotificationHandler {
      * except for the pass turn Button
      */
     private void possibleActionEndTurn() {
-        plusMinus = false;
         message1Label.setText("");
         endTurnButton.setVisible(true);
         cancelActionButton.setVisible(false);
@@ -1032,7 +1031,6 @@ public class GameController implements Observer, NotificationHandler {
         NextAction nextAction = null;
         try {
             nextAction = networkClient.pickDiceForToolCard(clientModel.getUserToken(), id);
-            System.out.println("pick dice:" +nextAction);
             switch (locations){
                 case WPC:
                     updateGraphicMyWpc();
@@ -1089,7 +1087,6 @@ public class GameController implements Observer, NotificationHandler {
                 if (dice.getId().equals(String.valueOf(clientDice.getDiceID()))) changeStyle(dice, clientDice);}
         }
         if (info.numbersToChoose.size() <= 2) {
-            plusMinus = true;
             messageLabel.setText("Aggiungi 1 o sottrai 1");
             plusMinusPane.setVisible(true);
             plusOneIcon.setVisible(true);
@@ -1222,7 +1219,6 @@ public class GameController implements Observer, NotificationHandler {
             switch (previousAction) {
                 case MENU_ALL:
                     isUsedToolCard = false;
-                    plusMinus = false;
                     diceBagIcon.setVisible(false);
                     break;
                 case SELECT_DICE_TOOLCARD:
@@ -1254,19 +1250,15 @@ public class GameController implements Observer, NotificationHandler {
      * different parameter.
      */
     private void createAlert() {
-        updateGraphicsCurrentUser();
-        isChosenDiceIdActive();
         ToolCardClientNextActionInfo info = clientModel.getToolCardClientNextActionInfo();
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Informazioni blocco ToolCard");
-        //alert.getDialogPane().setUndecorated(true);
         ButtonType yesButton = new ButtonType("Si");
         ButtonType noButton = new ButtonType("No");
         ButtonType okButton=new ButtonType("OK");
         ButtonType backButton = new ButtonType("Indietro");
         alert.setContentText(info.stringForStopToolCard);
-        System.out.println(info.showBackButton);
 
 
         if (info.bothYesAndNo&&info.showBackButton) alert.getButtonTypes().setAll(yesButton, noButton, backButton);
@@ -1361,71 +1353,71 @@ public class GameController implements Observer, NotificationHandler {
         int newDiceIndex = -1;
         int tempPosition;
         Node tempNode;
-        extractDices.clear();
-        ArrayList<String> extractedorderedIds = new ArrayList<>();
-        for (ClientDice dice : clientModel.getExtractedDices()) {
-            extractedorderedIds.add(String.valueOf(dice.getDiceID()));
-        }
 
-        ArrayList<String> extractedDicesImageViewIds = new ArrayList<>();
-        for (Node dice : extractedDicesGrid.getChildren()) {
-            extractedDicesImageViewIds.add(dice.getId());
-        }
-
-        if (extractedDicesGrid.getChildren().size() > extractedorderedIds.size()) {
-
-            for (int i = 0; i < extractedDicesGrid.getChildren().size(); i++) {
-                if (!extractedorderedIds.contains(extractedDicesGrid.getChildren().get(i).getId())) {
-                    for(ImageView image: extractDices){
-                        if(image.getId().equals(String.valueOf(extractedDicesGrid.getChildren().get(i).getId())))
-                            extractDices.remove(image);
-                    }
-                    extractedDicesGrid.getChildren().remove(i);
-                }
+            extractDices.clear();
+            ArrayList<String> extractedorderedIds = new ArrayList<>();
+            for (ClientDice dice : clientModel.getExtractedDices()) {
+                extractedorderedIds.add(String.valueOf(dice.getDiceID()));
             }
 
-        } else if (extractedDicesGrid.getChildren().size() == extractedorderedIds.size()){
-            int lenght = extractedDicesGrid.getChildren().size();
-            for (int i = 0; i < lenght; i++) {
-                tempIndex = extractedorderedIds.indexOf(extractedDicesGrid.getChildren().get(0).getId());
-                System.out.println("id: " +tempIndex);
-                tempNode = extractedDicesGrid.getChildren().get(0);
-                tempPosition= extractedDicesGrid.getRowIndex(tempNode);
-                if (tempIndex != -1) {
-                    for(ImageView image: extractDices){
-                        if(image.getId().equals(String.valueOf(tempNode.getId())))
-                            extractDices.remove(image);
+            ArrayList<String> extractedDicesImageViewIds = new ArrayList<>();
+            for (Node dice : extractedDicesGrid.getChildren()) {
+                extractedDicesImageViewIds.add(dice.getId());
+            }
+
+            if (extractedDicesGrid.getChildren().size() > extractedorderedIds.size()) {
+
+                for (int i = 0; i < extractedDicesGrid.getChildren().size(); i++) {
+                    if (!extractedorderedIds.contains(extractedDicesGrid.getChildren().get(i).getId())) {
+                        for (ImageView image : extractDices) {
+                            if (image.getId().equals(String.valueOf(extractedDicesGrid.getChildren().get(i).getId())))
+                                extractDices.remove(image);
+                        }
+                        extractedDicesGrid.getChildren().remove(i);
                     }
-                    extractedDicesGrid.getChildren().remove(0);
-                    ImageView dice = setDiceStyle(clientModel.getExtractedDices().get(tempIndex));
-                    dice.setFitHeight(100);
-                    dice.setFitWidth(100);
-                    extractDices.add(dice);
-                    extractedDicesGrid.add(dice, 0, tempPosition);
-                } else {
-                    for (int j = 0; j < extractedorderedIds.size(); j++) {
-                        if (!extractedDicesImageViewIds.contains(extractedorderedIds.get(j)))
-                            newDiceIndex = j;
-                    }
-                    if (newDiceIndex != -1) {
-                        for(ImageView image: extractDices){
-                            if(image.getId().equals(String.valueOf(tempNode.getId())))
+                }
+
+            } else if (extractedDicesGrid.getChildren().size() == extractedorderedIds.size()) {
+                int lenght = extractedDicesGrid.getChildren().size();
+                for (int i = 0; i < lenght; i++) {
+                    tempIndex = extractedorderedIds.indexOf(extractedDicesGrid.getChildren().get(0).getId());
+                    System.out.println("id: " + tempIndex);
+                    tempNode = extractedDicesGrid.getChildren().get(0);
+                    tempPosition = extractedDicesGrid.getRowIndex(tempNode);
+                    if (tempIndex != -1) {
+                        for (ImageView image : extractDices) {
+                            if (image.getId().equals(String.valueOf(tempNode.getId())))
                                 extractDices.remove(image);
                         }
                         extractedDicesGrid.getChildren().remove(0);
-                        ImageView dice = setDiceStyle(clientModel.getExtractedDices().get(newDiceIndex));
+                        ImageView dice = setDiceStyle(clientModel.getExtractedDices().get(tempIndex));
                         dice.setFitHeight(100);
                         dice.setFitWidth(100);
                         extractDices.add(dice);
                         extractedDicesGrid.add(dice, 0, tempPosition);
+                    } else {
+                        for (int j = 0; j < extractedorderedIds.size(); j++) {
+                            if (!extractedDicesImageViewIds.contains(extractedorderedIds.get(j)))
+                                newDiceIndex = j;
+                        }
+                        if (newDiceIndex != -1) {
+                            for (ImageView image : extractDices) {
+                                if (image.getId().equals(String.valueOf(tempNode.getId())))
+                                    extractDices.remove(image);
+                            }
+                            extractedDicesGrid.getChildren().remove(0);
+                            ImageView dice = setDiceStyle(clientModel.getExtractedDices().get(newDiceIndex));
+                            dice.setFitHeight(100);
+                            dice.setFitWidth(100);
+                            extractDices.add(dice);
+                            extractedDicesGrid.add(dice, 0, tempPosition);
+                        }
                     }
-                }
 
+                }
+            } else {
+                //TODO caso in cui restituisco un dado ai dadi estratti
             }
-        }
-        else {
-        //TODO caso in cui restituisco un dado ai dadi estratti
-        }
     }
 
     /**
