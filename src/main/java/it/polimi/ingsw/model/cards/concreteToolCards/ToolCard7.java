@@ -25,15 +25,7 @@ public class ToolCard7 extends ToolCard {
         this.cardBlocksNextTurn = false;
         this.cardOnlyInFirstMove = true;
         this.used = false;
-        this.diceForSingleUser = null;
-        this.currentPlayer = null;
-        this.currentStatus = 0;
-        this.stoppable = false;
-        this.currentGame = null;
-        this.username = null;
-        this.movesNotifications = new ArrayList<>();
-        this.tempExtractedDices = new ArrayList<>();
-
+        defaultClean();
     }
 
 
@@ -50,7 +42,7 @@ public class ToolCard7 extends ToolCard {
         if (cardOnlyInFirstMove)
             if (player.isPlacedDiceInTurn())
                 throw new CannotUseToolCardException(id, 2);
-        if (player.getTurnForRound()!=2)
+        if (player.getTurnForRound() != 2)
             throw new CannotUseToolCardException(id, 8);
 
         this.currentPlayer = player;
@@ -64,13 +56,12 @@ public class ToolCard7 extends ToolCard {
         this.currentPlayer.setToolCardInUse(this);
         updateClientExtractedDices();
         if (currentGame.isSinglePlayerGame()) {
-            singlePlayerGame=true;
-            return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD,ClientDiceLocations.EXTRACTED);
-        }
-        else {
+            singlePlayerGame = true;
+            return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD, ClientDiceLocations.EXTRACTED);
+        } else {
             this.currentStatus = 1;
 
-            for (Dice extDice:currentGame.getExtractedDices()){
+            for (Dice extDice : currentGame.getExtractedDices()) {
                 extDice.rollDice();
             }
             updateClientExtractedDices();
@@ -84,7 +75,6 @@ public class ToolCard7 extends ToolCard {
     }
 
 
-
     @Override
     public MoveData pickDice(int diceId) throws CannotPickDiceException, CannotPerformThisMoveException {
         if ((currentStatus == 0) && (singlePlayerGame)) {
@@ -95,7 +85,7 @@ public class ToolCard7 extends ToolCard {
 
             this.diceForSingleUser = tempDice;
             currentGame.getExtractedDices().remove(this.diceForSingleUser);
-            for (Dice extDice:currentGame.getExtractedDices()){
+            for (Dice extDice : currentGame.getExtractedDices()) {
                 extDice.rollDice();
             }
             updateClientExtractedDices();
@@ -128,59 +118,30 @@ public class ToolCard7 extends ToolCard {
     @Override
     public MoveData cancelAction() throws CannotCancelActionException {
         switch (currentStatus) {
-            case 0: {
-                if (singlePlayerGame){
-                    cleanCard();
-                    return new MoveData(true,true);
-                }
-                throw new CannotCancelActionException(username, id, 2);
-            }
-            case 1: {
-                if (singlePlayerGame) {
-                    currentGame.getExtractedDices().add(diceForSingleUser);
-                    updateClientExtractedDices();
-                    diceForSingleUser = null;
-                    this.currentStatus = 0;
-                    return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD, ClientDiceLocations.EXTRACTED, null, null, tempExtractedDices, null, null, null);
-                }
-                else throw new CannotCancelActionException(username,id,1);
-            }
+            case 0: return cancelStatusZero();
+            case 1: return cancelStatusOne();
         }
-        throw new CannotCancelActionException(username,id,1);
+        throw new CannotCancelActionException(username, id, 1);
 
     }
 
 
-
     @Override
     protected void cleanCard() {
-        currentPlayer.setToolCardInUse(null);
-        this.diceForSingleUser = null;
-        this.currentPlayer = null;
-        this.currentStatus = 0;
-        this.stoppable = false;
-        this.currentGame = null;
-        this.username = null;
-        this.singlePlayerGame = false;
-        this.movesNotifications = new ArrayList<>();
-        tempExtractedDices = new ArrayList<>();
+        defaultClean();
 
     }
 
     @Override
     public MoveData getNextMove() {
         switch (currentStatus) {
-            case 0: {
-                if (singlePlayerGame)
-                    return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD, ClientDiceLocations.EXTRACTED,tempExtractedDices);
-                else return null;
-            }
+            case 0:  return defaultNextMoveStatusZero();
         }
         return null;
     }
 
     @Override
     public MoveData interuptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException {
-        throw new CannotInteruptToolCardException(username,id);
+        throw new CannotInteruptToolCardException(username, id);
     }
 }

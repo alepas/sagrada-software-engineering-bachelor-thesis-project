@@ -211,6 +211,7 @@ public class PocTest {
         row0Dices.add(dice3);
         row0Dices.add(dice4);
         when(wpc.getRowDices(0)).thenReturn(row0Dices);
+        when(wpc.getRowDicesAndEmptySpaces(0)).thenReturn(row0Dices);
 
         row1Dices.clear();
         row1Dices.add(dice5);
@@ -219,6 +220,7 @@ public class PocTest {
         row1Dices.add(dice8);
         row1Dices.add(dice9);
         when(wpc.getRowDices(1)).thenReturn(row1Dices);
+        when(wpc.getRowDicesAndEmptySpaces(1)).thenReturn(row1Dices);
 
         row2Dices.clear();
         row2Dices.add(dice10);
@@ -227,6 +229,7 @@ public class PocTest {
         row2Dices.add(dice13);
         row2Dices.add(dice14);
         when(wpc.getRowDices(2)).thenReturn(row2Dices);
+        when(wpc.getRowDicesAndEmptySpaces(2)).thenReturn(row2Dices);
 
         row3Dices.clear();
         row3Dices.add(dice15);
@@ -235,6 +238,7 @@ public class PocTest {
         row3Dices.add(dice18);
         row3Dices.add(dice19);
         when(wpc.getRowDices(3)).thenReturn(row3Dices);
+        when(wpc.getRowDicesAndEmptySpaces(3)).thenReturn(row3Dices);
 
 
 

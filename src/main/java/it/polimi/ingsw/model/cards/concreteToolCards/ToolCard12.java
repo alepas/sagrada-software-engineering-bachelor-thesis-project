@@ -31,14 +31,7 @@ public class ToolCard12 extends ToolCard {
         this.cardBlocksNextTurn = false;
         this.cardOnlyInFirstMove = true;
         this.used = false;
-        this.diceForSingleUser = null;
-        this.currentPlayer = null;
-        this.currentStatus = 0;
-        this.stoppable = false;
-        this.currentGame = null;
-        this.username = null;
-        movesNotifications = new ArrayList<>();
-        tempExtractedDices = new ArrayList<>();
+        defaultClean();
         firstDiceInitial = null;
         secondDiceInitial = null;
         chosenColor = null;
@@ -52,46 +45,14 @@ public class ToolCard12 extends ToolCard {
 
     @Override
     public MoveData setCard(PlayerInGame player) throws CannotUseToolCardException {
-        if ((currentPlayer != null) || (currentStatus != 0)) {
-            throw new CannotUseToolCardException(id, 0);
-        }
-        if (cardOnlyInFirstMove)
-            if (player.isPlacedDiceInTurn())
-                throw new CannotUseToolCardException(id, 2);
-        if (player.getWPC().getNumOfDices() == 0)
-            throw new CannotUseToolCardException(id, 5);
-
-        this.currentPlayer = player;
-        this.currentGame = player.getGame();
-        this.username = player.getUser();
-        currentPlayer.setAllowPlaceDiceAfterCard(allowPlaceDiceAfterCard);
-        if (cardBlocksNextTurn) {
-            currentPlayer.setCardUsedBlockingTurn(this);
-        }
-        this.currentPlayer.setToolCardInUse(this);
-        updateClientExtractedDices();
-        if (currentGame.isSinglePlayerGame()) {
-            singlePlayerGame = true;
-            return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD, ClientDiceLocations.EXTRACTED);
-        } else {
-            this.currentStatus = 1;
-            return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.WPC, ClientDiceLocations.WPC);
-
-        }
+        return setCardDefault(player,true,false,NextAction.PLACE_DICE_TOOLCARD,ClientDiceLocations.WPC,ClientDiceLocations.WPC);
     }
 
 
     @Override
     public MoveData pickDice(int diceId) throws CannotPickDiceException, CannotPerformThisMoveException {
         if ((currentStatus == 0) && (singlePlayerGame)) {
-            Dice tempDice = currentPlayer.dicePresentInLocation(diceId, ClientDiceLocations.EXTRACTED).getDice();
-            if (tempDice.getDiceColor() != colorForDiceSingleUser)
-                throw new CannotPickDiceException(username, tempDice.getDiceNumber(), tempDice.getDiceColor(), ClientDiceLocations.EXTRACTED, 1);
-            this.currentStatus = 1;
-            this.diceForSingleUser = tempDice;
-            currentGame.getExtractedDices().remove(this.diceForSingleUser);
-            updateClientExtractedDices();
-            return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.WPC, ClientDiceLocations.WPC, null, tempExtractedDices, null, null, null);
+            return pickDiceInitializeSingleUserToolCard(diceId, NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.WPC, ClientDiceLocations.WPC);
         } else throw new CannotPerformThisMoveException(username, 2, false);
     }
 
@@ -131,8 +92,8 @@ public class ToolCard12 extends ToolCard {
             this.currentStatus = 20;
             updateClientWPC();
             movesNotifications.add(new ToolCardDicePlacedNotification(username, tempDice.getClientDice(), pos));
-            String text="Vuoi spostare un altro dado dello stesso colore del dado appena spostato?";
-            return new MoveData(NextAction.INTERRUPT_TOOLCARD,text, true, false, tempClientWpc, null, null, null, null,null, false );
+            String text = "Vuoi spostare un altro dado dello stesso colore del dado appena spostato?";
+            return new MoveData(NextAction.INTERRUPT_TOOLCARD, text, true, false, tempClientWpc, null, null, null, null, null, false);
         }
 
         if (currentStatus == 2) {
@@ -164,28 +125,12 @@ public class ToolCard12 extends ToolCard {
     @Override
     public MoveData cancelAction() throws CannotCancelActionException {
         switch (currentStatus) {
-            case 0: {
-                if (singlePlayerGame) {
-                    cleanCard();
-                    return new MoveData(true, true);
-                }
-                throw new CannotCancelActionException(username, id, 2);
-            }
-            case 1: {
-                if (!singlePlayerGame) {
-                    cleanCard();
-                    return new MoveData(true, true);
-                }
-                currentGame.getExtractedDices().add(diceForSingleUser);
-                updateClientExtractedDices();
-                diceForSingleUser = null;
-                this.currentStatus = 0;
-                return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD, ClientDiceLocations.EXTRACTED, null, null, tempExtractedDices, null, null, null);
-            }
+            case 0: return cancelStatusZero();
+            case 1: return cancelStatusOne();
 
             case 2: {
-                String text="Vuoi spostare un altro dado dello stesso colore del dado appena spostato?";
-                return new MoveData(NextAction.INTERRUPT_TOOLCARD,text, true, false, tempClientWpc, null, null, null, null,null, false );
+                String text = "Vuoi spostare un altro dado dello stesso colore del dado appena spostato?";
+                return new MoveData(NextAction.INTERRUPT_TOOLCARD, text, true, false, tempClientWpc, null, null, null, null, null, false);
             }
         }
         throw new CannotCancelActionException(username, id, 1);
@@ -194,37 +139,24 @@ public class ToolCard12 extends ToolCard {
 
     @Override
     protected void cleanCard() {
-        currentPlayer.setToolCardInUse(null);
-        this.diceForSingleUser = null;
-        this.currentPlayer = null;
-        this.currentStatus = 0;
-        this.stoppable = false;
-        this.currentGame = null;
-        this.username = null;
-        this.singlePlayerGame = false;
-        this.tempClientWpc = null;
-        this.movesNotifications = new ArrayList<>();
-        tempExtractedDices = new ArrayList<>();
+        defaultClean();
         firstDiceInitial = null;
         secondDiceInitial = null;
-        this.chosenColor=null;
+        chosenColor = null;
     }
 
     @Override
     public MoveData getNextMove() {
         switch (currentStatus) {
-            case 0: {
-                if (singlePlayerGame)
-                    return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD, ClientDiceLocations.EXTRACTED, tempExtractedDices);
-                else return null;
-            }
+            case 0:  return defaultNextMoveStatusZero();
             case 1:
                 return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.WPC, ClientDiceLocations.WPC, null, tempExtractedDices, null, null, null);
             case 2:
                 return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.WPC, ClientDiceLocations.WPC, tempClientWpc, null, null, null, null);
 
-            case 20:String text="Vuoi spostare un altro dado dello stesso colore del dado appena spostato?";
-                return new MoveData(NextAction.INTERRUPT_TOOLCARD,text, true, false, tempClientWpc, null, null, null, null,null, false );
+            case 20:
+                String text = "Vuoi spostare un altro dado dello stesso colore del dado appena spostato?";
+                return new MoveData(NextAction.INTERRUPT_TOOLCARD, text, true, false, tempClientWpc, null, null, null, null, null, false);
         }
         return null;
     }

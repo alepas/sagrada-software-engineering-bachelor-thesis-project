@@ -39,15 +39,9 @@ public class DatabaseUsers {
 
             instance = new DatabaseUsers();
             pathFile=UserDBConstants.getPathDbFile();
-            try {
-                instance.usersByUsername = (HashMap<String, User>) LoadingFromFile.fromFile(pathFile);
 
-            }catch (DatabaseFileErrorException e) {
-                if (e.getErrorId() == 1) {
-                    new File(pathFile);
-                    instance.usersByUsername = new HashMap<String, User>();
-                }
-            }
+            instance.loadDatabaseFromFile();
+
             instance.tokenByUsername =new HashMap<String, String>();
 
             instance.usersByToken =new HashMap<String, User>();
@@ -65,16 +59,7 @@ public class DatabaseUsers {
         if (instance==null) {
             instance = new DatabaseUsers();
             pathFile=path;
-            try {
-                instance.usersByUsername = (HashMap<String, User>) LoadingFromFile.fromFile(pathFile);
-
-            } catch (DatabaseFileErrorException e) {
-                if (e.getErrorId()==1){
-                    new File(pathFile);
-                    instance.usersByUsername =new HashMap<String, User>();
-                }
-
-            }
+            instance.loadDatabaseFromFile();
             instance.tokenByUsername =new HashMap<String, String>();
 
             instance.usersByToken =new HashMap<String, User>();
@@ -85,6 +70,7 @@ public class DatabaseUsers {
         return instance;
     }
 
+
     private DatabaseUsers(){}
 
 
@@ -92,7 +78,6 @@ public class DatabaseUsers {
         byte[] salt;
         String passwordHash;
         String newtoken=null;
-        System.out.println("questo è l'username: "+username);
         if (usersByUsername.containsKey(username)){
             throw new CannotRegisterUserException(username,1);
 
@@ -130,7 +115,7 @@ public class DatabaseUsers {
             throw new CannotRegisterUserException(username,1);
 
         }
-        System.out.println(">>> Creo nuovo utente");
+        System.out.println(">>> Creo nuovo utente: "+username);
         try {
             salt = getSalt();
             passwordHash = SHAFunction.getShaPwd(password, salt);
@@ -161,7 +146,7 @@ public class DatabaseUsers {
         String storedPasswordHash;
         String newtoken;
         PlayerInGame playerInGame=null;
-        String oldtoken=null;
+        String oldtoken;
         User foundUser;
 
         // username isn't registered
@@ -185,18 +170,17 @@ public class DatabaseUsers {
             {
 
                 playerInGame=playerInGameByToken.get(oldtoken);
+                if (playerInGame!=null) {
+                    try {
+                        removeSocketFromToken(oldtoken);
+                    } catch (CannotCloseOldConnectionException e) {
+                        if (e.getErrorId() == 0)
+                            throw new CannotLoginUserException(username, 3);
+                    }
+                    usersByToken.remove(oldtoken);
 
-
-                try {
-                    removeSocketFromToken(oldtoken);
-                } catch (CannotCloseOldConnectionException e) {
-                    if (e.getErrorId()==0)
-                        throw new CannotLoginUserException(username,3);
+                    playerInGameByToken.remove(oldtoken);
                 }
-                usersByToken.remove(oldtoken);
-
-                playerInGameByToken.remove(oldtoken);
-
             }
 
 
@@ -551,6 +535,21 @@ public class DatabaseUsers {
         playerInGameByToken.get(userToken).setObserver(observer);
         return game;
     }
+
+
+    private void loadDatabaseFromFile() {
+        try {
+            instance.usersByUsername = (HashMap<String, User>) LoadingFromFile.fromFile(pathFile);
+
+        }catch (DatabaseFileErrorException e) {
+            if (e.getErrorId() == 1) {
+                new File(pathFile);
+                instance.usersByUsername = new HashMap<String, User>();
+            }
+        }
+    }
+
+
 
 
 }
