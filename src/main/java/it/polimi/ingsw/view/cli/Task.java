@@ -5,25 +5,25 @@ import java.util.TimerTask;
 public class Task extends TimerTask {
     private int taskTime;
     private final int sensibility;
-    private final Object waiter;
+    private final Object timerWaiter;
     private boolean run = true;
 
-    public Task(int taskTime, Object waiter) {
-        this(taskTime, 1000, waiter);
+    public Task(int taskTime, Object timerWaiter) {
+        this(taskTime, 1000, timerWaiter);
     }
 
-    public Task(int taskTime, int sensibility, Object waiter) {
+    public Task(int taskTime, int sensibility, Object timerWaiter) {
         this.taskTime = taskTime;
         this.sensibility = sensibility;
-        this.waiter = waiter;
+        this.timerWaiter = timerWaiter;
     }
 
     @Override
     public void run() {
         if (run) {
-            synchronized (waiter) {
+            synchronized (timerWaiter) {
                 taskTime -= sensibility;
-                waiter.notifyAll();
+                timerWaiter.notifyAll();
             }
         }
     }

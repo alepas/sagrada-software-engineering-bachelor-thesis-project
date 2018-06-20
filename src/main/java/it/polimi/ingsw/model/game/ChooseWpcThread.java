@@ -1,22 +1,20 @@
 package it.polimi.ingsw.model.game;
 
-import it.polimi.ingsw.model.constants.GameConstants;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 
 public class ChooseWpcThread implements Runnable {
     private PlayerInGame[] players;
 
-    public ChooseWpcThread(PlayerInGame[] players) {
+    ChooseWpcThread(PlayerInGame[] players) {
         this.players = players;
     }
 
     @Override
     public void run() {
-        int startTime = GameConstants.CHOOSE_WPC_WAITING_TIME + GameConstants.TASK_DELAY;
         while (needToWaitPlayersWpc()){
             try {
-                Thread.sleep( startTime/ 20);
-            } catch (InterruptedException e) {}
+                Thread.sleep( 500);
+            } catch (InterruptedException e) {/*Do nothing*/}
         }
     }
 

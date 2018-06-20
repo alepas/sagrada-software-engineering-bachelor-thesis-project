@@ -16,11 +16,15 @@ public class CliView implements Observer, NotificationHandler {
     private int strNum = 0;
     private boolean isInterruptable = true;
 
-    private Timer timer = new Timer();
+    private Timer timer;
     private Task task = null;
+    private boolean preventTaskDeletion = false;
+    private TurnThread turnThread = null;
     private final Object waiter = new Object();
+    private final Object timerWaiter = new Object();
 
     private Status state;
+    private boolean stateChanged = false;
 
     // ----- The view is composed with the controller (strategy)
     private final CliController controller;
@@ -32,7 +36,7 @@ public class CliView implements Observer, NotificationHandler {
     }
 
     //Restituisce null se c'è stata un'eccezione
-    public String userInput() {
+    private String userInput() {
         try {
             // wait until we have data to complete a readLine()
             while (!fromKeyBoard.ready()) {
@@ -49,35 +53,60 @@ public class CliView implements Observer, NotificationHandler {
     public void printText(String text) { System.out.println(text); }
 
     private void startNewTask(int taskTime){
-        task = new Task(taskTime, waiter);
+        preventTaskDeletion = (task != null);
+        task = new Task(taskTime, timerWaiter);
+        timer = new Timer();
         timer.schedule(task, 0, task.getSensibility());
     }
 
     private void startNewTask(int taskTime, int sensibility){
-        task = new Task(taskTime, sensibility, waiter);
+        task = new Task(taskTime, sensibility, timerWaiter);
         timer.schedule(task, 0, task.getSensibility());
     }
 
     private void deleteTask() {
-        task.stop();
-        timer.cancel();
-        timer.purge();
-        task = null;
+        if (preventTaskDeletion) {
+            preventTaskDeletion = false;
+        } else {
+            timer = null;
+            task = null;
+        }
     }
 
     private void changeState(NextAction action) {
-        state = state.change(action);
+        synchronized (waiter) {
+            state = Status.change(action);
+            stateChanged = true;
+            waiter.notifyAll();
+        }
+    }
+
+    private void changeState(Status status){
+        synchronized (waiter) {
+            state = status;
+            stateChanged = true;
+            waiter.notifyAll();
+        }
+    }
+
+    private void returnToPreviousState(){
+        synchronized (waiter) {
+            state = state.getPrevious();
+            stateChanged = true;
+            waiter.notifyAll();
+        }
     }
 
     //---------------------------- External methods ----------------------------
     public void launch(){
-        state = Status.LOG_PHASE;
+        changeState(Status.LOG_PHASE);
         start();
     }
 
     private void start(){
         boolean quit = false;
         while (!quit) {
+            stateChanged = false;
             switch (state) {
                 case QUIT_SAGRADA:
                     quit = true;
@@ -124,20 +153,8 @@ public class CliView implements Observer, NotificationHandler {
                     waitForTurn();
                     break;
 
-                case MENU_ALL:
-                    showMenuAll();
-                    break;
-
-                case MENU_ONLY_PLACEDICE:
-                    showMenuOnlyPlaceDice();
-                    break;
-
-                case MENU_ONLY_TOOLCARD:
-                    showMenuOnlyToolcard();
-                    break;
-
-                case MENU_ONLY_ENDTURN:
-                    showMenuOnlyEndturn();
+                case MENU_ALL: case MENU_ONLY_PLACEDICE: case MENU_ONLY_TOOLCARD: case MENU_ONLY_ENDTURN:
+                    showMenu();
                     break;
 
                 case INTERRUPT_TOOLCARD:
@@ -171,12 +188,14 @@ public class CliView implements Observer, NotificationHandler {
         while (true) {
             displayText(CliConstants.CHOOSE_LOG_TYPE);
             String answer = userInput();
+            assert answer != null;
+
             if (answer.equals(CliConstants.YES_RESPONSE)) {
-                state = Status.LOGIN;
+                changeState(Status.LOGIN);
                 return;
             };
             if (answer.equals(CliConstants.NO_RESPONSE)){
-                state = Status.CREATE_ACCOUNT;
+                changeState(Status.CREATE_ACCOUNT);
                 return;
             }
         }
@@ -191,8 +210,10 @@ public class CliView implements Observer, NotificationHandler {
 
             displayText(CliConstants.INSERT_USERNAME);
             String username = userInput();
+            assert username != null;
+
             if (username.equals(CliConstants.ESCAPE_RESPONSE)){
-                state = state.getPrevious();
+                returnToPreviousState();
                 return;
             }
 
@@ -204,21 +225,23 @@ public class CliView implements Observer, NotificationHandler {
         } while (user == null);
 
         displayText(CliConstants.LOG_SUCCESS + user);
-        state = Status.MAIN_MENU_PHASE;
+        changeState(Status.MAIN_MENU_PHASE);
     }
 
     private void mainMenuPhase() {
         displayText(CliConstants.PRESENT_MAIN_MENU);
         String response = userInput();
+        assert response != null;
+
         switch (response){
             case "1":
-                state = Status.FIND_GAME_PHASE;
+                changeState(Status.FIND_GAME_PHASE);
                 break;
             case "2":
-                state = Status.DISPLAY_STAT;
+                changeState(Status.DISPLAY_STAT);
                 break;
             case "3":
-                state = Status.LOGOUT;
+                changeState(Status.LOGOUT);
                 break;
             default:
                 break;
@@ -236,7 +259,7 @@ public class CliView implements Observer, NotificationHandler {
         displayText("Ranking: " + user.getRanking());
         printText("");
 
-        state = Status.MAIN_MENU_PHASE;
+        changeState(Status.MAIN_MENU_PHASE);
     }
 
     private void findGamePhase(){
@@ -245,9 +268,10 @@ public class CliView implements Observer, NotificationHandler {
 
         displayText("Seleziona numero giocatori: (digita 'back' per tornare indietro)");
         response = userInput();
+        assert response != null;
 
         if (response.equals(CliConstants.ESCAPE_RESPONSE)){
-            state = Status.MAIN_MENU_PHASE;
+            changeState(Status.MAIN_MENU_PHASE);
             return;
         }
 
@@ -256,9 +280,9 @@ public class CliView implements Observer, NotificationHandler {
             int i = controller.findGame(numPlayers);
             if (i < 0){
                 displayText("Impossibile trovare partita. Riprovare più tardi");
-                state = Status.MAIN_MENU_PHASE;
+                changeState(Status.MAIN_MENU_PHASE);
             } else {
-                state = Status.START_GAME_PHASE;
+                changeState(Status.START_GAME_PHASE);
             }
         } catch (NumberFormatException e){
             displayText("Perfavore inserire un numero intero");
@@ -273,7 +297,7 @@ public class CliView implements Observer, NotificationHandler {
         chooseWpcPhase();
         waitFor("In attesa delle toolcard...", ObjectToWaitFor.TOOLCARDS);
         waitFor("In attesa degli obbiettivi pubblici...", ObjectToWaitFor.POC);
-        state = Status.UNKNOWN;
+        if (state.equals(Status.START_GAME_PHASE)) changeState(Status.UNKNOWN);;
     }
 
     private void unknownPhase() {
@@ -317,22 +341,20 @@ public class CliView implements Observer, NotificationHandler {
         });
         requestWpcThread.start();
 
-        synchronized (waiter){
+        synchronized (timerWaiter){
             try {
                 int lastTimeLeft = task.timeLeft();
-                int nextStep = 50;
+                int[] steps = {0, 5, 15, 30, 50};
+                Integer timeLeft;
 
                 while (!controller.allPlayersChooseWpc()) {
-                    if (task.timeLeft() <= nextStep && lastTimeLeft > nextStep) {
-                        displayText("Rimangono " + nextStep + " secondi per scegliere le wpc");
-                        lastTimeLeft = nextStep;
-                        if (nextStep == 0) displayText("Tempo scaduto");
-                        if (nextStep <= 5) nextStep = 0;
-                        if (nextStep == 15) nextStep = 5;
-                        if (nextStep == 30) nextStep = 15;
-                        if (nextStep == 50) nextStep = 30;
+                    if ((timeLeft = hasPassedStep(steps, lastTimeLeft)) != null) {
+                        if (timeLeft == 0) displayText("Tempo scaduto");
+                        else displayText("Rimangono " + timeLeft + " secondi per scegliere le wpc");
+
+                        lastTimeLeft = timeLeft;
                     }
-                    waiter.wait();
+                    timerWaiter.wait();
                 }
 
                 if (isInterruptable) requestWpcThread.interrupt();
@@ -343,13 +365,22 @@ public class CliView implements Observer, NotificationHandler {
         }
     }
 
+    //Se è stato superato uno degli step, restituisce lo step passato
+    //Altrimenti null
+    private Integer hasPassedStep(int[] steps, int lastTimeLeft){
+        for(int step : steps){
+            if (task.timeLeft() <= step && lastTimeLeft > step) return step;
+        }
+        return null;
+    }
+
     private void waitForTurn() {
         waitFor("In attesa del mio turno...", ObjectToWaitFor.TURN);
     }
 
     private void showStartTurnInfo(){
         displayText("Questa è la tua wpc");
-        displayText("Favours rimasti: " + controller.getFavour() + "\n"
+        displayText("Favours rimasti: " + controller.getUserFavour() + "\n"
                 + cliRender.renderWpc(controller.getMyWpc(), false));
 
         displayText("Dadi estratti:");
@@ -370,82 +401,87 @@ public class CliView implements Observer, NotificationHandler {
         return 5;
     }
 
-    private void showMenuAll() {
-        showStartTurnInfo();
-
-        MenuAction[] possibleActions = { MenuAction.GET_PRIVATE_OBJ, MenuAction.GET_POCS,
-                    MenuAction.GET_TOOLS, MenuAction.SEE_ALL_WPCS, MenuAction.SEE_ROUND_TRACK,
-                    MenuAction.PLACE_DICE, MenuAction.USE_TOOLCARD, MenuAction.END_TURN};
-
-        do{
-            displayText("Cosa vuoi fare?");
-            int i = showStandardActions();
-            displayText(++i + ") Posiziona dado");
-            displayText(++i + ") Usa toolcard (Favours rimasti: " + controller.getFavour() + ")");
-            displayText(++i + ") Passa turno");
-        } while (!listenToResponseAndPerformAction(possibleActions));
+    private MenuAction[] getActionsForState() {
+        switch (state) {
+            case MENU_ALL:
+                return new MenuAction[] {MenuAction.GET_PRIVATE_OBJ, MenuAction.GET_POCS,
+                        MenuAction.GET_TOOLS, MenuAction.SEE_ALL_WPCS, MenuAction.SEE_ROUND_TRACK,
+                        MenuAction.PLACE_DICE, MenuAction.USE_TOOLCARD, MenuAction.END_TURN};
+            case MENU_ONLY_PLACEDICE:
+                return new MenuAction[] {MenuAction.GET_PRIVATE_OBJ, MenuAction.GET_POCS,
+                        MenuAction.GET_TOOLS, MenuAction.SEE_ALL_WPCS, MenuAction.SEE_ROUND_TRACK,
+                        MenuAction.PLACE_DICE, MenuAction.END_TURN};
+            case MENU_ONLY_TOOLCARD:
+                return new MenuAction[] {MenuAction.GET_PRIVATE_OBJ, MenuAction.GET_POCS,
+                        MenuAction.GET_TOOLS, MenuAction.SEE_ALL_WPCS, MenuAction.SEE_ROUND_TRACK,
+                        MenuAction.END_TURN};
+            case MENU_ONLY_ENDTURN:
+                return new MenuAction[] {MenuAction.GET_PRIVATE_OBJ, MenuAction.GET_POCS,
+                        MenuAction.GET_TOOLS, MenuAction.SEE_ALL_WPCS, MenuAction.SEE_ROUND_TRACK,
+                        MenuAction.END_TURN};
+            default:
+                return null;
+        }
     }
 
-    private void showMenuOnlyPlaceDice(){
-        showStartTurnInfo();
+    private void showMenu(){
+        MenuAction[] possibleActions = getActionsForState();
+        if (possibleActions != null){
+            showStartTurnInfo();
 
-        MenuAction[] possibleActions = { MenuAction.GET_PRIVATE_OBJ, MenuAction.GET_POCS,
-                MenuAction.GET_TOOLS, MenuAction.SEE_ALL_WPCS, MenuAction.SEE_ROUND_TRACK,
-                MenuAction.PLACE_DICE, MenuAction.END_TURN};
+            Thread playTurn = new Thread(() -> {
+                do{
+                    displayText("Cosa vuoi fare?");
+                    int i = showStandardActions();
+                    while (i < possibleActions.length) {
+                        if (possibleActions[i].equals(MenuAction.PLACE_DICE)){
+                            displayText(++i + ") Posiziona dado");
+                            continue;
+                        }
+                        if (possibleActions[i].equals(MenuAction.USE_TOOLCARD)){
+                            displayText(++i + ") Usa toolcard (Favours rimasti: " + controller.getUserFavour() + ")");
+                            continue;
+                        }
+                        if (possibleActions[i].equals(MenuAction.END_TURN)){
+                            displayText(++i + ") Passa turno");
+                            continue;
+                        }
+                        printText("Show menu error");
+                    }
+                    listenToResponseAndPerformAction(possibleActions);
+                } while (!stateChanged);
+            });
+            playTurn.start();
 
-        do{
-            displayText("Cosa vuoi fare?");
-            int i = showStandardActions();
-            displayText(++i + ") Posiziona dado");
-            displayText(++i + ") Passa turno");
-        } while (!listenToResponseAndPerformAction(possibleActions));
-    }
+            synchronized (waiter){
+                try {
+                    while (!stateChanged) waiter.wait();
+                    if (playTurn.isAlive()) playTurn.interrupt();
+                    playTurn.join();
+                } catch (InterruptedException e){
+                    //Do nothing
+                }
+            }
+        }
 
-    private void showMenuOnlyToolcard(){
-        showStartTurnInfo();
-
-        MenuAction[] possibleActions = { MenuAction.GET_PRIVATE_OBJ, MenuAction.GET_POCS,
-                MenuAction.GET_TOOLS, MenuAction.SEE_ALL_WPCS, MenuAction.SEE_ROUND_TRACK,
-                MenuAction.USE_TOOLCARD, MenuAction.END_TURN};
-
-        do{
-            displayText("Cosa vuoi fare?");
-            int i = showStandardActions();
-            displayText(++i + ") Usa toolcard (Favours rimasti: " + controller.getFavour() + ")");
-            displayText(++i + ") Passa turno");
-        } while (!listenToResponseAndPerformAction(possibleActions));
-    }
-
-    private void showMenuOnlyEndturn(){
-        showStartTurnInfo();
-
-        MenuAction[] possibleActions = { MenuAction.GET_PRIVATE_OBJ, MenuAction.GET_POCS,
-                MenuAction.GET_TOOLS, MenuAction.SEE_ALL_WPCS, MenuAction.SEE_ROUND_TRACK,
-                MenuAction.END_TURN};
-
-        do{
-            displayText("Cosa vuoi fare?");
-            int i = showStandardActions();
-            displayText(++i + ") Passa turno");
-        } while (!listenToResponseAndPerformAction(possibleActions));
     }
 
     //Restituisce true se è stato possibile eseguire la mossa
     private boolean listenToResponseAndPerformAction(MenuAction[] possibleActions){
         String response = userInput();
-        try {
-            int action = Integer.parseInt(response) - 1;
-            if (action >= 0 && action < possibleActions.length) {
-                return performMenuAction(possibleActions[action]);
+        if (response != null) {
+            try {
+                int action = Integer.parseInt(response) - 1;
+                if (action >= 0 && action < possibleActions.length) {
+                    return performMenuAction(possibleActions[action]);
+                } else {
+                    displayText("Comando non riconosciuto");
+                }
+            } catch (NumberFormatException e) {
+                displayText("Perfavore inserire il numero dell'azione che si vuole eseguire");
             }
-            else {
-                displayText("Comando non riconosciuto");
-                return false;
-            }
-        } catch (NumberFormatException e){
-            displayText("Perfavore inserire il numero dell'azione che si vuole eseguire");
-            return false;
         }
+        return false;
     }
 
     //Restituisce true se l'azione è stata compiuta
@@ -484,7 +520,7 @@ public class CliView implements Observer, NotificationHandler {
             case END_TURN:
                 printText("\n");
                 if (controller.passTurn()) {
-                    state = Status.UNKNOWN;
+                    changeState(Status.UNKNOWN);
                     return true;
                 }
                 return false;
@@ -544,15 +580,18 @@ public class CliView implements Observer, NotificationHandler {
         do {
             try {
                 displayText("Inserisci l'ID del dado da posizionare (digita 'back' per annullare la mossa)");
-                if ((response = userInput()).equals(CliConstants.ESCAPE_RESPONSE)) return false;
+                if ((response = userInput()) == null) return false;
+                if (response.equals(CliConstants.ESCAPE_RESPONSE)) return false;
                 int id = Integer.parseInt(response);
 
                 displayText("Inserisci la riga in cui posizionarlo (digita 'back' per annullare la mossa)");
-                if ((response = userInput()).equals(CliConstants.ESCAPE_RESPONSE)) return false;
+                if ((response = userInput()) == null) return false;
+                if (response.equals(CliConstants.ESCAPE_RESPONSE)) return false;
                 int row = Integer.parseInt(response)-strNum;
                 
                 displayText("Inserisci la colonna in cui posizionarlo (digita 'back' per annullare la mossa)");
-                if ((response = userInput()).equals(CliConstants.ESCAPE_RESPONSE)) return false;
+                if ((response = userInput()) == null) return false;
+                if (response.equals(CliConstants.ESCAPE_RESPONSE)) return false;
                 int col = Integer.parseInt(response)-strNum;
                 
                 Position pos = new Position(row, col);
@@ -577,7 +616,9 @@ public class CliView implements Observer, NotificationHandler {
         do {
             showToolcards();
             displayText("Seleziona l'ID della toolcard da utilizzare");
-            nextAction = controller.useToolcard(userInput());
+            String response = userInput();
+            if (response == null) return;
+            nextAction = controller.useToolcard(response);
         } while (nextAction == null);
 
         changeState(nextAction);
@@ -586,13 +627,14 @@ public class CliView implements Observer, NotificationHandler {
     private void pickDiceForToolCard() {
         NextAction nextAction = null;
         ToolCardClientNextActionInfo info = controller.getToolcardNextActionInfo();
+        int id;
 
         do {
-            int id = pickDice(info.wherePickNewDice);
-            nextAction = controller.pickDiceForToolCard(id);
-        } while (nextAction == null);
+            id = pickDice(info.wherePickNewDice);
+            if (id >= 0) nextAction = controller.pickDiceForToolCard(id);
+        } while (id >= 0 && nextAction == null);
 
-        changeState(nextAction);
+        if (nextAction != null) changeState(nextAction);
     }
 
     private int pickDice(ClientDiceLocations location){
@@ -613,6 +655,7 @@ public class CliView implements Observer, NotificationHandler {
     private int pickDiceFromWpc(){
         ClientWpc wpc = controller.getMyWpc();
         int id = -1;
+        String response;
 
         do {
             try {
@@ -621,10 +664,12 @@ public class CliView implements Observer, NotificationHandler {
                 printText(cliRender.renderWpc(wpc, false));
 
                 displayText("Inserisci la riga del dado");
-                int row = Integer.parseInt(userInput())-strNum;
+                if ((response = userInput()) == null) return -1;
+                int row = Integer.parseInt(response)-strNum;
 
                 displayText("Indica la colonna del dado");
-                int col = Integer.parseInt(userInput())-strNum;
+                if ((response = userInput()) == null) return -1;
+                int col = Integer.parseInt(response)-strNum;
 
                 Position pos = new Position(row, col);
 
@@ -654,12 +699,14 @@ public class CliView implements Observer, NotificationHandler {
 
     private int pickDiceFromDices(ArrayList<ClientDice> dices){
         int id = -1;
+        String response;
         do {
             try {
                 printText(cliRender.renderDices(dices));
 
                 displayText("Inserisci l'ID del dado da utilizzare");
-                id = Integer.parseInt(userInput());
+                if ((response = userInput()) == null) return -1;
+                id = Integer.parseInt(response);
 
             } catch (NumberFormatException e) {
                 displayText("Inserire un numero intero");
@@ -671,16 +718,19 @@ public class CliView implements Observer, NotificationHandler {
 
     private Position selectWpcPosition(){
         ClientWpc wpc = controller.getMyWpc();
+        String response;
 
         do {
             try {
                 printText(cliRender.renderWpc(wpc, false));
 
                 displayText("Indica la riga in cui posizionare il dado");
-                int row = Integer.parseInt(userInput())-strNum;
+                if ((response = userInput()) == null) return null;
+                int row = Integer.parseInt(response)-strNum;
 
                 displayText("Indica la colonna in cui posizionare il dado");
-                int col = Integer.parseInt(userInput())-strNum;
+                if ((response = userInput()) == null) return null;
+                int col = Integer.parseInt(response)-strNum;
 
                 Position pos = new Position(row, col);
 
@@ -710,7 +760,10 @@ public class CliView implements Observer, NotificationHandler {
         }
 
         do {
-            if (info.wherePutNewDice.equals(ClientDiceLocations.WPC)) pos = selectWpcPosition();
+            if (info.wherePutNewDice.equals(ClientDiceLocations.WPC)) {
+                pos = selectWpcPosition();
+                if (pos == null) return;
+            }
             nextAction = controller.placeDiceForToolCard(id, pos);
         } while (nextAction == null);
 
@@ -720,7 +773,7 @@ public class CliView implements Observer, NotificationHandler {
     private void selectNumberForToolcard() {
         ToolCardClientNextActionInfo info = controller.getToolcardNextActionInfo();
         NextAction nextAction = null;
-//        ClientDice dice = info.dice();
+        String response;
 
         StringBuilder str = new StringBuilder();
         for(int num : info.numbersToChoose){
@@ -732,7 +785,8 @@ public class CliView implements Observer, NotificationHandler {
             displayText("Scegli il nuovo numero tra quelli mostrati sopra");
 
             try {
-                int num = Integer.parseInt(userInput());
+                if ((response = userInput()) == null) return;
+                int num = Integer.parseInt(response);
                 if (!info.numbersToChoose.contains(num)) {
                     displayText("Inserire un numero tra quelli presenti");
                     continue;
@@ -833,6 +887,7 @@ public class CliView implements Observer, NotificationHandler {
 
     @Override
     public void handle(NextTurnNotification notification) {
+        printText("");
         displayText("Turno: " + notification.turnNumber + "\tRound: "
                 + controller.getCurrentRound() + "\tGiocatore attivo: " + notification.activeUser);
 
@@ -841,9 +896,14 @@ public class CliView implements Observer, NotificationHandler {
             printText("\n" + cliRender.renderDices(controller.getExtractedDices()));
         }
 
+        startNewTask(notification.timeToCompleteTask);
+        if (turnThread != null) turnThread.stop();
+        turnThread = new TurnThread(this, task, timerWaiter);
+        (new Thread(turnThread)).start();
+
         synchronized (waiter){
-            if (controller.isActive()) state = Status.MENU_ALL;
-            else state = Status.ANOTHER_PLAYER_TURN;
+            if (controller.isActive()) changeState(Status.MENU_ALL);
+            else changeState(Status.ANOTHER_PLAYER_TURN);
             stopWaiting();
         }
     }

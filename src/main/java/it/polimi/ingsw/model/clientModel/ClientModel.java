@@ -23,13 +23,13 @@ public class ClientModel implements Observer, NotificationHandler {
     private ClientColor[] privateObjectives;
     private boolean wpcsArrived;
     private HashMap<String, ClientWpc> wpcByUsername;
+    private HashMap<String, Integer> favoursByUsername;
     private ArrayList<ClientToolCard> gameToolCards;
     private ArrayList<ClientPoc> gamePublicObjectiveCards;
     private int currentRound;
     private ArrayList<ClientDice> extractedDices;
     private int currentTurn;
     private boolean active;
-    private int favour;
     private ClientRoundTrack roundTrack;
     private ToolCardClientNextActionInfo toolCardClientNextActionInfo;
 
@@ -53,13 +53,13 @@ public class ClientModel implements Observer, NotificationHandler {
         this.privateObjectives = null;
         this.wpcsArrived = false;
         this.wpcByUsername = new HashMap<>();
+        this.favoursByUsername = new HashMap<>();
         this.gameToolCards = new ArrayList<>();
         this.gamePublicObjectiveCards = new ArrayList<>();
         this.currentRound = 0;
         this.extractedDices = new ArrayList<>();
         this.currentTurn = 0;
         this.active = false;
-        this.favour = 0;
         this.roundTrack=null;
         this.toolCardClientNextActionInfo = null;
     }
@@ -112,6 +112,14 @@ public class ClientModel implements Observer, NotificationHandler {
         this.wpcByUsername = wpcByUsername;
     }
 
+    public HashMap<String, Integer> getFavoursByUsername() {
+        return favoursByUsername;
+    }
+
+    public void setUserFavours(String username, int favours){
+        favoursByUsername.put(username, favours);
+    }
+
     public void setCurrentRound(int currentRound) {
         this.currentRound = currentRound;
     }
@@ -122,10 +130,6 @@ public class ClientModel implements Observer, NotificationHandler {
 
     public void setActive(boolean active) {
         this.active = active;
-    }
-
-    public void setFavour(int favour) {
-        this.favour = favour;
     }
 
     public void setUserToken(String userToken) {
@@ -212,11 +216,6 @@ public class ClientModel implements Observer, NotificationHandler {
         return active;
     }
 
-    public int getFavour() {
-        return favour;
-    }
-
-
     public boolean areAllPlayersInGame() {
         return (gameActualPlayers != 0 && gameActualPlayers == gameNumPlayers);
     }
@@ -287,7 +286,7 @@ public class ClientModel implements Observer, NotificationHandler {
     @Override
     public void handle(UserPickedWpcNotification notification) {
         wpcByUsername.put(notification.username, notification.wpc);
-        if (notification.username.equals(user.getUsername())) favour = notification.wpc.getFavours();
+        favoursByUsername.put(notification.username, notification.wpc.getFavours());
     }
 
     @Override

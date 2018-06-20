@@ -1525,7 +1525,7 @@ public class GameController implements Observer, NotificationHandler {
             else if(notification.toolCard.getId().equals(toolCardsIDs.get(2).getId()))
                 usedTool3Icon.setVisible(true);
 
-            firstFavourLabel.setText(String.valueOf(clientModel.getFavour())+ "X");
+            firstFavourLabel.setText(String.valueOf(clientModel.getFavoursByUsername().get(clientModel.getUsername()))+ "X");
             if (notification.username.equals(secondUserLabel.getText())) {
                 fillWpc(secondWpcGrid, clientModel.getWpcByUsername().get(notification.username));
                 updateGraphicExtractedDices();
