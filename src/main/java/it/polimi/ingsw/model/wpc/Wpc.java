@@ -433,18 +433,10 @@ public class Wpc {
      */
     public ArrayList<Dice> getRowDicesAndEmptySpaces(int row) {
         ArrayList<Dice> rowDices = new ArrayList<>();
-        System.out.println("cell ");
         for (Cell cell : schema) {
             if (cell.getCellPosition().getRow() == row) {
                 rowDices.add(cell.getDice());
             }
-           /* if (cell.getCellPosition().getRow() == row) {
-                if (cell.getDice() != null) {
-                    rowDices.add(cell.getDice());
-
-                }
-                else rowDices.add(null);
-            }*/
         }
 
         return rowDices;

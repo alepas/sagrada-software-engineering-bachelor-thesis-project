@@ -960,6 +960,16 @@ public class CliView implements Observer, NotificationHandler {
     }
 
     @Override
+    public void handle(PlayerDisconnectedNotification playerDisconnectedNotification) {
+
+    }
+
+    @Override
+    public void handle(PlayerReconnectedNotification playerReconnectedNotification) {
+
+    }
+
+    @Override
     public void handle(PlayerSkipTurnNotification notification) {
 
     }

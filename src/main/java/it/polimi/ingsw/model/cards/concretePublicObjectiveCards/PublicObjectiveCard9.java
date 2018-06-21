@@ -31,8 +31,9 @@ public class PublicObjectiveCard9  extends PublicObjectiveCard {
         ArrayList<ArrayList<Dice>> rows= new ArrayList<>();
         for (int row = 0; row < WpcConstants.ROWS_NUMBER; row++) {
             rows.add(wpc.getRowDicesAndEmptySpaces(row));
-            if (rows.get(row).size() != WpcConstants.COLS_NUMBER)
+            if (rows.get(row).size() != WpcConstants.COLS_NUMBER) {
                 return -1;
+            }
         }
         return diagSameColor(rows)*POCConstants.POC9_SCORE;
     }

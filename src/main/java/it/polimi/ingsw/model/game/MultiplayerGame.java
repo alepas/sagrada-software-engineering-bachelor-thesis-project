@@ -3,6 +3,8 @@ package it.polimi.ingsw.model.game;
 import it.polimi.ingsw.control.network.commands.notifications.*;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.clientModel.ClientDice;
+import it.polimi.ingsw.model.clientModel.ClientEndTurnData;
+import it.polimi.ingsw.model.clientModel.ClientWpc;
 import it.polimi.ingsw.model.constants.GameConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
@@ -21,6 +23,7 @@ public class MultiplayerGame extends Game {
     private int turnPlayer;
     private int roundPlayer;
     private HashMap<String, Integer> scoreList = new HashMap<>();
+    private ClientEndTurnData endTurnData;
 
     private boolean turnFinished = false;
 
@@ -125,6 +128,13 @@ public class MultiplayerGame extends Game {
 
     @Override
     public void nextRound() {
+        ClientWpc oldClientWpc=null;
+        String oldUser=null;
+        if (endTurnData!=null){
+            oldClientWpc=endTurnData.wpcOldUser;
+            oldUser=endTurnData.oldUser;
+        }
+
         for (Dice dice : extractedDices) roundTrack.addDice(dice);
         roundTrack.nextRound();
 
@@ -134,7 +144,7 @@ public class MultiplayerGame extends Game {
         extractedDices = diceBag.extractDices(numPlayers);
         ArrayList<ClientDice> extractedClientDices = new ArrayList<>();
         for (Dice dice : extractedDices) extractedClientDices.add(dice.getClientDice());
-        changeAndNotifyObservers(new NewRoundNotification(roundTrack.getCurrentRound(), extractedClientDices, roundTrack.getClientRoundTrack()));
+        changeAndNotifyObservers(new NewRoundNotification(roundTrack.getCurrentRound(), extractedClientDices, roundTrack.getClientRoundTrack(), oldClientWpc, oldUser));
 
         currentTurn = 0;
         if (roundPlayer < players.length - 1) roundPlayer++;
@@ -146,9 +156,10 @@ public class MultiplayerGame extends Game {
 
 
     @Override
-    public void endTurn() {
+    public void endTurn(ClientEndTurnData endTurnData) {
         players[turnPlayer].setNotActive();
         turnFinished = true;
+        this.endTurnData=endTurnData;
     }
 
     private void nextTurn(){
@@ -166,12 +177,12 @@ public class MultiplayerGame extends Game {
         }
 
         players[turnPlayer].setActive();
-        changeAndNotifyObservers(new NextTurnNotification(currentTurn, players[turnPlayer].getUser()));
+        changeAndNotifyObservers(new NextTurnNotification(currentTurn, players[turnPlayer].getUser(),endTurnData));
         startTurnTimer();
     }
 
     private boolean shouldSkipTurn(){
-        return players[turnPlayer].getCardUsedBlockingTurn() != null && players[turnPlayer].getTurnForRound() == 1;
+        return players[turnPlayer].getCardUsedBlockingTurn() != null && players[turnPlayer].getTurnForRound() == 2 && players[turnPlayer].isDisconnected();
     }
 
     private void startTurnTimer() {

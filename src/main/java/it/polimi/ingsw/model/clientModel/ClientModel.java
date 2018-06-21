@@ -60,7 +60,7 @@ public class ClientModel implements Observer, NotificationHandler {
         this.extractedDices = new ArrayList<>();
         this.currentTurn = 0;
         this.active = false;
-        this.roundTrack=null;
+        this.roundTrack = null;
         this.toolCardClientNextActionInfo = null;
     }
 
@@ -116,7 +116,7 @@ public class ClientModel implements Observer, NotificationHandler {
         return favoursByUsername;
     }
 
-    public void setUserFavours(String username, int favours){
+    public void setUserFavours(String username, int favours) {
         favoursByUsername.put(username, favours);
     }
 
@@ -303,11 +303,28 @@ public class ClientModel implements Observer, NotificationHandler {
     public void handle(NewRoundNotification notification) {
         currentRound = notification.roundNumber;
         extractedDices = notification.extractedDices;
-        roundTrack=notification.roundTrack;
+        roundTrack = notification.roundTrack;
+        if (notification.oldUserForcedWpc != null)
+            wpcByUsername.put(notification.oldUserNameForced, notification.oldUserForcedWpc);
     }
 
     @Override
     public void handle(NextTurnNotification notification) {
+        if (notification.endTurnData != null) {
+            if (notification.endTurnData.extractedDices != null)
+                extractedDices = notification.endTurnData.extractedDices;
+            if (notification.endTurnData.roundTrack != null) roundTrack = notification.endTurnData.roundTrack;
+            if (notification.endTurnData.wpcOldUser != null)
+                wpcByUsername.put(notification.endTurnData.oldUser, notification.endTurnData.wpcOldUser);
+            if (notification.endTurnData.toolCardUsed != null) {
+                String id = notification.endTurnData.toolCardUsed.getId();
+                for (ClientToolCard card : gameToolCards) {
+                    if (card.getId().equals(id))
+                        gameToolCards.set(gameToolCards.indexOf(card), notification.endTurnData.toolCardUsed);
+                }
+            }
+
+        }
         currentTurn = notification.turnNumber;
         active = notification.activeUser.equals(user.getUsername());
     }
@@ -334,7 +351,7 @@ public class ClientModel implements Observer, NotificationHandler {
             if (card.getId().equals(id)) gameToolCards.set(gameToolCards.indexOf(card), notification.toolCard);
         }
 
-        for (Notification not: notification.movesNotifications) not.handle(this);
+        for (Notification not : notification.movesNotifications) not.handle(this);
     }
 
     @Override
@@ -354,5 +371,15 @@ public class ClientModel implements Observer, NotificationHandler {
 
     @Override
     public void handle(ToolCardExtractedDicesModifiedNotification notification) {
+    }
+
+    @Override
+    public void handle(PlayerDisconnectedNotification playerDisconnectedNotification) {
+
+    }
+
+    @Override
+    public void handle(PlayerReconnectedNotification playerReconnectedNotification) {
+
     }
 }

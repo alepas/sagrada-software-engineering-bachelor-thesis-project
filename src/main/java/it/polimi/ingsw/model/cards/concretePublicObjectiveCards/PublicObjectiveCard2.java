@@ -33,7 +33,8 @@ public class PublicObjectiveCard2 extends PublicObjectiveCard {
 
         for (int column = 0; column < WpcConstants.COLS_NUMBER; column++){
             ArrayList<Dice> columnDices = wpc.getColDices(column);
-            if (columnDices.size() == WpcConstants.ROWS_NUMBER && allColorsAreDifferent(columnDices))
+            if (columnDices != null)
+                if (columnDices.size() == WpcConstants.ROWS_NUMBER && allColorsAreDifferent(columnDices))
                 score += POCConstants.POC2_SCORE;
         }
 

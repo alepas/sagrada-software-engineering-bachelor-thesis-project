@@ -5,10 +5,7 @@ import it.polimi.ingsw.model.cards.PocDB;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.cards.ToolCardDB;
-import it.polimi.ingsw.model.clientModel.ClientColor;
-import it.polimi.ingsw.model.clientModel.ClientPoc;
-import it.polimi.ingsw.model.clientModel.ClientToolCard;
-import it.polimi.ingsw.model.clientModel.ClientWpc;
+import it.polimi.ingsw.model.clientModel.*;
 import it.polimi.ingsw.model.constants.GameConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
@@ -287,7 +284,7 @@ public abstract class Game extends Observable implements Runnable {
     abstract void initializeGame();
     abstract void endGame();
     abstract void nextRound();
-    public abstract void endTurn();
+    public abstract void endTurn(ClientEndTurnData endTurnData);
     abstract void calculateScore();
     abstract void saveScore();
 

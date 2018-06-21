@@ -1,3 +1,4 @@
+/*
 package it.polimi.ingsw.model.cards.concreteToolCards;
 
 import it.polimi.ingsw.control.network.commands.notifications.ToolCardDiceChangedNotification;
@@ -8,7 +9,6 @@ import it.polimi.ingsw.model.clientModel.*;
 import it.polimi.ingsw.model.constants.ToolCardConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
-import it.polimi.ingsw.model.exceptions.dicebagExceptions.IncorrectNumberException;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
 import it.polimi.ingsw.model.usersdb.MoveData;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
@@ -86,7 +86,7 @@ public class ToolCard10 extends ToolCard {
         updateClientWPC();
         updateClientExtractedDices();
         movesNotifications.add(new ToolCardDicePlacedNotification(username, this.dice.getClientDice(), pos));
-        currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, tempExtractedDices, null));
+        currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, tempExtractedDices, null, favours));
         ClientWpc tempWpc = tempClientWpc;
         ArrayList<ClientDice> tempExtracted = tempExtractedDices;
         cleanCard();
@@ -145,3 +145,4 @@ public class ToolCard10 extends ToolCard {
 
 
 }
+*/

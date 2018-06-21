@@ -72,7 +72,7 @@ public class ToolCard2 extends ToolCard {
         this.used = true;
         updateClientWPC();
         movesNotifications.add(new ToolCardDicePlacedNotification(username, tempDice.getClientDice(), pos));
-        currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, null, null));
+        currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, null, null, currentPlayer.getFavours()));
         ClientWpc tempWpc = tempClientWpc;
         cleanCard();
         return new MoveData(true, tempWpc, null, null);
@@ -80,14 +80,32 @@ public class ToolCard2 extends ToolCard {
 
 
     @Override
-    public MoveData cancelAction() throws CannotCancelActionException {
+    public MoveData cancelAction(boolean all) throws CannotCancelActionException {
+        MoveData temp;
         switch (currentStatus) {
-            case 0:
-                return cancelStatusZero();
             case 1:
-                return cancelStatusOne();
+                if (!all) return cancelStatusOne();
+            case 0:
+                if (!all){
+                    return cancelStatusZero();
+                }
+
         }
-        throw new CannotCancelActionException(username, id, 1);
+        if (!all)
+            throw new CannotCancelActionException(username, id, 1);
+        if (currentStatus==1){
+            if (singlePlayerGame){
+                currentGame.getExtractedDices().add(diceForSingleUser);
+            }
+        }
+        updateClientWPC();
+        updateClientExtractedDices();
+        updateClientRoundTrack();
+        ClientWpc tempWpc = tempClientWpc;
+        ArrayList<ClientDice> tempExtracted = tempExtractedDices;
+        ClientRoundTrack tempRound = tempRoundTrack;
+        cleanCard();
+        return new MoveData(true, true, tempWpc,tempExtracted,tempRound,null,null,null);
 
     }
 

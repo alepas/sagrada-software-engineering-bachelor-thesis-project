@@ -1,6 +1,6 @@
+/*
 package it.polimi.ingsw.model.cards.concreteToolCards;
 
-import it.polimi.ingsw.control.network.commands.notifications.DicePlacedNotification;
 import it.polimi.ingsw.control.network.commands.notifications.ToolCardDiceChangedNotification;
 import it.polimi.ingsw.control.network.commands.notifications.ToolCardDicePlacedNotification;
 import it.polimi.ingsw.control.network.commands.notifications.ToolCardUsedNotification;
@@ -93,7 +93,7 @@ public class ToolCard6 extends ToolCard {
         updateClientWPC();
         updateClientExtractedDices();
         movesNotifications.add(new ToolCardDicePlacedNotification(username, this.dice.getClientDice(), pos));
-        currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, tempExtractedDices, null));
+        currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, tempExtractedDices, null, favours));
         ClientWpc tempWpc = tempClientWpc;
         ArrayList<ClientDice> tempExtracted = tempExtractedDices;
         cleanCard();
@@ -145,3 +145,4 @@ public class ToolCard6 extends ToolCard {
         return new MoveData(true, null, tempExtracted, null);
     }
 }
+*/

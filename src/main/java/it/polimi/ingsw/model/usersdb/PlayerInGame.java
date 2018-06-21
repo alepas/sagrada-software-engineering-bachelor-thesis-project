@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.usersdb;
 
 import it.polimi.ingsw.control.network.commands.notifications.DicePlacedNotification;
+import it.polimi.ingsw.control.network.commands.notifications.PlayerDisconnectedNotification;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.clientModel.*;
@@ -37,6 +38,7 @@ public class PlayerInGame {
     private ToolCard cardUsedBlockingTurn;
     private Observer observer;
     private boolean disconnected = false;
+    private ClientEndTurnData endTurnData;
 
 
     public PlayerInGame(String user, Game game) throws CannotAddPlayerInDatabaseException {
@@ -124,22 +126,6 @@ public class PlayerInGame {
 
     }
 
-    //TODO:
-
-    public void incrementTurnsForRound() {
-        if ((turnForRound == 1) && (cardUsedBlockingTurn != null)) {
-            clearPlayerRound();
-            turnForRound++;
-        }else if (turnForRound <2) {
-            turnForRound++;
-            clearPlayerTurn();
-        } else if (turnForRound == 2) {
-            clearPlayerRound();
-            turnForRound++;
-        }
-
-
-    }
 
     public Wpc getWPC() {
         return wpc;
@@ -171,16 +157,31 @@ public class PlayerInGame {
         if (!active)
             throw new PlayerNotAuthorizedException(username);
         if (toolCardInUse == null) {
-
-            clearPlayerTurn();
-            game.endTurn();
+            game.endTurn(null);
         } else throw new CannotPerformThisMoveException(username, 1, true);
     }
 
     public synchronized void forceEndTurn(){
-        //TODO: chiamare endTurn()
-
-        game.endTurn();
+        MoveData temp=null;
+        ToolCard oldToolCard=null;
+        ClientToolCard oldClientToolCard=null;
+        if (toolCardInUse == null) {
+            game.endTurn(null);
+        } else{
+            try {
+                oldToolCard=toolCardInUse;
+                temp = toolCardInUse.cancelAction(true);
+                oldClientToolCard=oldToolCard.getClientToolcard();
+            } catch (CannotCancelActionException e) {
+                e.printStackTrace();
+            }
+           if (temp==null)
+                    return;
+            if (temp.canceledToolCard)
+                oldClientToolCard=null;
+            ClientEndTurnData endTurnData= new ClientEndTurnData(username,temp.wpc,oldClientToolCard,temp.extractedDices,temp.roundTrack);
+            game.endTurn(endTurnData);
+        }
     }
 
     public synchronized MoveData getNextMove() {
@@ -234,7 +235,7 @@ public class PlayerInGame {
         if (!active)
             throw new PlayerNotAuthorizedException(username);
         if (toolCardInUse != null) {
-            temp = toolCardInUse.cancelAction();
+            temp = toolCardInUse.cancelAction(false);
             if (temp==null)
                 throw new CannotCancelActionException(username, null, 3);
             if (temp.canceledToolCard) {
@@ -377,7 +378,6 @@ public class PlayerInGame {
 
     public synchronized void setActive() {
         this.active = true;
-        incrementTurnsForRound();
     }
 
     public boolean isPlacedDiceInTurn() {
@@ -489,10 +489,20 @@ public class PlayerInGame {
 
     public void setTurnInRound(int i) {
        turnForRound=i;
+       if (turnForRound==1)
+           clearPlayerRound();
+       if (turnForRound==2)
+           clearPlayerTurn();
     }
 
     public void disconnect() {
-        //TODO:
+       if (!active){
+           disconnected=true;
+           game.changeAndNotifyObservers(new PlayerDisconnectedNotification(username));
+           return;
+       }
+       forceEndTurn();
+        game.changeAndNotifyObservers(new PlayerDisconnectedNotification(username));
     }
 
     public boolean isDisconnected() {

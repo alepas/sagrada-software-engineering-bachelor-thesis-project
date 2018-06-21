@@ -1,3 +1,4 @@
+/*
 package it.polimi.ingsw.model.cards.concreteToolCards;
 
 import it.polimi.ingsw.control.network.commands.notifications.ToolCardDiceChangedNotification;
@@ -124,7 +125,7 @@ public class ToolCard11 extends ToolCard {
             updateClientExtractedDices();
             printExtractedDices();
             movesNotifications.add(new ToolCardDicePlacedNotification(username, this.chosenDice.getClientDice(), pos));
-            currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, tempExtractedDices, null));
+            currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, tempExtractedDices, null, favours));
             ClientWpc tempWpc = tempClientWpc;
             ArrayList<ClientDice> tempExtracted = tempExtractedDices;
             cleanCard();
@@ -205,7 +206,7 @@ public class ToolCard11 extends ToolCard {
                 throw new CannotInteruptToolCardException(username, id);
             ArrayList<ClientDice> tempExtracted = tempExtractedDices;
             movesNotifications.add(new ToolCardDiceChangedNotification(username, oldDiceExtracted.getClientDice(), chosenDice.getClientDice(), ClientDiceLocations.EXTRACTED, ClientDiceLocations.DICEBAG));
-            currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, tempExtractedDices, null));
+            currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, tempExtractedDices, null, favours));
             this.used = true;
             cleanCard();
             return new MoveData(true, null, tempExtracted, null);
@@ -215,7 +216,7 @@ public class ToolCard11 extends ToolCard {
             throw new CannotInteruptToolCardException(username, id);
         updateClientExtractedDices();
         ArrayList<ClientDice> tempExtracted = tempExtractedDices;
-        currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, tempExtractedDices, null));
+        currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, tempExtractedDices, null, favours));
         this.used = true;
         cleanCard();
         return new MoveData(true, null, tempExtracted, null);
@@ -230,3 +231,4 @@ public class ToolCard11 extends ToolCard {
 
 
 }
+*/

@@ -1,3 +1,4 @@
+/*
 package it.polimi.ingsw.model.cards.concreteToolCards;
 
 import it.polimi.ingsw.control.network.commands.notifications.ToolCardDicePlacedNotification;
@@ -10,7 +11,6 @@ import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
 import it.polimi.ingsw.model.usersdb.MoveData;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
-import it.polimi.ingsw.model.wpc.DiceAndPosition;
 
 import java.util.ArrayList;
 
@@ -69,7 +69,7 @@ public class ToolCard9 extends ToolCard {
         updateClientWPC();
         updateClientExtractedDices();
         movesNotifications.add(new ToolCardDicePlacedNotification(username, tempDice.getClientDice(), pos));
-        currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, null, null));
+        currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, null, null, favours));
         ArrayList<ClientDice> tempDices = tempExtractedDices;
         ClientWpc tempWpc = tempClientWpc;
         cleanCard();
@@ -110,4 +110,4 @@ public class ToolCard9 extends ToolCard {
     public MoveData interuptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException {
         throw new CannotInteruptToolCardException(username, id);
     }
-}
+}*/

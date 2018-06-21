@@ -769,4 +769,14 @@ public class SetNewGameController implements Observer, NotificationHandler {
 
     }
 
+    @Override
+    public void handle(PlayerDisconnectedNotification playerDisconnectedNotification) {
+
+    }
+
+    @Override
+    public void handle(PlayerReconnectedNotification playerReconnectedNotification) {
+
+    }
+
 }

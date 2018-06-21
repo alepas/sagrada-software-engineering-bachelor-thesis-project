@@ -31,7 +31,8 @@ public class PublicObjectiveCard4  extends PublicObjectiveCard {
 
         for (int col = 0; col < WpcConstants.COLS_NUMBER; col++){
             ArrayList<Dice> colDices = wpc.getColDices(col);
-            if (colDices.size() == WpcConstants.ROWS_NUMBER && allNumbersAreDifferent(colDices)){
+            if (colDices != null)
+                if (colDices.size() == WpcConstants.ROWS_NUMBER && allNumbersAreDifferent(colDices)){
                 score += POCConstants.POC4_SCORE;
             }
         }

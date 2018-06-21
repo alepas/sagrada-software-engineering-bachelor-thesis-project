@@ -31,7 +31,8 @@ public class PublicObjectiveCard3  extends PublicObjectiveCard {
 
         for (int row = 0; row < WpcConstants.ROWS_NUMBER; row++){
             ArrayList<Dice> rowDices = wpc.getRowDices(row);
-            if (rowDices.size() == WpcConstants.COLS_NUMBER && allNumbersAreDifferent(rowDices)){
+            if (rowDices != null)
+                if (rowDices.size() == WpcConstants.COLS_NUMBER && allNumbersAreDifferent(rowDices)){
                 score += POCConstants.POC3_SCORE;
             }
         }

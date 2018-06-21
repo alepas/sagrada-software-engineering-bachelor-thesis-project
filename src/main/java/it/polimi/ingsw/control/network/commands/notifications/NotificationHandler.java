@@ -32,4 +32,8 @@ public interface NotificationHandler {
     void handle(ToolCardDicePlacedNotification toolCardDicePlacedNotification);
 
     void handle(ToolCardExtractedDicesModifiedNotification toolCardExtractedDicesModifiedNotification);
+
+    void handle(PlayerDisconnectedNotification playerDisconnectedNotification);
+
+    void handle(PlayerReconnectedNotification playerReconnectedNotification);
 }
