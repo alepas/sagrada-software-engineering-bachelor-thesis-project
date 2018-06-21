@@ -191,7 +191,7 @@ public class MultiplayerGame extends Game {
             if (waitForEndTurn.isAlive()) {
                 System.out.println("Tempo per il turno scaduto");
                 waitForEndTurn.interrupt();
-                endTurn();
+                players[turnPlayer].forceEndTurn();
             }
             System.out.println("OK");
         } catch (InterruptedException e) {
