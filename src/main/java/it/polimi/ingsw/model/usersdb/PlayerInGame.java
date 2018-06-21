@@ -174,6 +174,12 @@ public class PlayerInGame {
         } else throw new CannotPerformThisMoveException(username, 1, true);
     }
 
+    public synchronized void forceEndTurn(){
+        //TODO: chiamare endTurn()
+
+        game.endTurn();
+    }
+
     public synchronized MoveData getNextMove() {
         if (!active)
             return new MoveData(NextAction.WAIT_FOR_TURN);
