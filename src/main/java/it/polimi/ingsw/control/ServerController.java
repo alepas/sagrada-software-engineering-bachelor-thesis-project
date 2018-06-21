@@ -87,6 +87,11 @@ public class ServerController {
     }
 
     public void disconnectUser(String userToken) throws CannotFindPlayerInDatabaseException {
+        try {
+            System.out.println(databaseUsers.getUsernameByToken(userToken) + " si è disconesso");
+        } catch (CannotFindUserInDBException e) {
+            e.printStackTrace();
+        }
         databaseUsers.getPlayerInGameFromToken(userToken).disconnect();
     }
 

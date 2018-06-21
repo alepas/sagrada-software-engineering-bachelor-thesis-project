@@ -59,7 +59,7 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
                     respond(response);
                 }
             } while (!stop);
-        } catch (Exception e) {
+        } catch (IOException e) {
             //TODO: Socket disconessa
             try {
                 controller.disconnectUser(userToken);
@@ -67,6 +67,8 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
                 e1.printStackTrace();
             }
             close();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
 
         close();

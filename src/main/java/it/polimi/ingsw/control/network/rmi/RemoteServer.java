@@ -55,5 +55,6 @@ public interface RemoteServer extends Remote {
 
     Response findAlreadyStartedGame(String userToken, RemoteObserver observer) throws RemoteException, CannotFindGameForUserInDatabaseException;
 
+    void poll(String userToken) throws RemoteException;
     }
 
