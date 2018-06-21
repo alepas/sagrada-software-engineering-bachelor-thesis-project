@@ -169,7 +169,7 @@ public class RmiServer implements RemoteServer, Observer, DisconnectionHandler {
 
     @Override
     public Response findAlreadyStartedGame(String userToken, RemoteObserver observer) throws RemoteException, CannotFindGameForUserInDatabaseException {
-        Response response = controller.findAlreadyStartedGame(userToken, null); //TODO: non ci vuole l'observer?
+        Response response = controller.findAlreadyStartedGame(userToken, this); //ci vuole l'observer?
         String gameID = ((UpdatedGameResponse) response).gameID;
 
         String username = null;
