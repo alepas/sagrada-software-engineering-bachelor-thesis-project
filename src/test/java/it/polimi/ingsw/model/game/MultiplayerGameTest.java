@@ -381,30 +381,30 @@ public class MultiplayerGameTest {
 //        Assert.assertEquals(0, game.getRoundPlayer());
 //
 //        Assert.assertEquals(0, game.getTurnPlayer());
-//        game.nextTurn();
+//        game.endTurn();
 //        Assert.assertEquals(1, game.getTurnPlayer());
-//        game.nextTurn();
+//        game.endTurn();
 //        Assert.assertEquals(2, game.getTurnPlayer());
-//        game.nextTurn();
+//        game.endTurn();
 //        Assert.assertEquals(2, game.getTurnPlayer());
-//        game.nextTurn();
+//        game.endTurn();
 //        Assert.assertEquals(1, game.getTurnPlayer());
-//        game.nextTurn();
+//        game.endTurn();
 //        Assert.assertEquals(0, game.getTurnPlayer());
 //
-//        game.nextTurn();
+//        game.endTurn();
 //        Assert.assertEquals(1, game.getRoundPlayer());
 //
 //        Assert.assertEquals(1, game.getTurnPlayer());
-//        game.nextTurn();
+//        game.endTurn();
 //        Assert.assertEquals(2, game.getTurnPlayer());
-//        game.nextTurn();
+//        game.endTurn();
 //        Assert.assertEquals(0, game.getTurnPlayer());
-//        game.nextTurn();
+//        game.endTurn();
 //        Assert.assertEquals(0, game.getTurnPlayer());
-//        game.nextTurn();
+//        game.endTurn();
 //        Assert.assertEquals(2, game.getTurnPlayer());
-//        game.nextTurn();
+//        game.endTurn();
 //        Assert.assertEquals(1, game.getTurnPlayer());
 //    }
 

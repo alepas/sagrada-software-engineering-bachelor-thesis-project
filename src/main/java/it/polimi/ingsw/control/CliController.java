@@ -9,6 +9,7 @@ import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
 import it.polimi.ingsw.view.cli.CliView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class CliController {
     // reference to networking layer
@@ -246,8 +247,16 @@ public class CliController {
         return clientModel.getMyWpc();
     }
 
-    public int getFavour(){
-        return clientModel.getFavour();
+    public int getUserFavour(String username){
+        return clientModel.getFavoursByUsername().get(username);
+    }
+
+    public int getUserFavour(){
+        return clientModel.getFavoursByUsername().get(clientModel.getUsername());
+    }
+
+    public HashMap<String, Integer> getFavoursByUsername(){
+        return clientModel.getFavoursByUsername();
     }
 
     public ClientColor[] getPrivateObjectives(){ return clientModel.getPrivateObjectives(); }

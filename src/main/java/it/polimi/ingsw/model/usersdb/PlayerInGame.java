@@ -170,7 +170,7 @@ public class PlayerInGame {
         if (toolCardInUse == null) {
 
             clearPlayerTurn();
-            game.nextTurn();
+            game.endTurn();
         } else throw new CannotPerformThisMoveException(username, 1, true);
     }
 

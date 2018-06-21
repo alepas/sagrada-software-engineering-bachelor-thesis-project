@@ -14,16 +14,15 @@ import it.polimi.ingsw.model.gamesdb.DatabaseGames;
 import it.polimi.ingsw.model.usersdb.DatabaseUsers;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 import it.polimi.ingsw.model.wpc.Wpc;
-import javafx.application.Platform;
 
 import java.util.*;
-
-import static it.polimi.ingsw.model.constants.GameConstants.NUM_OF_ROUNDS;
 
 public class MultiplayerGame extends Game {
     private int turnPlayer;
     private int roundPlayer;
     private HashMap<String, Integer> scoreList = new HashMap<>();
+
+    private boolean turnFinished = false;
 
     public MultiplayerGame(int numPlayers) throws InvalidMultiplayerGamePlayersException {
         super(numPlayers);
@@ -35,7 +34,6 @@ public class MultiplayerGame extends Game {
         numOfToolCards = GameConstants.NUM_TOOL_CARDS_IN_MULTIPLAYER_GAME;
         numOfPublicObjectiveCards = GameConstants.NUM_PUBLIC_OBJ_IN_MULTIPLAYER_GAME;
     }
-
 
 
 
@@ -90,7 +88,12 @@ public class MultiplayerGame extends Game {
 
         System.out.println("La partità è iniziata");
         initializeGame();
-        playGame();
+
+        while (roundTrack.getCurrentRound() < GameConstants.NUM_OF_ROUNDS){
+            nextRound();
+        }
+
+        calculateScore();
     }
 
     private void waitPlayers(int time){
@@ -110,7 +113,7 @@ public class MultiplayerGame extends Game {
         shufflePlayers();
 
         turnPlayer = 0;
-        roundPlayer = 0;
+        roundPlayer = players.length-1;
         currentTurn = 1;
     }
 
@@ -120,55 +123,80 @@ public class MultiplayerGame extends Game {
         players = (PlayerInGame[]) playersList.toArray(players);
     }
 
-    private void playGame() {
-        nextRound();
-    }
-
     @Override
     public void nextRound() {
         for (Dice dice : extractedDices) roundTrack.addDice(dice);
-
         roundTrack.nextRound();
-        if(roundTrack.getCurrentRound() <= GameConstants.NUM_OF_ROUNDS) {
-            for (PlayerInGame player: players)
-                player.clearPlayerRound();
-            extractedDices = diceBag.extractDices(numPlayers);
 
-            ArrayList<ClientDice> extractedClientDices = new ArrayList<>();
-            for (Dice dice : extractedDices) extractedClientDices.add(dice.getClientDice());
-            changeAndNotifyObservers(new NewRoundNotification(roundTrack.getCurrentRound(), extractedClientDices, roundTrack.getClientRoundTrack()));
+        for (PlayerInGame player: players)
+            player.clearPlayerRound();
 
-            currentTurn = 0;
-            if (roundPlayer < players.length - 1) roundPlayer++;
-            else roundPlayer = 0;
-            turnPlayer = roundPlayer;
+        extractedDices = diceBag.extractDices(numPlayers);
+        ArrayList<ClientDice> extractedClientDices = new ArrayList<>();
+        for (Dice dice : extractedDices) extractedClientDices.add(dice.getClientDice());
+        changeAndNotifyObservers(new NewRoundNotification(roundTrack.getCurrentRound(), extractedClientDices, roundTrack.getClientRoundTrack()));
 
-            nextTurn();
-        }
-        else calculateScore();
+        currentTurn = 0;
+        if (roundPlayer < players.length - 1) roundPlayer++;
+        else roundPlayer = 0;
+        turnPlayer = roundPlayer;
+
+        while (currentTurn < GameConstants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME*numPlayers) nextTurn();
     }
 
-    @Override
-    public void nextTurn() {
-        players[turnPlayer].setNotActive();
-        if (currentTurn < GameConstants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME*numPlayers) {
-            turnPlayer = nextPlayer();
-            currentTurn++;
 
-            if ((players[turnPlayer].getTurnForRound() == 1) && (players[turnPlayer].getCardUsedBlockingTurn() != null)) {
-                changeAndNotifyObservers(new PlayerSkipTurnNotification(players[turnPlayer].getUser(), players[turnPlayer].getCardUsedBlockingTurn().getID()));
-                if (currentTurn < GameConstants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME*numPlayers) {
-                    turnPlayer = nextPlayer();
-                    currentTurn++;
-                } else {
-                    nextRound();
-                    return;
-                }
+    @Override
+    public void endTurn() {
+        players[turnPlayer].setNotActive();
+        turnFinished = true;
+    }
+
+    private void nextTurn(){
+        turnPlayer = nextPlayer();
+        currentTurn++;
+
+        if (shouldSkipTurn()) {
+            changeAndNotifyObservers(new PlayerSkipTurnNotification(players[turnPlayer].getUser(), players[turnPlayer].getCardUsedBlockingTurn().getID()));
+
+            if (currentTurn < GameConstants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME*numPlayers) {
+                turnPlayer = nextPlayer();
+                currentTurn++;
+
+            } else return;
+        }
+
+        players[turnPlayer].setActive();
+        changeAndNotifyObservers(new NextTurnNotification(currentTurn, players[turnPlayer].getUser()));
+        startTurnTimer();
+    }
+
+    private boolean shouldSkipTurn(){
+        return players[turnPlayer].getCardUsedBlockingTurn() != null && players[turnPlayer].getTurnForRound() == 1;
+    }
+
+    private void startTurnTimer() {
+        turnFinished = false;
+
+        Thread waitForEndTurn = new Thread(() -> {
+            while (!turnFinished){
+                try {
+                    Thread.sleep( 500);
+                } catch (InterruptedException e) {/*Do nothing*/}
             }
-            players[turnPlayer].setActive();
-            changeAndNotifyObservers(new NextTurnNotification(currentTurn, players[turnPlayer].getUser()));
-        } else {
-            nextRound();
+        });
+
+        try {
+            waitForEndTurn.start();
+            waitForEndTurn.join(GameConstants.TIME_TO_PLAY_TURN_MULTIPLAYER + GameConstants.TASK_DELAY);
+            if (waitForEndTurn.isAlive()) {
+                System.out.println("Tempo per il turno scaduto");
+                waitForEndTurn.interrupt();
+                endTurn();
+            }
+            System.out.println("OK");
+        } catch (InterruptedException e) {
+            //TODO: partita interrotta?
+            e.printStackTrace();/*Do nothing*/
         }
     }
 

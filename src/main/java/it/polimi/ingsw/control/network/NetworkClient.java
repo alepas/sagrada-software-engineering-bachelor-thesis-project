@@ -165,7 +165,7 @@ public abstract class NetworkClient implements ResponseHandler {
             clientModel.setCurrentTurn(response.currentTurn);
             clientModel.setPrivateObjectives(response.privateObjectives);
             clientModel.setActive(response.active);
-            clientModel.setFavour(response.favour);
+            clientModel.setUserFavours(clientModel.getUsername(), response.favour);     //TODO: Ottenere i favours di tutti
             clientModel.setToolCardClientNextActionInfo(response.nextActionInfo);
         }
     }
