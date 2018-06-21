@@ -2,7 +2,6 @@ package it.polimi.ingsw.control.guicontroller;
 
 
 
-import it.polimi.ingsw.model.clientModel.ClientUser;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

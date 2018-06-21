@@ -49,6 +49,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
 
     private boolean gameStarted = false;
     private boolean areWpcExtracted = false;
+    private boolean allWpcsPicked = false;
     private boolean pocExtracted = false;
     private boolean privateObjExtractd = false;
     private boolean toolExtracted = false;
@@ -622,7 +623,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
      */
     private void playGame(Event event) {
         Thread startGame = new Thread(() -> {
-            while (!pocExtracted || !toolExtracted || (clientModel.getGameNumPlayers() != clientModel.getWpcByUsername().size()) || !privateObjExtractd) {
+            while (!pocExtracted || !toolExtracted || !allWpcsPicked || !privateObjExtractd) {
                 synchronized (cardWaiter){
                     try {
                         cardWaiter.wait();
@@ -710,7 +711,9 @@ public class SetNewGameController implements Observer, NotificationHandler {
     }
 
     @Override
-    public void handle(UserPickedWpcNotification notification) {}
+    public void handle(UserPickedWpcNotification notification) {
+        allWpcsPicked = clientModel.allPlayersChooseWpc();
+    }
 
     @Override
     public void handle(ToolcardsExtractedNotification notification) {

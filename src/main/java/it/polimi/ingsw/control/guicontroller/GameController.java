@@ -273,11 +273,12 @@ public class GameController implements Observer, NotificationHandler {
         endTurnButton.setOnAction(event -> {
             try {
                 networkClient.passTurn(clientModel.getUserToken());
+
             } catch (CannotFindPlayerInDatabaseException | PlayerNotAuthorizedException | CannotPerformThisMoveException e) {
                 message1Label.setText(e.getMessage());
+                stateAction(change(lastNextAction));
             }
-            lastNextAction = NextAction.WAIT_FOR_TURN;
-            stateAction(ANOTHER_PLAYER_TURN);
+
         });
 
         //by clicking on the cancel button the player goes back to the previous action
@@ -1491,7 +1492,15 @@ public class GameController implements Observer, NotificationHandler {
     public void handle(NewRoundNotification notification) { nextRound(); }
 
     @Override
-    public void handle(NextTurnNotification notification) { synchronized (waiter) {waiter.notify();} }
+    public void handle(NextTurnNotification notification) {
+        if(!clientModel.isActive()) {
+            Platform.runLater(()->{
+                lastNextAction = NextAction.WAIT_FOR_TURN;
+                stateAction(ANOTHER_PLAYER_TURN);
+            });
+        }
+        else synchronized (waiter) {waiter.notify();}
+    }
 
     @Override
     public void handle(ToolCardDiceChangedNotification notification) {}
@@ -1501,7 +1510,7 @@ public class GameController implements Observer, NotificationHandler {
         Platform.runLater(() -> {
             String user = notification.username;
             String id = String.valueOf(notification.dice.getDiceID());
-            if (user.equals(secondUserLabel.getText()))
+            if (secondUserLabel!= null && user.equals(secondUserLabel.getText()))
                 fillWpc(secondWpcGrid, notification.wpc);
             else if ( thirdUserLabel!= null && user.equals(thirdUserLabel.getText()))
                 fillWpc(thirdWpcGrid, notification.wpc);
