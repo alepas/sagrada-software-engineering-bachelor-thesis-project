@@ -1,3 +1,4 @@
+/*
 package it.polimi.ingsw.model.game;
 
 import it.polimi.ingsw.control.network.commands.notifications.GameStartedNotification;
@@ -77,10 +78,12 @@ public class SinglePlayerGame extends Game {
     public void run() {
         //Codice che regola il funzionamento della partita
         waitPlayers(3000);//Aspetta 3 secondi che i giocatori si connettano tutti
-            /* Quando l'ultimo giocatore si connette il thread della partita viene avviato immediatamente,
+            */
+/* Quando l'ultimo giocatore si connette il thread della partita viene avviato immediatamente,
                ma l'ultimo giocatore, di fatto, non è ancora in partita: lo è solo il suo playerInGame lato
                server. Occorre aspettare che l'ultimo utente riceva la partita in cui è entrato e che si metta
-               in ascolto di eventuali cambiamenti. Ecco il perchè di questa attesa*/
+               in ascolto di eventuali cambiamenti. Ecco il perchè di questa attesa*//*
+
         changeAndNotifyObservers(new GameStartedNotification());
 
         System.out.println("La partità è iniziata");
@@ -220,3 +223,4 @@ public class SinglePlayerGame extends Game {
 
 
 }
+*/

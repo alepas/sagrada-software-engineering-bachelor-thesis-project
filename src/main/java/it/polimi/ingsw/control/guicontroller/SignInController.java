@@ -54,7 +54,7 @@ public class SignInController {
 
         signInUsername.setOnMouseClicked(event -> signInErrorLabel.setVisible(false));
 
-        backButton.setOnAction(event -> changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/StartingScene.fxml"));
+        backButton.setOnAction(event -> changeSceneHandle(event, "/view/gui/StartingScene.fxml"));
     }
 
 
@@ -78,17 +78,17 @@ public class SignInController {
                             case 1:
                                 break;
                             case 2:
-                                changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/TwoPlayersGameScene.fxml");
+                                changeSceneHandle(event, "/view/gui/TwoPlayersGameScene.fxml");
                                 break;
                             case 3:
-                                changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/ThreePlayersGameScene.fxml");
+                                changeSceneHandle(event, "/view/gui/ThreePlayersGameScene.fxml");
                                 break;
                             case 4:
-                                changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/FourPlayersGameScene.fxml");
+                                changeSceneHandle(event, "/view/gui/FourPlayersGameScene.fxml");
                                 break;
                         }
                     } catch (CannotFindGameForUserInDatabaseException e) {
-                        changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/SetNewGameScene.fxml");
+                        changeSceneHandle(event, "/view/gui/SetNewGameScene.fxml");
                     }
                 });
             } catch (CannotLoginUserException e) {

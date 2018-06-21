@@ -1,31 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.paint.*?>
 <?import java.lang.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.effect.*?>
-<?import javafx.scene.image.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.shape.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.text.Font?>
 
-
-<AnchorPane maxHeight="705.0" maxWidth="1200.0" minHeight="705.0" minWidth="1200.0" prefHeight="705.0" prefWidth="1200.0" styleClass="Scene" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.control.guicontroller.GameController">
+<AnchorPane maxHeight="800.0" maxWidth="1300.0" minHeight="800.0" minWidth="1300.0" prefHeight="800.0" prefWidth="1300.0" styleClass="Scene" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.control.guicontroller.GameController">
     <children>
-        <ImageView fitHeight="705.0" fitWidth="1200.0">
+        <ImageView fitHeight="800.0" fitWidth="1300.0">
             <image>
-                <Image url="@/it/polimi/ingsw/view/gui/guiview/background/gameScene.jpg" />
+                <Image url="@/view/gui/background/gameScene.jpg" />
             </image>
         </ImageView>
 
-        <AnchorPane fx:id="scoreBoard" styleClass="Scene" visible="false">
+        <AnchorPane fx:id="scoreBoard" minHeight="800.0" minWidth="1300.0" prefHeight="800.0" prefWidth="1300.0" styleClass="Scene" visible="false">
             <children>
                 <AnchorPane layoutX="360.0" layoutY="91.0" styleClass="MenuWindow">
                     <children>
                         <ImageView fitHeight="550.0" fitWidth="500.0">
                             <image>
-                                <Image url="@/it/polimi/ingsw/view/gui/guiview/background/menuArea.jpg" />
+                                <Image url="@/view/gui/background/menuArea.jpg" />
                             </image>
                         </ImageView>
 
@@ -56,57 +59,19 @@
             </children>
         </AnchorPane>
 
-        <AnchorPane fx:id="boardGame" layoutX="2.0" layoutY="2.0" minHeight="705.0" minWidth="1200.0" prefHeight="705.0" prefWidth="1200.0" styleClass="Scene">
+        <AnchorPane fx:id="boardGame" layoutX="2.0" layoutY="2.0" minHeight="800.0" minWidth="1300.0" prefHeight="800.0" prefWidth="1300.0" styleClass="Scene">
             <children>
                 <ImageView fx:id="diceBagIcon" fitHeight="368.0" fitWidth="339.0" layoutX="321.0" layoutY="134.0" visible="false">
                     <image>
-                        <Image url="@background/dicebag.png" />
+                        <Image url="@/view/gui/background/dicebag.png" />
                     </image>
                 </ImageView>
 
-                <Button fx:id="endTurnButton" layoutX="749.0" layoutY="656.0" styleClass="Button" text="Fine Turno" />
+                <Button fx:id="endTurnButton" layoutX="792.0" layoutY="258.0" styleClass="Button" text="Fine Turno" />
 
-                <Label fx:id="roundLabel" layoutX="362.0" layoutY="44.0" styleClass="TitleLabel" />
+                <Label fx:id="roundLabel" layoutX="493.0" layoutY="28.0" styleClass="TitleLabel" />
 
-                <GridPane fx:id="firstWpcGrid" hgap="5.0" layoutX="402.0" layoutY="118.0" prefHeight="335.0" prefWidth="400.0" style="-fx-background-color: black;" styleClass="Grid" vgap="5.0">
-                    <columnConstraints>
-                        <ColumnConstraints prefWidth="100.0" />
-                        <ColumnConstraints prefWidth="100.0" />
-                        <ColumnConstraints prefWidth="100.0" />
-                        <ColumnConstraints prefWidth="100.0" />
-                        <ColumnConstraints prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints prefHeight="100.0" />
-                        <RowConstraints prefHeight="100.0" />
-                        <RowConstraints prefHeight="100.0" />
-                        <RowConstraints prefHeight="100.0" />
-                        <RowConstraints prefHeight="50.0" />
-                    </rowConstraints>
-                    <effect>
-                        <DropShadow blurType="GAUSSIAN" color="#c29300" />
-                    </effect>
-                    <padding>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                    </padding>
-                    <children>
-
-
-                        <Label fx:id="firstWpcNameLabel" alignment="CENTER" contentDisplay="TOP" styleClass="Label" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" />
-
-                        <AnchorPane prefHeight="15.0" prefWidth="65.0" style="-fx-background-color: black;" GridPane.columnIndex="4" GridPane.rowIndex="4">
-                            <children>
-                                <Label fx:id="firstFavourLabel" layoutX="14.0" layoutY="4.0" styleClass="FavoursLabel">
-                                    <font>
-                                        <Font size="11.0" />
-                                    </font></Label>
-                                <Circle layoutX="44.0" layoutY="12.0" radius="6.0" styleClass="Favours" />
-                            </children>
-                        </AnchorPane>
-                    </children>
-                </GridPane>
-
-                <GridPane fx:id="secondWpcGrid" disable="true" hgap="5.0" layoutX="35.0" layoutY="34.0" prefHeight="228.0" prefWidth="274.0" style="-fx-background-color: black;" vgap="5.0">
+                <GridPane fx:id="secondWpcGrid" disable="true" hgap="5.0" layoutX="34.0" layoutY="540.0" prefHeight="228.0" prefWidth="274.0" style="-fx-background-color: black;" vgap="5.0">
                     <columnConstraints>
                         <ColumnConstraints prefWidth="100.0" />
                         <ColumnConstraints prefWidth="100.0" />
@@ -141,11 +106,12 @@
 
                 </GridPane>
 
-                <Label fx:id="firstUserLabel" alignment="CENTER" layoutX="562.0" layoutY="464.0" styleClass="TitleLabel" textAlignment="CENTER" />
-                <Label fx:id="secondUserLabel" alignment="CENTER" layoutX="141.0" layoutY="5.0" styleClass="TitleLabel" textAlignment="CENTER" />
-            <Label fx:id="thirdUserLabel" alignment="CENTER" layoutX="156.0" layoutY="513.0" styleClass="TitleLabel" textAlignment="CENTER" />
+                <Label fx:id="firstUserLabel" alignment="CENTER" layoutX="252.0" layoutY="6.0" styleClass="TitleLabel" textAlignment="CENTER" />
+                <Label fx:id="secondUserLabel" alignment="CENTER" layoutX="133.0" layoutY="502.0" styleClass="TitleLabel" textAlignment="CENTER" />
+                <Label fx:id="thirdUserLabel" alignment="CENTER" layoutX="452.0" layoutY="502.0" styleClass="TitleLabel" textAlignment="CENTER" />
+            <Label fx:id="fourthUserLabel" alignment="CENTER" layoutX="759.0" layoutY="502.0" styleClass="TitleLabel" textAlignment="CENTER" />
 
-                <GridPane fx:id="toolCardGrid" layoutX="866.0" layoutY="44.0" prefHeight="639.0" prefWidth="330.0" vgap="5.0" visible="false">
+                <GridPane fx:id="toolCardGrid" layoutX="956.0" layoutY="52.0" prefHeight="639.0" prefWidth="330.0" vgap="5.0" visible="false">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -164,7 +130,7 @@
                                 <Button fx:id="useTool1" layoutX="23.0" layoutY="116.0" styleClass="Button" text="Usa ToolCard 1" />
                                 <ImageView fx:id="usedTool1Icon" fitHeight="53.0" fitWidth="105.0" layoutX="27.0" layoutY="155.0" visible="false">
                                     <image>
-                                        <Image url="@background/toolUsed.png" />
+                                        <Image url="@/view/gui/background/toolUsed.png" />
                                     </image>
                                 </ImageView>
                             </children>
@@ -177,7 +143,7 @@
                                 <Button fx:id="useTool2" layoutX="23.0" layoutY="112.0" styleClass="Button" text="Usa ToolCard 2" />
                                 <ImageView fx:id="usedTool2Icon" fitHeight="53.0" fitWidth="105.0" layoutX="27.0" layoutY="155.0" visible="false">
                                     <image>
-                                        <Image url="@background/toolUsed.png" />
+                                        <Image url="@/view/gui/background/toolUsed.png" />
                                     </image>
                                 </ImageView>
                             </children>
@@ -189,7 +155,7 @@
                                 <Button fx:id="useTool3" layoutX="23.0" layoutY="124.0" styleClass="Button" text="Usa ToolCard 3" />
                                 <ImageView fx:id="usedTool3Icon" fitHeight="54.0" fitWidth="105.0" layoutX="27.0" layoutY="155.0" visible="false">
                                     <image>
-                                        <Image url="@background/toolUsed.png" />
+                                        <Image url="@/view/gui/background/toolUsed.png" />
                                     </image>
                                 </ImageView>
                             </children>
@@ -197,14 +163,16 @@
                     </children>
                 </GridPane>
 
-                <AnchorPane fx:id="privateObjPane" layoutX="896.0" layoutY="124.0" prefHeight="381.0" prefWidth="274.0" />
-                <AnchorPane fx:id="roundTrackPane" layoutX="828.0" layoutY="90.0" prefHeight="488.0" prefWidth="367.0" visible="false">
+                <AnchorPane fx:id="privateObjPane" layoutX="984.0" layoutY="118.0" prefHeight="381.0" prefWidth="274.0" />
+                <AnchorPane fx:id="roundTrackPane" layoutX="867.0" layoutY="74.0" prefHeight="488.0" prefWidth="367.0" visible="false">
                     <children>
 
-                        <GridPane fx:id="roundTrackGrid" hgap="5.0" layoutX="44.0" layoutY="30.0" prefHeight="453.0" prefWidth="314.0" vgap="5.0">
+                        <GridPane fx:id="roundTrackGrid" hgap="5.0" layoutX="44.0" layoutY="30.0" prefHeight="453.0" prefWidth="383.0" vgap="5.0">
                             <columnConstraints>
                                 <ColumnConstraints maxWidth="83.0" minWidth="30.0" prefWidth="41.0" />
                                 <ColumnConstraints maxWidth="44.0" minWidth="2.0" prefWidth="44.0" />
+                                <ColumnConstraints maxWidth="44.0" minWidth="30.0" prefWidth="100.0" />
+                                <ColumnConstraints maxWidth="44.0" minWidth="30.0" prefWidth="100.0" />
                                 <ColumnConstraints maxWidth="44.0" minWidth="30.0" prefWidth="100.0" />
                                 <ColumnConstraints maxWidth="44.0" minWidth="30.0" prefWidth="100.0" />
                         <ColumnConstraints maxWidth="44.0" minWidth="30.0" prefWidth="100.0" />
@@ -240,22 +208,24 @@
                     </children>
                 </AnchorPane>
 
-                <GridPane fx:id="extractedDicesGrid" layoutX="480.0" layoutY="287.0" prefHeight="610.0" prefWidth="96.0" rotate="-90.0">
+                <GridPane fx:id="extractedDicesGrid" layoutX="404.0" layoutY="20.0" prefHeight="857.0" prefWidth="96.0" rotate="-90.0">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                 </GridPane>
 
-                <MenuButton layoutX="866.0" prefHeight="44.0" prefWidth="380.0" styleClass="Menu" text="MenuButton">
+                <MenuButton layoutX="956.0" layoutY="1.0" prefHeight="44.0" prefWidth="380.0" styleClass="Menu" text="MenuButton">
                     <items>
                         <MenuItem fx:id="toolCardButton" styleClass="Label" text="Tool cards" />
                         <MenuItem fx:id="roundTrackButton" styleClass="Label" text="RoundTrack" />
@@ -273,7 +243,7 @@
                     </children>
                 </AnchorPane>
 
-                <GridPane fx:id="pocGrid" layoutX="867.0" layoutY="46.0" prefHeight="639.0" prefWidth="330.0" vgap="5.0" visible="false">
+                <GridPane fx:id="pocGrid" layoutX="956.0" layoutY="52.0" prefHeight="639.0" prefWidth="330.0" vgap="5.0" visible="false">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -305,83 +275,114 @@
                     </children>
                 </GridPane>
 
-                <AnchorPane layoutX="-7.0" layoutY="482.0" prefHeight="209.0" prefWidth="220.0">
+                <AnchorPane layoutX="517.0" layoutY="63.0" prefHeight="209.0" prefWidth="220.0">
                     <children>
-                        <ImageView fitHeight="198.0" fitWidth="198.0" layoutX="22.0" layoutY="56.0" opacity="0.75" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="228.0" fitWidth="220.0" layoutY="25.0" opacity="0.75" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@background/menuTrasparente.png" />
+                                <Image url="@/view/gui/background/menuTrasparente.png" />
                             </image>
                         </ImageView>
-                        <Label fx:id="message1Label" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="34.0" layoutY="165.0" prefHeight="60.0" prefWidth="165.0" textAlignment="CENTER" wrapText="true">
+                        <Label fx:id="message1Label" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="28.0" layoutY="149.0" prefHeight="60.0" prefWidth="165.0" textAlignment="CENTER" wrapText="true">
                             <font>
                                 <Font name="Cooper Black" size="13.0" />
                             </font></Label>
-                        <Label blendMode="SRC_ATOP" layoutX="74.0" layoutY="80.0" text="Message Area" wrapText="true">
+                        <Label blendMode="SRC_ATOP" layoutX="63.0" layoutY="55.0" text="Message Area" wrapText="true">
                             <font>
                                 <Font name="Cooper Black" size="14.0" />
                             </font></Label>
-                        <Label fx:id="messageLabel" alignment="TOP_CENTER" blendMode="SRC_ATOP" contentDisplay="CENTER" layoutX="29.0" layoutY="105.0" prefHeight="60.0" prefWidth="175.0" textAlignment="CENTER" wrapText="true">
+                        <Label fx:id="messageLabel" alignment="TOP_CENTER" blendMode="SRC_ATOP" contentDisplay="CENTER" layoutX="23.0" layoutY="74.0" prefHeight="60.0" prefWidth="175.0" textAlignment="CENTER" wrapText="true">
                             <font>
                                 <Font name="Cooper Black" size="13.0" />
                             </font></Label>
                     </children>
                 </AnchorPane>
 
-                <AnchorPane fx:id="plusMinusPane" layoutX="402.0" layoutY="638.0" prefHeight="66.0" prefWidth="253.0" visible="false">
+                <AnchorPane fx:id="plusMinusPane" layoutX="500.0" layoutY="318.0" prefHeight="66.0" prefWidth="253.0" visible="false">
                     <children>
                         <ImageView fx:id="plusOneIcon" fitHeight="44.0" fitWidth="44.0" layoutX="160.0" layoutY="16.0" styleClass="ChangeNumberImage">
                             <image>
-                                <Image url="@background/plus.png" />
+                                <Image url="@/view/gui/background/plus.png" />
                             </image>
                         </ImageView>
                         <ImageView fx:id="minusOneIcon" fitHeight="44.0" fitWidth="44.0" layoutX="44.0" layoutY="16.0" styleClass="ChangeNumberImage">
                             <image>
-                                <Image url="@background/minus.png" />
+                                <Image url="@/view/gui/background/minus.png" />
                             </image>
                         </ImageView>
                     </children>
                 </AnchorPane>
 
-                <AnchorPane fx:id="changeNumberPane" layoutX="272.0" layoutY="638.0" prefHeight="66.0" prefWidth="442.0" visible="false">
+                <AnchorPane fx:id="changeNumberPane" layoutX="472.0" layoutY="309.0" prefHeight="66.0" prefWidth="442.0" visible="false">
                     <ImageView fx:id="oneCircle" fitHeight="44.0" fitWidth="44.0" layoutX="46.0" layoutY="38.0" styleClass="ChangeNumberImage">
                         <image>
-                            <Image url="@background/number1.png" />
+                            <Image url="@/view/gui/background/number1.png" />
                         </image>
                     </ImageView>
                     <ImageView fx:id="twoCircle" fitHeight="44.0" fitWidth="44.0" layoutX="117.0" layoutY="38.0" styleClass="ChangeNumberImage">
                         <image>
-                            <Image url="@background/number2.png" />
+                            <Image url="@/view/gui/background/number2.png" />
                         </image>
                     </ImageView>
                     <ImageView fx:id="threeCircle" fitHeight="44.0" fitWidth="44.0" layoutX="185.0" layoutY="38.0" styleClass="ChangeNumberImage">
                         <image>
-                            <Image url="@background/number3.png" />
+                            <Image url="@/view/gui/background/number3.png" />
                         </image>
                     </ImageView>
                     <ImageView fx:id="fourCircle" fitHeight="44.0" fitWidth="44.0" layoutX="251.0" layoutY="38.0" styleClass="ChangeNumberImage">
                         <image>
-                            <Image url="@background/number4.png" />
+                            <Image url="@/view/gui/background/number4.png" />
                         </image>
                     </ImageView>
                     <ImageView fx:id="fiveCircle" fitHeight="44.0" fitWidth="44.0" layoutX="318.0" layoutY="38.0" styleClass="ChangeNumberImage">
                         <image>
-                            <Image url="@background/number5.png" />
+                            <Image url="@/view/gui/background/number5.png" />
                         </image>
                     </ImageView>
                     <ImageView fx:id="sixCircle" fitHeight="44.0" fitWidth="44.0" layoutX="395.0" layoutY="38.0" styleClass="ChangeNumberImage">
                         <image>
-                            <Image url="@background/number6.png" />
+                            <Image url="@/view/gui/background/number6.png" />
                         </image>
                     </ImageView>
                 </AnchorPane>
 
-                <Button fx:id="cancelActionButton" layoutX="727.0" layoutY="656.0" styleClass="Button" text="Torna Indietro" visible="false" />
-            <GridPane fx:id="thirdWpcGrid" disable="true" hgap="5.0" layoutX="35.0" layoutY="285.0" prefHeight="228.0" prefWidth="274.0" style="-fx-background-color: black;" vgap="5.0">
+                <Button fx:id="cancelActionButton" layoutX="770.0" layoutY="258.0" styleClass="Button" text="Torna Indietro" visible="false" />
+                <GridPane fx:id="thirdWpcGrid" disable="true" hgap="5.0" layoutX="340.0" layoutY="540.0" prefHeight="228.0" prefWidth="274.0" style="-fx-background-color: black;" vgap="5.0">
+                    <children>
+                        <Label fx:id="thirdWpcNameLabel" alignment="CENTER" contentDisplay="TOP" styleClass="Label" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" />
+                        <AnchorPane prefHeight="19.0" prefWidth="55.0" style="-fx-background-color: black;" GridPane.columnIndex="4" GridPane.rowIndex="4">
+                            <children>
+                                <Label fx:id="thirdFavourLabel" layoutX="16.0" layoutY="1.0" styleClass="FavoursLabel" />
+                                <Circle layoutX="42.0" layoutY="11.0" radius="6.0" styleClass="Favours" />
+                            </children>
+                        </AnchorPane>
+                    </children>
+                    <columnConstraints>
+                        <ColumnConstraints prefWidth="100.0" />
+                        <ColumnConstraints prefWidth="100.0" />
+                        <ColumnConstraints prefWidth="100.0" />
+                        <ColumnConstraints prefWidth="100.0" />
+                        <ColumnConstraints prefWidth="100.0" />
+                    </columnConstraints>
+                    <effect>
+                        <DropShadow blurType="GAUSSIAN" color="#c29300" />
+                    </effect>
+                    <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                    </padding>
+                    <rowConstraints>
+                        <RowConstraints prefHeight="100.0" />
+                        <RowConstraints prefHeight="100.0" />
+                        <RowConstraints prefHeight="100.0" />
+                        <RowConstraints prefHeight="100.0" />
+                        <RowConstraints prefHeight="50.0" />
+                    </rowConstraints>
+                </GridPane>
+            <GridPane fx:id="fourthWpcGrid" disable="true" hgap="5.0" layoutX="655.0" layoutY="540.0" prefHeight="228.0" prefWidth="274.0" style="-fx-background-color: black;" vgap="5.0">
                <children>
-                  <Label fx:id="thirdWpcNameLabel" alignment="CENTER" contentDisplay="TOP" styleClass="Label" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" />
+                  <Label fx:id="thirdWpcNameLabel1" alignment="CENTER" contentDisplay="TOP" styleClass="Label" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" />
                   <AnchorPane prefHeight="19.0" prefWidth="55.0" style="-fx-background-color: black;" GridPane.columnIndex="4" GridPane.rowIndex="4">
                      <children>
-                        <Label fx:id="thirdFavourLabel" layoutX="16.0" layoutY="1.0" styleClass="FavoursLabel" />
+                        <Label fx:id="fourthFavourLabel" layoutX="16.0" layoutY="1.0" styleClass="FavoursLabel" />
                         <Circle layoutX="42.0" layoutY="11.0" radius="6.0" styleClass="Favours" />
                      </children>
                   </AnchorPane>
@@ -407,6 +408,45 @@
                   <RowConstraints prefHeight="50.0" />
                </rowConstraints>
             </GridPane>
+      
+                <GridPane fx:id="firstWpcGrid" hgap="5.0" layoutX="72.0" layoutY="41.0" prefHeight="335.0" prefWidth="400.0" style="-fx-background-color: black;" styleClass="Grid" vgap="5.0">
+                    <columnConstraints>
+                        <ColumnConstraints prefWidth="100.0" />
+                        <ColumnConstraints prefWidth="100.0" />
+                        <ColumnConstraints prefWidth="100.0" />
+                        <ColumnConstraints prefWidth="100.0" />
+                        <ColumnConstraints prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints prefHeight="100.0" />
+                        <RowConstraints prefHeight="100.0" />
+                        <RowConstraints prefHeight="100.0" />
+                        <RowConstraints prefHeight="100.0" />
+                        <RowConstraints prefHeight="50.0" />
+                    </rowConstraints>
+                    <effect>
+                        <DropShadow blurType="GAUSSIAN" color="#c29300" />
+                    </effect>
+                    <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                    </padding>
+                    <children>
+      
+      
+                        <Label fx:id="firstWpcNameLabel" alignment="CENTER" contentDisplay="TOP" styleClass="Label" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" />
+      
+                        <AnchorPane prefHeight="15.0" prefWidth="65.0" style="-fx-background-color: black;" GridPane.columnIndex="4" GridPane.rowIndex="4">
+                            <children>
+                                <Label fx:id="firstFavourLabel" layoutX="14.0" layoutY="4.0" styleClass="FavoursLabel">
+                                    <font>
+                                        <Font size="11.0" />
+                                    </font>
+                        </Label>
+                                <Circle layoutX="44.0" layoutY="12.0" radius="6.0" styleClass="Favours" />
+                            </children>
+                        </AnchorPane>
+                    </children>
+                </GridPane>
             </children>
         </AnchorPane>
     </children>

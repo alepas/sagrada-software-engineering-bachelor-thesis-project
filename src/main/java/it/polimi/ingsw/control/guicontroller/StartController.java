@@ -57,9 +57,9 @@ public class StartController {
             changeButton();
         });
 
-        signUpButton.setOnAction(event -> changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/SignUpScene.fxml"));
+        signUpButton.setOnAction(event -> changeSceneHandle(event, "/view/gui/SignUpScene.fxml"));
 
-        signInButton.setOnAction(event -> changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/SignInScene.fxml"));
+        signInButton.setOnAction(event -> changeSceneHandle(event, "/view/gui/SignInScene.fxml"));
     }
 
     private static void startSocketClient() throws IOException {

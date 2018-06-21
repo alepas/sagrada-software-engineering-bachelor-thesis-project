@@ -9,12 +9,12 @@
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.control.guicontroller.SignInController">
 
     <ImageView fitHeight="705.0" fitWidth="1200.0">
-        <Image url="@/it/polimi/ingsw/view/gui/guiview/background/signScene.jpg" />
+        <Image url="@/view/gui/background/signScene.jpg" />
     </ImageView>
 
     <AnchorPane layoutX="360.0" layoutY="91.0" styleClass="MenuWindow">
         <ImageView fitHeight="550.0" fitWidth="500.0">
-            <Image url="@/it/polimi/ingsw/view/gui/guiview/background/menuArea.jpg" />
+            <Image url="@/view/gui/background/menuArea.jpg" />
         </ImageView>
 
         <TextField fx:id="signInUsername" layoutX="140.0" layoutY="275.0" promptText="Username" styleClass="InsertionField" />

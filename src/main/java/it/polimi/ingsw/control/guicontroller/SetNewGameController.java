@@ -219,7 +219,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
         fourPlayersBox.setOnMouseClicked(event -> errorLabel.setVisible(false));
 
         personalAreaButton.setOnAction(event -> changeSceneHandle(event,
-                "/it/polimi/ingsw/view/gui/guiview/PersonalAreaScene.fxml"));
+                "/view/gui/PersonalAreaScene.fxml"));
 
         firstWPC.setOnMouseClicked(event -> pickWpc(event, wpc0ID));
 
@@ -635,16 +635,16 @@ public class SetNewGameController implements Observer, NotificationHandler {
             Platform.runLater(()->{
                 switch (clientModel.getGameNumPlayers()){
                     case 1:
-                        changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/SoloPlayerGameScene.fxml");
+                        changeSceneHandle(event, "/view/gui/SoloPlayerGameScene.fxml");
                         break;
                     case 2:
-                        changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/TwoPlayersGameScene.fxml");
+                        changeSceneHandle(event, "/view/gui/TwoPlayersGameScene.fxml");
                         break;
                     case 3:
-                        changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/ThreePlayersGameScene.fxml");
+                        changeSceneHandle(event, "/view/gui/ThreePlayersGameScene.fxml");
                         break;
                     case 4:
-                        changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/FourPlayersGameScene.fxml");
+                        changeSceneHandle(event, "/view/gui/FourPlayersGameScene.fxml");
                         break;
                 }
             });

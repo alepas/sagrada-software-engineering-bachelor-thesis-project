@@ -49,7 +49,7 @@ public class SignUpController {
 
         signUpUsername.setOnMouseClicked(event -> signUpErrorLabel.setVisible(false));
 
-        backButton.setOnAction(event -> changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/StartingScene.fxml"));
+        backButton.setOnAction(event -> changeSceneHandle(event, "/view/gui/StartingScene.fxml"));
     }
 
     /**
@@ -85,7 +85,7 @@ public class SignUpController {
         Thread signUp = new Thread(()->{
             try {
                 networkClient.createUser(username, password);
-                Platform.runLater(() -> changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/SetNewGameScene.fxml"));
+                Platform.runLater(() -> changeSceneHandle(event, "/view/gui/SetNewGameScene.fxml"));
             } catch (CannotRegisterUserException e) {
                 Platform.runLater(()->{
                 signUpErrorLabel.setText(e.getMessage());

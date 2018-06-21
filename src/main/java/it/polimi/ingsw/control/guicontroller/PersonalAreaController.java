@@ -37,7 +37,7 @@ public class PersonalAreaController {
         personalAreaLost.setText(String.valueOf(clientUser.getLostGames()));
         personalAreaScore.setText(String.valueOf(clientUser.getAbandonedGames()));*/
 
-        newGameButton.setOnAction(event -> changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/SetNewGameScene.fxml"));
+        newGameButton.setOnAction(event -> changeSceneHandle(event, "/view/gui/SetNewGameScene.fxml"));
     }
 
 

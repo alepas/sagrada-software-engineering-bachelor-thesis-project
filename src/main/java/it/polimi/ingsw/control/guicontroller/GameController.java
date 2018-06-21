@@ -285,10 +285,10 @@ public class GameController implements Observer, NotificationHandler {
         cancelActionButton.setOnAction(event -> stateAction(CANCEL_ACTION_TOOLCARD));
 
         //by clicking on the personal area button the player changes scene and goes to the area containing all his/her info
-        personalAreaButton.setOnAction(event -> changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/PersonalAreaScene.fxml"));
+        personalAreaButton.setOnAction(event -> changeSceneHandle(event, "/view/gui/PersonalAreaScene.fxml"));
 
         //by clicking on the new game button the player starts a new game
-        newGameButton.setOnAction(event -> changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/SetNewGameScene.fxml"));
+        newGameButton.setOnAction(event -> changeSceneHandle(event, "/view/gui/SetNewGameScene.fxml"));
     }
 
     /**

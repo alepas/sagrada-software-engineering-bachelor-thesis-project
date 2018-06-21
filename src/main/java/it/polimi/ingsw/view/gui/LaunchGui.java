@@ -29,7 +29,7 @@ public class LaunchGui extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
-        Parent root = FXMLLoader.load(getClass().getResource("/it/polimi/ingsw/view/gui/guiview/StartingScene.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/view/gui/StartingScene.fxml"));
         stage.setTitle("Sagrada");
         stage.setScene(new Scene(root));
         stage.setResizable(false);
