@@ -22,6 +22,7 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
     private final ObjectInputStream in;
     private final ObjectOutputStream out;
     private boolean stop;
+    private String userToken;
 
     private final ServerController controller;
 
@@ -60,7 +61,11 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
             } while (!stop);
         } catch (Exception e) {
             //TODO: Socket disconessa
-//            printError(e.getClass().getSimpleName() + " - " + e.getMessage());
+            try {
+                controller.disconnectUser(userToken);
+            } catch (CannotFindPlayerInDatabaseException e1) {
+                e1.printStackTrace();
+            }
             close();
         }
 
@@ -100,7 +105,9 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
     @Override
     public Response handle(CreateUserRequest request){
         try {
-            return controller.createUser(request.username, request.password, socket);
+            CreateUserResponse response = (CreateUserResponse) controller.createUser(request.username, request.password, socket);
+            userToken = response.userToken;
+            return response;
         } catch (CannotRegisterUserException e){
             return new CreateUserResponse(request.username, null, e);
         }
@@ -109,7 +116,9 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
     @Override
     public Response handle(LoginRequest request) {
         try {
-            return controller.login(request.username, request.password, socket);
+            LoginResponse response = (LoginResponse) controller.login(request.username, request.password, socket);
+            userToken = response.userToken;
+            return response;
         } catch (CannotLoginUserException e){
             return new LoginResponse(request.username, null, e);
         }

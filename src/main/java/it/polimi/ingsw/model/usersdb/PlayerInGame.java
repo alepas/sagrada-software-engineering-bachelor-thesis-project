@@ -36,6 +36,7 @@ public class PlayerInGame {
     private boolean allowPlaceDiceAfterCard;
     private ToolCard cardUsedBlockingTurn;
     private Observer observer;
+    private boolean disconnected = false;
 
 
     public PlayerInGame(String user, Game game) throws CannotAddPlayerInDatabaseException {
@@ -123,7 +124,7 @@ public class PlayerInGame {
 
     }
 
-    //TODO: 
+    //TODO:
 
     public void incrementTurnsForRound() {
         if ((turnForRound == 1) && (cardUsedBlockingTurn != null)) {
@@ -488,5 +489,13 @@ public class PlayerInGame {
 
     public void setTurnInRound(int i) {
        turnForRound=i;
+    }
+
+    public void disconnect() {
+        //TODO:
+    }
+
+    public boolean isDisconnected() {
+        return disconnected;
     }
 }

@@ -86,6 +86,10 @@ public class ServerController {
         return new GetUserStatResponse(user, null);
     }
 
+    public void disconnectUser(String userToken) throws CannotFindPlayerInDatabaseException {
+        databaseUsers.getPlayerInGameFromToken(userToken).disconnect();
+    }
+
 
 
     //----------------------------------------------- Toolcards --------------------------------------------------
