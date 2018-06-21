@@ -123,6 +123,8 @@ public class PlayerInGame {
 
     }
 
+    //TODO: 
+
     public void incrementTurnsForRound() {
         if ((turnForRound == 1) && (cardUsedBlockingTurn != null)) {
             clearPlayerRound();
@@ -482,5 +484,9 @@ public class PlayerInGame {
             placedDiceInTurn=true;
             tempResponse.setNextAction(NextAction.MENU_ONLY_TOOLCARD);
         }
+    }
+
+    public void setTurnInRound(int i) {
+       turnForRound=i;
     }
 }

@@ -202,17 +202,22 @@ public class MultiplayerGame extends Game {
 
     int nextPlayer(){
         if (currentTurn % numPlayers == 0) {
+            players[turnPlayer].setTurnInRound(2);
             return turnPlayer;
         } else if ((currentTurn / numPlayers) % 2 == 0){
             if (turnPlayer != numPlayers-1){
+                players[turnPlayer+1].setTurnInRound(1);
                 return turnPlayer+1;
             } else {
+                players[0].setTurnInRound(1);
                 return 0;
             }
         } else {
             if (turnPlayer != 0){
+                players[turnPlayer-1].setTurnInRound(2);
                 return turnPlayer-1;
             } else {
+                players[numPlayers-1].setTurnInRound(2);
                 return numPlayers-1;
             }
         }

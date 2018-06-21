@@ -59,6 +59,7 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
                 }
             } while (!stop);
         } catch (Exception e) {
+            //TODO: Socket disconessa
 //            printError(e.getClass().getSimpleName() + " - " + e.getMessage());
             close();
         }

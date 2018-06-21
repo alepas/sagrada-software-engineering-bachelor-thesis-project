@@ -52,13 +52,18 @@ public class CliView implements Observer, NotificationHandler {
 
     public void printText(String text) { System.out.println(text); }
 
+    //Avvia un nuovo timer della durata di taskTime, notificando ogni volta che è trascorso un secondo
     private void startNewTask(int taskTime){
-        preventTaskDeletion = (task != null);
+        preventTaskDeletion = (task != null);       /*Quando un thread viene cancellato si chiama la deleteTask
+                                                      Se questa chiamata avvenisse dopo che la nuova task è stata
+                                                      avviata troverebbe preventTaskDeletion a true e non la
+                                                      eliminerebbe*/
         task = new Task(taskTime, timerWaiter);
         timer = new Timer();
         timer.schedule(task, 0, task.getSensibility());
     }
 
+    //Avvia un nuovo timer della durata di taskTime, notificando quando passano 'sensibility' ms
     private void startNewTask(int taskTime, int sensibility){
         task = new Task(taskTime, sensibility, timerWaiter);
         timer.schedule(task, 0, task.getSensibility());
@@ -184,12 +189,18 @@ public class CliView implements Observer, NotificationHandler {
         }
     }
 
+
+    //----------------------------------------- PRE-GAME -----------------------------------------
     private void logPhase(){
         while (true) {
             displayText(CliConstants.CHOOSE_LOG_TYPE);
             String answer = userInput();
             assert answer != null;
 
+            if (answer.equals("quit")) {
+                changeState(Status.QUIT_SAGRADA);
+                return;
+            };
             if (answer.equals(CliConstants.YES_RESPONSE)) {
                 changeState(Status.LOGIN);
                 return;
@@ -198,6 +209,7 @@ public class CliView implements Observer, NotificationHandler {
                 changeState(Status.CREATE_ACCOUNT);
                 return;
             }
+            displayText("Scrivi 'quit', '" + CliConstants.YES_RESPONSE + "' oppure '" + CliConstants.NO_RESPONSE + "'");
         }
     }
 
@@ -219,6 +231,7 @@ public class CliView implements Observer, NotificationHandler {
 
             displayText(CliConstants.INSERT_PASS);
             String password = userInput();
+            assert password != null;
 
             if (login) user = controller.login(username, password);
             else user = controller.createUser(username, password);
@@ -897,7 +910,10 @@ public class CliView implements Observer, NotificationHandler {
         }
 
         startNewTask(notification.timeToCompleteTask);
-        if (turnThread != null) turnThread.stop();
+        if (turnThread != null) {
+            turnThread.stop();
+            deleteTask();
+        }
         turnThread = new TurnThread(this, task, timerWaiter);
         (new Thread(turnThread)).start();
 
