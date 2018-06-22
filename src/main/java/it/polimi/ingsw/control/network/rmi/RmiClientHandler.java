@@ -53,7 +53,7 @@ public class RmiClientHandler extends ClientHandler implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         try {
-            observer.update(o, arg);
+            observer.update(null, arg);
         } catch (RemoteException e) {
             //TODO: non riesce a contattare il client
             e.printStackTrace();

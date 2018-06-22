@@ -340,7 +340,8 @@ public class CliView implements Observer, NotificationHandler {
                 if (!obj.isArrived(controller)) displayText(message);
                 while (!obj.isArrived(controller))  waiter.wait();
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                //TODO:
+//                e.printStackTrace();
             }
         }
     }
