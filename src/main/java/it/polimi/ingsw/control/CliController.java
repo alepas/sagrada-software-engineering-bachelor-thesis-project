@@ -10,6 +10,7 @@ import it.polimi.ingsw.view.cli.CliView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Observer;
 
 public class CliController {
     // reference to networking layer
@@ -25,11 +26,18 @@ public class CliController {
         this.client = client;
         this.clientModel = ClientModel.getInstance();
         this.view = new CliView(this);
-        this.clientModel.addObserver(this.view);
     }
 
-    public void run(){
-        view.launch();
+    public boolean run(){
+        return view.launch();
+    }
+
+    public void addObserver(Observer observer){
+        clientModel.addObserver(observer);
+    }
+
+    public void removeObserver(Observer observer){
+        clientModel.removeObserver(observer);
     }
 
     public String createUser(String username, String password){

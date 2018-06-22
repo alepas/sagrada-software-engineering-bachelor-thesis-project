@@ -13,6 +13,7 @@ public enum Status {
     LOGOUT,
     START_GAME_PHASE,
     QUIT_SAGRADA,
+    RECONNECT,
     UNKNOWN,
 
 

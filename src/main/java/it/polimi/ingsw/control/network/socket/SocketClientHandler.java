@@ -120,7 +120,7 @@ public class SocketClientHandler extends ClientHandler implements Runnable, Obse
     public void removeConnection() {
         //Forza il client a disconettersi
         System.out.println("Socket client buttato fuori");
-        respond(new ForceDisconnectionNotification());
+        respond(new ForceDisconnectionNotification(false));
         userdb.removeClient(userToken);
         close();
     }

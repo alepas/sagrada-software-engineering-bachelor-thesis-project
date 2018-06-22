@@ -18,6 +18,7 @@ public class LaunchCli {
     public static void main() throws IOException {
         String answer;
         Tecnology tecnology = null;
+        boolean quit = false;
 
         do {
             System.out.println(">>> Vuoi usare socket o rmi? (Digita \"quit\" per uscire)");
@@ -33,7 +34,7 @@ public class LaunchCli {
             switch (tecnology){
                 case SOCKET:
                     try {
-                        startSocketClient();
+                        quit = startSocketClient();
                     } catch (ConnectException e) {
                         System.out.println(">>> Impossibile stabilire connessione Socket con il Server");
                         tecnology = null;
@@ -41,7 +42,7 @@ public class LaunchCli {
                     break;
                 case RMI:
                     try {
-                        startRmiClient();
+                        quit = startRmiClient();
                     } catch (Exception e){
                         System.out.println(">>> Impossibile stabilire connessione RMI con il Server");
                         e.printStackTrace();
@@ -53,25 +54,26 @@ public class LaunchCli {
                     tecnology = null;
                     break;
             }
-        } while (tecnology == null);
+        } while (!quit);
     }
 
-    private static void startSocketClient() throws IOException {
+    private static boolean startSocketClient() throws IOException {
         SocketClient client = NetworkClient.getNewSocketInstance(
                 NetworkConstants.SERVER_ADDRESS, NetworkConstants.SOCKET_SERVER_PORT);
 
         client.init();
         CliController controller = new CliController(client);
-        controller.run();
+        boolean quit = controller.run();
 
         client.close();
+        return quit;
     }
 
 
-    private static void startRmiClient() throws Exception {
+    private static boolean startRmiClient() throws Exception {
         RmiClient client = NetworkClient.getNewRmiInstance();
         CliController controller = new CliController(client);
-        controller.run();
+        return controller.run();
     }
 
 

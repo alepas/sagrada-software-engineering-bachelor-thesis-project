@@ -12,22 +12,21 @@ import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.Observer;
 
 public abstract class NetworkClient implements ResponseHandler {
     private static NetworkClient instance;
     protected final ClientModel clientModel = ClientModel.getInstance();
+    protected Observer observer = ClientModel.getInstance();
 
+    //TODO: Da eliminare signleton
     public static SocketClient getNewSocketInstance(String host, int port){
-        if (instance == null){
-            instance = new SocketClient(host, port);
-        }
+        instance = new SocketClient(host, port);
         return (SocketClient) instance;
     }
 
     public static RmiClient getNewRmiInstance() throws NotBoundException, RemoteException {
-        if (instance == null){
-            instance = new RmiClient();
-        }
+        instance = new RmiClient();
         return (RmiClient) instance;
     }
 

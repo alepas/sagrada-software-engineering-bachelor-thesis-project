@@ -1,6 +1,7 @@
 package it.polimi.ingsw.control.network.rmi;
 
 import it.polimi.ingsw.control.network.NetworkClient;
+import it.polimi.ingsw.control.network.commands.notifications.ForceDisconnectionNotification;
 import it.polimi.ingsw.control.network.commands.responses.*;
 import it.polimi.ingsw.model.clientModel.NextAction;
 import it.polimi.ingsw.model.clientModel.Position;
@@ -36,7 +37,7 @@ public class RmiClient extends NetworkClient {
                 }
             } catch (RemoteException e){
                 connected = false;
-                System.out.println(">>> Connessione con il server persa");
+                observer.update(null, new ForceDisconnectionNotification(true));
             } catch (InterruptedException e){}
         }).start();
     }

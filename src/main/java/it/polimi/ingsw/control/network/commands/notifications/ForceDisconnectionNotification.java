@@ -1,8 +1,12 @@
 package it.polimi.ingsw.control.network.commands.notifications;
 
 public class ForceDisconnectionNotification implements Notification {
-    public ForceDisconnectionNotification() {
+    public final boolean lostConnection;
+
+    public ForceDisconnectionNotification(boolean lostConnection) {
+        this.lostConnection = lostConnection;
     }
+
 
     @Override
     public void handle(NotificationHandler handler) {

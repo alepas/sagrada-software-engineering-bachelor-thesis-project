@@ -1,6 +1,7 @@
 package it.polimi.ingsw.control.network.socket;
 
 import it.polimi.ingsw.control.network.NetworkClient;
+import it.polimi.ingsw.control.network.commands.notifications.ForceDisconnectionNotification;
 import it.polimi.ingsw.control.network.commands.requests.*;
 import it.polimi.ingsw.control.network.commands.responses.*;
 import it.polimi.ingsw.model.clientModel.ClientModel;
@@ -26,8 +27,6 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
     private Socket connection;
     private ObjectInputStream in;
     private ObjectOutputStream out;
-
-    private Observer observer = ClientModel.getInstance();
 
     private Thread receiver;
 
@@ -77,8 +76,7 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
                                 observer.update(null, obj);
                             }
                         } catch (IOException|ClassNotFoundException e){
-                            //TODO: Patch momentanea, bisognerebbe far printare il messaggio alla view
-                            System.out.println(">>> Connessione con il server persa");
+                            observer.update(null, new ForceDisconnectionNotification(true));
                             return;
                         }
                     } while (true);

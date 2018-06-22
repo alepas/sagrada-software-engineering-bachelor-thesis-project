@@ -36,6 +36,15 @@ public class CliView implements Observer, NotificationHandler {
         this.cliRender = new CliRender();
     }
 
+    private void clean(){
+        isInterruptable = true;
+        currentThread = null;
+        if (task != null) task.stop();
+        preventTaskDeletion = false;
+        deleteTask();
+        changeState(Status.RECONNECT);
+    }
+
     //Restituisce null se c'è stata un'eccezione
     private String userInput() {
         try {
@@ -104,9 +113,12 @@ public class CliView implements Observer, NotificationHandler {
     }
 
     //---------------------------- External methods ----------------------------
-    public void launch(){
+    public boolean launch(){
+        controller.addObserver(this);
         changeState(Status.LOG_PHASE);
-        while (state != Status.QUIT_SAGRADA) start();
+        start();
+        controller.removeObserver(this);
+        return state.equals(Status.QUIT_SAGRADA);
     }
 
     private void start(){
@@ -118,6 +130,9 @@ public class CliView implements Observer, NotificationHandler {
                     case QUIT_SAGRADA:
                         quit = true;
                         //TODO
+                        break;
+                    case RECONNECT:
+                        quit = true;
                         break;
 
                     case UNKNOWN:
@@ -983,10 +998,14 @@ public class CliView implements Observer, NotificationHandler {
     @Override
     public void handle(ForceDisconnectionNotification notification) {
         printText("");
-        displayText("Hai effettuato il login da un altro dispositivo");
-        displayText("Sei pertanto stato disconesso dalla sessione");
-        state = Status.LOG_PHASE;
-        currentThread.interrupt();
+        if (notification.lostConnection) {
+            displayText("Connessione con il server persa");
+        } else {
+            displayText("Hai effettuato il login da un altro dispositivo");
+            displayText("Sei pertanto stato disconesso dalla sessione");
+        }
+        if (currentThread != null) currentThread.interrupt();
+        clean();
     }
 
     @Override
