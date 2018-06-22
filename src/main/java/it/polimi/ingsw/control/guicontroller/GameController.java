@@ -1601,4 +1601,9 @@ public class GameController implements Observer, NotificationHandler {
     public void handle(PlayerReconnectedNotification playerReconnectedNotification) {
 
     }
+
+    @Override
+    public void handle(ForceDisconnectionNotification notification) {
+
+    }
 }

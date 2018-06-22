@@ -25,6 +25,7 @@ public class CliController {
         this.client = client;
         this.clientModel = ClientModel.getInstance();
         this.view = new CliView(this);
+        this.clientModel.addObserver(this.view);
     }
 
     public void run(){
@@ -69,7 +70,6 @@ public class CliController {
 
         String gameID = clientModel.getGameID();
         if (gameID != null) {
-            clientModel.addObserver(view);
             view.displayText("Entrato nella partita: " + gameID);
             view.displayText("Giocatori presenti: " + clientModel.getGameActualPlayers() +
                     " di " + clientModel.getGameNumPlayers() + " necessari.");

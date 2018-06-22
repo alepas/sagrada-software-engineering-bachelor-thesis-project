@@ -3,23 +3,21 @@ package it.polimi.ingsw.control.network.rmi;
 import it.polimi.ingsw.model.constants.NetworkConstants;
 
 public class RmiUserConnectionTimer implements Runnable {
-    private final String userToken;
     private int timeLeft;
     private boolean run;
-    private DisconnectionHandler handler;
+    private RmiClientHandler client;
 
-    public RmiUserConnectionTimer(String userToken, DisconnectionHandler handler) {
-        this.userToken = userToken;
+    RmiUserConnectionTimer(RmiClientHandler client) {
         this.timeLeft = NetworkConstants.RMI_INITIAL_POLLING_TIME;
         this.run = true;
-        this.handler = handler;
+        this.client = client;
     }
 
-    public void reset(){
+    void reset(){
         timeLeft = NetworkConstants.RMI_MAX_POLLS_MISSED * NetworkConstants.RMI_POLLING_TIME;
     }
 
-    public void stop(){
+    void stop(){
         run = false;
     }
 
@@ -30,7 +28,7 @@ public class RmiUserConnectionTimer implements Runnable {
                 Thread.sleep(NetworkConstants.RMI_POLLING_TIME);
                 timeLeft -= NetworkConstants.RMI_POLLING_TIME;
             }
-            if (timeLeft <= 0) handler.notifyDisconnection(userToken);
+            if (timeLeft <= 0) client.disconnect();
         } catch (InterruptedException e){ /*Do nothing*/}
     }
 }

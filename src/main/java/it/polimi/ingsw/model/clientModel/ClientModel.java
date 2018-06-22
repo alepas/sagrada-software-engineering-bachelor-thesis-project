@@ -40,6 +40,7 @@ public class ClientModel implements Observer, NotificationHandler {
         if (instance == null) {
             instance = new ClientModel();
             instance.clean();
+            instance.observers = new ArrayList<>();
         }
 
         return instance;
@@ -67,7 +68,6 @@ public class ClientModel implements Observer, NotificationHandler {
     public void clean() {
         this.userToken = null;
         this.user = null;
-        this.observers = new ArrayList<>();
         exitGame();
     }
 
@@ -381,5 +381,10 @@ public class ClientModel implements Observer, NotificationHandler {
     @Override
     public void handle(PlayerReconnectedNotification playerReconnectedNotification) {
 
+    }
+
+    @Override
+    public void handle(ForceDisconnectionNotification notification) {
+        clean();
     }
 }

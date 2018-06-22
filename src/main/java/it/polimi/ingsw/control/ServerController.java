@@ -2,8 +2,6 @@ package it.polimi.ingsw.control;
 
 import it.polimi.ingsw.control.network.commands.responses.*;
 import it.polimi.ingsw.control.network.rmi.RmiServer;
-import it.polimi.ingsw.control.network.socket.SocketClientHandler;
-import it.polimi.ingsw.control.network.socket.SocketServer;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.clientModel.*;
@@ -16,7 +14,6 @@ import it.polimi.ingsw.model.exceptions.gameExceptions.UserNotInThisGameExceptio
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
 import it.polimi.ingsw.model.game.Game;
 import it.polimi.ingsw.model.game.RoundTrack;
-import it.polimi.ingsw.model.gamesdb.DatabaseGames;
 import it.polimi.ingsw.model.usersdb.DatabaseUsers;
 import it.polimi.ingsw.model.usersdb.MoveData;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
@@ -59,7 +56,7 @@ public class ServerController {
     }
 
     public Response login(String username, String password, Socket socket) throws CannotLoginUserException {
-        String userToken = databaseUsers.login(username, password, socket);
+        String userToken = databaseUsers.login(username, password);
         displayText("Login avvenuto: " + username);
         return new LoginResponse(username, userToken, null);
     }

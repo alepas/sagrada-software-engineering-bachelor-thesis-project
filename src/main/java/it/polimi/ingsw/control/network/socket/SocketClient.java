@@ -76,8 +76,10 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
                             } else if (obj != null){
                                 observer.update(null, obj);
                             }
-                        } catch (Exception e){
-                            e.printStackTrace();
+                        } catch (IOException|ClassNotFoundException e){
+                            //TODO: Patch momentanea, bisognerebbe far printare il messaggio alla view
+                            System.out.println(">>> Connessione con il server persa");
+                            return;
                         }
                     } while (true);
                 }

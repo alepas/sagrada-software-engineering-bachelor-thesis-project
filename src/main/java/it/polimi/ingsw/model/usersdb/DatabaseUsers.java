@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.usersdb;
 
 
+import it.polimi.ingsw.control.network.ClientHandler;
 import it.polimi.ingsw.control.network.rmi.RmiServer;
 import it.polimi.ingsw.model.clientModel.ClientUser;
 import it.polimi.ingsw.model.constants.UserDBConstants;
@@ -33,8 +34,9 @@ public class DatabaseUsers {
 
     private HashMap<String, String> tokenByUsername;
     private HashMap<String, User> usersByToken;
-    private HashMap<String, Socket> socketByToken;
+    private HashMap<String, Socket> socketByToken;               //TODO: non serve più?
     private HashMap<String, PlayerInGame> playerInGameByToken;
+    private HashMap<String, ClientHandler> clientByToken;
 
 
     public static synchronized DatabaseUsers getInstance() {
@@ -53,6 +55,8 @@ public class DatabaseUsers {
 
             instance.playerInGameByToken = new HashMap<>();
 
+            instance.clientByToken = new HashMap<>();
+
             instance.databaseGames = DatabaseGames.getInstance();
 
             instance.rmiServer = null;
@@ -70,6 +74,7 @@ public class DatabaseUsers {
             instance.usersByToken = new HashMap<String, User>();
             instance.socketByToken = new HashMap<>();
             instance.playerInGameByToken = new HashMap<>();
+            instance.clientByToken = new HashMap<>();
             instance.rmiServer = null;
 
 
@@ -81,6 +86,18 @@ public class DatabaseUsers {
     private DatabaseUsers() {
     }
 
+    public void addClient(ClientHandler client){
+        clientByToken.put(client.getToken(), client);
+    }
+
+    public void removeClient(String userToken){
+        String username = usersByToken.get(userToken).getUsername();
+
+        tokenByUsername.remove(username);
+        usersByToken.remove(userToken);
+        playerInGameByToken.remove(userToken);
+        clientByToken.remove(userToken);
+    }
 
     public synchronized String registerUser(String username, String password) throws CannotRegisterUserException {
         byte[] salt;
@@ -171,20 +188,22 @@ public class DatabaseUsers {
         if (passwordHash.equals(storedPasswordHash)) {
             newtoken = UUID.randomUUID().toString();
             if ((oldtoken = tokenByUsername.get(username)) != null) {
-
                 playerInGame = playerInGameByToken.get(oldtoken);
-                if (playerInGame != null) {
-                    try {
-                        removeSocketFromToken(oldtoken);
-                    } catch (CannotCloseOldConnectionException e) {
-                        if (e.getErrorId() == 0)
-                            throw new CannotLoginUserException(username, 3);
-                    }
-                    usersByToken.remove(oldtoken);
+                clientByToken.get(oldtoken).removeConnection();     //Chiama già la removeClient()
 
-                    playerInGameByToken.remove(oldtoken);
-                    rmiServer.rmiDisconnectionTimerStop(oldtoken);
-                }
+//                playerInGame = playerInGameByToken.get(oldtoken);
+//                if (playerInGame != null) {
+//                    try {
+//                        removeSocketFromToken(oldtoken);
+//                    } catch (CannotCloseOldConnectionException e) {
+//                        if (e.getErrorId() == 0)
+//                            throw new CannotLoginUserException(username, 3);
+//                    }
+//                    usersByToken.remove(oldtoken);
+//
+//                    playerInGameByToken.remove(oldtoken);
+//                    rmiServer.rmiDisconnectionTimerStop(oldtoken);
+//                }
             }
 
 
@@ -199,6 +218,7 @@ public class DatabaseUsers {
         }
     }
 
+    //TODO: Serve ancora?
     public synchronized String login(String username, String password, Socket socket) throws CannotLoginUserException {
         String passwordHash;
         String storedPasswordHash;
@@ -273,7 +293,7 @@ public class DatabaseUsers {
     public synchronized String getUsernameByToken(String token) throws CannotFindUserInDBException {
         if (token == null) throw new CannotFindUserInDBException("");
 
-        String username = usersByToken.get(token).getUsername();
+        String username = usersByToken.get(token).getUsername();            //TODO: Attenzione, NullPointerException se la get restituisce null
         if (username == null) throw new CannotFindUserInDBException("");
         return username;
     }

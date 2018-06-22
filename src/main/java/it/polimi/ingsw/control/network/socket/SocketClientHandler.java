@@ -1,6 +1,8 @@
 package it.polimi.ingsw.control.network.socket;
 
 import it.polimi.ingsw.control.ServerController;
+import it.polimi.ingsw.control.network.ClientHandler;
+import it.polimi.ingsw.control.network.commands.notifications.ForceDisconnectionNotification;
 import it.polimi.ingsw.control.network.commands.requests.*;
 import it.polimi.ingsw.control.network.commands.responses.*;
 import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
@@ -8,7 +10,9 @@ import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersExcept
 import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.UserNotInThisGameException;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
+import it.polimi.ingsw.model.usersdb.DatabaseUsers;
 
+import javax.management.Notification;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -17,30 +21,34 @@ import java.util.Observable;
 import java.util.Observer;
 
 
-public class SocketClientHandler implements Runnable, Observer, RequestHandler {
+public class SocketClientHandler extends ClientHandler implements Runnable, Observer, RequestHandler {
     private Socket socket;
     private final ObjectInputStream in;
     private final ObjectOutputStream out;
-    private boolean stop;
-    private String userToken;
-
     private final ServerController controller;
+    private boolean stop;
+    private DatabaseUsers userdb;
+
 
     public SocketClientHandler(Socket socket) throws IOException {
+        super(null);
         this.socket = socket;
         this.out = new ObjectOutputStream(socket.getOutputStream());
         this.in = new ObjectInputStream(socket.getInputStream());
         this.controller = ServerController.getInstance();
+        this.stop = false;
+        userdb = DatabaseUsers.getInstance();
     }
 
-    public Socket getSocket() {
-        return socket;
-    }
+//    public Socket getSocket() {
+//        return socket;
+//    }
 
-    public void respond(Object response) {
+    private void respond(Object response) {
         try {
             out.writeObject(response);
         } catch (IOException e) {
+            //TODO: Non riesco a contattare il client
             printError("IO - " + e.getMessage());
         }
     }
@@ -59,18 +67,17 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
                 }
             } while (!stop);
         } catch (IOException e) {
-            //TODO: Socket disconessa
-            try {
-                controller.disconnectUser(userToken);
-            } catch (CannotFindPlayerInDatabaseException e1) {
-                e1.printStackTrace();
-            }
-            close();
+//            //TODO: Persa la connessione con il client
+            disconnect();
+//            try {
+//                controller.disconnectUser(userToken);
+//            } catch (CannotFindPlayerInDatabaseException e1) {
+//                e1.printStackTrace();
+//            }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+            removeConnection();
         }
-
-        close();
     }
 
     public void stop(){ stop = true; }
@@ -101,6 +108,23 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
     }
 
 
+    @Override
+    public void disconnect() {
+        //Ho perso la connessione con il client
+        System.out.println("Socket client disconnesso");
+        userdb.removeClient(userToken);
+        close();
+    }
+
+    @Override
+    public void removeConnection() {
+        //Forza il client a disconettersi
+        System.out.println("Socket client buttato fuori");
+        respond(new ForceDisconnectionNotification());
+        userdb.removeClient(userToken);
+        close();
+    }
+
     //------------------------------ Request handler ------------------------------
 
     @Override
@@ -108,6 +132,7 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
         try {
             CreateUserResponse response = (CreateUserResponse) controller.createUser(request.username, request.password, socket);
             userToken = response.userToken;
+            userdb.addClient(this);
             return response;
         } catch (CannotRegisterUserException e){
             return new CreateUserResponse(request.username, null, e);
@@ -119,6 +144,7 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
         try {
             LoginResponse response = (LoginResponse) controller.login(request.username, request.password, socket);
             userToken = response.userToken;
+            userdb.addClient(this);
             return response;
         } catch (CannotLoginUserException e){
             return new LoginResponse(request.username, null, e);
@@ -128,6 +154,7 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
     @Override
     public Response handle(FindGameRequest request) {
         try {
+            //TODO: Eliminare rmiObserver: false
             return controller.findGame(request.token, request.numPlayers, this,false);
         } catch (InvalidNumOfPlayersException|CannotFindUserInDBException|CannotCreatePlayerException e){
             return new FindGameResponse(null, 0, 0, e);
@@ -294,6 +321,7 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
     @Override
     public Response handle(FindAlreadyStartedGameRequest request) {
         try{
+            //TODO: Eliminare rmiObserver: false
             return controller.findAlreadyStartedGame(request.token, this,false);
         } catch (CannotFindGameForUserInDatabaseException e) {
             return new UpdatedGameResponse(e);
