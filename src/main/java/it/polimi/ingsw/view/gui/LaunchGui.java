@@ -34,7 +34,7 @@ public class LaunchGui extends Application {
         stage.setScene(new Scene(root));
         stage.setResizable(false);
 
-        final java.net.URL resource = getClass().getResource("song.mp3");
+        final java.net.URL resource = getClass().getResource("/view/gui/song.mp3");
         final Media media = new Media(resource.toString());
         final MediaPlayer mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);

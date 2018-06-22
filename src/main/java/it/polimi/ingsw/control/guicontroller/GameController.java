@@ -7,8 +7,13 @@ import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
 
 import it.polimi.ingsw.view.Status;
 import it.polimi.ingsw.model.clientModel.ClientWpcConstants;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -26,9 +31,14 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
+import javax.swing.*;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Timer;
 
 import static it.polimi.ingsw.model.clientModel.ClientConstants.NUM_OF_ROUNDS;
 import static it.polimi.ingsw.model.clientModel.ClientDiceLocations.*;
@@ -40,6 +50,10 @@ import static java.lang.Thread.sleep;
 
 public class GameController implements Observer, NotificationHandler {
 
+    @FXML private Label fourthScoreLabel;
+    @FXML private Label fourthLabel;
+    @FXML private Label thirdScoreLabel;
+    @FXML private Label thirdLabel;
     @FXML private GridPane fourthWpcGrid;
     @FXML private Label fourthFavourLabel;
     @FXML private Label fourthUserLabel;
@@ -50,6 +64,7 @@ public class GameController implements Observer, NotificationHandler {
     @FXML private ImageView usedTool1Icon;
     @FXML private Label firstWpcNameLabel;
     @FXML private Label message1Label;
+
     @FXML
     private AnchorPane roundTrackPane;
     @FXML
@@ -79,6 +94,7 @@ public class GameController implements Observer, NotificationHandler {
     private ImageView minusOneIcon;
     @FXML
     private ImageView plusOneIcon;
+
     private NetworkClient networkClient;
     private ClientModel clientModel;
     private String username;
@@ -93,6 +109,7 @@ public class GameController implements Observer, NotificationHandler {
     private final Object waiter = new Object();
     private boolean isUsedToolCard = false;
     private NextAction lastNextAction;
+    private Timer timer;
 
     @FXML
     private Label messageLabel;
@@ -195,6 +212,7 @@ public class GameController implements Observer, NotificationHandler {
     @FXML  private Label thirdUserLabel;
     @FXML private  Label thirdFavourLabel;
     @FXML private GridPane thirdWpcGrid;
+    @FXML private Label clockLabel;
 
     /**
      * Replaces the constructor, it cointains also all the events done cliking the some objects in the view
@@ -270,16 +288,7 @@ public class GameController implements Observer, NotificationHandler {
         useTool3.setOnAction(event -> useToolCard(toolCardsIDs.get(2).getId()));
 
         //by clicking on the end button the player pass his/her turn
-        endTurnButton.setOnAction(event -> {
-            try {
-                networkClient.passTurn(clientModel.getUserToken());
-
-            } catch (CannotFindPlayerInDatabaseException | PlayerNotAuthorizedException | CannotPerformThisMoveException e) {
-                message1Label.setText(e.getMessage());
-                stateAction(change(lastNextAction));
-            }
-
-        });
+        endTurnButton.setOnAction(event -> endTurn());
 
         //by clicking on the cancel button the player goes back to the previous action
         cancelActionButton.setOnAction(event -> stateAction(CANCEL_ACTION_TOOLCARD));
@@ -376,6 +385,7 @@ public class GameController implements Observer, NotificationHandler {
      * This method doesn't need parameters and return void.
      */
     private void dragAndDrop() {
+        //the next two lambda's detect and complete the drag and drop on the extracted dices
         for (ImageView dice : extractDices) {
             dice.setOnDragDetected(event -> {
                 Dragboard db = dice.startDragAndDrop(TransferMode.MOVE);
@@ -396,7 +406,7 @@ public class GameController implements Observer, NotificationHandler {
             });
         }
 
-
+        //the next two lambda's detect and complete the drag and drop on the schema dices
         for (ImageView dice : schemaDices) {
             dice.setOnDragDetected(event -> {
                 Dragboard db = dice.startDragAndDrop(TransferMode.MOVE);
@@ -480,12 +490,11 @@ public class GameController implements Observer, NotificationHandler {
     private NextAction placeDice(AnchorPane cell, int id) {
         Position position;
         NextAction nextAction;
-        if(cell!= null) {
+        if (cell != null) {
             int row = Integer.parseInt(cell.getId().substring(0, 1));
             int column = Integer.parseInt(cell.getId().substring(1, 2));
             position = new Position(row, column);
-        }
-        else position = null;
+        } else position = null;
         try {
             if (!isUsedToolCard)
                 nextAction = networkClient.placeDice(clientModel.getUserToken(), id, position);
@@ -494,15 +503,20 @@ public class GameController implements Observer, NotificationHandler {
                 isUsedToolCard = false;
             }
             lastNextAction = nextAction;
-        } catch (CannotFindPlayerInDatabaseException | CannotPickPositionException |
-                CannotPickDiceException | PlayerNotAuthorizedException | CannotPerformThisMoveException e) {
-            Platform.runLater(() -> message1Label.setText(e.getMessage()));
+        } catch (CannotFindPlayerInDatabaseException | CannotPickPositionException
+                | PlayerNotAuthorizedException | CannotPerformThisMoveException e) {
+            message1Label.setText(e.getMessage());
             if (isUsedToolCard) isUsedToolCard = false;
-            return lastNextAction;
+            nextAction = lastNextAction;
+
+        } catch (CannotPickDiceException e) {
+            message1Label.setText(e.getMessage());
+            nextAction = lastNextAction;
         } catch (NoToolCardInUseException e) {
             message1Label.setText(e.getMessage());
-            return lastNextAction;
+            nextAction = lastNextAction;
         }
+
         return nextAction;
     }
 
@@ -589,7 +603,7 @@ public class GameController implements Observer, NotificationHandler {
         Platform.runLater(() -> {
             if (turn.equals("3")) messageLabel.setText("Tocca ancora a te!");
             else messageLabel.setText("Tocca a te!");
-            message1Label.setText("");
+            message1Label.setText(""); //todo: dare più tempo alla label di avviso
             roundLabel.setText("Round numero " + round + ", turno di " + username);
             endTurnButton.setVisible(true);
             endTurnButton.setDisable(false);
@@ -602,6 +616,36 @@ public class GameController implements Observer, NotificationHandler {
             useTool3.setDisable(false);
             dragAndDrop();
         });
+    }
+
+    private void startTimer(int time){
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            int clock = time/1000;
+            public void run() {
+                if(clock > 0) {
+                    Platform.runLater(()-> clockLabel.setText("00:"+clock));
+                    clock--;
+                }
+                else {
+                    Platform.runLater(()-> clockLabel.setText("00:"+ time/1000));
+                    endTurn();
+                    System.out.println("ehi");
+                    timer.cancel();
+                }
+            }
+        }, 1000,1000);
+
+    }
+
+    private void endTurn(){
+        try {
+            networkClient.passTurn(clientModel.getUserToken());
+
+        } catch (CannotFindPlayerInDatabaseException | PlayerNotAuthorizedException | CannotPerformThisMoveException e) {
+            message1Label.setText(e.getMessage());
+            stateAction(change(lastNextAction));
+        }
     }
 
     /**
@@ -1326,20 +1370,27 @@ public class GameController implements Observer, NotificationHandler {
     private void setScore(ArrayList<Map.Entry<String, Integer>> score) {
         Platform.runLater(() -> {
             boardGame.setVisible(false);
-            if (score.get(0).getKey().equals(clientModel.getUsername())) {
-                firstLabel.setText("1. " + username);
-                firstScoreLabel.setText(String.valueOf(score.get(0).getValue()));
-                winnerLabel.setText("HAI VINTO!");
+
+            if (score.get(0).getKey().equals(clientModel.getUsername())) winnerLabel.setText("HAI VINTO!");
+            else winnerLabel.setText("HAI PERSO!");
+
+            firstLabel.setText("1. " + score.get(0).getKey());
+            firstScoreLabel.setText(String.valueOf(score.get(0).getValue()));
+
+            if(score.size() > 1) {
                 secondLabel.setText("2. " + score.get(1).getKey());
                 secondScoreLabel.setText(String.valueOf(score.get(1).getValue()));
-            } else {
-                firstLabel.setText("1. " + score.get(0).getKey());
-                firstScoreLabel.setText(String.valueOf(score.get(0).getValue()));
-                winnerLabel.setText("HAI PERSO!");
-                secondLabel.setText("2. " + username);
-                secondScoreLabel.setText(String.valueOf(score.get(1).getValue()));
             }
-            scoreBoard.setVisible(true);
+            if(score.size() > 2){
+                thirdLabel.setText("3. " + score.get(2).getKey());
+                thirdScoreLabel.setText(String.valueOf(score.get(2).getValue()));
+            }
+            if(clientModel.getGameNumPlayers() == 4) {
+                fourthLabel.setText("4. " + score.get(3).getKey());
+                fourthScoreLabel.setText(String.valueOf(score.get(3).getValue()));
+            }
+
+                scoreBoard.setVisible(true);
         });
     }
 
@@ -1493,13 +1544,17 @@ public class GameController implements Observer, NotificationHandler {
 
     @Override
     public void handle(NextTurnNotification notification) {
-        if(!clientModel.isActive()) {
-            Platform.runLater(()->{
-                lastNextAction = NextAction.WAIT_FOR_TURN;
+        Platform.runLater(()->{
+            if(!clientModel.isActive()) {
+               // lastNextAction = NextAction.WAIT_FOR_TURN;
                 stateAction(ANOTHER_PLAYER_TURN);
-            });
-        }
-        else synchronized (waiter) {waiter.notify();}
+                }
+            else{
+                System.out.println(notification.activeUser);
+                startTimer(notification.timeToCompleteTask);
+                synchronized (waiter) {waiter.notify();}
+            }
+        });
     }
 
     @Override
@@ -1534,8 +1589,9 @@ public class GameController implements Observer, NotificationHandler {
             else if(notification.toolCard.getId().equals(toolCardsIDs.get(2).getId()))
                 usedTool3Icon.setVisible(true);
 
+            message1Label.setText(notification.username +" ha usato la ToolCard " + notification.toolCard.getId());
             firstFavourLabel.setText(String.valueOf(clientModel.getFavoursByUsername().get(clientModel.getUsername()))+ "X");
-            if (notification.username.equals(secondUserLabel.getText())) {
+            if (secondUserLabel != null && notification.username.equals(secondUserLabel.getText())) {
                 fillWpc(secondWpcGrid, clientModel.getWpcByUsername().get(notification.username));
                 updateGraphicExtractedDices();
             }
@@ -1572,7 +1628,7 @@ public class GameController implements Observer, NotificationHandler {
         Platform.runLater(() -> {
             String user = toolCardDicePlacedNotification.username;
             String id = String.valueOf(toolCardDicePlacedNotification.dice.getDiceID());
-            if (user.equals(secondUserLabel.getText())) updateGraphicRoundTrack();
+            if (secondUserLabel != null && user.equals(secondUserLabel.getText())) updateGraphicRoundTrack();
             else if (thirdUserLabel.getText()!= null && user.equals(thirdUserLabel.getText())){
                 fillWpc(thirdWpcGrid, clientModel.getWpcByUsername().get(user));
                 updateGraphicRoundTrack();

@@ -37,13 +37,16 @@
                             <rowConstraints>
                                 <RowConstraints prefHeight="30.0" />
                                 <RowConstraints prefHeight="30.0" />
+                                <RowConstraints prefHeight="30.0" />
                             </rowConstraints>
                             <children>
 
                                 <Label fx:id="firstLabel" />
                                 <Label fx:id="secondLabel" GridPane.rowIndex="1" />
+                                <Label fx:id="thirdLabel" GridPane.rowIndex="2"/>
                                 <Label fx:id="firstScoreLabel" GridPane.columnIndex="1" />
                                 <Label fx:id="secondScoreLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                <Label fx:id="thirdScoreLabel" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
                             </children>
                         </GridPane>
 
