@@ -20,22 +20,28 @@ public class RmiServer implements RemoteServer, Observer, DisconnectionHandler {
     private transient final ServerController controller;
     private transient HashMap<String, RemoteObserver> observerByUser;
     private transient HashMap<String, RmiUserConnectionTimer> timerByToken;
-    private transient DatabaseUsers userdb = DatabaseUsers.getInstance();
+    private transient DatabaseUsers userdb;
 
     public RmiServer(ServerController controller) throws RemoteException {
         this.controller = controller;
         observerByUser = new HashMap<>();
         timerByToken = new HashMap<>();
-    };
+        controller.setRmiServerOnUsersDb(this);
+        userdb = DatabaseUsers.getInstance();
+    }
+
+    ;
 
 
     //--------------------------------- CONNECTION HANDLER ------------------------------------
 
-    private void reconnectPlayer() {
+  /*  private void reconnectPlayer() {
         //TODO
     }
+*/
+  //Ci server davvero questa reconnectPlayer???
 
-    private void startUserConnectionDetector(String userToken){
+    private void startUserConnectionDetector(String userToken) {
         RmiUserConnectionTimer timer = new RmiUserConnectionTimer(userToken, this);
         timerByToken.put(userToken, timer);
         (new Thread(timer)).start();
@@ -53,10 +59,21 @@ public class RmiServer implements RemoteServer, Observer, DisconnectionHandler {
         } catch (CannotFindPlayerInDatabaseException e) { /*Do nothing: player already disconnected*/}
     }
 
+    public void removeRemoteObserver(String username) {
+        observerByUser.remove(username);
+    }
 
+    public void rmiDisconnectionTimerStop(String oldToken) {
+        RmiUserConnectionTimer timer = timerByToken.remove(oldToken);
+        if (timer != null){
+            timer.stop();
+        }
+
+    }
 
 
     //------------------------------------- RMI SERVER ----------------------------------------
+
     @Override
     public Response createUser(String username, String password) throws CannotRegisterUserException {
         CreateUserResponse response = (CreateUserResponse) controller.createUser(username, password, null);
@@ -73,11 +90,10 @@ public class RmiServer implements RemoteServer, Observer, DisconnectionHandler {
 
     @Override
     public Response findGame(String userToken, int numPlayers, RemoteObserver observer) throws CannotFindUserInDBException, InvalidNumOfPlayersException, CannotCreatePlayerException {
-        Response response = controller.findGame(userToken, numPlayers, this);
+        Response response = controller.findGame(userToken, numPlayers, this, true);
 
-        String gameID = ((FindGameResponse) response).gameID;
         String username = userdb.getUsernameByToken(userToken);
-        RemoteObserver put = observerByUser.put(username, observer);
+        observerByUser.put(username, observer);
 
         return response;
     }
@@ -88,7 +104,7 @@ public class RmiServer implements RemoteServer, Observer, DisconnectionHandler {
     }
 
     @Override
-    public Response passTurn(String userToken) throws RemoteException, CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException , CannotPerformThisMoveException {
+    public Response passTurn(String userToken) throws RemoteException, CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotPerformThisMoveException {
         return controller.passTurn(userToken);
     }
 
@@ -109,7 +125,7 @@ public class RmiServer implements RemoteServer, Observer, DisconnectionHandler {
 
     @Override
     public Response pickNumberForToolCard(String userToken, int number) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPickNumberException, CannotPerformThisMoveException {
-        return controller.pickNumberForToolCard(userToken,number);
+        return controller.pickNumberForToolCard(userToken, number);
     }
 
     @Override
@@ -163,18 +179,18 @@ public class RmiServer implements RemoteServer, Observer, DisconnectionHandler {
     }
 
     @Override
-    public Response getUserStat(String userToken) throws RemoteException, CannotFindUserInDBException {
+    public Response getUserStat(String userToken) throws CannotFindUserInDBException {
         return controller.getUserStat(userToken);
     }
 
     @Override
-    public Response findAlreadyStartedGame(String userToken, RemoteObserver observer) throws RemoteException, CannotFindGameForUserInDatabaseException {
-        Response response = controller.findAlreadyStartedGame(userToken, this); //ci vuole l'observer?
-        String gameID = ((UpdatedGameResponse) response).gameID;
+    public Response findAlreadyStartedGame(String userToken, RemoteObserver observer) throws CannotFindGameForUserInDatabaseException {
+        Response response = controller.findAlreadyStartedGame(userToken, this, true); //ci vuole l'observer?
 
         String username = null;
-        try { username = userdb.getUsernameByToken(userToken); }
-        catch (CannotFindUserInDBException e) {/*TODO: */}
+        try {
+            username = userdb.getUsernameByToken(userToken);
+        } catch (CannotFindUserInDBException e) {/*TODO: */}
 
         observerByUser.put(username, observer);
 
@@ -183,11 +199,11 @@ public class RmiServer implements RemoteServer, Observer, DisconnectionHandler {
 
     @Override
     public void update(Observable o, Object arg) {
-        if (o instanceof Game){
+        if (o instanceof Game) {
             Game game = (Game) o;
-            for (PlayerInGame player : game.getPlayers()){
+            for (PlayerInGame player : game.getPlayers()) {
                 RemoteObserver observer = observerByUser.get(player.getUser());
-                if (observer != null){
+                if (observer != null) {
                     try {
                         observer.update(null, arg);
                     } catch (RemoteException e) {

@@ -37,6 +37,7 @@ public class PlayerInGame {
     private boolean allowPlaceDiceAfterCard;
     private ToolCard cardUsedBlockingTurn;
     private Observer observer;
+    private boolean rmiObserver;
     private boolean disconnected = false;
     private ClientEndTurnData endTurnData;
 
@@ -126,6 +127,17 @@ public class PlayerInGame {
 
     }
 
+    public boolean isRmiObserver() {
+        return rmiObserver;
+    }
+
+    public void setRmiObserver(boolean rmiObserver) {
+        this.rmiObserver = rmiObserver;
+    }
+
+    public void setDisconnected(boolean disconnected) {
+        this.disconnected = disconnected;
+    }
 
     public Wpc getWPC() {
         return wpc;
@@ -498,6 +510,8 @@ public class PlayerInGame {
     public void disconnect() {
        if (!active){
            disconnected=true;
+           rmiObserver=false;
+           observer=null;
            game.changeAndNotifyObservers(new PlayerDisconnectedNotification(username));
            return;
        }

@@ -1,7 +1,9 @@
 package it.polimi.ingsw.control;
 
 import it.polimi.ingsw.control.network.commands.responses.*;
+import it.polimi.ingsw.control.network.rmi.RmiServer;
 import it.polimi.ingsw.control.network.socket.SocketClientHandler;
+import it.polimi.ingsw.control.network.socket.SocketServer;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.clientModel.*;
@@ -26,14 +28,25 @@ import java.util.HashMap;
 import java.util.Observer;
 
 public class ServerController {
+    private static ServerController instance;
     // pieces of the model
     private final DatabaseUsers databaseUsers;
-    private final DatabaseGames databaseGames;
 
-    public ServerController(SocketClientHandler clientHandler) {
+    private ServerController() {
         this.databaseUsers = DatabaseUsers.getInstance();
-        this.databaseGames = DatabaseGames.getInstance();
     }
+
+    public static ServerController getInstance(){
+        if (instance!=null)
+            return instance;
+        instance = new ServerController();
+        return instance;
+    }
+
+    public void setRmiServerOnUsersDb(RmiServer rmiServer){
+        databaseUsers.setRmiServer(rmiServer);
+    }
+
 
     public void displayText(String text){
         System.out.println(">>> " + text);
@@ -51,8 +64,8 @@ public class ServerController {
         return new LoginResponse(username, userToken, null);
     }
 
-    public Response findGame(String userToken, int numPlayers, Observer observer) throws InvalidNumOfPlayersException, CannotFindUserInDBException, CannotCreatePlayerException {
-        Game game = databaseUsers.findNewGame(userToken, numPlayers, observer);
+    public Response findGame(String userToken, int numPlayers, Observer observer, boolean rmiObserver) throws InvalidNumOfPlayersException, CannotFindUserInDBException, CannotCreatePlayerException {
+        Game game = databaseUsers.findNewGame(userToken, numPlayers, observer, rmiObserver);
         return new FindGameResponse(game.getID(), game.numActualPlayers(), game.getNumPlayers(), null);
     }
 
@@ -92,7 +105,7 @@ public class ServerController {
         } catch (CannotFindUserInDBException e) {
             e.printStackTrace();
         }
-        databaseUsers.getPlayerInGameFromToken(userToken).disconnect();
+            databaseUsers.disconnectUser(userToken);
     }
 
 
@@ -217,8 +230,8 @@ public class ServerController {
     }
 
 
-    public Response findAlreadyStartedGame(String userToken, Observer observer) throws CannotFindGameForUserInDatabaseException {
-        Game game = databaseUsers.findAlreadyStartedGame(userToken, observer);
+    public Response findAlreadyStartedGame(String userToken, Observer observer, boolean rmiObserver) throws CannotFindGameForUserInDatabaseException {
+        Game game = databaseUsers.findAlreadyStartedGame(userToken, observer, rmiObserver);
         if (game != null) {
             try {
                 return getUpdatedGame(userToken);

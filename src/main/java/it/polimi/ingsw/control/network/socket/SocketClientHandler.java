@@ -30,8 +30,7 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
         this.socket = socket;
         this.out = new ObjectOutputStream(socket.getOutputStream());
         this.in = new ObjectInputStream(socket.getInputStream());
-
-        this.controller = new ServerController(this);
+        this.controller = ServerController.getInstance();
     }
 
     public Socket getSocket() {
@@ -129,7 +128,7 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
     @Override
     public Response handle(FindGameRequest request) {
         try {
-            return controller.findGame(request.token, request.numPlayers, this);
+            return controller.findGame(request.token, request.numPlayers, this,false);
         } catch (InvalidNumOfPlayersException|CannotFindUserInDBException|CannotCreatePlayerException e){
             return new FindGameResponse(null, 0, 0, e);
         }
@@ -295,7 +294,7 @@ public class SocketClientHandler implements Runnable, Observer, RequestHandler {
     @Override
     public Response handle(FindAlreadyStartedGameRequest request) {
         try{
-            return controller.findAlreadyStartedGame(request.token, this);
+            return controller.findAlreadyStartedGame(request.token, this,false);
         } catch (CannotFindGameForUserInDatabaseException e) {
             return new UpdatedGameResponse(e);
         }
