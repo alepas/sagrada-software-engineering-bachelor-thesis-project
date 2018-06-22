@@ -8,7 +8,7 @@ public class CliConstants {
 
     public static final String CHOOSE_LOG_TYPE =
             "Benvenuto in Sagrada. Prima di iniziare è necessario registrarsi. " +
-            "Ha già un account? " + YES_RESPONSE + "/" + NO_RESPONSE;
+            "Ha già un account? " + YES_RESPONSE + "/" + NO_RESPONSE + " (digita quit per uscire)";
 
     public static final String CHOOSE_LOG_TYPE_ERROR =
             "Comando non riconosciuto, perfavore rispondi \"" + YES_RESPONSE + "\" oppure \"" +

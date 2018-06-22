@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model.cards.concreteToolCards;
 
 import it.polimi.ingsw.control.network.commands.notifications.ToolCardDiceChangedNotification;
-import it.polimi.ingsw.control.network.commands.notifications.DicePlacedNotification;
 import it.polimi.ingsw.control.network.commands.notifications.ToolCardDicePlacedNotification;
 import it.polimi.ingsw.control.network.commands.notifications.ToolCardUsedNotification;
 import it.polimi.ingsw.model.cards.ToolCard;
@@ -115,7 +114,7 @@ public class ToolCard1 extends ToolCard {
         updateClientWPC();
         updateClientExtractedDices();
         movesNotifications.add(new ToolCardDicePlacedNotification(username, this.dice.getClientDice(), pos));
-        currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, tempExtractedDices, null));
+        currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, tempExtractedDices, null, currentPlayer.getFavours()));
         ClientWpc tempWpc = tempClientWpc;
         ArrayList<ClientDice> tempExtracted = tempExtractedDices;
         cleanCard();
@@ -123,7 +122,8 @@ public class ToolCard1 extends ToolCard {
     }
 
 
-    @Override
+
+   /* @Override
     public MoveData cancelAction() throws CannotCancelActionException {
         switch (currentStatus) {
             case 0:
@@ -151,7 +151,8 @@ public class ToolCard1 extends ToolCard {
         }
         throw new CannotCancelActionException(username, id, 1);
 
-    }
+    }*/
+
 
 
     @Override
@@ -178,6 +179,59 @@ public class ToolCard1 extends ToolCard {
 
         }
         return null;
+    }
+
+
+
+    @Override
+    public MoveData cancelAction(boolean all) throws CannotCancelActionException {
+        MoveData temp;
+        switch (currentStatus) {
+            case 3: {
+                try {
+                    dice.setNumber(oldDice.getDiceNumber());
+                } catch (IncorrectNumberException e) {
+                    throw new CannotCancelActionException(username, this.id, 3);
+                }
+                updateClientExtractedDices();
+                this.currentStatus = 2;
+                movesNotifications.remove(movesNotifications.size() - 1);
+                if (!all)
+                    return new MoveData(NextAction.SELECT_NUMBER_TOOLCARD, null, tempExtractedDices, null, this.dice.getClientDice(), ClientDiceLocations.EXTRACTED, numbers, false);
+            }
+            case 2: {
+                this.dice = null;
+                this.currentStatus = 1;
+                this.numbers.clear();
+                if (!all)
+                    return new MoveData(NextAction.SELECT_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED);
+
+            }
+
+            case 1:
+                if (!all) return cancelStatusOne();
+            case 0:
+                if (!all){
+                    return cancelStatusZero();
+                }
+
+        }
+        if (!all)
+        throw new CannotCancelActionException(username, id, 1);
+        if (currentStatus==1){
+            if (singlePlayerGame){
+                currentGame.getExtractedDices().add(diceForSingleUser);
+            }
+        }
+        updateClientWPC();
+        updateClientExtractedDices();
+        updateClientRoundTrack();
+        ClientWpc tempWpc = tempClientWpc;
+        ArrayList<ClientDice> tempExtracted = tempExtractedDices;
+        ClientRoundTrack tempRound = tempRoundTrack;
+        cleanCard();
+        return new MoveData(true, true, tempWpc,tempExtracted,tempRound,null,null,null);
+
     }
 
 

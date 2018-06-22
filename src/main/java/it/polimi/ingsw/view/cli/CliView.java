@@ -15,6 +15,7 @@ public class CliView implements Observer, NotificationHandler {
     private final CliRender cliRender;
     private int strNum = 0;
     private boolean isInterruptable = true;
+    private Thread currentThread;
 
     private Timer timer;
     private Task task = null;
@@ -52,13 +53,18 @@ public class CliView implements Observer, NotificationHandler {
 
     public void printText(String text) { System.out.println(text); }
 
+    //Avvia un nuovo timer della durata di taskTime, notificando ogni volta che è trascorso un secondo
     private void startNewTask(int taskTime){
-        preventTaskDeletion = (task != null);
+        preventTaskDeletion = (task != null);       /*Quando un thread viene cancellato si chiama la deleteTask
+                                                      Se questa chiamata avvenisse dopo che la nuova task è stata
+                                                      avviata troverebbe preventTaskDeletion a true e non la
+                                                      eliminerebbe*/
         task = new Task(taskTime, timerWaiter);
         timer = new Timer();
         timer.schedule(task, 0, task.getSensibility());
     }
 
+    //Avvia un nuovo timer della durata di taskTime, notificando quando passano 'sensibility' ms
     private void startNewTask(int taskTime, int sensibility){
         task = new Task(taskTime, sensibility, timerWaiter);
         timer.schedule(task, 0, task.getSensibility());
@@ -100,96 +106,111 @@ public class CliView implements Observer, NotificationHandler {
     //---------------------------- External methods ----------------------------
     public void launch(){
         changeState(Status.LOG_PHASE);
-        start();
+        while (state != Status.QUIT_SAGRADA) start();
     }
 
     private void start(){
-        boolean quit = false;
-        while (!quit) {
-            stateChanged = false;
-            switch (state) {
-                case QUIT_SAGRADA:
-                    quit = true;
-                    //TODO
-                    break;
+        currentThread = new Thread(() -> {
+            boolean quit = false;
+            while (!quit) {
+                stateChanged = false;
+                switch (state) {
+                    case QUIT_SAGRADA:
+                        quit = true;
+                        //TODO
+                        break;
 
-                case UNKNOWN:
-                    unknownPhase();
-                    break;
+                    case UNKNOWN:
+                        unknownPhase();
+                        break;
 
-                case LOG_PHASE:
-                    logPhase();
-                    break;
+                    case LOG_PHASE:
+                        logPhase();
+                        break;
 
-                case LOGIN:
-                    log(true);
-                    break;
+                    case LOGIN:
+                        log(true);
+                        break;
 
-                case CREATE_ACCOUNT:
-                    log(false);
-                    break;
+                    case CREATE_ACCOUNT:
+                        log(false);
+                        break;
 
-                case DISPLAY_STAT:
-                    showStat();
-                    break;
+                    case DISPLAY_STAT:
+                        showStat();
+                        break;
 
-                case LOGOUT:
-                    //TODO
-                    break;
+                    case LOGOUT:
+                        //TODO
+                        break;
 
-                case MAIN_MENU_PHASE:
-                    mainMenuPhase();
-                    break;
+                    case MAIN_MENU_PHASE:
+                        mainMenuPhase();
+                        break;
 
-                case FIND_GAME_PHASE:
-                    findGamePhase();
-                    break;
+                    case FIND_GAME_PHASE:
+                        findGamePhase();
+                        break;
 
-                case START_GAME_PHASE:
-                    startGamePhase();
-                    break;
+                    case START_GAME_PHASE:
+                        startGamePhase();
+                        break;
 
-                case ANOTHER_PLAYER_TURN:
-                    waitForTurn();
-                    break;
+                    case ANOTHER_PLAYER_TURN:
+                        waitForTurn();
+                        break;
 
-                case MENU_ALL: case MENU_ONLY_PLACEDICE: case MENU_ONLY_TOOLCARD: case MENU_ONLY_ENDTURN:
-                    showMenu();
-                    break;
+                    case MENU_ALL:
+                    case MENU_ONLY_PLACEDICE:
+                    case MENU_ONLY_TOOLCARD:
+                    case MENU_ONLY_ENDTURN:
+                        showMenu();
+                        break;
 
-                case INTERRUPT_TOOLCARD:
-                    //TODO
-                    break;
+                    case INTERRUPT_TOOLCARD:
+                        //TODO
+                        break;
 
-                case SELECT_DICE_TOOLCARD:
-                    pickDiceForToolCard();
-                    break;
+                    case SELECT_DICE_TOOLCARD:
+                        pickDiceForToolCard();
+                        break;
 
-                case SELECT_NUMBER_TOOLCARD:
-                    selectNumberForToolcard();
-                    break;
+                    case SELECT_NUMBER_TOOLCARD:
+                        selectNumberForToolcard();
+                        break;
 
-                case SELECT_DICE_TO_ACTIVE_TOOLCARD:
-                    //TODO
-                    break;
+                    case SELECT_DICE_TO_ACTIVE_TOOLCARD:
+                        //TODO
+                        break;
 
-                case PLACE_DICE:
-                    //TODO: ha senso???
-                    break;
+                    case PLACE_DICE:
+                        //TODO: ha senso???
+                        break;
 
-                case PLACE_DICE_TOOLCARD:
-                    placeDiceForToolcard();
-                    break;
+                    case PLACE_DICE_TOOLCARD:
+                        placeDiceForToolcard();
+                        break;
+                }
             }
-        }
+        });
+        currentThread.start();
+        try {
+            currentThread.join();
+        } catch (InterruptedException e) {/*Do nothing*/}
     }
 
+
+    //----------------------------------------- PRE-GAME -----------------------------------------
     private void logPhase(){
         while (true) {
             displayText(CliConstants.CHOOSE_LOG_TYPE);
             String answer = userInput();
-            assert answer != null;
 
+            if (answer == null) return;
+            if (answer.equals("quit")) {
+                changeState(Status.QUIT_SAGRADA);
+                return;
+            };
             if (answer.equals(CliConstants.YES_RESPONSE)) {
                 changeState(Status.LOGIN);
                 return;
@@ -198,6 +219,7 @@ public class CliView implements Observer, NotificationHandler {
                 changeState(Status.CREATE_ACCOUNT);
                 return;
             }
+            displayText("Scrivi 'quit', '" + CliConstants.YES_RESPONSE + "' oppure '" + CliConstants.NO_RESPONSE + "'");
         }
     }
 
@@ -210,7 +232,7 @@ public class CliView implements Observer, NotificationHandler {
 
             displayText(CliConstants.INSERT_USERNAME);
             String username = userInput();
-            assert username != null;
+            if (username == null) return;
 
             if (username.equals(CliConstants.ESCAPE_RESPONSE)){
                 returnToPreviousState();
@@ -219,6 +241,7 @@ public class CliView implements Observer, NotificationHandler {
 
             displayText(CliConstants.INSERT_PASS);
             String password = userInput();
+            if (password == null) return;
 
             if (login) user = controller.login(username, password);
             else user = controller.createUser(username, password);
@@ -231,7 +254,7 @@ public class CliView implements Observer, NotificationHandler {
     private void mainMenuPhase() {
         displayText(CliConstants.PRESENT_MAIN_MENU);
         String response = userInput();
-        assert response != null;
+        if (response == null) return;
 
         switch (response){
             case "1":
@@ -268,7 +291,7 @@ public class CliView implements Observer, NotificationHandler {
 
         displayText("Seleziona numero giocatori: (digita 'back' per tornare indietro)");
         response = userInput();
-        assert response != null;
+        if (response == null) return;
 
         if (response.equals(CliConstants.ESCAPE_RESPONSE)){
             changeState(Status.MAIN_MENU_PHASE);
@@ -317,7 +340,8 @@ public class CliView implements Observer, NotificationHandler {
                 if (!obj.isArrived(controller)) displayText(message);
                 while (!obj.isArrived(controller))  waiter.wait();
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                //TODO:
+//                e.printStackTrace();
             }
         }
     }
@@ -897,7 +921,10 @@ public class CliView implements Observer, NotificationHandler {
         }
 
         startNewTask(notification.timeToCompleteTask);
-        if (turnThread != null) turnThread.stop();
+        if (turnThread != null) {
+            turnThread.stop();
+            deleteTask();
+        }
         turnThread = new TurnThread(this, task, timerWaiter);
         (new Thread(turnThread)).start();
 
@@ -941,6 +968,25 @@ public class CliView implements Observer, NotificationHandler {
     @Override
     public void handle(ToolCardExtractedDicesModifiedNotification toolCardExtractedDicesModifiedNotification) {
 
+    }
+
+    @Override
+    public void handle(PlayerDisconnectedNotification playerDisconnectedNotification) {
+
+    }
+
+    @Override
+    public void handle(PlayerReconnectedNotification playerReconnectedNotification) {
+
+    }
+
+    @Override
+    public void handle(ForceDisconnectionNotification notification) {
+        printText("");
+        displayText("Hai effettuato il login da un altro dispositivo");
+        displayText("Sei pertanto stato disconesso dalla sessione");
+        state = Status.LOG_PHASE;
+        currentThread.interrupt();
     }
 
     @Override

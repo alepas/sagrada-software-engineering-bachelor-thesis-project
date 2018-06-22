@@ -69,8 +69,8 @@ public abstract class ToolCard implements Cloneable {
 
     public abstract MoveData interuptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException;
 
+    public abstract MoveData cancelAction(boolean all) throws CannotCancelActionException;
 
-    public abstract MoveData cancelAction() throws CannotCancelActionException;
 
     protected abstract void cleanCard();
 
@@ -111,6 +111,7 @@ public abstract class ToolCard implements Cloneable {
         }
         throw new CannotCancelActionException(username, id, 2);
     }
+
 
 
     protected MoveData pickDiceInitializeSingleUserToolCard(int diceId, NextAction nextAction, ClientDiceLocations initial, ClientDiceLocations finish) throws CannotPickDiceException {

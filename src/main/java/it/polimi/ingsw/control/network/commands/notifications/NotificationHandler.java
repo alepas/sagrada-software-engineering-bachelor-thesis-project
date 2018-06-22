@@ -29,7 +29,13 @@ public interface NotificationHandler {
 
     void handle(ScoreNotification notification);
 
-    void handle(ToolCardDicePlacedNotification toolCardDicePlacedNotification);
+    void handle(ToolCardDicePlacedNotification notification);
 
-    void handle(ToolCardExtractedDicesModifiedNotification toolCardExtractedDicesModifiedNotification);
+    void handle(ToolCardExtractedDicesModifiedNotification notification);
+
+    void handle(PlayerDisconnectedNotification notification);
+
+    void handle(PlayerReconnectedNotification notification);
+
+    void handle(ForceDisconnectionNotification notification);
 }

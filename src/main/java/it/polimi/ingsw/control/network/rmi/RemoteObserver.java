@@ -6,6 +6,7 @@ import java.util.Observable;
 
 public interface RemoteObserver extends Remote {
 
-    public void update(Observable o, Object arg) throws RemoteException;
+    @SuppressWarnings( "deprecation" )
+    void update(Observable o, Object arg) throws RemoteException;
 
 }

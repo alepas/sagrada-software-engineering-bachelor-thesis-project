@@ -1,9 +1,7 @@
 package it.polimi.ingsw.control.network.rmi;
 
 import it.polimi.ingsw.control.ServerController;
-import it.polimi.ingsw.control.network.commands.responses.FindGameResponse;
-import it.polimi.ingsw.control.network.commands.responses.Response;
-import it.polimi.ingsw.control.network.commands.responses.UpdatedGameResponse;
+import it.polimi.ingsw.control.network.commands.responses.*;
 import it.polimi.ingsw.model.clientModel.Position;
 import it.polimi.ingsw.model.clientModel.ToolCardInteruptValues;
 import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
@@ -11,58 +9,94 @@ import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersExcept
 import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.UserNotInThisGameException;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
-import it.polimi.ingsw.model.game.Game;
 import it.polimi.ingsw.model.usersdb.DatabaseUsers;
 
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
 
-public class RmiServer implements RemoteServer, Observer {
+public class RmiServer implements RemoteServer {
     private transient final ServerController controller;
-    private transient HashMap<String, ArrayList<RemoteObserver>> observersByGame;
-    private transient HashMap<String, RemoteObserver> observersByUser;
+//    private transient HashMap<String, RemoteObserver> observerByUser;
+//    private transient HashMap<String, RmiUserConnectionTimer> timerByToken;
+    private transient HashMap<String, RmiClientHandler> clientByToken;
+    private transient DatabaseUsers userdb;
 
     public RmiServer(ServerController controller) throws RemoteException {
         this.controller = controller;
-        observersByGame = new HashMap<>();
-        observersByUser=new HashMap<>();
-
-    };
-
-    private void reconnectPlayer() {
-        //TODO
+//        observerByUser = new HashMap<>();
+//        timerByToken = new HashMap<>();
+        clientByToken = new HashMap<>();
+//        controller.setRmiServerOnUsersDb(this);
+        userdb = DatabaseUsers.getInstance();
     }
 
+
+    //--------------------------------- CONNECTION HANDLER ------------------------------------
+
+//    private void startUserConnectionDetector(String userToken) {
+//        RmiUserConnectionTimer timer = new RmiUserConnectionTimer(userToken, this);
+//        timerByToken.put(userToken, timer);
+//        (new Thread(timer)).start();
+//    }
+
     @Override
-    public Response createUser(String username, String password) throws CannotRegisterUserException {
-        return controller.createUser(username, password, null);
+    public void poll(String userToken) throws RemoteException {
+        RmiClientHandler client = clientByToken.get(userToken);
+        if (client != null) client.poll();
     }
 
-    @Override
-    public Response login(String username, String password) throws CannotLoginUserException {
-        return controller.login(username, password, null);
+//    @Override
+//    public void notifyDisconnection(String userToken) {
+//        try {
+//            controller.disconnectUser(userToken);
+//        } catch (CannotFindPlayerInDatabaseException e) { /*Do nothing: player already disconnected*/}
+//    }
+
+    //TODO: Non serve più
+    public void removeRemoteObserver(String username) {
+//        observerByUser.remove(username);
     }
 
+    //TODO: Non serve più
+    public void rmiDisconnectionTimerStop(String oldToken) {
+//        RmiUserConnectionTimer timer = timerByToken.remove(oldToken);
+//        if (timer != null){
+//            timer.stop();
+//        }
+    }
+
+    void removeClient(String userToken){
+        clientByToken.remove(userToken);
+        userdb.removeClient(userToken);
+    }
+
+
+    //------------------------------------- RMI SERVER ----------------------------------------
+
     @Override
-    public Response findGame(String userToken, int numPlayers, RemoteObserver observer) throws CannotFindUserInDBException, InvalidNumOfPlayersException, CannotCreatePlayerException {
-        Response response = controller.findGame(userToken, numPlayers, this);
-        DatabaseUsers userdb=DatabaseUsers.getInstance();
-        String username=null;
-        RemoteObserver tempObs=null;
-        try {
-            username=userdb.getUsernameByToken(userToken);
-        } catch (CannotFindUserInDBException e) {
-
-        }
-        String gameID = ((FindGameResponse) response).gameID;
-        if (observersByGame.get(gameID) == null) observersByGame.put(gameID, new ArrayList<>());
-        if (!observersByGame.get(gameID).contains(observer)) observersByGame.get(gameID).add(observer);
-        observersByUser.put(username,observer);
-
+    public Response createUser(String username, String password, RemoteObserver observer) throws CannotRegisterUserException {
+        CreateUserResponse response = (CreateUserResponse) controller.createUser(username, password, null);
+        RmiClientHandler client = new RmiClientHandler(response.userToken, this);
+        client.setObserver(observer);
+        clientByToken.put(response.userToken, client);
+        userdb.addClient(client);
         return response;
+    }
+
+    @Override
+    public Response login(String username, String password, RemoteObserver observer) throws CannotLoginUserException {
+        LoginResponse response = (LoginResponse) controller.login(username, password, null);
+        RmiClientHandler client = new RmiClientHandler(response.userToken, this);
+        client.setObserver(observer);
+        clientByToken.put(response.userToken, client);
+        userdb.addClient(client);
+        return response;
+    }
+
+    @Override
+    public Response findGame(String userToken, int numPlayers) throws CannotFindUserInDBException, InvalidNumOfPlayersException, CannotCreatePlayerException {
+        //TODO: eliminare rmiObserver: true
+        return controller.findGame(userToken, numPlayers, clientByToken.get(userToken), true);
     }
 
     @Override
@@ -71,7 +105,7 @@ public class RmiServer implements RemoteServer, Observer {
     }
 
     @Override
-    public Response passTurn(String userToken) throws RemoteException, CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException , CannotPerformThisMoveException {
+    public Response passTurn(String userToken) throws RemoteException, CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotPerformThisMoveException {
         return controller.passTurn(userToken);
     }
 
@@ -92,7 +126,7 @@ public class RmiServer implements RemoteServer, Observer {
 
     @Override
     public Response pickNumberForToolCard(String userToken, int number) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPickNumberException, CannotPerformThisMoveException {
-        return controller.pickNumberForToolCard(userToken,number);
+        return controller.pickNumberForToolCard(userToken, number);
     }
 
     @Override
@@ -146,44 +180,48 @@ public class RmiServer implements RemoteServer, Observer {
     }
 
     @Override
-    public Response getUserStat(String userToken) throws RemoteException, CannotFindUserInDBException {
+    public Response getUserStat(String userToken) throws CannotFindUserInDBException {
         return controller.getUserStat(userToken);
     }
 
+//    @Override
+//    public Response findAlreadyStartedGame(String userToken, RemoteObserver observer) throws CannotFindGameForUserInDatabaseException {
+//        Response response = controller.findAlreadyStartedGame(userToken, this, true); //ci vuole l'observer?
+//
+//        String username = null;
+//        try {
+//            username = userdb.getUsernameByToken(userToken);
+//        } catch (CannotFindUserInDBException e) {/*TODO: */}
+//
+//        observerByUser.put(username, observer);
+//
+//        return response;
+//    }
+
     @Override
-    public Response findAlreadyStartedGame(String userToken, RemoteObserver observer) throws RemoteException, CannotFindGameForUserInDatabaseException {
-        Response response= controller.findAlreadyStartedGame(userToken, null);
-        DatabaseUsers userdb=DatabaseUsers.getInstance();
-        String username=null;
-        RemoteObserver tempObs=null;
-        try {
-            username=userdb.getUsernameByToken(userToken);
-        } catch (CannotFindUserInDBException e) {
-
-        }
-        String gameID = ((UpdatedGameResponse) response).gameID;
-        if (observersByGame.get(gameID) == null) observersByGame.put(gameID, new ArrayList<>());
-        if ((tempObs=observersByUser.get(username))!=null) observersByGame.get(gameID).remove(tempObs);
-        if (!observersByGame.get(gameID).contains(observer)) observersByGame.get(gameID).add(observer);
-        observersByUser.put(username,observer);
-
+    public Response findAlreadyStartedGame(String userToken, RemoteObserver observer) throws CannotFindGameForUserInDatabaseException {
+        //TODO: Eliminare rmiObserver: true
+        Response response = controller.findAlreadyStartedGame(userToken, clientByToken.get(userToken), true);
+        clientByToken.get(userToken).setObserver(observer);
         return response;
     }
 
-
-    @Override
-    public void update(Observable o, Object arg) {
-        if (o instanceof Game){
-            Game game = (Game) o;
-            ArrayList<RemoteObserver> observers = observersByGame.get(game.getID());
-            for (RemoteObserver observer : observers){
-                try {
-                    observer.update(null, arg);
-                } catch (RemoteException e){
-                    //TODO
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
+//    @Override
+//    public void update(Observable o, Object arg) {
+//        if (o instanceof Game) {
+//            Game game = (Game) o;
+//            for (PlayerInGame player : game.getPlayers()) {
+//
+//                RemoteObserver observer = observerByUser.get(player.getUser());
+//                if (observer != null) {
+//                    try {
+//                        observer.update(null, arg);
+//                    } catch (RemoteException e) {
+//                        //TODO: non riesce a contattare il client
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        }
+//    }
 }

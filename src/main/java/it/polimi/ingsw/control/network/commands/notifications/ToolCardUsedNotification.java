@@ -14,14 +14,16 @@ public class ToolCardUsedNotification implements Notification {
     public final ClientWpc wpc;
     public final ArrayList<ClientDice> newExtractedDices;
     public final ClientRoundTrack newRoundTrack;
+    public final int favours;
 
-    public ToolCardUsedNotification(String username, ClientToolCard toolCard, ArrayList<Notification> movesNotifications, ClientWpc wpc, ArrayList<ClientDice> newExtractedDices, ClientRoundTrack newRoundTrack) {
+    public ToolCardUsedNotification(String username, ClientToolCard toolCard, ArrayList<Notification> movesNotifications, ClientWpc wpc, ArrayList<ClientDice> newExtractedDices, ClientRoundTrack newRoundTrack, int favours) {
         this.username = username;
         this.toolCard = toolCard;
         this.movesNotifications = movesNotifications;
         this.wpc = wpc;
         this.newExtractedDices = newExtractedDices;
         this.newRoundTrack = newRoundTrack;
+        this.favours = favours;
     }
 
     @Override

@@ -1,3 +1,4 @@
+/*
 package it.polimi.ingsw.model.cards.concreteToolCards;
 
 import it.polimi.ingsw.control.network.commands.notifications.ToolCardExtractedDicesModifiedNotification;
@@ -68,7 +69,7 @@ public class ToolCard7 extends ToolCard {
             this.used = true;
             ArrayList<ClientDice> tempExtracted = tempExtractedDices;
             this.movesNotifications.add(new ToolCardExtractedDicesModifiedNotification(username));
-            this.currentGame.changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, null, tempExtractedDices, null));
+            this.currentGame.changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, null, tempExtractedDices, null, favours));
             cleanCard();
             return new MoveData(true, null, tempExtracted, null);
         }
@@ -92,7 +93,7 @@ public class ToolCard7 extends ToolCard {
             this.used = true;
             ArrayList<ClientDice> tempExtracted = tempExtractedDices;
             this.movesNotifications.add(new ToolCardExtractedDicesModifiedNotification(username));
-            this.currentGame.changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, null, tempExtractedDices, null));
+            this.currentGame.changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, null, tempExtractedDices, null, favours));
             cleanCard();
             return new MoveData(true, null, tempExtracted, null);
 
@@ -145,3 +146,4 @@ public class ToolCard7 extends ToolCard {
         throw new CannotInteruptToolCardException(username, id);
     }
 }
+*/

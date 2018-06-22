@@ -14,7 +14,7 @@ public class PublicObjectiveCard1 extends PublicObjectiveCard {
     /**
      * Constructor of POC 1.
      */
-    public PublicObjectiveCard1(){
+    public PublicObjectiveCard1() {
         this.id = POCConstants.POC1_ID;
         this.name = POCConstants.POC1_NAME;
         this.description = POCConstants.POC1_DESCRIPTION;
@@ -30,11 +30,12 @@ public class PublicObjectiveCard1 extends PublicObjectiveCard {
     public int calculateScore(Wpc wpc) {
         int score = 0;
 
-        for (int row = 0; row < WpcConstants.ROWS_NUMBER; row++){
+        for (int row = 0; row < WpcConstants.ROWS_NUMBER; row++) {
             ArrayList<Dice> rowDices = wpc.getRowDices(row);
-            if (rowDices.size() == WpcConstants.COLS_NUMBER && allColorsAreDifferent(rowDices)) {
-                score += POCConstants.POC1_SCORE;
-            }
+            if (rowDices != null)
+                if (rowDices.size() == WpcConstants.COLS_NUMBER && allColorsAreDifferent(rowDices)) {
+                    score += POCConstants.POC1_SCORE;
+                }
         }
 
         return score;
@@ -48,10 +49,10 @@ public class PublicObjectiveCard1 extends PublicObjectiveCard {
      * @return true if the 5 dices have 5 different colors, false if the row is not complete (arrayList.size()<5 ) or if
      * there are at least two dices with the same color.
      */
-    private boolean allColorsAreDifferent(ArrayList<Dice> dices){
+    private boolean allColorsAreDifferent(ArrayList<Dice> dices) {
         ArrayList<Color> extractedColors = new ArrayList<>();
 
-        for (Dice dice : dices){
+        for (Dice dice : dices) {
             if (extractedColors.contains(dice.getDiceColor())) return false;
             extractedColors.add(dice.getDiceColor());
         }

@@ -1647,4 +1647,19 @@ public class GameController implements Observer, NotificationHandler {
 
     @Override
     public void handle(ToolCardExtractedDicesModifiedNotification toolCardExtractedDicesModifiedNotification) {}
+
+    @Override
+    public void handle(PlayerDisconnectedNotification playerDisconnectedNotification) {
+
+    }
+
+    @Override
+    public void handle(PlayerReconnectedNotification playerReconnectedNotification) {
+
+    }
+
+    @Override
+    public void handle(ForceDisconnectionNotification notification) {
+
+    }
 }

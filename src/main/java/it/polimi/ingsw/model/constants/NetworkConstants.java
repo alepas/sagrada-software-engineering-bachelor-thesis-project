@@ -7,5 +7,8 @@ public class NetworkConstants {
 
     public static final int RMI_SERVER_PORT = 1099;
     public static final String RMI_CONTROLLER_NAME = "controller";
+    public static final int RMI_INITIAL_POLLING_TIME = 3000;
+    public static final int RMI_POLLING_TIME = 300;             //Tempo in millisecondi
+    public static final int RMI_MAX_POLLS_MISSED = 3;
 
 }

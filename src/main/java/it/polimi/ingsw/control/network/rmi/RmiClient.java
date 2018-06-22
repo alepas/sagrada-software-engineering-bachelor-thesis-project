@@ -19,20 +19,40 @@ import java.rmi.registry.Registry;
 
 public class RmiClient extends NetworkClient {
     private final RemoteServer remoteServer;
+    private String userToken;
+    private boolean connected = false;
 
     public RmiClient() throws NotBoundException, RemoteException{
         Registry registry = LocateRegistry.getRegistry(NetworkConstants.SERVER_ADDRESS, NetworkConstants.RMI_SERVER_PORT);
         remoteServer = (RemoteServer) registry.lookup(NetworkConstants.RMI_CONTROLLER_NAME);
     }
 
-
+    private void startPolling(){
+        new Thread(() -> {
+            try {
+                while (connected) {
+                    remoteServer.poll(userToken);
+                    Thread.sleep(NetworkConstants.RMI_POLLING_TIME);
+                }
+            } catch (RemoteException e){
+                connected = false;
+                System.out.println(">>> Connessione con il server persa");
+            } catch (InterruptedException e){}
+        }).start();
+    }
 
     //-------------------------------- NetworkClientMethods --------------------------------
 
     @Override
     public void createUser(String username, String password) throws CannotRegisterUserException {
         try {
-            (remoteServer.createUser(username, password)).handle(this);
+            CreateUserResponse response = (CreateUserResponse) remoteServer.createUser(username, password, new RmiRemoteObserver());
+            response.handle(this);
+            if (response.exception == null){
+                connected = true;
+                userToken = response.userToken;
+                startPolling();
+            }
         } catch (RemoteException e){
 
         }
@@ -41,7 +61,13 @@ public class RmiClient extends NetworkClient {
     @Override
     public void login(String username, String password) throws CannotLoginUserException {
         try {
-            (remoteServer.login(username, password)).handle(this);
+            LoginResponse response = (LoginResponse) remoteServer.login(username, password, new RmiRemoteObserver());
+            response.handle(this);
+            if (response.exception == null){
+                connected = true;
+                userToken = response.userToken;
+                startPolling();
+            }
         } catch (RemoteException e){
 
         }
@@ -50,8 +76,7 @@ public class RmiClient extends NetworkClient {
     @Override
     public void findGame(String token, int numPlayers) throws CannotFindUserInDBException, InvalidNumOfPlayersException, CannotCreatePlayerException {
         try {
-            RemoteObserver remoteObserver = new RmiRemoteObserver();
-            (remoteServer.findGame(token, numPlayers, remoteObserver)).handle(this);
+            (remoteServer.findGame(token, numPlayers)).handle(this);
         } catch (RemoteException e){
 
         }

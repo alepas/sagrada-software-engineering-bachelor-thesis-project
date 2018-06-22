@@ -27,6 +27,10 @@ public class PocTest {
     private PublicObjectiveCard10 card10;
 
     private Wpc wpc;
+    private Wpc wpcEmpty;
+    private ArrayList<Dice> emptyRow = new ArrayList<>();
+
+
     private ArrayList<Dice> wpcDices = new ArrayList<>();
     private ArrayList<Dice> col0Dices = new ArrayList<>();
     private ArrayList<Dice> col1Dices = new ArrayList<>();
@@ -37,12 +41,14 @@ public class PocTest {
     private ArrayList<Dice> row1Dices = new ArrayList<>();
     private ArrayList<Dice> row2Dices = new ArrayList<>();
     private ArrayList<Dice> row3Dices = new ArrayList<>();
+    private ArrayList<Dice> row1DicesSpaces = new ArrayList<>();
+
 
     /**
      * Creates a mock wpc, not the schema but all dices and thei position in the schema
      */
     @Before
-    public void before(){
+    public void before() {
         card1 = new PublicObjectiveCard1();
         card2 = new PublicObjectiveCard2();
         card3 = new PublicObjectiveCard3();
@@ -55,6 +61,7 @@ public class PocTest {
         card10 = new PublicObjectiveCard10();
 
         wpc = mock(Wpc.class);
+        wpcEmpty = mock(Wpc.class);
 
 
         Dice dice0 = mock(Dice.class);
@@ -83,8 +90,6 @@ public class PocTest {
         wpcDices.add(dice4);
 
 
-
-
         Dice dice5 = mock(Dice.class);
         when(dice5.getDiceColor()).thenReturn(Color.GREEN);
         when(dice5.getDiceNumber()).thenReturn(5);
@@ -100,17 +105,15 @@ public class PocTest {
         when(dice7.getDiceNumber()).thenReturn(4);
         wpcDices.add(dice7);
 
-        Dice dice8 = mock(Dice.class);
+/*        Dice dice8 = mock(Dice.class);
         when(dice8.getDiceColor()).thenReturn(Color.RED);
         when(dice8.getDiceNumber()).thenReturn(2);
-        wpcDices.add(dice8);
+        wpcDices.add(dice8);*/
 
         Dice dice9 = mock(Dice.class);
         when(dice9.getDiceColor()).thenReturn(Color.GREEN);
         when(dice9.getDiceNumber()).thenReturn(6);
         wpcDices.add(dice9);
-
-
 
 
         Dice dice10 = mock(Dice.class);
@@ -137,8 +140,6 @@ public class PocTest {
         when(dice14.getDiceColor()).thenReturn(Color.RED);
         when(dice14.getDiceNumber()).thenReturn(2);
         wpcDices.add(dice14);
-
-
 
 
         Dice dice15 = mock(Dice.class);
@@ -192,7 +193,7 @@ public class PocTest {
 
         col3Dices.clear();
         col3Dices.add(dice3);
-        col3Dices.add(dice8);
+        //col3Dices.add(dice8);
         col3Dices.add(dice13);
         col3Dices.add(dice18);
         when(wpc.getColDices(3)).thenReturn(col3Dices);
@@ -217,10 +218,18 @@ public class PocTest {
         row1Dices.add(dice5);
         row1Dices.add(dice6);
         row1Dices.add(dice7);
-        row1Dices.add(dice8);
+        //row1Dices.add(dice8);
         row1Dices.add(dice9);
         when(wpc.getRowDices(1)).thenReturn(row1Dices);
-        when(wpc.getRowDicesAndEmptySpaces(1)).thenReturn(row1Dices);
+
+        row1DicesSpaces.clear();
+        row1DicesSpaces.add(dice5);
+        row1DicesSpaces.add(dice6);
+        row1DicesSpaces.add(dice7);
+        row1DicesSpaces.add(null);
+        row1DicesSpaces.add(dice9);
+        when(wpc.getRowDicesAndEmptySpaces(1)).thenReturn(row1DicesSpaces);
+
 
         row2Dices.clear();
         row2Dices.add(dice10);
@@ -241,19 +250,58 @@ public class PocTest {
         when(wpc.getRowDicesAndEmptySpaces(3)).thenReturn(row3Dices);
 
 
-
-        when(wpc.numDicesOfColor(Color.BLUE)).thenReturn(3);
-        when(wpc.numDicesOfColor(Color.RED)).thenReturn(4);
+        when(wpc.numDicesOfColor(Color.BLUE)).thenReturn(4);
+        when(wpc.numDicesOfColor(Color.RED)).thenReturn(3);
         when(wpc.numDicesOfColor(Color.YELLOW)).thenReturn(3);
         when(wpc.numDicesOfColor(Color.VIOLET)).thenReturn(2);
-        when(wpc.numDicesOfColor(Color.GREEN)).thenReturn(6);
+        when(wpc.numDicesOfColor(Color.GREEN)).thenReturn(7);
 
         when(wpc.numDicesOfShade(1)).thenReturn(3);
-        when(wpc.numDicesOfShade(2)).thenReturn(2);
+        when(wpc.numDicesOfShade(2)).thenReturn(1);
         when(wpc.numDicesOfShade(3)).thenReturn(2);
-        when(wpc.numDicesOfShade(4)).thenReturn(5);
+        when(wpc.numDicesOfShade(4)).thenReturn(6);
         when(wpc.numDicesOfShade(5)).thenReturn(2);
-        when(wpc.numDicesOfShade(6)).thenReturn(4);
+        when(wpc.numDicesOfShade(6)).thenReturn(5);
+
+
+        when(wpcEmpty.getRowDices(0)).thenReturn(null);
+        when(wpcEmpty.getRowDices(1)).thenReturn(null);
+        when(wpcEmpty.getRowDices(2)).thenReturn(null);
+        when(wpcEmpty.getRowDices(3)).thenReturn(null);
+        when(wpcEmpty.getColDices(0)).thenReturn(null);
+        when(wpcEmpty.getColDices(1)).thenReturn(null);
+        when(wpcEmpty.getColDices(2)).thenReturn(null);
+        when(wpcEmpty.getColDices(3)).thenReturn(null);
+        when(wpcEmpty.getColDices(4)).thenReturn(null);
+        when(wpcEmpty.getWpcDices()).thenReturn(null);
+
+        when(wpcEmpty.numDicesOfColor(Color.BLUE)).thenReturn(0);
+        when(wpcEmpty.numDicesOfColor(Color.RED)).thenReturn(0);
+        when(wpcEmpty.numDicesOfColor(Color.YELLOW)).thenReturn(0);
+        when(wpcEmpty.numDicesOfColor(Color.VIOLET)).thenReturn(0);
+        when(wpcEmpty.numDicesOfColor(Color.GREEN)).thenReturn(0);
+
+        when(wpcEmpty.numDicesOfShade(1)).thenReturn(0);
+        when(wpcEmpty.numDicesOfShade(2)).thenReturn(0);
+        when(wpcEmpty.numDicesOfShade(3)).thenReturn(0);
+        when(wpcEmpty.numDicesOfShade(4)).thenReturn(0);
+        when(wpcEmpty.numDicesOfShade(5)).thenReturn(0);
+        when(wpcEmpty.numDicesOfShade(6)).thenReturn(0);
+
+
+        emptyRow.add(null);
+        emptyRow.add(null);
+        emptyRow.add(null);
+        emptyRow.add(null);
+        emptyRow.add(null);
+
+
+        when(wpcEmpty.getRowDicesAndEmptySpaces(0)).thenReturn(emptyRow);
+        when(wpcEmpty.getRowDicesAndEmptySpaces(1)).thenReturn(emptyRow);
+        when(wpcEmpty.getRowDicesAndEmptySpaces(2)).thenReturn(emptyRow);
+        when(wpcEmpty.getRowDicesAndEmptySpaces(3)).thenReturn(emptyRow);
+
+
     }
 
     /**
@@ -261,8 +309,9 @@ public class PocTest {
      * number of all different colors in a same row.
      */
     @Test
-    public void poc1Test(){
-        assertEquals(2*POC1_SCORE, card1.calculateScore(wpc));
+    public void poc1Test() {
+        assertEquals(2 * POC1_SCORE, card1.calculateScore(wpc));
+        assertEquals(0, card1.calculateScore(wpcEmpty));
     }
 
     /**
@@ -270,58 +319,81 @@ public class PocTest {
      * number of all different colors in a same column.
      */
     @Test
-    public void poc2Test(){ assertEquals(POC2_SCORE, card2.calculateScore(wpc)); }
+    public void poc2Test() {
+        assertEquals(POC2_SCORE, card2.calculateScore(wpc));
+        assertEquals(0, card2.calculateScore(wpcEmpty));
+
+    }
 
     /**
      * Tests if, given a wpc at the end of the game, the related method counts in a correct way points related to the
      * number of all different numbers in a same row.
      */
     @Test
-    public void poc3Test() { assertEquals(2*POC3_SCORE, card3.calculateScore(wpc)); }
+    public void poc3Test() {
+        assertEquals(1 * POC3_SCORE, card3.calculateScore(wpc));
+        assertEquals(0, card3.calculateScore(wpcEmpty));
+    }
 
     /**
      * Tests if, given a wpc at the end of the game, the related method counts in a correct way points related to the
      * number of all different numbers in a same column.
      */
     @Test
-    public void poc4Test(){ assertEquals(2*POC4_SCORE, card4.calculateScore(wpc)); }
+    public void poc4Test() {
+        assertEquals(1 * POC4_SCORE, card4.calculateScore(wpc));
+        assertEquals(0, card4.calculateScore(wpcEmpty));
+    }
 
     /**
      * Tests if, given a wpc at the end of the game, the related method counts in a correct way points related to the
      * number of tuplas of dices with 1 and 2.
      */
     @Test
-    public void poc5Test(){ assertEquals(2*POC5_SCORE, card5.calculateScore(wpc)); }
+    public void poc5Test() {
+        assertEquals(1 * POC5_SCORE, card5.calculateScore(wpc));
+        assertEquals(0, card5.calculateScore(wpcEmpty));
+    }
 
     /**
      * Tests if, given a wpc at the end of the game, the related method counts in a correct way points related to the
      * number of tuplas of dices with 3 and 4.
      */
     @Test
-    public void poc6Test(){ assertEquals( 2*POC6_SCORE, card6.calculateScore(wpc));}
+    public void poc6Test() {
+        assertEquals(2 * POC6_SCORE, card6.calculateScore(wpc));
+        assertEquals(0, card6.calculateScore(wpcEmpty));
+    }
 
     /**
      * Tests if, given a wpc at the end of the game, the related method counts in a correct way points related to the
      * number of tuplas of dices with 5 and 6.
      */
     @Test
-    public void poc7Test(){ assertEquals(2*POC7_SCORE, card7.calculateScore(wpc));}
+    public void poc7Test() {
+        assertEquals(2 * POC7_SCORE, card7.calculateScore(wpc));
+        assertEquals(0, card7.calculateScore(wpcEmpty));
+    }
 
     /**
      * Tests if, given a wpc at the end of the game, the related method counts in a correct way points related to the
      * number of groups of dices with all different numbers.
      */
     @Test
-    public void poc8Test(){assertEquals(2*POC8_SCORE, card8.calculateScore(wpc));}
+    public void poc8Test() {
+        assertEquals(POC8_SCORE, card8.calculateScore(wpc));
+        assertEquals(0, card8.calculateScore(wpcEmpty));
+    }
 
     /**
      * Tests if, given a wpc at the end of the game, the related method counts in a correct way points related to the
      * number of dices of the same color on the same diagonal.
      */
     @Test
-    public void poc9Test(){
-        System.out.println(wpc.getSchema());
-    //    assertEquals(9*POC9_SCORE, card9.calculateScore(wpc));
+    public void poc9Test() {
+        assertEquals(7 * POC9_SCORE, card9.calculateScore(wpc));
+        assertEquals(0, card9.calculateScore(wpcEmpty));
+
     }
 
     /**
@@ -329,5 +401,8 @@ public class PocTest {
      * number of groups of dices with all different colors.
      */
     @Test
-    public void poc10Test(){assertEquals(2*POC10_SCORE, card10.calculateScore(wpc));}
+    public void poc10Test() {
+        assertEquals(2 * POC10_SCORE, card10.calculateScore(wpc));
+        assertEquals(0, card10.calculateScore(wpcEmpty));
+    }
 }

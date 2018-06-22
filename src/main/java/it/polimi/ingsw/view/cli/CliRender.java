@@ -93,52 +93,52 @@ public class CliRender {
 
 
     private final String[] dice1 = {"       ",
-                                    "   ◯   ",
+                                    "   o   ",
                                     "       "};
 
-    private final String[] dice2 = {" ◯     ",
+    private final String[] dice2 = {" o     ",
                                     "       ",
-                                    "     ◯ "};
+                                    "     o "};
 
-    private final String[] dice3 = {" ◯     ",
-                                    "   ◯   ",
-                                    "     ◯ "};
+    private final String[] dice3 = {" o     ",
+                                    "   o   ",
+                                    "     o "};
 
-    private final String[] dice4 = {" ◯   ◯ ",
+    private final String[] dice4 = {" o   o ",
                                     "       ",
-                                    " ◯   ◯ "};
+                                    " o   o "};
 
-    private final String[] dice5 = {" ◯   ◯ ",
-                                    "   ◯   ",
-                                    " ◯   ◯ "};
+    private final String[] dice5 = {" o   o ",
+                                    "   o   ",
+                                    " o   o "};
 
-    private final String[] dice6 = {" ◯   ◯ ",
-                                    " ◯   ◯ ",
-                                    " ◯   ◯ "};
+    private final String[] dice6 = {" o   o ",
+                                    " o   o ",
+                                    " o   o "};
 
     private final String[] diceWithNumber1 = {  "       ",
-                                                "   ●   ",
+                                                "   o   ",
                                                 "       "};
 
-    private final String[] diceWithNumber2 = {  " ●     ",
+    private final String[] diceWithNumber2 = {  " o     ",
                                                 "       ",
-                                                "     ● "};
+                                                "     o "};
 
-    private final String[] diceWithNumber3 = {  " ●     ",
-                                                "   ●   ",
-                                                "     ● "};
+    private final String[] diceWithNumber3 = {  " o     ",
+                                                "   o   ",
+                                                "     o "};
 
-    private final String[] diceWithNumber4 = {  " ●   ● ",
+    private final String[] diceWithNumber4 = {  " o   o ",
                                                 "       ",
-                                                " ●   ● "};
+                                                " o   o "};
 
-    private final String[] diceWithNumber5 = {  " ●   ● ",
-                                                "   ●   ",
-                                                " ●   ● "};
+    private final String[] diceWithNumber5 = {  " o   o ",
+                                                "   o   ",
+                                                " o   o "};
     
-    private final String[] diceWithNumber6 = {  " ●   ● ",
-                                                " ●   ● ",
-                                                " ●   ● "};
+    private final String[] diceWithNumber6 = {  " o   o ",
+                                                " o   o ",
+                                                " o   o "};
 
     private final String[] cellColorRestricted =   {"///////",
                                                     "///////",
