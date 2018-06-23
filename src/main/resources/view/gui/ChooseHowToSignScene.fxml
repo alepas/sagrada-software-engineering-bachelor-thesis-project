@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane styleClass="Scene" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.control.guicontroller.ChooseHowToSignController">
+
+    <ImageView styleClass="ImageEffect" fitHeight="705.0" fitWidth="900.0" layoutX="151.0">
+        <Image url="@/view/gui/background/startingScene.jpg"/>
+    </ImageView>
+
+    <Button fx:id="signInButton" layoutX="535.0" layoutY="345.0" styleClass="FirstSceneButton" text="Sign in"/>
+
+    <Button fx:id="signUpButton" layoutX="535.0" layoutY="476.0" styleClass="FirstSceneButton" text="Sign up"/>
+
+
+</AnchorPane>

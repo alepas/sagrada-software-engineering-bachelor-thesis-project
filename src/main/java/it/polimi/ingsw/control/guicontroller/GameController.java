@@ -7,13 +7,8 @@ import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
 
 import it.polimi.ingsw.view.Status;
 import it.polimi.ingsw.model.clientModel.ClientWpcConstants;
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -31,12 +26,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
-import javax.swing.*;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Timer;
 
@@ -64,7 +55,7 @@ public class GameController implements Observer, NotificationHandler {
     @FXML private ImageView usedTool1Icon;
     @FXML private Label firstWpcNameLabel;
     @FXML private Label message1Label;
-
+    @FXML private Button disconnectButton;
     @FXML
     private AnchorPane roundTrackPane;
     @FXML
@@ -107,6 +98,7 @@ public class GameController implements Observer, NotificationHandler {
     private ArrayList<AnchorPane> schema = new ArrayList<>();
     private HashMap<String, ClientWpc> wpc;
     private final Object waiter = new Object();
+    private final Object NextTurnWaiter = new Object();
     private boolean isUsedToolCard = false;
     private NextAction lastNextAction;
     private Timer timer;
@@ -288,7 +280,16 @@ public class GameController implements Observer, NotificationHandler {
         useTool3.setOnAction(event -> useToolCard(toolCardsIDs.get(2).getId()));
 
         //by clicking on the end button the player pass his/her turn
-        endTurnButton.setOnAction(event -> endTurn());
+        endTurnButton.setOnAction(event -> {
+            try {
+                networkClient.passTurn(clientModel.getUserToken());
+                clockLabel.setText("00:00");
+                timer.cancel();
+            } catch (CannotFindPlayerInDatabaseException | PlayerNotAuthorizedException | CannotPerformThisMoveException e) {
+                message1Label.setText(e.getMessage());
+                stateAction(change(lastNextAction));
+            }
+        });
 
         //by clicking on the cancel button the player goes back to the previous action
         cancelActionButton.setOnAction(event -> stateAction(CANCEL_ACTION_TOOLCARD));
@@ -298,6 +299,8 @@ public class GameController implements Observer, NotificationHandler {
 
         //by clicking on the new game button the player starts a new game
         newGameButton.setOnAction(event -> changeSceneHandle(event, "/view/gui/SetNewGameScene.fxml"));
+
+        disconnectButton.setOnAction(event -> changeSceneHandle(event, "/view/gui/ChooseHowToSignScene.fxml"));
     }
 
     /**
@@ -598,12 +601,13 @@ public class GameController implements Observer, NotificationHandler {
      * Changes the label information and sets Able both the endTurnButton and the extractedDicesGrid.
      */
     private void playTurn() {
+
         round = String.valueOf(clientModel.getCurrentRound());
         String turn = String.valueOf(clientModel.getCurrentTurn());
         Platform.runLater(() -> {
             if (turn.equals("3")) messageLabel.setText("Tocca ancora a te!");
             else messageLabel.setText("Tocca a te!");
-            message1Label.setText(""); //todo: dare più tempo alla label di avviso
+            message1Label.setText("");
             roundLabel.setText("Round numero " + round + ", turno di " + username);
             endTurnButton.setVisible(true);
             endTurnButton.setDisable(false);
@@ -616,37 +620,38 @@ public class GameController implements Observer, NotificationHandler {
             useTool3.setDisable(false);
             dragAndDrop();
         });
+        startTimer();
     }
 
-    private void startTimer(int time){
+    /**
+     * Starts the timer animation
+     */
+    private void startTimer(){
+
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
-            int clock = time/1000;
+            int clock = 90;
+
             public void run() {
-                if(clock > 0) {
-                    Platform.runLater(()-> clockLabel.setText("00:"+clock));
+                if (clock > 9 && clientModel.isActive()) {
+                Platform.runLater(() -> clockLabel.setText("00:" + clock));
+                        clock--;
+                }
+                else if(clock > 0 && clock <= 9 && clientModel.isActive()){
+                    Platform.runLater(() -> clockLabel.setText("00:0" + clock));
                     clock--;
                 }
                 else {
-                    Platform.runLater(()-> clockLabel.setText("00:"+ time/1000));
-                    endTurn();
-                    System.out.println("ehi");
-                    timer.cancel();
+                    Platform.runLater(() ->{
+                        clockLabel.setText("00:00");
+                        timer.cancel();
+                        cancel();
+                    });
                 }
             }
-        }, 1000,1000);
-
+        }, 1000, 1000);
     }
 
-    private void endTurn(){
-        try {
-            networkClient.passTurn(clientModel.getUserToken());
-
-        } catch (CannotFindPlayerInDatabaseException | PlayerNotAuthorizedException | CannotPerformThisMoveException e) {
-            message1Label.setText(e.getMessage());
-            stateAction(change(lastNextAction));
-        }
-    }
 
     /**
      * Sets in the extractedDicesGrid an ImageView for each dice which is in the ArrayList.
@@ -966,6 +971,8 @@ public class GameController implements Observer, NotificationHandler {
         useTool1.setDisable(true);
         useTool2.setDisable(true);
         useTool3.setDisable(true);
+        plusMinusPane.setVisible(false);
+        changeNumberPane.setVisible(false);
         messageLabel.setText("Passa il turno!");
     }
 
@@ -1272,8 +1279,10 @@ public class GameController implements Observer, NotificationHandler {
                     makeSelectedDiceLessVisible(info.diceChosenLocation);
                     break;
                 case SELECT_NUMBER_TOOLCARD:
-                    if(info.numbersToChoose.size() <= 2) plusMinusPane.setVisible(true);
-                    else changeNumberPane.setVisible(true);
+                    Platform.runLater(()->{
+                        if(info.numbersToChoose.size() <= 2) plusMinusPane.setVisible(true);
+                        else changeNumberPane.setVisible(true);
+                    });
                     break;
                 case MENU_ONLY_TOOLCARD:
                     isUsedToolCard = false;
@@ -1433,7 +1442,6 @@ public class GameController implements Observer, NotificationHandler {
                 int lenght = extractedDicesGrid.getChildren().size();
                 for (int i = 0; i < lenght; i++) {
                     tempIndex = extractedorderedIds.indexOf(extractedDicesGrid.getChildren().get(0).getId());
-                    System.out.println("id: " + tempIndex);
                     tempNode = extractedDicesGrid.getChildren().get(0);
                     tempPosition = extractedDicesGrid.getRowIndex(tempNode);
                     if (tempIndex != -1) {
@@ -1546,14 +1554,10 @@ public class GameController implements Observer, NotificationHandler {
     public void handle(NextTurnNotification notification) {
         Platform.runLater(()->{
             if(!clientModel.isActive()) {
-               // lastNextAction = NextAction.WAIT_FOR_TURN;
                 stateAction(ANOTHER_PLAYER_TURN);
-                }
-            else{
-                System.out.println(notification.activeUser);
-                startTimer(notification.timeToCompleteTask);
-                synchronized (waiter) {waiter.notify();}
             }
+            else
+                synchronized (waiter) {waiter.notify();}
         });
     }
 
@@ -1611,6 +1615,7 @@ public class GameController implements Observer, NotificationHandler {
 
     @Override
     public void handle(PlayerSkipTurnNotification notification) {
+        Platform.runLater(()->message1Label.setText(notification.username + "salta il turno!"));
     }
 
     @Override
@@ -1650,16 +1655,14 @@ public class GameController implements Observer, NotificationHandler {
 
     @Override
     public void handle(PlayerDisconnectedNotification playerDisconnectedNotification) {
-
+        Platform.runLater(()-> message1Label.setText(playerDisconnectedNotification.username + "si è disconnesso!"));
     }
 
     @Override
     public void handle(PlayerReconnectedNotification playerReconnectedNotification) {
-
+        Platform.runLater(()-> message1Label.setText(playerReconnectedNotification.username + "si è connesso!"));
     }
 
     @Override
-    public void handle(ForceDisconnectionNotification notification) {
-
-    }
+    public void handle(ForceDisconnectionNotification notification) { Platform.runLater(()->disconnectButton.fire());}
 }
