@@ -98,6 +98,38 @@ public class Wpc {
         return false;
     }
 
+
+    public boolean audoAddDice(Dice dice) {
+        Position tempPos;
+        for (Cell cell : schema) {
+
+            if (cell != null && cell.getDice() == null) {
+                tempPos = cell.getCellPosition();
+                if (!firstDicePutted) {
+                    if (checkFirstTurnRestriction(cell) && checkCellRestriction(cell, dice)) {
+                        cell.setDice(dice);
+                        firstDicePutted = true;
+                        onlyFirstDice = true;
+                        return true;
+                    }
+                } else {
+                    ArrayList<Cell> orthoCells = getOrthogonallyAdjacentCells(tempPos);
+                    ArrayList<Cell> diagCells = getDiagonallyAdjacentCells(tempPos);
+
+                    if (checkCellRestriction(cell, dice)
+                            && checkAdjacentDiceRestriction(orthoCells, dice)
+                            && isThereAtLeastADiceNear(orthoCells, diagCells)) {
+                        cell.setDice(dice);
+                        onlyFirstDice = false;
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+
     /**
      * Controls if it is possible to add the dice in the position selected by the player.
      *
@@ -146,7 +178,7 @@ public class Wpc {
      * @param ValueRestr       if it's true it means that the number restrictions must be considered, if it's false it is
      *                         possible to add a dice on a cell with a number that is different from his or close to a dice
      *                         with the same number.
-     * @param PlacementRestr   if it's true it means the placement must fallow all the game rules
+     * @param PlacementRestr   if it's true it means the placement must fallow all the placement rules
      * @param atLeastADiceNear if it's true it means that there must be at least a dice on of the cells close to the
      *                         chosen one
      * @param noDicesNear      if it's true it means that there must not be dices in the cells close to the chosen one
