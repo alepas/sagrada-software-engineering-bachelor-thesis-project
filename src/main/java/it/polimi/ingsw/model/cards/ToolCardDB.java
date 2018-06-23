@@ -24,7 +24,7 @@ public class ToolCardDB {
         toolCards.put( ToolCardConstants.TOOLCARD1_ID,new ToolCard1());
         toolCards.put( ToolCardConstants.TOOLCARD2_ID,new ToolCard2());
         toolCards.put( ToolCardConstants.TOOLCARD3_ID,new ToolCard3());
-        /*toolCards.put( ToolCardConstants.TOOLCARD4_ID,new ToolCard4());
+        toolCards.put( ToolCardConstants.TOOLCARD4_ID,new ToolCard4());
         toolCards.put( ToolCardConstants.TOOLCARD5_ID,new ToolCard5());
         toolCards.put( ToolCardConstants.TOOLCARD6_ID,new ToolCard6());
         toolCards.put( ToolCardConstants.TOOLCARD7_ID,new ToolCard7());
@@ -32,7 +32,7 @@ public class ToolCardDB {
         toolCards.put( ToolCardConstants.TOOLCARD9_ID,new ToolCard9());
         toolCards.put( ToolCardConstants.TOOLCARD10_ID,new ToolCard10());
         toolCards.put( ToolCardConstants.TOOLCARD11_ID,new ToolCard11());
-        toolCards.put( ToolCardConstants.TOOLCARD12_ID,new ToolCard12());*/
+        toolCards.put( ToolCardConstants.TOOLCARD12_ID,new ToolCard12());
     }
 
     public ArrayList<String> getCardsIDs() {

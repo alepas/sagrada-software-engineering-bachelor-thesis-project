@@ -1,4 +1,3 @@
-/*
 package it.polimi.ingsw.model.cards.concreteToolCards;
 
 import it.polimi.ingsw.control.network.commands.notifications.ToolCardExtractedDicesModifiedNotification;
@@ -69,7 +68,7 @@ public class ToolCard7 extends ToolCard {
             this.used = true;
             ArrayList<ClientDice> tempExtracted = tempExtractedDices;
             this.movesNotifications.add(new ToolCardExtractedDicesModifiedNotification(username));
-            this.currentGame.changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, null, tempExtractedDices, null, favours));
+            this.currentGame.changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, null, tempExtractedDices, null, currentPlayer.getFavours()));
             cleanCard();
             return new MoveData(true, null, tempExtracted, null);
         }
@@ -93,7 +92,7 @@ public class ToolCard7 extends ToolCard {
             this.used = true;
             ArrayList<ClientDice> tempExtracted = tempExtractedDices;
             this.movesNotifications.add(new ToolCardExtractedDicesModifiedNotification(username));
-            this.currentGame.changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, null, tempExtractedDices, null, favours));
+            this.currentGame.changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, null, tempExtractedDices, null, currentPlayer.getFavours()));
             cleanCard();
             return new MoveData(true, null, tempExtracted, null);
 
@@ -117,12 +116,32 @@ public class ToolCard7 extends ToolCard {
 
 
     @Override
-    public MoveData cancelAction() throws CannotCancelActionException {
+    public MoveData cancelAction(boolean all) throws CannotCancelActionException {
+        MoveData temp;
         switch (currentStatus) {
-            case 0: return cancelStatusZero();
-            case 1: return cancelStatusOne();
+            case 1:
+                if (!all) return cancelStatusOne();
+            case 0:
+                if (!all){
+                    return cancelStatusZero();
+                }
+
         }
-        throw new CannotCancelActionException(username, id, 1);
+        if (!all)
+            throw new CannotCancelActionException(username, id, 1);
+        if (currentStatus==1){
+            if (singlePlayerGame){
+                currentGame.getExtractedDices().add(diceForSingleUser);
+            }
+        }
+        updateClientWPC();
+        updateClientExtractedDices();
+        updateClientRoundTrack();
+        ClientWpc tempWpc = tempClientWpc;
+        ArrayList<ClientDice> tempExtracted = tempExtractedDices;
+        ClientRoundTrack tempRound = tempRoundTrack;
+        cleanCard();
+        return new MoveData(true, true, tempWpc,tempExtracted,tempRound,null,null,null);
 
     }
 
@@ -146,4 +165,3 @@ public class ToolCard7 extends ToolCard {
         throw new CannotInteruptToolCardException(username, id);
     }
 }
-*/

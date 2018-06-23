@@ -1,4 +1,3 @@
-/*
 package it.polimi.ingsw.model.cards.concreteToolCards;
 
 import it.polimi.ingsw.control.network.commands.notifications.ToolCardDicePlacedNotification;
@@ -109,7 +108,7 @@ public class ToolCard8 extends ToolCard {
             updateClientExtractedDices();
             movesNotifications.add(new ToolCardDicePlacedNotification(username, tempDice.getClientDice(), pos));
             this.used = true;
-            currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, tempExtractedDices, null, favours));
+            currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, tempExtractedDices, null, currentPlayer.getFavours()));
             ClientWpc tempWpc = tempClientWpc;
             ArrayList<ClientDice> tempDices = tempExtractedDices;
             cleanCard();
@@ -143,6 +142,54 @@ public class ToolCard8 extends ToolCard {
     }
 
     @Override
+    public MoveData cancelAction(boolean all) throws CannotCancelActionException {
+        MoveData temp;
+        boolean canceledCard = true;
+        switch (currentStatus) {
+            case 2:
+                if (!all) break;
+                currentStatus=30;
+                try {
+                    return interuptToolCard(ToolCardInteruptValues.OK);
+                } catch (CannotInteruptToolCardException e) {
+                    //impossible
+                }
+
+            case 30:
+                if (!all) break;
+                try {
+                    return interuptToolCard(ToolCardInteruptValues.OK);
+                } catch (CannotInteruptToolCardException e) {
+                    //impossible
+                }
+            case 1:
+                if (!all) return cancelStatusOne();
+            case 0:
+                if (!all) {
+                    return cancelStatusZero();
+                }
+
+        }
+        if (!all)
+            throw new CannotCancelActionException(username, id, 1);
+        if (currentStatus == 1) {
+            if (singlePlayerGame) {
+                currentGame.getExtractedDices().add(diceForSingleUser);
+            }
+        }
+        updateClientWPC();
+        updateClientExtractedDices();
+        updateClientRoundTrack();
+        ClientWpc tempWpc = tempClientWpc;
+        ArrayList<ClientDice> tempExtracted = tempExtractedDices;
+        ClientRoundTrack tempRound = tempRoundTrack;
+        cleanCard();
+        return new MoveData(true, canceledCard, tempWpc, tempExtracted, tempRound, null, null, null);
+
+    }
+
+    //------------------------------------------------------------------------
+
     public MoveData cancelAction() throws CannotCancelActionException {
         switch (currentStatus) {
             case 0:
@@ -205,6 +252,8 @@ public class ToolCard8 extends ToolCard {
         if (value != ToolCardInteruptValues.OK)
             throw new CannotInteruptToolCardException(username, id);
         this.used = false;
+        if (singlePlayerGame)
+            currentGame.getExtractedDices().add(diceForSingleUser);
         updateClientExtractedDices();
         updateClientWPC();
         ClientWpc tempWpc = tempClientWpc;
@@ -212,4 +261,4 @@ public class ToolCard8 extends ToolCard {
         cleanCard();
         return new MoveData(null, tempWpc, tempDices, null, null, null, true);
     }
-}*/
+}

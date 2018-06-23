@@ -1,4 +1,3 @@
-/*
 package it.polimi.ingsw.model.cards.concreteToolCards;
 
 import it.polimi.ingsw.control.network.commands.notifications.ToolCardDiceChangedNotification;
@@ -30,8 +29,8 @@ public class ToolCard6 extends ToolCard {
         this.cardOnlyInFirstMove = true;
         this.used = false;
         defaultClean();
-        oldDice=null;
-        dice=null;
+        oldDice = null;
+        dice = null;
 
     }
 
@@ -43,7 +42,7 @@ public class ToolCard6 extends ToolCard {
 
     @Override
     public MoveData setCard(PlayerInGame player) throws CannotUseToolCardException {
-        return setCardDefault(player,false,false,NextAction.SELECT_DICE_TOOLCARD,ClientDiceLocations.EXTRACTED,null);
+        return setCardDefault(player, false, false, NextAction.SELECT_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, null);
     }
 
 
@@ -93,7 +92,7 @@ public class ToolCard6 extends ToolCard {
         updateClientWPC();
         updateClientExtractedDices();
         movesNotifications.add(new ToolCardDicePlacedNotification(username, this.dice.getClientDice(), pos));
-        currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, tempExtractedDices, null, favours));
+        currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, tempExtractedDices, null, currentPlayer.getFavours()));
         ClientWpc tempWpc = tempClientWpc;
         ArrayList<ClientDice> tempExtracted = tempExtractedDices;
         cleanCard();
@@ -102,12 +101,43 @@ public class ToolCard6 extends ToolCard {
 
 
     @Override
-    public MoveData cancelAction() throws CannotCancelActionException {
+    public MoveData cancelAction(boolean all) throws CannotCancelActionException {
+        MoveData temp;
+        boolean canceledCard = true;
         switch (currentStatus) {
-            case 0: return cancelStatusZero();
-            case 1: return cancelStatusOne();
+            case 2:
+                if (!all) break;
+                if (currentPlayer.getWPC().audoAddDice(this.dice))
+                    currentGame.getExtractedDices().remove(this.dice);
+                currentStatus = 30;
+
+            case 30:
+                if (!all) break;
+                    currentStatus = 1;
+                    canceledCard = false;
+            case 1:
+                if (!all) return cancelStatusOne();
+            case 0:
+                if (!all) {
+                    return cancelStatusZero();
+                }
+
         }
-        throw new CannotCancelActionException(username, id, 1);
+        if (!all)
+            throw new CannotCancelActionException(username, id, 1);
+        if (currentStatus == 1) {
+            if (singlePlayerGame) {
+                currentGame.getExtractedDices().add(diceForSingleUser);
+            }
+        }
+        updateClientWPC();
+        updateClientExtractedDices();
+        updateClientRoundTrack();
+        ClientWpc tempWpc = tempClientWpc;
+        ArrayList<ClientDice> tempExtracted = tempExtractedDices;
+        ClientRoundTrack tempRound = tempRoundTrack;
+        cleanCard();
+        return new MoveData(true, canceledCard, tempWpc, tempExtracted, tempRound, null, null, null);
 
     }
 
@@ -115,8 +145,8 @@ public class ToolCard6 extends ToolCard {
     @Override
     protected void cleanCard() {
         defaultClean();
-        oldDice=null;
-        dice=null;
+        oldDice = null;
+        dice = null;
     }
 
     @Override
@@ -128,6 +158,10 @@ public class ToolCard6 extends ToolCard {
                 return new MoveData(NextAction.SELECT_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, null, null, tempExtractedDices, null, null, null);
             case 2:
                 return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, ClientDiceLocations.WPC, null, tempExtractedDices, null, this.dice.getClientDice(), ClientDiceLocations.EXTRACTED);
+            case 30:
+                String text = "Il dado non può essere posizionato sulla Window Pattern Card. È stato riposizionato nei dadi estratti.";
+                return new MoveData(NextAction.INTERRUPT_TOOLCARD, text, false, false);
+
         }
         return null;
     }
@@ -145,4 +179,3 @@ public class ToolCard6 extends ToolCard {
         return new MoveData(true, null, tempExtracted, null);
     }
 }
-*/

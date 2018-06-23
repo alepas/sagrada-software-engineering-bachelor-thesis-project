@@ -1,4 +1,3 @@
-/*
 package it.polimi.ingsw.model.cards.concreteToolCards;
 
 import it.polimi.ingsw.control.network.commands.notifications.ToolCardDicePlacedNotification;
@@ -69,7 +68,7 @@ public class ToolCard9 extends ToolCard {
         updateClientWPC();
         updateClientExtractedDices();
         movesNotifications.add(new ToolCardDicePlacedNotification(username, tempDice.getClientDice(), pos));
-        currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, null, null, favours));
+        currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, null, null, currentPlayer.getFavours()));
         ArrayList<ClientDice> tempDices = tempExtractedDices;
         ClientWpc tempWpc = tempClientWpc;
         cleanCard();
@@ -78,12 +77,32 @@ public class ToolCard9 extends ToolCard {
 
 
     @Override
-    public MoveData cancelAction() throws CannotCancelActionException {
+    public MoveData cancelAction(boolean all) throws CannotCancelActionException {
+        MoveData temp;
         switch (currentStatus) {
-            case 0: return cancelStatusZero();
-            case 1: return cancelStatusOne();
+            case 1:
+                if (!all) return cancelStatusOne();
+            case 0:
+                if (!all){
+                    return cancelStatusZero();
+                }
+
         }
-        throw new CannotCancelActionException(username, id, 1);
+        if (!all)
+            throw new CannotCancelActionException(username, id, 1);
+        if (currentStatus==1){
+            if (singlePlayerGame){
+                currentGame.getExtractedDices().add(diceForSingleUser);
+            }
+        }
+        updateClientWPC();
+        updateClientExtractedDices();
+        updateClientRoundTrack();
+        ClientWpc tempWpc = tempClientWpc;
+        ArrayList<ClientDice> tempExtracted = tempExtractedDices;
+        ClientRoundTrack tempRound = tempRoundTrack;
+        cleanCard();
+        return new MoveData(true, true, tempWpc,tempExtracted,tempRound,null,null,null);
 
     }
 
@@ -110,4 +129,4 @@ public class ToolCard9 extends ToolCard {
     public MoveData interuptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException {
         throw new CannotInteruptToolCardException(username, id);
     }
-}*/
+}
