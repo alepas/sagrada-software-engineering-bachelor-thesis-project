@@ -54,7 +54,7 @@ public class SignInController {
 
         signInUsername.setOnMouseClicked(event -> signInErrorLabel.setVisible(false));
 
-        backButton.setOnAction(event -> changeSceneHandle(event, "/view/gui/StartingScene.fxml"));
+        backButton.setOnAction(event -> changeSceneHandle(event, "/view/gui/ChooseHowToSignScene.fxml"));
     }
 
 
@@ -74,6 +74,7 @@ public class SignInController {
                 Platform.runLater(()->{
                     try {
                         int numPlayers = networkClient.findAlreadyStartedGame(clientModel.getUserToken());
+                        System.out.println(numPlayers);
                         switch (numPlayers){
                             case 1:
                                 break;
@@ -86,6 +87,7 @@ public class SignInController {
                             case 4:
                                 changeSceneHandle(event, "/view/gui/FourPlayersGameScene.fxml");
                                 break;
+
                         }
                     } catch (CannotFindGameForUserInDatabaseException e) {
                         changeSceneHandle(event, "/view/gui/SetNewGameScene.fxml");

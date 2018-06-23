@@ -1,8 +1,20 @@
 
 .Scene{
     -fx-alignment: center;
-    -fx-background-pref-height: 705;
-    -fx-background-pref-width: 1200;
+    -fx-pref-height: 705;
+    -fx-pref-width: 1200;
+    -fx-background-color: #4a626d;
+
+}
+
+.AnchorScene{
+    -fx-alignment: center;
+    -fx-pref-height: 705;
+    -fx-pref-width: 1200;
+}
+
+.ImageEffect{
+    -fx-effect: dropshadow(gaussian, #000000, 30.0 , 0.5 , 0.0, 0.0);
 }
 
 
@@ -95,8 +107,8 @@
     -fx-background-color: BLACK;
     -fx-hgap: 5.0;
     -fx-vgap: 5.0;
-    -fx-pref-height: 300.0;
-    -fx-pref-width: 376.0;
+    -fx-pref-height: 274.0;
+    -fx-pref-width: 350.0;
     -fx-effect: dropshadow(gaussian, #c29300, 10 , 0.0 , 0.0, 0.0);
     -fx-padding: 5.0 5.0 5.0 5.0;
 }

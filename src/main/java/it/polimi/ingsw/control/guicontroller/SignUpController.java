@@ -49,7 +49,7 @@ public class SignUpController {
 
         signUpUsername.setOnMouseClicked(event -> signUpErrorLabel.setVisible(false));
 
-        backButton.setOnAction(event -> changeSceneHandle(event, "/view/gui/StartingScene.fxml"));
+        backButton.setOnAction(event -> changeSceneHandle(event, "/view/gui/ChooseHowToSignScene.fxml"));
     }
 
     /**

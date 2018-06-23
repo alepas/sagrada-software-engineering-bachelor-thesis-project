@@ -23,11 +23,6 @@ public class StartController {
     @FXML
     private Button rmiButton;
 
-    @FXML
-    private Button signInButton;
-
-    @FXML
-    private Button signUpButton;
 
     @FXML
     private Button socketButton;
@@ -36,16 +31,17 @@ public class StartController {
     private Label errorLabel;
 
     public void initialize() {
-
+        //if the socket button is selected the event tries to open a socket connection
         rmiButton.setOnAction(event -> {
             try {
                 NetworkClient.getNewRmiInstance();
             } catch (Exception e) {
                 errorLabel.setText("Impossibile stabilire connessione RMI con il Server.");
             }
-            changeButton();
+            changeSceneHandle(event);
         });
 
+        //if the socket button is selected the event tries to open a socket connection
         socketButton.setOnAction(event -> {
             try {
                 startSocketClient();
@@ -54,14 +50,16 @@ public class StartController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            changeButton();
+            changeSceneHandle(event);
         });
 
-        signUpButton.setOnAction(event -> changeSceneHandle(event, "/view/gui/SignUpScene.fxml"));
-
-        signInButton.setOnAction(event -> changeSceneHandle(event, "/view/gui/SignInScene.fxml"));
     }
 
+    /**
+     * Starts a socket connection.
+     *
+     * @throws IOException in case it is not possible to start a socket connection
+     */
     private static void startSocketClient() throws IOException {
         NetworkClient networkClient = NetworkClient.getNewSocketInstance(NetworkConstants.SERVER_ADDRESS,
                 NetworkConstants.SOCKET_SERVER_PORT);
@@ -71,26 +69,14 @@ public class StartController {
     }
 
     /**
-     * Sets visible the sign in/up button and invisible the rmi/socket button
-     */
-    private void changeButton(){
-        rmiButton.setVisible(false);
-        socketButton.setVisible(false);
-        signInButton.setVisible(true);
-        signUpButton.setVisible(true);
-    }
-
-
-    /**
      * Changes the scene in the window.
      *
      * @param event the event related to the desire of the player to change scene
-     * @param path is the path of the next scene
      */
-    private void changeSceneHandle(ActionEvent event, String path) {
+    private void changeSceneHandle(ActionEvent event) {
         AnchorPane nextNode = new AnchorPane();
         try {
-            nextNode = FXMLLoader.load(getClass().getResource(path));
+            nextNode = FXMLLoader.load(getClass().getResource("/view/gui/ChooseHowToSignScene.fxml"));
         } catch (IOException e) {
             e.printStackTrace();
         }
