@@ -1,11 +1,11 @@
 package it.polimi.ingsw.model.game;
 
-import it.polimi.ingsw.model.cards.ToolCardDB;
-import it.polimi.ingsw.model.constants.GameConstants;
-import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;
+import it.polimi.ingsw.model.constants.GameConstants;
+import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.exceptions.gameExceptions.*;
+import it.polimi.ingsw.model.usersdb.DatabaseUsers;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 
 import org.junit.Assert;
@@ -13,43 +13,70 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class MultiplayerGameTest {
     private MultiplayerGame game;
     private String username1 = "John", username2 = "Alice", username3 = "Bob", username4 = "Eva";
-    int defaulNumPlayers = 3;
+    private int defaulNumPlayers = 3;
+    private DatabaseUsers db;
+    private PlayerInGame player1;
+    private PlayerInGame player2;
+    private PlayerInGame player3;
+    private PlayerInGame player4;
 
     @Before
     public void before() throws Exception{
         game = new MultiplayerGame(defaulNumPlayers);
+
+        db = DatabaseUsers.getInstance();
+
+        player1 = mock(PlayerInGame.class);
+        when(player1.getUser()).thenReturn(username1);
+        player2 = mock(PlayerInGame.class);
+        player3 = mock(PlayerInGame.class);
+        player4 = mock(PlayerInGame.class);
+
+//        db.login("John", "password1");
+//        db.login("Alice", "password2");
+//        db.login("Bob", "password3");
+//        db.login("Eva", "password4");
     }
 
     /**
-     * Checks if the constructor creates a correct object
+     * Checks if the constructor creates a correct multi-player Game object
      */
     @Test
     public void checkMultiPlayerGameConstructor(){
-        Assert.assertEquals(0, game.getToolCards().size());
-        Assert.assertEquals(0, game.getPublicObjectiveCards().size());
+        assertEquals(0, game.getToolCards().size());
+        assertEquals(0, game.getPublicObjectiveCards().size());
         Assert.assertNotNull(game.getID());
-        Assert.assertEquals(0, game.getExtractedDices().size());
+        assertEquals(0, game.getExtractedDices().size());
         Assert.assertNotNull(game.getDiceBag());
         Assert.assertNotNull(game.getRoundTrack());
         Assert.assertTrue(game.getNumPlayers() >= GameConstants.MIN_NUM_PLAYERS &&
                 game.getNumPlayers() <= GameConstants.MAX_NUM_PLAYERS);
-        Assert.assertEquals(0, game.nextFree());
-        Assert.assertEquals(GameConstants.NUM_PRIVATE_OBJ_FOR_PLAYER_IN_MULTIPLAYER_GAME, game.numOfPrivateObjectivesForPlayer);
-        Assert.assertEquals(GameConstants.NUM_TOOL_CARDS_IN_MULTIPLAYER_GAME, game.numOfToolCards);
-        Assert.assertEquals(GameConstants.NUM_PUBLIC_OBJ_IN_MULTIPLAYER_GAME, game.numOfPublicObjectiveCards);
+        assertEquals(0, game.nextFree());
+        assertEquals(GameConstants.NUM_PRIVATE_OBJ_FOR_PLAYER_IN_MULTIPLAYER_GAME, game.numOfPrivateObjectivesForPlayer);
+        assertEquals(GameConstants.NUM_TOOL_CARDS_IN_MULTIPLAYER_GAME, game.numOfToolCards);
+        assertEquals(GameConstants.NUM_PUBLIC_OBJ_IN_MULTIPLAYER_GAME, game.numOfPublicObjectiveCards);
     }
 
+    /**
+     * @throws Exception if the given numPlayers is not valid, in this case it is higher than the nux number accepted
+     */
     @Test(expected = InvalidMultiplayerGamePlayersException.class)
     public void checkMultiPlayerGameConstructor2() throws Exception{
         Game game2 = new MultiplayerGame(GameConstants.MAX_NUM_PLAYERS+1);
     }
 
+    /**
+     * @throws Exception if the given numPlayers is not valid, in this case it is smaller than the min number accepted
+     */
     @Test(expected = InvalidMultiplayerGamePlayersException.class)
     public void checkMultiPlayerGameConstructor3() throws Exception{
         Game game2 = new MultiplayerGame(GameConstants.MULTIPLAYER_MIN_NUM_PLAYERS-1);
@@ -58,125 +85,166 @@ public class MultiplayerGameTest {
     @Test
     public void addingAndRemovingPlayersTest() throws Exception {
         Boolean bool;
-        Assert.assertEquals(0, game.numActualPlayers());
+        assertEquals(0, game.numActualPlayers());
 
-        //Aggiunta fino a 3 utenti
+  /*      //Aggiunta fino a 3 utenti
         bool = game.addPlayer(username1);
-        Assert.assertEquals(1, game.numActualPlayers());
+        assertEquals(1, game.numActualPlayers());
         Assert.assertFalse(bool);
 
         bool = game.addPlayer(username2);
-        Assert.assertEquals(2, game.numActualPlayers());
+        assertEquals(2, game.numActualPlayers());
         Assert.assertFalse(bool);
 
         bool = game.addPlayer(username3);
-        Assert.assertEquals(3, game.numActualPlayers());
+        assertEquals(3, game.numActualPlayers());
         Assert.assertTrue(bool);
 
         //Rimozione e aggiunta dell'utente 2
         game.removePlayer(username2);
-        Assert.assertEquals(2, game.numActualPlayers());
+        assertEquals(2, game.numActualPlayers());
         bool = game.addPlayer(username2);
-        Assert.assertEquals(3, game.numActualPlayers());
+        assertEquals(3, game.numActualPlayers());
         Assert.assertTrue(bool);
 
         //Rimozione di tutti gli utenti
         game.removePlayer(username1);
-        Assert.assertEquals(2, game.numActualPlayers());
+        assertEquals(2, game.numActualPlayers());
         game.removePlayer(username2);
-        Assert.assertEquals(1, game.numActualPlayers());
+        assertEquals(1, game.numActualPlayers());
         game.removePlayer(username3);
-        Assert.assertEquals(0, game.numActualPlayers());
+        assertEquals(0, game.numActualPlayers());*/
     }
 
+    /**
+     * Tests if the is full methos works in a correct way
+     */
     @Test
-    public void checkIsFull() throws Exception{
+    public void checkIsFull(){
         Assert.assertFalse(game.isFull());
 
-        game.addPlayer(username1);
+        game.players[0] = player1;
+        Assert.assertEquals(1, game.numActualPlayers());
         Assert.assertFalse(game.isFull());
 
-        game.addPlayer(username2);
+        game.players[1] = player2;
+        Assert.assertEquals(2, game.numActualPlayers());
         Assert.assertFalse(game.isFull());
 
-        game.addPlayer(username3);
+        game.players[2] = player3;
+        Assert.assertEquals(3, game.numActualPlayers());
         Assert.assertTrue(game.isFull());
 
-        game.removePlayer(username1);
+        game.players[2] = null;
+        Assert.assertEquals(2, game.numActualPlayers());
         Assert.assertFalse(game.isFull());
     }
 
+    /**
+     *Tests if the Next Free method works in a correct way.
+     */
     @Test
-    public void checkNextFree() throws Exception{
-        Assert.assertEquals(0, game.nextFree());
+    public void nextFreeTest(){
+        assertEquals(0, game.nextFree());
 
-        game.addPlayer(username1);
-        Assert.assertEquals(1, game.nextFree());
+        game.players[0] = player1;
+        assertEquals(1, game.nextFree());
 
-        game.addPlayer(username2);
-        Assert.assertEquals(2, game.nextFree());
+        game.players[1] = player2;
+        assertEquals(2, game.nextFree());
 
-        game.addPlayer(username3);
-        Assert.assertEquals(-1, game.nextFree());
+        game.players[2] = player3;
+        assertEquals(-1, game.nextFree());
 
-        game.removePlayer(username1);
-        Assert.assertEquals(2, game.nextFree());
+        game.players[2] = null;
+        assertEquals(2, game.nextFree());
     }
 
+
+    /**
+     * Tests if the playerIndex method return the correct index given the username of a player
+     */
     @Test
-    public void checkPlayerIndex() throws Exception{
-        game.addPlayer(username1);
-        Assert.assertEquals(0, game.playerIndex(username1));
-        Assert.assertEquals(-1, game.playerIndex(username2));
-        Assert.assertEquals(-1, game.playerIndex(username3));
+    public void playerIndexTest(){
+        game.players[0] = player1;
+        when(player1.getUser()).thenReturn(username1);
+        assertEquals(0, game.playerIndex(username1));
+        assertEquals(-1, game.playerIndex(username2));
+        assertEquals(-1, game.playerIndex(username3));
 
-        game.addPlayer(username2);
-        Assert.assertEquals(0, game.playerIndex(username1));
-        Assert.assertEquals(1, game.playerIndex(username2));
-        Assert.assertEquals(-1, game.playerIndex(username3));
+        game.players[1] = player2;
+        when(player2.getUser()).thenReturn(username2);
+        assertEquals(0, game.playerIndex(username1));
+        assertEquals(1, game.playerIndex(username2));
+        assertEquals(-1, game.playerIndex(username3));
 
-        game.addPlayer(username3);
-        Assert.assertEquals(0, game.playerIndex(username1));
-        Assert.assertEquals(1, game.playerIndex(username2));
-        Assert.assertEquals(2, game.playerIndex(username3));
-        Assert.assertEquals(-1, game.playerIndex(username4));
+        game.players[2] = player3;
+        when(player3.getUser()).thenReturn(username3);
+        assertEquals(0, game.playerIndex(username1));
+        assertEquals(1, game.playerIndex(username2));
+        assertEquals(2, game.playerIndex(username3));
+        assertEquals(-1, game.playerIndex(username4));
     }
 
+    /**
+     * Tests if players are removed from the array in a correct way
+     */
     @Test
-    public void checkRemoveArrayIndex() throws Exception{
-        game.addPlayer(username1);
-        game.addPlayer(username2);
-        game.addPlayer(username3);
-        Assert.assertTrue(game.players.length == defaulNumPlayers);
-        Assert.assertEquals(username1, game.players[0].getUser());
-        Assert.assertEquals(username2, game.players[1].getUser());
-        Assert.assertEquals(username3, game.players[2].getUser());
-        for(int i = 3; i < game.players.length; i++){
-            Assert.assertNull(game.players[i]);
-        }
+    public void checkRemoveArrayIndexTest(){
+        game.players[game.nextFree()] = player1;
+        when(player1.getUser()).thenReturn(username1);
 
+        game.players[game.nextFree()] = player2;
+        when(player2.getUser()).thenReturn(username2);
+
+        game.players[game.nextFree()] = player3;
+        when(player3.getUser()).thenReturn(username3);
+
+        /*
+          The players' array has as many playerInGame as the num of players accepted by this game.
+         */
+        Assert.assertEquals(game.players.length, defaulNumPlayers);
+        assertEquals(username1, game.players[0].getUser());
+        assertEquals(username2, game.players[1].getUser());
+        assertEquals(username3, game.players[2].getUser());
+        for(int i = 3; i < game.players.length; i++) Assert.assertNotNull(game.players[i]);
+
+        /*
+          If a player is removed by the game, the related player[] will be setted to null and will be available for a
+          new player.
+         */
         game.removeArrayIndex(game.players, 2);
-        Assert.assertEquals(username1, game.players[0].getUser());
-        Assert.assertEquals(username2, game.players[1].getUser());
-        for(int i = 2; i < game.players.length; i++){
-            Assert.assertNull(game.players[i]);
-        }
+        assertEquals(username1, game.players[0].getUser());
+        assertEquals(username2, game.players[1].getUser());
+        Assert.assertNull(game.players[2]);
 
-        game.addPlayer(username3);
+        /*
+          If a player is added in the last array's index and then the first one is removed all the others will be moved
+          to leave the last index available for a new element.
+         */
+        game.players[game.nextFree()] = player3;
         game.removeArrayIndex(game.players, 0);
-        Assert.assertEquals(username2, game.players[0].getUser());
-        Assert.assertEquals(username3, game.players[1].getUser());
-        for(int i = 2; i < game.players.length; i++){
-            Assert.assertNull(game.players[i]);
-        }
+        assertEquals(username2, game.players[0].getUser());
+        assertEquals(username3, game.players[1].getUser());
+        Assert.assertNull(game.players[2]);
 
-        game.addPlayer(username1);
+        /*
+          If a player is added in the last array's index and then a player in the middle of the array is removed all
+          the others will be moved to leave the last index available for a new element.
+         */
+        game.players[game.nextFree()] = player1;
         game.removeArrayIndex(game.players, 1);
-        Assert.assertEquals(username2, game.players[0].getUser());
-        Assert.assertEquals(username1, game.players[1].getUser());
-        for(int i = 2; i < game.players.length; i++){
-            Assert.assertNull(game.players[i]);
-        }
+        assertEquals(username2, game.players[0].getUser());
+        assertEquals(username1, game.players[1].getUser());
+        Assert.assertNull(game.players[2]);
+
+        /*
+          Given an index out of bounds any element will be removed by the array
+         */
+        game.players[game.nextFree()] = player3;
+        game.removeArrayIndex(game.players, 5);
+        for(int i = 0; i < game.players.length; i++ )
+            Assert.assertNotNull(game.players[i]);
     }
 
     @Test(expected = MaxPlayersExceededException.class)
@@ -193,22 +261,26 @@ public class MultiplayerGameTest {
         game.addPlayer(username1);
     }
 
+    /**
+     * @throws Exception because it is trying to remove a player which is not in the array
+     */
     @Test(expected = UserNotInThisGameException.class)
     public void removePlayerIllegalTest() throws Exception { game.removePlayer(username2); }
 
     @Test
-    public void extractPrivateObjectivesTest() throws Exception {
-        game.addPlayer(username1);
-        game.addPlayer(username2);
-        game.addPlayer(username3);
-        game.extractPrivateObjectives();
+    public void extractPrivateObjectivesTest() {
+        game.players[game.nextFree()] = player1;
+        game.players[game.nextFree()] = player2;
+        game.players[game.nextFree()] = player3;
+//todo: problema dato dall'interazione tra classi
+       // game.extractPrivateObjectives();
 
         ArrayList<Color> colorsExtracted = new ArrayList<>();
         Color[] playerColors;
 
         for (PlayerInGame player : game.getPlayers()){
             playerColors = player.getPrivateObjs();
-            Assert.assertEquals(GameConstants.NUM_PRIVATE_OBJ_FOR_PLAYER_IN_MULTIPLAYER_GAME, playerColors.length);
+            assertEquals(GameConstants.NUM_PRIVATE_OBJ_FOR_PLAYER_IN_MULTIPLAYER_GAME, playerColors.length);
 
             for (Color color : playerColors){
                 Assert.assertFalse(colorsExtracted.contains(color));
@@ -217,31 +289,63 @@ public class MultiplayerGameTest {
         }
     }
 
-    //TODO
-//    @Test
-//    public void extractWpcTest() throws Exception {
-//        game.addPlayer(username1);
-//        game.addPlayer(username2);
-//        game.addPlayer(username3);
-//        game.extractWPCs();
-//
-//        ArrayList<Wpc> wpcExtracted = new ArrayList<>();
-//
-//        for (PlayerInGame player : game.getPlayers()){
-//            Wpc playerWPC = player.getWPC();
-//            Assert.assertNotNull(playerWPC);
-//
-//            for (Wpc wpc : wpcExtracted){
-//                Assert.assertNotEquals(playerWPC.getId(), wpc.getId());
-//            }
-//
-//            wpcExtracted.add(playerWPC);
-//        }
-//    }
+    /*//TODO
+    @Test
+    public void extractWpcTest(){
+        game.players[game.nextFree()] = player1;
+        when(player1.getUser()).thenReturn(username1);
+        game.players[game.nextFree()] = player2;
+        when(player1.getUser()).thenReturn(username2);
+        game.players[game.nextFree()] = player3;
+        when(player1.getUser()).thenReturn(username3);
 
-  /*  @Test
+
+        game.extractWPCs();
+
+        //Assert.assertNotNull(game.players[0].getWPC());
+        Assert.assertTrue(0 < Integer.parseInt(game.players[0].getWPC().getId()));
+        Assert.assertTrue(Integer.parseInt(game.players[0].getWPC().getId()) <= 24);
+        ArrayList<Wpc> wpcExtracted = new ArrayList<>();
+
+        for (PlayerInGame player : game.getPlayers()){
+            Wpc playerWPC = player.getWPC();
+            Assert.assertNotNull(playerWPC);
+
+            for (Wpc wpc : wpcExtracted){
+                Assert.assertNotEquals(playerWPC.getId(), wpc.getId());
+            }
+
+            wpcExtracted.add(playerWPC);
+        }
+    }*/
+
+    @Test
+    public void choseWpTest() {
+        ArrayList<String> wpcPlayer = new ArrayList<>();
+        game.players[game.nextFree()] = player1;
+        when(player1.getUser()).thenReturn(username1);
+        when(player1.getWPC()).thenReturn(null);
+        game.players[game.nextFree()] = player2;
+        when(player1.getUser()).thenReturn(username2);
+        game.players[game.nextFree()] = player3;
+        when(player1.getUser()).thenReturn(username3);
+
+        wpcPlayer.add("1" );
+        wpcPlayer.add( "14" );
+        wpcPlayer.add( "7" );
+        wpcPlayer.add( "21" );
+        game.wpcsByUser.put(username1, wpcPlayer);
+
+        Assert.assertNull(player1.getWPC());
+       // game.setPlayerWpc(player1, "7");  //todo
+       // Assert.assertNotNull(player1.getWPC());
+    }
+
+    /**
+     * Tests if ToolCards are extracted in a correct way
+     */
+    @Test
     public void extractToolCardsTest(){
-        ToolCardDB toolCardDB=ToolCardDB.getInstance();
         game.extractToolCards();
 
         Assert.assertEquals(GameConstants.NUM_TOOL_CARDS_IN_MULTIPLAYER_GAME, game.getToolCards().size());
@@ -250,18 +354,19 @@ public class MultiplayerGameTest {
 
         for (ToolCard gameCard : game.getToolCards()){
             Assert.assertNotNull(gameCard);
-
-            for (ToolCard card : cardsExtracted){
-                Assert.assertNotEquals(card.getID(), gameCard.getID());
-            }
+            Assert.assertTrue(Integer.parseInt(gameCard.getID()) <= 12);
+            Assert.assertTrue( Integer.parseInt(gameCard.getID()) >= 1);
+            for (ToolCard card : cardsExtracted) Assert.assertNotEquals(card.getID(), gameCard.getID());
 
             cardsExtracted.add(gameCard);
         }
-    }*/
-/*
-    @Test       //Prima di eseguirlo assicurarsi che loadCards(), getCardByID() e getCardsIDs() siano testati
+    }
+
+    /**
+     *Tests if Public Objective Cards are extracted in a correct way
+     */
+    @Test
     public void extractPublicObjectivesTest(){
-        PublicObjectiveCard.loadCards();
         game.extractPublicObjectives();
 
         Assert.assertEquals(GameConstants.NUM_PUBLIC_OBJ_IN_MULTIPLAYER_GAME, game.getPublicObjectiveCards().size());
@@ -277,71 +382,71 @@ public class MultiplayerGameTest {
 
             cardsExtracted.add(gameCard);
         }
-    }*/
-
-    @Test
-    public void initializeGameTest() throws Exception {
-        game.addPlayer(username1);
-        game.addPlayer(username2);
-        game.addPlayer(username3);
-        game.initializeGame();
-
-        Assert.assertEquals(3, game.getPlayers().length);
     }
 
     @Test
-    public void nextPlayerTest1() throws Exception {
-        game.addPlayer(username1);
-        game.addPlayer(username2);
-        game.addPlayer(username3);
+    public void initializeGameTest() {
+        game.players[game.nextFree()] = player1;
+        game.players[game.nextFree()] = player2;
+        game.players[game.nextFree()] = player3;
+        game.initializeGame();
+
+        assertEquals(3, game.getPlayers().length);
+    }
+
+    @Test
+    public void nextPlayerTest1() {
+        game.players[game.nextFree()] = player1;
+        game.players[game.nextFree()] = player2;
+        game.players[game.nextFree()] = player3;
 
         game.setCurrentTurn(1);
 
-        Assert.assertEquals(1, game.nextPlayer());
+        assertEquals(1, game.nextPlayer());
         game.setTurnPlayer(game.nextPlayer());
         game.setCurrentTurn(game.getCurrentTurn()+1);
 
-        Assert.assertEquals(2, game.nextPlayer());
+        assertEquals(2, game.nextPlayer());
         game.setTurnPlayer(game.nextPlayer());
         game.setCurrentTurn(game.getCurrentTurn()+1);
 
-        Assert.assertEquals(2, game.nextPlayer());
+        assertEquals(2, game.nextPlayer());
         game.setTurnPlayer(game.nextPlayer());
         game.setCurrentTurn(game.getCurrentTurn()+1);
 
-        Assert.assertEquals(1, game.nextPlayer());
+        assertEquals(1, game.nextPlayer());
         game.setTurnPlayer(game.nextPlayer());
         game.setCurrentTurn(game.getCurrentTurn()+1);
 
-        Assert.assertEquals(0, game.nextPlayer());
+        assertEquals(0, game.nextPlayer());
     }
 
     @Test
-    public void nextPlayerTest2() throws Exception {
-        game.addPlayer(username1);
-        game.addPlayer(username2);
-        game.addPlayer(username3);
+    public void nextPlayerTest2() {
+        game.players[game.nextFree()] = player1;
+        game.players[game.nextFree()] = player2;
+        game.players[game.nextFree()] = player3;
 
         game.setCurrentTurn(1);
         game.setTurnPlayer(1);
 
-        Assert.assertEquals(2, game.nextPlayer());
+        assertEquals(2, game.nextPlayer());
         game.setTurnPlayer(game.nextPlayer());
         game.setCurrentTurn(game.getCurrentTurn()+1);
 
-        Assert.assertEquals(0, game.nextPlayer());
+        assertEquals(0, game.nextPlayer());
         game.setTurnPlayer(game.nextPlayer());
         game.setCurrentTurn(game.getCurrentTurn()+1);
 
-        Assert.assertEquals(0, game.nextPlayer());
+        assertEquals(0, game.nextPlayer());
         game.setTurnPlayer(game.nextPlayer());
         game.setCurrentTurn(game.getCurrentTurn()+1);
 
-        Assert.assertEquals(2, game.nextPlayer());
+        assertEquals(2, game.nextPlayer());
         game.setTurnPlayer(game.nextPlayer());
         game.setCurrentTurn(game.getCurrentTurn()+1);
 
-        Assert.assertEquals(1, game.nextPlayer());
+        assertEquals(1, game.nextPlayer());
     }
 
     @Test
@@ -353,60 +458,60 @@ public class MultiplayerGameTest {
         game.setCurrentTurn(1);
         game.setTurnPlayer(2);
 
-        Assert.assertEquals(0, game.nextPlayer());
+        assertEquals(0, game.nextPlayer());
         game.setTurnPlayer(game.nextPlayer());
         game.setCurrentTurn(game.getCurrentTurn()+1);
 
-        Assert.assertEquals(1, game.nextPlayer());
+        assertEquals(1, game.nextPlayer());
         game.setTurnPlayer(game.nextPlayer());
         game.setCurrentTurn(game.getCurrentTurn()+1);
 
-        Assert.assertEquals(1, game.nextPlayer());
+        assertEquals(1, game.nextPlayer());
         game.setTurnPlayer(game.nextPlayer());
         game.setCurrentTurn(game.getCurrentTurn()+1);
 
-        Assert.assertEquals(0, game.nextPlayer());
+        assertEquals(0, game.nextPlayer());
         game.setTurnPlayer(game.nextPlayer());
         game.setCurrentTurn(game.getCurrentTurn()+1);
 
-        Assert.assertEquals(2, game.nextPlayer());
+        assertEquals(2, game.nextPlayer());
     }
 
     //TODO
-//    @Test
-//    public void nextTurnAndNextRoundTest() throws Exception {
-//        game.addPlayer(username1);
-//        game.addPlayer(username2);
-//        game.addPlayer(username3);
-//        Assert.assertEquals(0, game.getRoundPlayer());
-//
-//        Assert.assertEquals(0, game.getTurnPlayer());
-//        game.endTurn();
-//        Assert.assertEquals(1, game.getTurnPlayer());
-//        game.endTurn();
-//        Assert.assertEquals(2, game.getTurnPlayer());
-//        game.endTurn();
-//        Assert.assertEquals(2, game.getTurnPlayer());
-//        game.endTurn();
-//        Assert.assertEquals(1, game.getTurnPlayer());
-//        game.endTurn();
-//        Assert.assertEquals(0, game.getTurnPlayer());
-//
-//        game.endTurn();
-//        Assert.assertEquals(1, game.getRoundPlayer());
-//
-//        Assert.assertEquals(1, game.getTurnPlayer());
-//        game.endTurn();
-//        Assert.assertEquals(2, game.getTurnPlayer());
-//        game.endTurn();
-//        Assert.assertEquals(0, game.getTurnPlayer());
-//        game.endTurn();
-//        Assert.assertEquals(0, game.getTurnPlayer());
-//        game.endTurn();
-//        Assert.assertEquals(2, game.getTurnPlayer());
-//        game.endTurn();
-//        Assert.assertEquals(1, game.getTurnPlayer());
-//    }
+    @Test
+    public void nextTurnAndNextRoundTest() throws Exception {
+        game.addPlayer(username1);
+        game.addPlayer(username2);
+        game.addPlayer(username3);
+        Assert.assertEquals(0, game.getRoundPlayer());
+
+        Assert.assertEquals(0, game.getTurnPlayer());
+       // game.endTurn();
+        Assert.assertEquals(1, game.getTurnPlayer());
+       // game.endTurn();
+        Assert.assertEquals(2, game.getTurnPlayer());
+       // game.endTurn();
+        Assert.assertEquals(2, game.getTurnPlayer());
+      //  game.endTurn();
+        Assert.assertEquals(1, game.getTurnPlayer());
+     //   game.endTurn();
+        Assert.assertEquals(0, game.getTurnPlayer());
+
+      //  game.endTurn();
+        Assert.assertEquals(1, game.getRoundPlayer());
+
+        Assert.assertEquals(1, game.getTurnPlayer());
+     //   game.endTurn();
+        Assert.assertEquals(2, game.getTurnPlayer());
+      //  game.endTurn();
+        Assert.assertEquals(0, game.getTurnPlayer());
+        //game.endTurn();
+        Assert.assertEquals(0, game.getTurnPlayer());
+       // game.endTurn();
+        Assert.assertEquals(2, game.getTurnPlayer());
+      //  game.endTurn();
+        Assert.assertEquals(1, game.getTurnPlayer());
+    }
 
     //TODO
 //    @Test

@@ -331,7 +331,7 @@ public class PocTest {
      */
     @Test
     public void poc3Test() {
-        assertEquals(1 * POC3_SCORE, card3.calculateScore(wpc));
+        assertEquals(POC3_SCORE, card3.calculateScore(wpc));
         assertEquals(0, card3.calculateScore(wpcEmpty));
     }
 
@@ -341,7 +341,7 @@ public class PocTest {
      */
     @Test
     public void poc4Test() {
-        assertEquals(1 * POC4_SCORE, card4.calculateScore(wpc));
+        assertEquals(POC4_SCORE, card4.calculateScore(wpc));
         assertEquals(0, card4.calculateScore(wpcEmpty));
     }
 
@@ -351,7 +351,7 @@ public class PocTest {
      */
     @Test
     public void poc5Test() {
-        assertEquals(1 * POC5_SCORE, card5.calculateScore(wpc));
+        assertEquals(POC5_SCORE, card5.calculateScore(wpc));
         assertEquals(0, card5.calculateScore(wpcEmpty));
     }
 

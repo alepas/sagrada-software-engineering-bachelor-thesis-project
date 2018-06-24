@@ -99,7 +99,14 @@ public class Wpc {
     }
 
 
-    public boolean audoAddDice(Dice dice) {
+    /**
+     * this method is called when the current player turn ends before he/she can terminate to use a ToolCard, this method
+     * try to place the selected dice in the first acceptable position.
+     *
+     * @param dice is the chosen dice selected by the player while he/she was using a ToolCard
+     * @return true if there is a cell where it is possibe to add the dice, false if not
+     */
+    public boolean autoAddDice(Dice dice) {
         Position tempPos;
         for (Cell cell : schema) {
 

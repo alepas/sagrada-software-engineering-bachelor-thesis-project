@@ -68,37 +68,44 @@ public class Dice implements Serializable {
         this.number = number;
     }
 
+    /**
+     * @return a clientDice equals to this
+     */
     public ClientDice getClientDice(){
         return new ClientDice(Color.getClientColor(color), number, id);
     }
 
 
+    /**
+     * @return a copy of this
+     */
+    public Dice copyDice(){ return new Dice(color,number,id); }
 
-    public Dice copyDice(){
-        return new Dice(color,number,id);
-    }
 
+    /**
+     * Changes the dice's number as if the player is turning the dice. If dice number is 1 it will be turn in 6,
+     * if it is 2 it will be turn in 5, etc etc
+     */
     public void turnDiceOppositeSide(){
         switch (this.number){
-            case 1: {
+            case 1:
                 this.number = 6;
-                return;
-            }case 2: {
+                break;
+            case 2:
                 this.number = 5;
-                return;
-            } case 3: {
+                break;
+            case 3:
                 this.number = 4;
-                return;
-            } case 4: {
+                break;
+            case 4:
                 this.number = 3;
-                return;
-            } case 5: {
+                break;
+            case 5:
                 this.number = 2;
-                return;
-            } case 6: {
+                break;
+            case 6:
                 this.number = 1;
-                return;
-            }
+                break;
         }
     }
 

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.game;
 
 import it.polimi.ingsw.control.network.commands.notifications.*;
+
 import it.polimi.ingsw.model.cards.PocDB;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;
@@ -11,7 +12,6 @@ import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.dicebag.DiceBag;
 import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
-import it.polimi.ingsw.model.gamesdb.DatabaseGames;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 import it.polimi.ingsw.model.wpc.WpcDB;
 
@@ -37,7 +37,7 @@ public abstract class Game extends Observable implements Runnable {
     ToolCardDB toolcardDB = ToolCardDB.getInstance();
     PocDB pocDB = PocDB.getInstance();
 
-    private HashMap<String, ArrayList<String>> wpcsByUser = new HashMap<>();
+    HashMap<String, ArrayList<String>> wpcsByUser = new HashMap<>();
 
     Game(int numPlayers) {
         toolCards = new ArrayList<>();
@@ -77,13 +77,12 @@ public abstract class Game extends Observable implements Runnable {
         return roundTrack;
     }
 
-    public HashMap<String, ArrayList<String>> getWpcsByUser() {
-        return wpcsByUser;
-    }
+    public HashMap<String, ArrayList<String>> getWpcsByUser() { return wpcsByUser; }
 
-    public boolean isFull(){
-        return !(players[players.length-1] == null);
-    }
+    /**
+     * @return true if the game has all players
+     */
+    public boolean isFull(){ return !(players[players.length-1] == null); }
 
     public int getCurrentTurn() {
         return currentTurn;
@@ -94,17 +93,28 @@ public abstract class Game extends Observable implements Runnable {
         notifyObservers(arg);
     }
 
-    public int nextFree(){
-        //Restituisce la prima posizione null nell'array dei players
-        //-1 se nessun valore è a null
-        if (isFull()) return -1;
+    /**
+     * Checks if there are null elements inside the players array, if there's still space it means that the game isn't
+     * full yet and that is still possible to add players to the game.
+     *
+     * @return the index of the first available position in the players array or -1 if the array is full
+     */
+    int nextFree(){
+        if (isFull()) return -1; //todo: serve davvero? quando si esce dal ciclo for tecnicamente è perche è full
         for(int i = 0; i < players.length; i++){
             if (players[i] == null) return i;
         }
         return -1;
     }
 
-    public int playerIndex(String username){
+    /**
+     * Searches the player with the given username inside the players array
+     *
+     * @param username is the username of a player
+     * @return the index of the player with the given username inside the players array or -1 if the username isn't
+     * associated to one of the game's players
+     */
+    int playerIndex(String username){
         for(int i = 0; i < players.length; i++){
             if (players[i] == null) return -1;
             if (players[i].getUser().equals(username)) return i;
@@ -112,7 +122,14 @@ public abstract class Game extends Observable implements Runnable {
         return -1;
     }
 
-    public void removeArrayIndex(Object[] array, int index){
+
+    /**
+     * Removes the element in the given index from the given array and moves all the others
+     *
+     * @param array is a undefined array, it could be for example the player one
+     * @param index is the index in the array of the element that will be removed
+     */
+    void removeArrayIndex(Object[] array, int index){
         for(int i = index; i < array.length; i++){
             if (i == array.length-1) {
                 array[i] = null;
@@ -128,42 +145,51 @@ public abstract class Game extends Observable implements Runnable {
         }
     }
 
+    /**
+     * @return the actual number of players: it is equals to the numPlayers if the game is full, if not to the index of
+     * the first null position in the players array
+     */
     public int numActualPlayers(){
         if (isFull()) return numPlayers;
         return nextFree();
     }
 
+    /**
+     * Extracts in  a random way a private objective for each player in the game. A private objective is a color chosen
+     * from the color enum, every player must have a different color from the others. Sets the ClientColor and the
+     * Hashmap of players and private Objectives.
+     */
     void extractPrivateObjectives() {
         ArrayList<Color> colorsExtracted = new ArrayList<>();
         Color color;
         HashMap<String, ClientColor[]> colorsByUser = new HashMap<>();
 
-
         for (PlayerInGame player : players){
             for (int i = 0; i < numOfPrivateObjectivesForPlayer; i++) {
+
                 do {
                     color = Color.randomColor();
-                } while (colorsExtracted.contains(color));
+                }while (colorsExtracted.contains(color));
 
                 colorsExtracted.add(color);
                 player.setPrivateObjs(color, i);
             }
-
             Color[] playerColors = player.getPrivateObjs();
             int numPrivateObjs = playerColors.length;
             ClientColor[] playerClientColors = new ClientColor[numPrivateObjs];
 
-            for(int j = 0; j < numPrivateObjs; j++){
+            for(int j = 0; j < numPrivateObjs; j++)
                 playerClientColors[j] = Color.getClientColor(playerColors[j]);
-            }
 
             colorsByUser.put(player.getUser(), playerClientColors);
         }
 
-
         changeAndNotifyObservers(new PrivateObjExtractedNotification(colorsByUser));
     }
 
+    /**
+     *Extracts in a random way 4 schemas for each player, creates the ClientWpc equal to the chosen ones
+     */
     void extractWPCs(){
         wpcsByUser = extractRandomWpcsForUser();
         HashMap<String, ArrayList<ClientWpc>> clientWpcByUser = new HashMap<>();
@@ -183,6 +209,12 @@ public abstract class Game extends Observable implements Runnable {
         waitForWpcResponse();
     }
 
+    /**
+     * Selects four random different schemas from the 24 given and associates the ids to  the user with an HashMap
+     *
+     * @return an HashMap containing for each String key (player username) an ArrayList with four different ids of four
+     * different schemas
+     */
     private HashMap<String, ArrayList<String>> extractRandomWpcsForUser(){
         ArrayList<String> ids = wpcDB.getWpcIDs();
         Collections.shuffle(ids);
@@ -191,13 +223,17 @@ public abstract class Game extends Observable implements Runnable {
         int numOfWpcs = GameConstants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER;
 
         for(int i = 0; i < players.length; i++){
-            wpcsByUser.put(players[i].getUser(), new ArrayList<String> (
-                    ids.subList(numOfWpcs*i, numOfWpcs*(i+1))));
+            wpcsByUser.put(players[i].getUser(), new ArrayList<>(
+                    ids.subList(numOfWpcs * i, numOfWpcs * (i + 1))));
         }
 
         return wpcsByUser;
     }
 
+    /**
+     * Waits that all players choose a wpc; if it doesn't happen in a minutes from the call of this method the schemas
+     * will be chosen by the server between the 4 given to each player by calling the next method.
+     */
     private void waitForWpcResponse() {
         Thread waitForWpcs = new Thread(new ChooseWpcThread(players));
 
@@ -216,6 +252,12 @@ public abstract class Game extends Observable implements Runnable {
         }
     }
 
+    /**
+     * Chooses for each player one of the four schemas in a random way and sets it in the player in game object
+     *
+     * @param wpcsByUser is the HashMap which contains for the player username (keys) and the arrayLists with the schemas'
+     *                   ids
+     */
     private void selectRandomWpc(HashMap<String,ArrayList<String>> wpcsByUser) {
         for (PlayerInGame player : players){
             if (player.getWPC() == null) {
@@ -229,6 +271,13 @@ public abstract class Game extends Observable implements Runnable {
         }
     }
 
+    /**
+     * Sets in the player in game object the chosen schema.
+     *
+     * @param player is the player that has chosen a schema before the timer's end
+     * @param wpcID is the id of the chosen schema
+     * @throws NotYourWpcException if the chosen id is not one of the given to each player
+     */
     public void setPlayerWpc(PlayerInGame player, String wpcID) throws NotYourWpcException {
         ArrayList<String> userWPCs = wpcsByUser.get(player.getUser());
         if (userWPCs == null || !userWPCs.contains(wpcID)) throw new NotYourWpcException(wpcID);
@@ -236,14 +285,17 @@ public abstract class Game extends Observable implements Runnable {
         changeAndNotifyObservers(new UserPickedWpcNotification(player.getUser(), wpcDB.getClientWpcByID(wpcID)));
     }
 
+    /**
+     * Chooses in a random way 3 ToolCard from the 12 available in the ToolCard data base
+     */
     void extractToolCards() {
         ArrayList<String> ids = toolcardDB.getCardsIDs();
         Collections.shuffle(ids);
 
         ids.clear();
-        ids.add("1");
-        ids.add("2");
-        ids.add("3");
+        ids.add("12");
+        ids.add("11");
+        ids.add("10");
 
         ArrayList<String> toolCardsExtracted = new ArrayList<>(ids.subList(0, numOfToolCards));
         ArrayList<ClientToolCard> clientToolCards = new ArrayList<>();
@@ -257,6 +309,9 @@ public abstract class Game extends Observable implements Runnable {
         changeAndNotifyObservers(new ToolcardsExtractedNotification(clientToolCards));
     }
 
+    /**
+     *Chooses in a random way 3 Public Objective Cards from the 12 available in the Private Objective Cards data base
+     */
     void extractPublicObjectives(){
         ArrayList<String> ids = pocDB.getCardsIDs();
         Collections.shuffle(ids);
@@ -272,14 +327,15 @@ public abstract class Game extends Observable implements Runnable {
         changeAndNotifyObservers(new PocsExtractedNotification(clientPocs));
     }
 
-    public DiceBag getDiceBag() {
-        return diceBag;
-    }
+    /**
+     * @return the object diceBag
+     */
+    public DiceBag getDiceBag() { return diceBag; }
 
 
     public abstract boolean isSinglePlayerGame();
 
-    //--------------------------------------- Metodi astratti --------------------------------------
+    //--------------------------------------- Abstract Methods --------------------------------------
 
     abstract void initializeGame();
     abstract void endGame();

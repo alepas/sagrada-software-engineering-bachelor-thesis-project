@@ -12,8 +12,7 @@
         <Image url="@/view/gui/background/signScene.jpg"/>
     </ImageView>
 
-
-    <AnchorPane layoutX="360.0" layoutY="91.0" styleClass="Scene">
+    <AnchorPane layoutX="360.0" layoutY="91.0" styleClass="MenuWindow">
         <ImageView fitHeight="550.0" fitWidth="500.0">
             <Image url="@/view/gui/background/menuArea.jpg" />
         </ImageView>
@@ -30,5 +29,6 @@
         <Label fx:id="signUpErrorLabel" layoutX="109.0" layoutY="461.0" styleClass="Label"
                text="Errore: inserisci un nuovo username e password." visible="false" />
 
+        <Button fx:id="disconnectButton" layoutX="746.0" layoutY="641.0" styleClass="Button" visible="false"/>
     </AnchorPane>
 </AnchorPane>

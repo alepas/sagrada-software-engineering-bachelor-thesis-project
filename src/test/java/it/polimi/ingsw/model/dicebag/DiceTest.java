@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 
 public class DiceTest {
     private Dice dice1;
@@ -31,13 +32,13 @@ public class DiceTest {
      */
     @Test
     public void constructorsTest() {
-        Assert.assertEquals(Color.VIOLET, dice1.getDiceColor());
-        Assert.assertEquals(diceID , dice1.getId());
+        assertEquals(Color.VIOLET, dice1.getDiceColor());
+        assertEquals(diceID , dice1.getId());
         Assert.assertTrue(dice1.getDiceNumber() >= 0 && dice1.getDiceNumber()<= 6);
 
-        Assert.assertEquals(Color.VIOLET, dice2.getDiceColor());
-        Assert.assertEquals(diceID, dice2.getId());
-        Assert.assertEquals(number, dice2.getDiceNumber() );
+        assertEquals(Color.VIOLET, dice2.getDiceColor());
+        assertEquals(diceID, dice2.getId());
+        assertEquals(number, dice2.getDiceNumber() );
     }
 
     /**
@@ -46,9 +47,9 @@ public class DiceTest {
      */
     @Test
     public void copyClientDiceTest(){
-        Assert.assertEquals( clientDice.getDiceID(), dice2.getId());
-        Assert.assertEquals( clientDice.getDiceNumber(), dice2.getDiceNumber());
-        Assert.assertEquals( clientDice.getDiceColor(), dice2.getClientDice().getDiceColor());
+        assertEquals( clientDice.getDiceID(), dice2.getId());
+        assertEquals( clientDice.getDiceNumber(), dice2.getDiceNumber());
+        assertEquals( clientDice.getDiceColor(), dice2.getClientDice().getDiceColor());
     }
 
     /**
@@ -60,17 +61,22 @@ public class DiceTest {
     }
 
 
+    /**
+     * tests if the insert number is in the correct range and sets it to the dice
+     *
+     * @throws IncorrectNumberException if the player has chosen an incorrect number this xception will be thrown
+     */
     @Test
     public void setLegalNumberTest() throws IncorrectNumberException{
         int n0 = 6;
         int n1 = 0;
         int n2 = 3;
         dice1.setNumber(n0);
-        Assert.assertEquals(n0, dice1.getDiceNumber());
+        assertEquals(n0, dice1.getDiceNumber());
         dice1.setNumber(n1);
-        Assert.assertEquals(n1, dice1.getDiceNumber());
+        assertEquals(n1, dice1.getDiceNumber());
         dice1.setNumber(n2);
-        Assert.assertEquals(n2, dice1.getDiceNumber());
+        assertEquals(n2, dice1.getDiceNumber());
     }
 
     @Test(expected = IncorrectNumberException.class)
@@ -87,9 +93,33 @@ public class DiceTest {
     @Test
     public void copyDiceTest(){
         dice1 = dice2.copyDice();
-        Assert.assertEquals( dice1.getId(), dice2.getId());
-        Assert.assertEquals( dice1.getDiceNumber(), dice2.getDiceNumber());
-        Assert.assertEquals( dice1.getDiceColor(), dice2.getDiceColor());
+        assertEquals( dice1.getId(), dice2.getId());
+        assertEquals( dice1.getDiceNumber(), dice2.getDiceNumber());
+        assertEquals( dice1.getDiceColor(), dice2.getDiceColor());
 
+    }
+
+    /**
+     * Checks if the turnDiceOppositeSide method changes in a correct way the value
+     */
+    @Test
+    public void turnDiceOppositeSideTest(){
+        Dice dice = new Dice(Color.RED, 1, 1);
+        dice.turnDiceOppositeSide();
+        assertEquals(6, dice.getDiceNumber());
+        dice.turnDiceOppositeSide();
+        assertEquals(1, dice.getDiceNumber());
+
+        Dice dice1 = new Dice(Color.BLUE, 2, 2);
+        dice1.turnDiceOppositeSide();
+        assertEquals(5,dice1.getDiceNumber());
+        dice1.turnDiceOppositeSide();
+        assertEquals(2,dice1.getDiceNumber());
+
+        Dice dice2 = new Dice(Color.BLUE, 3, 3);
+        dice2.turnDiceOppositeSide();
+        assertEquals(4,dice2.getDiceNumber());
+        dice2.turnDiceOppositeSide();
+        assertEquals(3, dice2.getDiceNumber());
     }
 }

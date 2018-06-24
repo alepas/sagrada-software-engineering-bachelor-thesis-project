@@ -27,6 +27,11 @@ public class MultiplayerGame extends Game {
 
     private boolean turnFinished = false;
 
+    /**
+     * Creates a multiplayerGame
+     * @param numPlayers is the number of players what will take part to the game
+     * @throws InvalidMultiplayerGamePlayersException  when the num of player isn't in the range
+     */
     public MultiplayerGame(int numPlayers) throws InvalidMultiplayerGamePlayersException {
         super(numPlayers);
 
@@ -47,13 +52,22 @@ public class MultiplayerGame extends Game {
     public int getRoundPlayer() { return roundPlayer; }
 
 
+    /**
+     * if possible creates a new Player in game and adds it to the array of players
+     *
+     * @param user is the username of the player that would like to enter in the game
+     * @return true if, after adding the new player, the game is full, false if there's still space
+     * @throws MaxPlayersExceededException the game is full and it is not possible to add a new player
+     * @throws UserAlreadyInThisGameException the player was already inside the game
+     * @throws CannotCreatePlayerException if there were problems in creating the playerIn game related to the user
+     */
     public synchronized boolean addPlayer(String user) throws MaxPlayersExceededException, UserAlreadyInThisGameException, CannotCreatePlayerException {
-        //Return true if, after adding the player, the game is complete
+
         if (this.isFull()) throw new MaxPlayersExceededException(user, this);
 
         if (playerIndex(user) >= 0) throw new UserAlreadyInThisGameException(user, this);
 
-        PlayerInGame player = null;
+        PlayerInGame player;
         try {
             player = new PlayerInGame(user, this);
         } catch (CannotAddPlayerInDatabaseException e) {
@@ -66,6 +80,12 @@ public class MultiplayerGame extends Game {
         return this.isFull();
     }
 
+    /**
+     * removes a player from the players' array
+     *
+     * @param user is the String related to the player in game that will be removed
+     * @throws UserNotInThisGameException if the player is not in this game
+     */
     public synchronized void removePlayer(String user) throws UserNotInThisGameException {
         int index = playerIndex(user);
         if (index < 0) throw new UserNotInThisGameException(user, this);
@@ -99,6 +119,9 @@ public class MultiplayerGame extends Game {
         calculateScore();
     }
 
+    /**
+     * @param time is the ammount of time that the thread sleeps
+     */
     private void waitPlayers(int time){
         try {
             Thread.sleep(time);
@@ -107,6 +130,10 @@ public class MultiplayerGame extends Game {
         }
     }
 
+    /**
+     * Starts the multi-player game, it calls all the extraction methods and sets some parameters to their initial values.
+     * Overrides the method of the abstract class game.
+     */
     @Override
     public void initializeGame() {
         extractPrivateObjectives();
@@ -120,12 +147,20 @@ public class MultiplayerGame extends Game {
         currentTurn = 1;
     }
 
+    /**
+     * shuffle the players array, the new disposition in the array will be the turn sequence.
+     */
     private void shufflePlayers(){
         ArrayList<PlayerInGame> playersList = new ArrayList<>(Arrays.asList(players));
         Collections.shuffle(playersList);
         players = (PlayerInGame[]) playersList.toArray(players);
     }
 
+    /**
+     * when all players have done their turns this method is called. It puts all left dices in the round Track,
+     * extracts the new dices from the diceBag and sets the first round player. It also sends a NextRound Notification
+     * containing all new information.
+     */
     @Override
     public void nextRound() {
         ClientWpc oldClientWpc=null;
@@ -155,6 +190,10 @@ public class MultiplayerGame extends Game {
     }
 
 
+    /**
+     * Sets the player which is ending his/her turn to !active()
+     * @param endTurnData are related to what happened in the last turn
+     */
     @Override
     public void endTurn(ClientEndTurnData endTurnData) {
         players[turnPlayer].setNotActive();
@@ -162,6 +201,12 @@ public class MultiplayerGame extends Game {
         this.endTurnData=endTurnData;
     }
 
+
+    /**
+     * calls the nextPlayer() method, the player that will have to play the new turn is set to active. Before activate
+     * the players it is necessary to check if he/she should skip the turn: if yes the method nextPlayer() will be called
+     * again and a playerSkipNotification will be thrown.
+     */
     private void nextTurn(){
         turnPlayer = nextPlayer();
         currentTurn++;
@@ -181,10 +226,17 @@ public class MultiplayerGame extends Game {
         startTurnTimer();
     }
 
+    /**
+     * @return true if the player must skip the turn, false if not
+     */
     private boolean shouldSkipTurn(){
         return players[turnPlayer].getCardUsedBlockingTurn() != null && players[turnPlayer].getTurnForRound() == 2 && players[turnPlayer].isDisconnected();
     }
 
+    /**
+     * At the biginning of a new turn the timer starts. if the player doesn't end the turn before the time ends  it will
+     * be force to end.
+     */
     private void startTurnTimer() {
         turnFinished = false;
 
@@ -211,6 +263,9 @@ public class MultiplayerGame extends Game {
         }
     }
 
+    /**
+     * @return the //todo
+     */
     int nextPlayer(){
         if (currentTurn % numPlayers == 0) {
             players[turnPlayer].setTurnInRound(2);
@@ -307,6 +362,9 @@ public class MultiplayerGame extends Game {
         endGame();
     }
 
+    /**
+     * Removes all player in game from the database
+     */
     @Override
     public void endGame() {
         DatabaseGames.getInstance().removeGame(this);

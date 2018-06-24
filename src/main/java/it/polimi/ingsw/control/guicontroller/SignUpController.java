@@ -20,11 +20,14 @@ import java.io.IOException;
 
 public class SignUpController {
 
+
     private NetworkClient networkClient;
 
     @FXML private PasswordField signUpPassword;
 
     @FXML private Button backButton;
+
+    @FXML private Button disconnectButton;
 
     @FXML private Button signUpButton;
 

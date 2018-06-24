@@ -18,6 +18,10 @@
 
     <Button fx:id="socketButton" layoutX="535.0" layoutY="475.0" styleClass="FirstSceneButton" text="Socket" />
 
+    <Button fx:id="signInButton" layoutX="535.0" layoutY="345.0" styleClass="FirstSceneButton" text="Sign in" visible="false"/>
+
+    <Button fx:id="signUpButton" layoutX="535.0" layoutY="476.0" styleClass="FirstSceneButton" text="Sign up" visible="false"/>
+
     <Label fx:id="errorLabel" layoutX="391.0" layoutY="555.0" styleClass="Label" wrapText="true" />
 
 

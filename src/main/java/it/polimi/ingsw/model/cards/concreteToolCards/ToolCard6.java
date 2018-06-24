@@ -107,7 +107,7 @@ public class ToolCard6 extends ToolCard {
         switch (currentStatus) {
             case 2:
                 if (!all) break;
-                if (currentPlayer.getWPC().audoAddDice(this.dice))
+                if (currentPlayer.getWPC().autoAddDice(this.dice))
                     currentGame.getExtractedDices().remove(this.dice);
                 currentStatus = 30;
 

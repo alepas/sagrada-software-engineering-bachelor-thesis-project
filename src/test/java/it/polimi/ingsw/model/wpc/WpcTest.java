@@ -537,6 +537,7 @@ public class WpcTest {
     @Test
     public void getDicesTest(){
         assertEquals(0, wpc2.getRowDices(1).size());
+        assertEquals(5, wpc2.getRowDicesAndEmptySpaces(1).size());
         assertEquals(0, wpc2.getColDices(1).size());
         assertEquals(0, wpc2.getNumOfDices());
         assertEquals(20, wpc2.getNumFreeCells());
@@ -554,6 +555,7 @@ public class WpcTest {
         wpc2.schema.add(cell02);
 
         assertEquals(3, wpc2.getRowDices(0).size());
+        assertEquals(5, wpc2.getRowDicesAndEmptySpaces(1).size());
         assertEquals(dice1, wpc2.getRowDices(0).get(0));
 
         assertEquals(0, wpc2.getRowDices(1).size());
@@ -576,6 +578,7 @@ public class WpcTest {
         wpc2.schema.add(cell23);
         wpc2.schema.add(cell24);
         assertEquals(5, wpc2.getRowDices(2).size());
+        assertEquals(5, wpc2.getRowDicesAndEmptySpaces(1).size());
         assertEquals(dice2, wpc2.getRowDices(2).get(1));
 
         assertEquals(2, wpc2.getColDices(0).size());
@@ -586,7 +589,6 @@ public class WpcTest {
 
         assertEquals(8, wpc2.getNumOfDices());
         assertEquals(8, wpc2.getWpcDices().size());
-        //assertEquals(12, wpc2.getNumFreeCells());
     }
 
 
