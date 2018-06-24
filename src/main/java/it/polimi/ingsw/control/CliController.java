@@ -6,6 +6,7 @@ import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerExcepti
 import it.polimi.ingsw.model.exceptions.gameExceptions.InvalidNumOfPlayersException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
+import it.polimi.ingsw.view.Status;
 import it.polimi.ingsw.view.cli.CliView;
 
 import java.util.ArrayList;
@@ -32,11 +33,11 @@ public class CliController {
         return view.launch();
     }
 
-    public void addObserver(Observer observer){
+    public void addModelObserver(Observer observer){
         clientModel.addObserver(observer);
     }
 
-    public void removeObserver(Observer observer){
+    public void removeModelObserver(Observer observer){
         clientModel.removeObserver(observer);
     }
 
@@ -187,6 +188,14 @@ public class CliController {
         return null;
     }
 
+    public NextAction checkIfInGame(){
+        try {
+            return client.getUpdatedGame(clientModel.getUserToken());
+        } catch (CannotFindPlayerInDatabaseException e){
+            return null;
+        }
+    }
+
 
 
     //---------------------------------- Request to cli model ----------------------------------
@@ -284,5 +293,13 @@ public class CliController {
         }
 
         return dices;
+    }
+
+    public void exitGame(){
+        clientModel.exitGame();
+    }
+
+    public ClientGame getGame(){
+        return clientModel.getGame();
     }
 }

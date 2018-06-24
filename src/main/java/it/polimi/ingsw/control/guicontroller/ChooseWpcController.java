@@ -102,7 +102,7 @@ public class ChooseWpcController implements Observer, {
     void initialize(){
         networkClient = NetworkClient.getInstance();
         clientModel = ClientModel.getInstance();
-        clientModel.addObserver(this);
+        clientModel.addModelObserver(this);
 
         firstWPC.setOnMouseClicked(event -> pickWpc(event, wpc0ID));
 

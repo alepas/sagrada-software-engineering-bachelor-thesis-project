@@ -61,8 +61,8 @@ public class ServerController {
         return new LoginResponse(username, userToken, null);
     }
 
-    public Response findGame(String userToken, int numPlayers, Observer observer, boolean rmiObserver) throws InvalidNumOfPlayersException, CannotFindUserInDBException, CannotCreatePlayerException {
-        Game game = databaseUsers.findNewGame(userToken, numPlayers, observer, rmiObserver);
+    public Response findGame(String userToken, int numPlayers, Observer observer) throws InvalidNumOfPlayersException, CannotFindUserInDBException, CannotCreatePlayerException {
+        Game game = databaseUsers.findNewGame(userToken, numPlayers, observer);
         return new FindGameResponse(game.getID(), game.numActualPlayers(), game.getNumPlayers(), null);
     }
 
@@ -94,15 +94,6 @@ public class ServerController {
     public Response getUserStat(String userToken) throws CannotFindUserInDBException {
         ClientUser user = databaseUsers.getClientUserByToken(userToken);
         return new GetUserStatResponse(user, null);
-    }
-
-    public void disconnectUser(String userToken) throws CannotFindPlayerInDatabaseException {
-        try {
-            System.out.println(databaseUsers.getUsernameByToken(userToken) + " si è disconesso");
-        } catch (CannotFindUserInDBException e) {
-            e.printStackTrace();
-        }
-            databaseUsers.disconnectUser(userToken);
     }
 
 
@@ -185,40 +176,58 @@ public class ServerController {
         return new UpdatedWPCResponse(username, wpc.getClientWpc());
     }
 
-    public Response getUpdatedGame(String userToken) throws CannotFindPlayerInDatabaseException {
-        PlayerInGame currentPlayer=databaseUsers.getPlayerInGameFromToken(userToken);
-        Game tempGame=currentPlayer.getGame();
-        HashMap<String,ClientWpc> wpcHashMap=new HashMap<>();
-        for (PlayerInGame player: tempGame.getPlayers()){
-            wpcHashMap.put(player.getUser(),player.getWPC().getClientWpc());
+    public Response getUpdatedGame(String userToken, Observer observer) throws CannotFindPlayerInDatabaseException {
+        PlayerInGame player = databaseUsers.getPlayerInGameFromToken(userToken);
+        player.getGame().addObserver(observer);
+        ClientGame clientGame = player.getGame().getClientGame();
+
+        Color[] playerPrivateObjs = player.getPrivateObjs();
+        ClientColor[] clientPrivateObjs = new ClientColor[playerPrivateObjs.length];
+        for(int i = 0; i < playerPrivateObjs.length; i++){
+            clientPrivateObjs[i] = Color.getClientColor(playerPrivateObjs[i]);
         }
-        ArrayList<ToolCard> toolCards= currentPlayer.getUpdatedToolCards();
-        ArrayList<ClientToolCard> clientToolCards=new ArrayList<>();
-        for (ToolCard card :toolCards){
-            clientToolCards.add(card.getClientToolcard());
-        }
-        ArrayList<PublicObjectiveCard> pocs= currentPlayer.getUpdatedPOCs();
-        ArrayList<ClientPoc> clientPocs=new ArrayList<>();
-        for (PublicObjectiveCard poc :pocs){
-            clientPocs.add(poc.getClientPoc());
-        }
-        ArrayList<Dice> dices= currentPlayer.getUpdatedExtractedDices();
-        ArrayList<ClientDice> clientDices=new ArrayList<>();
-        for (Dice dice :dices){
-            clientDices.add(dice.getClientDice());
-        }
-        ArrayList<ClientColor> tempPrivateObjects=new ArrayList<>();
-        for (Color col: currentPlayer.getPrivateObjs())
-            tempPrivateObjects.add(Color.getClientColor(col));
-        ClientColor []clientColors= new ClientColor[tempPrivateObjects.size()];
-        tempPrivateObjects.toArray(clientColors);
-        MoveData nextActionMove=currentPlayer.getNextMove();
-        ToolCardClientNextActionInfo toolCardClientNextActionInfo=new ToolCardClientNextActionInfo(nextActionMove.wherePickNewDice,nextActionMove.wherePutNewDice,
+
+        MoveData nextActionMove = player.getNextMove();
+        ToolCardClientNextActionInfo toolCardClientNextActionInfo = new ToolCardClientNextActionInfo(nextActionMove.wherePickNewDice,nextActionMove.wherePutNewDice,
                 nextActionMove.numbersToChoose,nextActionMove.diceChosen, nextActionMove.diceChosenLocation, nextActionMove.messageForStop, nextActionMove.bothYesAndNo, nextActionMove.showBackButton);
-        return new UpdatedGameResponse(tempGame.getID(),tempGame.numActualPlayers(),tempGame.getNumPlayers(),clientColors,wpcHashMap,clientToolCards,clientPocs,
-                tempGame.getRoundTrack().getCurrentRound(),clientDices,tempGame.getCurrentTurn(),currentPlayer.isActive(),currentPlayer.getFavours(),
-                tempGame.getRoundTrack().getClientRoundTrack(),nextActionMove.nextAction,toolCardClientNextActionInfo);
+
+        return new UpdatedGameResponse(clientGame, clientPrivateObjs, player.isActive(), nextActionMove.nextAction, toolCardClientNextActionInfo);
     }
+
+//    public Response getUpdatedGame(String userToken) throws CannotFindPlayerInDatabaseException {
+//        PlayerInGame currentPlayer=databaseUsers.getPlayerInGameFromToken(userToken);
+//        Game tempGame=currentPlayer.getGame();
+//        HashMap<String,ClientWpc> wpcHashMap=new HashMap<>();
+//        for (PlayerInGame player: tempGame.getPlayers()){
+//            wpcHashMap.put(player.getUser(),player.getWPC().getClientWpc());
+//        }
+//        ArrayList<ToolCard> toolCards= currentPlayer.getUpdatedToolCards();
+//        ArrayList<ClientToolCard> clientToolCards=new ArrayList<>();
+//        for (ToolCard card :toolCards){
+//            clientToolCards.add(card.getClientToolcard());
+//        }
+//        ArrayList<PublicObjectiveCard> pocs= currentPlayer.getUpdatedPOCs();
+//        ArrayList<ClientPoc> clientPocs=new ArrayList<>();
+//        for (PublicObjectiveCard poc :pocs){
+//            clientPocs.add(poc.getClientPoc());
+//        }
+//        ArrayList<Dice> dices= currentPlayer.getUpdatedExtractedDices();
+//        ArrayList<ClientDice> clientDices=new ArrayList<>();
+//        for (Dice dice :dices){
+//            clientDices.add(dice.getClientDice());
+//        }
+//        ArrayList<ClientColor> tempPrivateObjects=new ArrayList<>();
+//        for (Color col: currentPlayer.getPrivateObjs())
+//            tempPrivateObjects.add(Color.getClientColor(col));
+//        ClientColor []clientColors= new ClientColor[tempPrivateObjects.size()];
+//        tempPrivateObjects.toArray(clientColors);
+//        MoveData nextActionMove=currentPlayer.getNextMove();
+//        ToolCardClientNextActionInfo toolCardClientNextActionInfo=new ToolCardClientNextActionInfo(nextActionMove.wherePickNewDice,nextActionMove.wherePutNewDice,
+//                nextActionMove.numbersToChoose,nextActionMove.diceChosen, nextActionMove.diceChosenLocation, nextActionMove.messageForStop, nextActionMove.bothYesAndNo, nextActionMove.showBackButton);
+//        return new UpdatedGameResponse(tempGame.getID(),tempGame.numActualPlayers(),tempGame.getNumPlayers(),clientColors,wpcHashMap,clientToolCards,clientPocs,
+//                tempGame.getRoundTrack().getCurrentRound(),clientDices,tempGame.getCurrentTurn(),currentPlayer.isActive(),currentPlayer.getFavours(),
+//                tempGame.getRoundTrack().getClientRoundTrack(),nextActionMove.nextAction,toolCardClientNextActionInfo);
+//    }
 
 
     public Response getNextMove(String userToken) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException {
@@ -227,11 +236,12 @@ public class ServerController {
     }
 
 
+    //TODO: Da eliminare
     public Response findAlreadyStartedGame(String userToken, Observer observer, boolean rmiObserver) throws CannotFindGameForUserInDatabaseException {
         Game game = databaseUsers.findAlreadyStartedGame(userToken, observer, rmiObserver);
         if (game != null) {
             try {
-                return getUpdatedGame(userToken);
+                return getUpdatedGame(userToken, observer);
             } catch (CannotFindPlayerInDatabaseException e) {
                 throw new CannotFindGameForUserInDatabaseException();
             }

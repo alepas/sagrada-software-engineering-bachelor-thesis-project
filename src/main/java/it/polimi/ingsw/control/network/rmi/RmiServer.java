@@ -16,41 +16,23 @@ import java.util.*;
 
 public class RmiServer implements RemoteServer {
     private transient final ServerController controller;
-//    private transient HashMap<String, RemoteObserver> observerByUser;
-//    private transient HashMap<String, RmiUserConnectionTimer> timerByToken;
     private transient HashMap<String, RmiClientHandler> clientByToken;
     private transient DatabaseUsers userdb;
 
     public RmiServer(ServerController controller) throws RemoteException {
         this.controller = controller;
-//        observerByUser = new HashMap<>();
-//        timerByToken = new HashMap<>();
         clientByToken = new HashMap<>();
-//        controller.setRmiServerOnUsersDb(this);
         userdb = DatabaseUsers.getInstance();
     }
 
 
     //--------------------------------- CONNECTION HANDLER ------------------------------------
 
-//    private void startUserConnectionDetector(String userToken) {
-//        RmiUserConnectionTimer timer = new RmiUserConnectionTimer(userToken, this);
-//        timerByToken.put(userToken, timer);
-//        (new Thread(timer)).start();
-//    }
-
     @Override
     public void poll(String userToken) throws RemoteException {
         RmiClientHandler client = clientByToken.get(userToken);
         if (client != null) client.poll();
     }
-
-//    @Override
-//    public void notifyDisconnection(String userToken) {
-//        try {
-//            controller.disconnectUser(userToken);
-//        } catch (CannotFindPlayerInDatabaseException e) { /*Do nothing: player already disconnected*/}
-//    }
 
     //TODO: Non serve più
     public void removeRemoteObserver(String username) {
@@ -65,8 +47,11 @@ public class RmiServer implements RemoteServer {
 //        }
     }
 
-    void removeClient(String userToken){
+    void removeClient(String userToken, Observer observer){
         clientByToken.remove(userToken);
+        try {
+            userdb.getPlayerInGameFromToken(userToken).getGame().deleteObserver(observer);
+        } catch (CannotFindPlayerInDatabaseException e) { /*Do nothing: user not in game*/ }
         userdb.removeClient(userToken);
     }
 
@@ -95,8 +80,7 @@ public class RmiServer implements RemoteServer {
 
     @Override
     public Response findGame(String userToken, int numPlayers) throws CannotFindUserInDBException, InvalidNumOfPlayersException, CannotCreatePlayerException {
-        //TODO: eliminare rmiObserver: true
-        return controller.findGame(userToken, numPlayers, clientByToken.get(userToken), true);
+        return controller.findGame(userToken, numPlayers, clientByToken.get(userToken));
     }
 
     @Override
@@ -156,7 +140,7 @@ public class RmiServer implements RemoteServer {
 
     @Override
     public Response getUpdatedGame(String userToken) throws CannotFindPlayerInDatabaseException {
-        return controller.getUpdatedGame(userToken);
+        return controller.getUpdatedGame(userToken, clientByToken.get(userToken));
     }
 
     @Override
@@ -198,30 +182,11 @@ public class RmiServer implements RemoteServer {
 //        return response;
 //    }
 
+    //TODO: Eliminare metodo
     @Override
     public Response findAlreadyStartedGame(String userToken, RemoteObserver observer) throws CannotFindGameForUserInDatabaseException {
-        //TODO: Eliminare rmiObserver: true
         Response response = controller.findAlreadyStartedGame(userToken, clientByToken.get(userToken), true);
         clientByToken.get(userToken).setObserver(observer);
         return response;
     }
-
-//    @Override
-//    public void update(Observable o, Object arg) {
-//        if (o instanceof Game) {
-//            Game game = (Game) o;
-//            for (PlayerInGame player : game.getPlayers()) {
-//
-//                RemoteObserver observer = observerByUser.get(player.getUser());
-//                if (observer != null) {
-//                    try {
-//                        observer.update(null, arg);
-//                    } catch (RemoteException e) {
-//                        //TODO: non riesce a contattare il client
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//        }
-//    }
 }

@@ -33,8 +33,8 @@ public class RmiClientHandler extends ClientHandler implements Observer {
     public void disconnect() {
         //Ho perso la connessione con il client
         System.out.println("Rmi client disconnesso");
+        rmiServer.removeClient(userToken, this);
         observer = null;
-        rmiServer.removeClient(userToken);
     }
 
     @Override
@@ -43,7 +43,8 @@ public class RmiClientHandler extends ClientHandler implements Observer {
         System.out.println("Rmi client buttato fuori");
         timer.stop();
         update(null, new ForceDisconnectionNotification(false));
-        rmiServer.removeClient(userToken);
+        rmiServer.removeClient(userToken, this);
+        observer = null;
     }
 
     void poll(){

@@ -229,7 +229,7 @@ public class RmiClient extends NetworkClient {
             RemoteObserver remoteObserver = new RmiRemoteObserver();
             UpdatedGameResponse response = (UpdatedGameResponse) remoteServer.findAlreadyStartedGame(userToken, remoteObserver);
             response.handle(this);
-            return response.gameNumPlayers;
+            return response.game.getGameNumPlayers();
         } catch (RemoteException e) {
             return 0;
         }

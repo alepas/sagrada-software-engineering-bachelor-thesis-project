@@ -40,10 +40,6 @@ public class SocketClientHandler extends ClientHandler implements Runnable, Obse
         userdb = DatabaseUsers.getInstance();
     }
 
-//    public Socket getSocket() {
-//        return socket;
-//    }
-
     private void respond(Object response) {
         try {
             out.writeObject(response);
@@ -67,13 +63,7 @@ public class SocketClientHandler extends ClientHandler implements Runnable, Obse
                 }
             } while (!stop);
         } catch (IOException e) {
-//            //TODO: Persa la connessione con il client
             disconnect();
-//            try {
-//                controller.disconnectUser(userToken);
-//            } catch (CannotFindPlayerInDatabaseException e1) {
-//                e1.printStackTrace();
-//            }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             removeConnection();
@@ -112,6 +102,9 @@ public class SocketClientHandler extends ClientHandler implements Runnable, Obse
     public void disconnect() {
         //Ho perso la connessione con il client
         System.out.println("Socket client disconnesso");
+        try {
+            userdb.getPlayerInGameFromToken(userToken).getGame().deleteObserver(this);
+        } catch (CannotFindPlayerInDatabaseException e) { /*Do nothing: user not in game*/ }
         userdb.removeClient(userToken);
         close();
     }
@@ -121,6 +114,9 @@ public class SocketClientHandler extends ClientHandler implements Runnable, Obse
         //Forza il client a disconettersi
         System.out.println("Socket client buttato fuori");
         respond(new ForceDisconnectionNotification(false));
+        try {
+            userdb.getPlayerInGameFromToken(userToken).getGame().deleteObserver(this);
+        } catch (CannotFindPlayerInDatabaseException e) { /*Do nothing: user not in game*/ }
         userdb.removeClient(userToken);
         close();
     }
@@ -154,8 +150,7 @@ public class SocketClientHandler extends ClientHandler implements Runnable, Obse
     @Override
     public Response handle(FindGameRequest request) {
         try {
-            //TODO: Eliminare rmiObserver: false
-            return controller.findGame(request.token, request.numPlayers, this,false);
+            return controller.findGame(request.token, request.numPlayers, this);
         } catch (InvalidNumOfPlayersException|CannotFindUserInDBException|CannotCreatePlayerException e){
             return new FindGameResponse(null, 0, 0, e);
         }
@@ -267,7 +262,7 @@ public class SocketClientHandler extends ClientHandler implements Runnable, Obse
     @Override
     public Response handle(UpdatedGameRequest request) {
         try {
-            return controller.getUpdatedGame(request.userToken);
+            return controller.getUpdatedGame(request.userToken, this);
         } catch (CannotFindPlayerInDatabaseException e) {
             return new UpdatedGameResponse(e);
         }

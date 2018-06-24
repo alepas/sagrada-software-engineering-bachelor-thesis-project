@@ -112,12 +112,17 @@ public class CliView implements Observer, NotificationHandler {
         }
     }
 
+    private void returnToMainMenu() {
+        changeState(Status.MAIN_MENU_PHASE);
+        controller.exitGame();
+    }
+
     //---------------------------- External methods ----------------------------
     public boolean launch(){
-        controller.addObserver(this);
+        controller.addModelObserver(this);
         changeState(Status.LOG_PHASE);
         start();
-        controller.removeObserver(this);
+        controller.removeModelObserver(this);
         return state.equals(Status.QUIT_SAGRADA);
     }
 
@@ -263,7 +268,27 @@ public class CliView implements Observer, NotificationHandler {
         } while (user == null);
 
         displayText(CliConstants.LOG_SUCCESS + user);
-        changeState(Status.MAIN_MENU_PHASE);
+        NextAction nextAction = controller.checkIfInGame();
+        if (nextAction != null) resumeGame(nextAction);
+        else changeState(Status.MAIN_MENU_PHASE);
+    }
+
+    private void resumeGame(NextAction nextAction) {
+        ClientGame game = controller.getGame();
+        displayText("Riconnesso alla partita: " + game.getId());
+
+        showPrivateObjectives();
+        showPocs();
+        showToolcards();
+
+        switch (nextAction){
+            case WAIT_FOR_TURN: case MENU_ALL: case MENU_ONLY_PLACE_DICE: case MENU_ONLY_TOOLCARD: case MENU_ONLY_ENDTURN:
+                changeState(nextAction);
+                break;
+            case PLACE_DICE_TOOLCARD: case SELECT_DICE_TOOLCARD: case INTERRUPT_TOOLCARD: case SELECT_NUMBER_TOOLCARD: case SELECT_DICE_TO_ACTIVATE_TOOLCARD: case CANCEL_ACTION_TOOLCARD:
+                //TODO:
+                break;
+        }
     }
 
     private void mainMenuPhase() {
@@ -627,12 +652,12 @@ public class CliView implements Observer, NotificationHandler {
                 if ((response = userInput()) == null) return false;
                 if (response.equals(CliConstants.ESCAPE_RESPONSE)) return false;
                 int row = Integer.parseInt(response)-strNum;
-                
+
                 displayText("Inserisci la colonna in cui posizionarlo (digita 'back' per annullare la mossa)");
                 if ((response = userInput()) == null) return false;
                 if (response.equals(CliConstants.ESCAPE_RESPONSE)) return false;
                 int col = Integer.parseInt(response)-strNum;
-                
+
                 Position pos = new Position(row, col);
 
                 nextAction = controller.placeDice(id, pos);
@@ -719,7 +744,7 @@ public class CliView implements Observer, NotificationHandler {
                 displayText("Inserire un numero intero");
             }
         } while (id == -1);
-        
+
         return id;
     }
 
@@ -976,23 +1001,25 @@ public class CliView implements Observer, NotificationHandler {
     }
 
     @Override
-    public void handle(ToolCardDicePlacedNotification toolCardDicePlacedNotification) {
+    public void handle(ToolCardDicePlacedNotification notification) {
 
     }
 
     @Override
-    public void handle(ToolCardExtractedDicesModifiedNotification toolCardExtractedDicesModifiedNotification) {
+    public void handle(ToolCardExtractedDicesModifiedNotification notification) {
 
     }
 
     @Override
-    public void handle(PlayerDisconnectedNotification playerDisconnectedNotification) {
-
+    public void handle(PlayerDisconnectedNotification notification) {
+        printText("");
+        displayText(notification.username + " è uscito dalla partita");
     }
 
     @Override
-    public void handle(PlayerReconnectedNotification playerReconnectedNotification) {
-
+    public void handle(PlayerReconnectedNotification notification) {
+        printText("");
+        displayText(notification.username + " è rientrato in partita");
     }
 
     @Override
@@ -1010,11 +1037,28 @@ public class CliView implements Observer, NotificationHandler {
 
     @Override
     public void handle(PlayerSkipTurnNotification notification) {
-
+        printText("");
+        displayText(notification.username +
+                " ha saltato il turno a causa dell'utilizzo della toolcard " + notification.cardId);
     }
 
     @Override
     public void handle(ScoreNotification notification) {
+        printText("");
+        displayText("Classifica finale:");
 
+        ArrayList<Map.Entry<String, Integer>> scores = new ArrayList<>(notification.scoreList.entrySet());
+        scores.sort((Comparator<Map.Entry<?, Integer>>) (o1, o2) -> o2.getValue().compareTo(o1.getValue()));
+
+        int i = 1;
+        for (Map.Entry<String, Integer> entry : scores) {
+            System.out.println(i++ + ") " + entry.getKey() + ": "
+                    + entry.getValue() + " punti");
+        }
+
+//        printText("");
+//        displayText("Premi invio per tornare al menù principale");
+//        userInput();
+//        returnToMainMenu();
     }
 }

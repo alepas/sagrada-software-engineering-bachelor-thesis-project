@@ -6,60 +6,28 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class UpdatedGameResponse implements Response {
-    public String gameID;
-    public int gameActualPlayers;
-    public int gameNumPlayers;
-    public ClientColor[] privateObjectives;
-    public HashMap<String, ClientWpc> wpcByUsername;
-    public ArrayList<ClientToolCard> gameToolCards;
-    public ArrayList<ClientPoc> gamePublicObjectiveCards;
-    public int currentRound;
-    public ArrayList<ClientDice> extractedDices;
-    public int currentTurn;
-    public boolean active = false;
-    public int favour;
+    public final ClientGame game;
+    public final ClientColor[] privateObjectives;
+    public final boolean active;
     public final Exception exception;
-    public final ClientRoundTrack roundTrack;
     public final NextAction nextAction;
     public final ToolCardClientNextActionInfo nextActionInfo;
 
-    public UpdatedGameResponse(Exception exception) {
-        this.exception = exception;
-        this.gameID = null;
-        this.gameActualPlayers = 0;
-        this.gameNumPlayers = 0;
-        this.privateObjectives = null;
-        this.wpcByUsername = null;
-        this.gameToolCards = null;
-        this.gamePublicObjectiveCards = null;
-        this.currentRound = 0;
-        this.extractedDices = null;
-        this.currentTurn = 0;
-        this.active = false;
-        this.favour = 0;
-        this.roundTrack=null;
-        this.nextAction = null;
-        this.nextActionInfo = null;
-    }
-
-
-    public UpdatedGameResponse(String gameID, int gameActualPlayers, int gameNumPlayers, ClientColor[] privateObjectives, HashMap<String, ClientWpc> wpcByUsername, ArrayList<ClientToolCard> gameToolCards, ArrayList<ClientPoc> gamePublicObjectiveCards, int currentRound, ArrayList<ClientDice> extractedDices, int currentTurn, boolean active, int favour, ClientRoundTrack roundTrack, NextAction nextAction, ToolCardClientNextActionInfo nextActionInfo) {
-        this.gameID = gameID;
-        this.gameActualPlayers = gameActualPlayers;
-        this.gameNumPlayers = gameNumPlayers;
-        this.privateObjectives = privateObjectives;
-        this.wpcByUsername = wpcByUsername;
-        this.gameToolCards = gameToolCards;
-        this.gamePublicObjectiveCards = gamePublicObjectiveCards;
-        this.currentRound = currentRound;
-        this.extractedDices = extractedDices;
-        this.currentTurn = currentTurn;
+    private UpdatedGameResponse(ClientGame game, boolean active, ClientColor[] privateObjectives, NextAction nextAction, ToolCardClientNextActionInfo nextActionInfo, Exception exception) {
+        this.game = game;
         this.active = active;
-        this.favour = favour;
-        this.exception = null;
-        this.roundTrack = roundTrack;
+        this.privateObjectives = privateObjectives;
         this.nextAction = nextAction;
         this.nextActionInfo = nextActionInfo;
+        this.exception = exception;
+    }
+
+    public UpdatedGameResponse(ClientGame game, ClientColor[] privateObjectives, boolean active, NextAction nextAction, ToolCardClientNextActionInfo nextActionInfo) {
+        this(game, active, privateObjectives, nextAction, nextActionInfo, null);
+    }
+
+    public UpdatedGameResponse(Exception exception) {
+        this(null, false, null, null, null, exception);
     }
 
     @Override

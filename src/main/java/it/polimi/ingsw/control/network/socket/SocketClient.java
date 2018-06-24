@@ -364,7 +364,7 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
             return 0;
         }
         else
-            return response.gameNumPlayers;
+            return response.game.getGameNumPlayers();
     }
 
     @Override

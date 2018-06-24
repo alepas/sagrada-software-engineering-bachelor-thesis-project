@@ -9,29 +9,19 @@ import java.util.Observer;
 
 public class ClientModel implements Observer, NotificationHandler {
     private static ClientModel instance;
-    private ArrayList<Observer> observers;
+    private ArrayList<Observer> observers = new ArrayList<>();
 
     //User
     private String userToken;
     private ClientUser user;
 
     //Game
-    private String gameID;
-    private boolean gameStarted;
-    private int gameActualPlayers;
-    private int gameNumPlayers;
-    private ClientColor[] privateObjectives;
+    private ClientColor[] myPrivateObjectives;
     private boolean wpcsArrived;
-    private HashMap<String, ClientWpc> wpcByUsername;
-    private HashMap<String, Integer> favoursByUsername;
-    private ArrayList<ClientToolCard> gameToolCards;
-    private ArrayList<ClientPoc> gamePublicObjectiveCards;
-    private int currentRound;
-    private ArrayList<ClientDice> extractedDices;
-    private int currentTurn;
+    private boolean gameStarted;
     private boolean active;
-    private ClientRoundTrack roundTrack;
     private ToolCardClientNextActionInfo toolCardClientNextActionInfo;
+    private ClientGame game;
 
     private ClientModel() {
     }
@@ -40,28 +30,17 @@ public class ClientModel implements Observer, NotificationHandler {
         if (instance == null) {
             instance = new ClientModel();
             instance.clean();
-            instance.observers = new ArrayList<>();
         }
 
         return instance;
     }
 
     public void exitGame() {
-        this.gameID = null;
-        this.gameStarted = false;
-        this.gameActualPlayers = 0;
-        this.gameNumPlayers = 0;
-        this.privateObjectives = null;
+        this.game = null;
+        this.myPrivateObjectives = null;
         this.wpcsArrived = false;
-        this.wpcByUsername = new HashMap<>();
-        this.favoursByUsername = new HashMap<>();
-        this.gameToolCards = new ArrayList<>();
-        this.gamePublicObjectiveCards = new ArrayList<>();
-        this.currentRound = 0;
-        this.extractedDices = new ArrayList<>();
-        this.currentTurn = 0;
+        this.gameStarted = false;
         this.active = false;
-        this.roundTrack = null;
         this.toolCardClientNextActionInfo = null;
     }
 
@@ -80,16 +59,15 @@ public class ClientModel implements Observer, NotificationHandler {
     }
 
     public String getUsername() {
-        if (user != null) return user.getUsername();
-        return null;
+        return (user != null) ? user.getUsername() : null;
     }
 
     public ClientRoundTrack getRoundTrack() {
-        return roundTrack;
+        return game.getRoundTrack();
     }
 
     public void setRoundTrack(ClientRoundTrack roundTrack) {
-        this.roundTrack = roundTrack;
+        this.game.setRoundTrack(roundTrack);
     }
 
     public void setUsername(String username) {
@@ -109,23 +87,19 @@ public class ClientModel implements Observer, NotificationHandler {
     }
 
     public void setWpcByUsername(HashMap<String, ClientWpc> wpcByUsername) {
-        this.wpcByUsername = wpcByUsername;
+        this.game.setWpcByUsername(wpcByUsername);
     }
 
     public HashMap<String, Integer> getFavoursByUsername() {
-        return favoursByUsername;
+        return game.getFavoursByUsername();
     }
 
     public void setUserFavours(String username, int favours) {
-        favoursByUsername.put(username, favours);
-    }
-
-    public void setCurrentRound(int currentRound) {
-        this.currentRound = currentRound;
+        game.setUserFavours(username, favours);
     }
 
     public void setCurrentTurn(int currentTurn) {
-        this.currentTurn = currentTurn;
+        this.game.setCurrentTurn(currentTurn);
     }
 
     public void setActive(boolean active) {
@@ -137,79 +111,71 @@ public class ClientModel implements Observer, NotificationHandler {
     }
 
     public String getGameID() {
-        return gameID;
-    }
-
-    public void setGameID(String gameID) {
-        this.gameID = gameID;
+        return game.getId();
     }
 
     public int getGameActualPlayers() {
-        return gameActualPlayers;
+        return game.getGameActualPlayers();
     }
 
     public void setGameActualPlayers(int gameActualPlayers) {
-        this.gameActualPlayers = gameActualPlayers;
+        this.game.setGameActualPlayers(gameActualPlayers);
     }
 
     public int getGameNumPlayers() {
-        return gameNumPlayers;
+        return game.getGameNumPlayers();
     }
 
     public void setExtractedDices(ArrayList<ClientDice> extractedDices) {
-        this.extractedDices = extractedDices;
-    }
-
-    public void setGameNumPlayers(int gameNumPlayers) {
-        this.gameNumPlayers = gameNumPlayers;
+        this.game.setExtractedDices(extractedDices);
     }
 
     public ClientColor[] getPrivateObjectives() {
-        return privateObjectives;
+        return myPrivateObjectives;
     }
 
     public void setPrivateObjectives(ClientColor[] privateObjectives) {
-        this.privateObjectives = privateObjectives;
+        this.myPrivateObjectives = privateObjectives;
     }
 
     public ArrayList<ClientToolCard> getGameToolCards() {
-        return gameToolCards;
+        return game.getToolCards();
     }
 
     public void setGameToolCards(ArrayList<ClientToolCard> gameToolCards) {
-        this.gameToolCards = gameToolCards;
+        this.game.setToolCards(gameToolCards);
     }
 
     public ArrayList<ClientPoc> getGamePublicObjectiveCards() {
-        return gamePublicObjectiveCards;
+        return game.getPublicObjectiveCards();
     }
 
-    public void setGamePublicObjectiveCards(ArrayList<ClientPoc> gamePublicObjectiveCards) {
-        this.gamePublicObjectiveCards = gamePublicObjectiveCards;
+    public void setGamePublicObjectiveCards(ArrayList<ClientPoc> pocs) {
+        this.game.setPublicObjectiveCards(pocs);
     }
 
     public ClientWpc getMyWpc() {
-        return wpcByUsername.get(user.getUsername());
+        return game.getWpcByUsername().get(user.getUsername());
     }
 
     public void setMyWpc(ClientWpc wpc) {
-        wpcByUsername.put(user.getUsername(), wpc);
+        game.setUserWpc(user.getUsername(), wpc);
     }
 
     public HashMap<String, ClientWpc> getWpcByUsername() {
-        return wpcByUsername;
+        return game.getWpcByUsername();
     }
 
     public int getCurrentRound() {
-        return currentRound;
+        return game.getRoundTrack().getCurrentRound();
     }
 
     public int getCurrentTurn() {
-        return currentTurn;
+        return game.getCurrentTurn();
     }
 
     public ArrayList<ClientDice> getExtractedDices() {
-        return extractedDices;
+        return game.getExtractedDices();
     }
 
     public boolean isActive() {
@@ -217,11 +183,11 @@ public class ClientModel implements Observer, NotificationHandler {
     }
 
     public boolean areAllPlayersInGame() {
-        return (gameActualPlayers != 0 && gameActualPlayers == gameNumPlayers);
+        return (game.getGameActualPlayers() != 0 && game.getGameActualPlayers() == game.getGameNumPlayers());
     }
 
     public boolean arePrivateObjectivesArrived() {
-        return privateObjectives != null;
+        return myPrivateObjectives != null;
     }
 
     public boolean areAllWpcsArrived() {
@@ -229,7 +195,7 @@ public class ClientModel implements Observer, NotificationHandler {
     }
 
     public boolean allPlayersChooseWpc() {
-        return (gameNumPlayers != 0 && wpcByUsername.size() == gameNumPlayers);
+        return (game.getGameNumPlayers() != 0 && game.getWpcByUsername().size() == game.getGameNumPlayers());
     }
 
     public boolean isGameStarted() {
@@ -237,11 +203,11 @@ public class ClientModel implements Observer, NotificationHandler {
     }
 
     public boolean areToolcardsArrived() {
-        return gameToolCards != null;
+        return game.getToolCards() != null;
     }
 
     public boolean arePocsArrived() {
-        return gamePublicObjectiveCards != null;
+        return game.getPublicObjectiveCards() != null;
     }
 
     public ToolCardClientNextActionInfo getToolCardClientNextActionInfo() {
@@ -252,6 +218,24 @@ public class ClientModel implements Observer, NotificationHandler {
         this.toolCardClientNextActionInfo = toolCardClientNextActionInfo;
     }
 
+    public ClientGame getGame() {
+        return game;
+    }
+
+    public void setGame(ClientGame game) {
+        this.game = game;
+    }
+
+    public void changeToolcard(String id, ClientToolCard newToolCard){
+        ArrayList<ClientToolCard> toolCards = game.getToolCards();
+
+        for (ClientToolCard card : toolCards) {
+            if (card.getId().equals(id))
+                toolCards.set(toolCards.indexOf(card), newToolCard);
+        }
+
+        game.setToolCards(toolCards);
+    }
 
     //----------------------------------- Notification Handler -------------------------------------
     @Override
@@ -269,13 +253,14 @@ public class ClientModel implements Observer, NotificationHandler {
 
     @Override
     public void handle(PlayersChangedNotification notification) {
-        if (notification.joined) gameActualPlayers++;
-        else gameActualPlayers--;
+        int actualPlayers = game.getGameActualPlayers();
+        if (notification.joined) game.setGameActualPlayers(actualPlayers+1);
+        else game.setGameActualPlayers(actualPlayers-1);
     }
 
     @Override
     public void handle(PrivateObjExtractedNotification notification) {
-        privateObjectives = notification.colorsByUser.get(user.getUsername());
+        myPrivateObjectives = notification.colorsByUser.get(user.getUsername());
     }
 
     @Override
@@ -285,47 +270,43 @@ public class ClientModel implements Observer, NotificationHandler {
 
     @Override
     public void handle(UserPickedWpcNotification notification) {
-        wpcByUsername.put(notification.username, notification.wpc);
-        favoursByUsername.put(notification.username, notification.wpc.getFavours());
+        game.setUserWpc(notification.username, notification.wpc);
+        game.setUserFavours(notification.username, notification.wpc.getFavours());
     }
 
     @Override
     public void handle(ToolcardsExtractedNotification notification) {
-        gameToolCards = notification.cards;
+        game.setToolCards(notification.cards);
     }
 
     @Override
     public void handle(PocsExtractedNotification notification) {
-        gamePublicObjectiveCards = notification.cards;
+        game.setPublicObjectiveCards(notification.cards);
     }
 
     @Override
     public void handle(NewRoundNotification notification) {
-        currentRound = notification.roundNumber;
-        extractedDices = notification.extractedDices;
-        roundTrack = notification.roundTrack;
+        game.setExtractedDices(notification.extractedDices);
+        game.setRoundTrack(notification.roundTrack);
+
         if (notification.oldUserForcedWpc != null)
-            wpcByUsername.put(notification.oldUserNameForced, notification.oldUserForcedWpc);
+            game.setUserWpc(notification.oldUserNameForced, notification.oldUserForcedWpc);
     }
 
     @Override
     public void handle(NextTurnNotification notification) {
         if (notification.endTurnData != null) {
             if (notification.endTurnData.extractedDices != null)
-                extractedDices = notification.endTurnData.extractedDices;
-            if (notification.endTurnData.roundTrack != null) roundTrack = notification.endTurnData.roundTrack;
+                game.setExtractedDices(notification.endTurnData.extractedDices);
+            if (notification.endTurnData.roundTrack != null) game.setRoundTrack(notification.endTurnData.roundTrack);
             if (notification.endTurnData.wpcOldUser != null)
-                wpcByUsername.put(notification.endTurnData.oldUser, notification.endTurnData.wpcOldUser);
+                game.setUserWpc(notification.endTurnData.oldUser, notification.endTurnData.wpcOldUser);
             if (notification.endTurnData.toolCardUsed != null) {
-                String id = notification.endTurnData.toolCardUsed.getId();
-                for (ClientToolCard card : gameToolCards) {
-                    if (card.getId().equals(id))
-                        gameToolCards.set(gameToolCards.indexOf(card), notification.endTurnData.toolCardUsed);
-                }
+                changeToolcard(notification.endTurnData.toolCardUsed.getId(), notification.endTurnData.toolCardUsed);
             }
 
         }
-        currentTurn = notification.turnNumber;
+        game.setCurrentTurn(notification.turnNumber);
         active = notification.activeUser.equals(user.getUsername());
     }
 
@@ -335,21 +316,18 @@ public class ClientModel implements Observer, NotificationHandler {
 
     @Override
     public void handle(DicePlacedNotification notification) {
-        wpcByUsername.put(notification.username, notification.wpc);
-        if (notification.newExtractedDices != null) extractedDices = notification.newExtractedDices;
-        if (notification.newRoundTrack != null) roundTrack = notification.newRoundTrack;
+        game.setUserWpc(notification.username, notification.wpc);
+        if (notification.newExtractedDices != null) game.setExtractedDices(notification.newExtractedDices);
+        if (notification.newRoundTrack != null) game.setRoundTrack(notification.newRoundTrack);
     }
 
 
     @Override
     public void handle(ToolCardUsedNotification notification) {
-        String id = notification.toolCard.getId();
-        if (notification.wpc != null) wpcByUsername.put(notification.username, notification.wpc);
-        if (notification.newExtractedDices != null) extractedDices = notification.newExtractedDices;
-        if (notification.newRoundTrack != null) roundTrack = notification.newRoundTrack;
-        for (ClientToolCard card : gameToolCards) {
-            if (card.getId().equals(id)) gameToolCards.set(gameToolCards.indexOf(card), notification.toolCard);
-        }
+        if (notification.wpc != null) game.setUserWpc(notification.username, notification.wpc);
+        if (notification.newExtractedDices != null) game.setExtractedDices(notification.newExtractedDices);
+        if (notification.newRoundTrack != null) game.setRoundTrack(notification.newRoundTrack);
+        changeToolcard(notification.toolCard.getId(), notification.toolCard);
 
         for (Notification not : notification.movesNotifications) not.handle(this);
     }

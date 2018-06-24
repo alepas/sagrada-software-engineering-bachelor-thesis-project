@@ -37,6 +37,7 @@ public class DatabaseUsers {
     private HashMap<String, Socket> socketByToken;               //TODO: non serve più?
     private HashMap<String, PlayerInGame> playerInGameByToken;
     private HashMap<String, ClientHandler> clientByToken;
+    private HashMap<String, PlayerInGame> playerByUsername;
 
 
     public static synchronized DatabaseUsers getInstance() {
@@ -57,6 +58,8 @@ public class DatabaseUsers {
 
             instance.clientByToken = new HashMap<>();
 
+            instance.playerByUsername = new HashMap<>();
+
             instance.databaseGames = DatabaseGames.getInstance();
 
             instance.rmiServer = null;
@@ -74,6 +77,7 @@ public class DatabaseUsers {
             instance.usersByToken = new HashMap<String, User>();
             instance.socketByToken = new HashMap<>();
             instance.playerInGameByToken = new HashMap<>();
+            instance.playerByUsername = new HashMap<>();
             instance.clientByToken = new HashMap<>();
             instance.rmiServer = null;
 
@@ -83,8 +87,7 @@ public class DatabaseUsers {
     }
 
 
-    private DatabaseUsers() {
-    }
+    private DatabaseUsers() { }
 
     public void addClient(ClientHandler client){
         clientByToken.put(client.getToken(), client);
@@ -165,9 +168,6 @@ public class DatabaseUsers {
     public synchronized String login(String username, String password) throws CannotLoginUserException {
         String passwordHash;
         String storedPasswordHash;
-        String newtoken;
-        PlayerInGame playerInGame = null;
-        String oldtoken;
         User foundUser;
 
         // username isn't registered
@@ -186,91 +186,75 @@ public class DatabaseUsers {
         }
         storedPasswordHash = foundUser.getPassword();
         if (passwordHash.equals(storedPasswordHash)) {
-            newtoken = UUID.randomUUID().toString();
-            if ((oldtoken = tokenByUsername.get(username)) != null) {
-                playerInGame = playerInGameByToken.get(oldtoken);
-                clientByToken.get(oldtoken).removeConnection();     //Chiama già la removeClient()
+            PlayerInGame playerInGame;
+            String oldtoken;
+            String newtoken = UUID.randomUUID().toString();
 
-//                playerInGame = playerInGameByToken.get(oldtoken);
-//                if (playerInGame != null) {
-//                    try {
-//                        removeSocketFromToken(oldtoken);
-//                    } catch (CannotCloseOldConnectionException e) {
-//                        if (e.getErrorId() == 0)
-//                            throw new CannotLoginUserException(username, 3);
-//                    }
-//                    usersByToken.remove(oldtoken);
+            if ((oldtoken = tokenByUsername.get(username)) != null) clientByToken.get(oldtoken).removeConnection();
+            if ((playerInGame = playerByUsername.get(username)) != null) playerInGameByToken.put(newtoken, playerInGame);
+
+            usersByToken.put(newtoken, foundUser);
+            tokenByUsername.put(username, newtoken);
+
+            return newtoken;
+        } else {
+            throw new CannotLoginUserException(username, 1);
+        }
+    }
+
+    //TODO: Non serve più
+//    public synchronized String login(String username, String password, Socket socket) throws CannotLoginUserException {
+//        String passwordHash;
+//        String storedPasswordHash;
+//        String newtoken;
+//        PlayerInGame playerInGame = null;
+//        String oldtoken = null;
 //
-//                    playerInGameByToken.remove(oldtoken);
-//                    rmiServer.rmiDisconnectionTimerStop(oldtoken);
+//        // username isn't registered
+//
+//        System.out.println("username ricevuto: " + username + " password: " + password);
+//        if (!usersByUsername.containsKey(username)) {
+//            throw new CannotLoginUserException(username, 2);
+//        }
+//        User foundUser = null;
+//        foundUser = usersByUsername.get(username);
+//        try {
+//            byte[] salt = foundUser.getSalt();
+//
+//
+//            passwordHash = SHAFunction.getShaPwd(password, salt);
+//        } catch (PasswordParsingException e) {
+//            throw new CannotLoginUserException(username, 0);
+//        }
+//        storedPasswordHash = foundUser.getPassword();
+//        if (passwordHash.equals(storedPasswordHash)) {
+//            newtoken = UUID.randomUUID().toString();
+//            if ((oldtoken = tokenByUsername.get(username)) != null) {
+//
+//                playerInGame = playerInGameByToken.get(oldtoken);
+//
+//
+//                try {
+//                    removeSocketFromToken(oldtoken);
+//                } catch (CannotCloseOldConnectionException e) {
+//                    if (e.getErrorId() == 0)
+//                        throw new CannotLoginUserException(username, 3);
 //                }
-            }
-
-
-            usersByToken.put(newtoken, foundUser);
-            tokenByUsername.put(username, newtoken);
-            if (playerInGame != null)
-                playerInGameByToken.put(newtoken, playerInGame);
-
-            return newtoken;
-        } else {
-            throw new CannotLoginUserException(username, 1);
-        }
-    }
-
-    //TODO: Serve ancora?
-    public synchronized String login(String username, String password, Socket socket) throws CannotLoginUserException {
-        String passwordHash;
-        String storedPasswordHash;
-        String newtoken;
-        PlayerInGame playerInGame = null;
-        String oldtoken = null;
-
-        // username isn't registered
-
-        System.out.println("username ricevuto: " + username + " password: " + password);
-        if (!usersByUsername.containsKey(username)) {
-            throw new CannotLoginUserException(username, 2);
-        }
-        User foundUser = null;
-        foundUser = usersByUsername.get(username);
-        try {
-            byte[] salt = foundUser.getSalt();
-
-
-            passwordHash = SHAFunction.getShaPwd(password, salt);
-        } catch (PasswordParsingException e) {
-            throw new CannotLoginUserException(username, 0);
-        }
-        storedPasswordHash = foundUser.getPassword();
-        if (passwordHash.equals(storedPasswordHash)) {
-            newtoken = UUID.randomUUID().toString();
-            if ((oldtoken = tokenByUsername.get(username)) != null) {
-
-                playerInGame = playerInGameByToken.get(oldtoken);
-
-
-                try {
-                    removeSocketFromToken(oldtoken);
-                } catch (CannotCloseOldConnectionException e) {
-                    if (e.getErrorId() == 0)
-                        throw new CannotLoginUserException(username, 3);
-                }
-                usersByToken.remove(oldtoken);
-                playerInGameByToken.remove(oldtoken);
-
-            }
-
-            usersByToken.put(newtoken, foundUser);
-            tokenByUsername.put(username, newtoken);
-            if (playerInGame != null)
-                playerInGameByToken.put(newtoken, playerInGame);
-            socketByToken.put(newtoken, socket);
-            return newtoken;
-        } else {
-            throw new CannotLoginUserException(username, 1);
-        }
-    }
+//                usersByToken.remove(oldtoken);
+//                playerInGameByToken.remove(oldtoken);
+//
+//            }
+//
+//            usersByToken.put(newtoken, foundUser);
+//            tokenByUsername.put(username, newtoken);
+//            if (playerInGame != null)
+//                playerInGameByToken.put(newtoken, playerInGame);
+//            socketByToken.put(newtoken, socket);
+//            return newtoken;
+//        } else {
+//            throw new CannotLoginUserException(username, 1);
+//        }
+//    }
 
     synchronized String getTokenFromUsername(String user) throws CannotFindUserInDBException {
         String token;
@@ -344,7 +328,7 @@ public class DatabaseUsers {
         if (token == null)
             throw new CannotAddPlayerInDatabaseException();
         playerInGameByToken.put(token, play);
-
+        playerByUsername.put(play.getUser(), play);
     }
 
     public synchronized void removePlayerInGameFromDB(PlayerInGame play) throws CannotFindPlayerInDatabaseException {
@@ -352,6 +336,7 @@ public class DatabaseUsers {
         if (token == null)
             throw new CannotFindPlayerInDatabaseException();
         playerInGameByToken.remove(token);
+        playerByUsername.remove(play.getUser());
     }
 
 
@@ -547,17 +532,17 @@ public class DatabaseUsers {
     }
 
 
-    public synchronized Game findNewGame(String userToken, int numPlayers, Observer observer, boolean rmiObserver) throws InvalidNumOfPlayersException, CannotCreatePlayerException, CannotFindUserInDBException {
+    public synchronized Game findNewGame(String userToken, int numPlayers, Observer observer) throws InvalidNumOfPlayersException, CannotCreatePlayerException, CannotFindUserInDBException {
         PlayerInGame player = playerInGameByToken.get(userToken);
         Game game;
         if (player != null) {
             throw new CannotCreatePlayerException(player.getUser());
         }
         game = databaseGames.findGameForUser(getUsernameByToken(userToken), numPlayers);
-        player = playerInGameByToken.get(userToken);
+//        player = playerInGameByToken.get(userToken);      //TODO: Non servono più?
         game.addObserver(observer);
-        player.setObserver(observer);
-        player.setRmiObserver(rmiObserver);
+//        player.setObserver(observer);
+//        player.setRmiObserver(rmiObserver);
         return game;
     }
 

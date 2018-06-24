@@ -111,9 +111,10 @@ public abstract class NetworkClient implements ResponseHandler {
     public void handle(FindGameResponse response){
         if (response.exception == null) {
             clientModel.exitGame();
-            clientModel.setGameID(response.gameID);
+            clientModel.setGame(new ClientGame(response.gameID, response.numPlayers));
+//            clientModel.setGameID(response.gameID);
             clientModel.setGameActualPlayers(response.actualPlayers);
-            clientModel.setGameNumPlayers(response.numPlayers);
+//            clientModel.setGameNumPlayers(response.numPlayers);
         }
     }
 
@@ -152,20 +153,26 @@ public abstract class NetworkClient implements ResponseHandler {
     @Override
     public void handle(UpdatedGameResponse response){
         if (response.exception == null) {
-            clientModel.setGamePublicObjectiveCards(response.gamePublicObjectiveCards);
-            clientModel.setGameToolCards(response.gameToolCards);
-            clientModel.setRoundTrack(response.roundTrack);
-            clientModel.setExtractedDices(response.extractedDices);
-            clientModel.setWpcByUsername(response.wpcByUsername);
-            clientModel.setGameActualPlayers(response.gameActualPlayers);
-            clientModel.setGameID(response.gameID);
-            clientModel.setGameNumPlayers(response.gameNumPlayers);
-            clientModel.setCurrentRound(response.currentRound);
-            clientModel.setCurrentTurn(response.currentTurn);
-            clientModel.setPrivateObjectives(response.privateObjectives);
+            clientModel.setGame(response.game);
             clientModel.setActive(response.active);
-            clientModel.setUserFavours(clientModel.getUsername(), response.favour);     //TODO: Ottenere i favours di tutti
+            clientModel.setPrivateObjectives(response.privateObjectives);
             clientModel.setToolCardClientNextActionInfo(response.nextActionInfo);
+
+
+//            clientModel.setGamePublicObjectiveCards(response.gamePublicObjectiveCards);
+//            clientModel.setGameToolCards(response.gameToolCards);
+//            clientModel.setRoundTrack(response.roundTrack);
+//            clientModel.setExtractedDices(response.extractedDices);
+//            clientModel.setWpcByUsername(response.wpcByUsername);
+//            clientModel.setGameActualPlayers(response.gameActualPlayers);
+////            clientModel.setGameID(response.gameID);
+////            clientModel.setGameNumPlayers(response.gameNumPlayers);
+////            clientModel.setCurrentRound(response.currentRound);
+//            clientModel.setCurrentTurn(response.currentTurn);
+//            clientModel.setPrivateObjectives(response.privateObjectives);
+//            clientModel.setActive(response.active);
+//            clientModel.setUserFavours(clientModel.getUsername(), response.favour);     //TODO: Ottenere i favours di tutti
+//            clientModel.setToolCardClientNextActionInfo(response.nextActionInfo);
         }
     }
 

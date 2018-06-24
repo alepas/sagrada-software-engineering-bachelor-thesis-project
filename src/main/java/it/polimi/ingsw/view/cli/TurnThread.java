@@ -13,7 +13,7 @@ public class TurnThread implements Runnable {
         this.run = true;
     }
 
-    public void stop(){ run = false; }
+    void stop(){ run = false; }
 
     @Override
     public void run() {
@@ -45,5 +45,9 @@ public class TurnThread implements Runnable {
             if (task.timeLeft() <= step && lastTimeLeft > step) return step;
         }
         return null;
+    }
+
+    public boolean isTerminated(){
+        return !run || task.timeLeft() <= 0;
     }
 }

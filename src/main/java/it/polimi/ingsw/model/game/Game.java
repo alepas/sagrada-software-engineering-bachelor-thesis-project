@@ -51,6 +51,34 @@ public abstract class Game extends Observable implements Runnable {
         players = new PlayerInGame[numPlayers];
     }
 
+    public ClientGame getClientGame(){
+        ClientGame clientCopy = new ClientGame(this.id, this.numPlayers);
+        clientCopy.setGameActualPlayers(this.numActualPlayers());
+
+        for(PlayerInGame player : players){
+            clientCopy.setUserWpc(player.getUser(), player.getWPC().getClientWpc());
+            clientCopy.setUserFavours(player.getUser(), player.getFavours());
+        }
+
+        ArrayList<ClientToolCard> clientToolCards = new ArrayList<>();
+        for(ToolCard card : this.toolCards) clientToolCards.add(card.getClientToolcard());
+        clientCopy.setToolCards(clientToolCards);
+
+        ArrayList<ClientPoc> clientPocs = new ArrayList<>();
+        for(PublicObjectiveCard card : this.publicObjectiveCards) clientPocs.add(card.getClientPoc());
+        clientCopy.setPublicObjectiveCards(clientPocs);
+
+        ArrayList<ClientDice> clientDices = new ArrayList<>();
+        for(Dice dice : this.extractedDices) clientDices.add(dice.getClientDice());
+        clientCopy.setExtractedDices(clientDices);
+
+        clientCopy.setCurrentTurn(this.currentTurn);
+        clientCopy.setRoundTrack(this.roundTrack.getClientRoundTrack());
+
+        return clientCopy;
+    }
+
+
 
 
     //----------------------------------------------------------------------------------
