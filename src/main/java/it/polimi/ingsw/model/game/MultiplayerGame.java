@@ -12,6 +12,9 @@ import it.polimi.ingsw.model.exceptions.gameExceptions.*;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotAddPlayerInDatabaseException;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotFindPlayerInDatabaseException;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotUpdateStatsForUserException;
+import it.polimi.ingsw.model.game.thread.ChooseWpcThread;
+import it.polimi.ingsw.model.game.thread.WaitForEndTurnThread;
+import it.polimi.ingsw.model.game.thread.WaiterThread;
 import it.polimi.ingsw.model.gamesdb.DatabaseGames;
 import it.polimi.ingsw.model.usersdb.DatabaseUsers;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
@@ -24,6 +27,7 @@ public class MultiplayerGame extends Game {
     private int roundPlayer;
     private HashMap<String, Integer> scoreList = new HashMap<>();
     private ClientEndTurnData endTurnData;
+    private WaiterThread currentThread;
 
     private boolean turnFinished = false;
 
@@ -51,6 +55,13 @@ public class MultiplayerGame extends Game {
 
     public int getRoundPlayer() { return roundPlayer; }
 
+    public boolean isTurnFinished() {
+        return turnFinished;
+    }
+
+    public int getCurrentTaskTimeLeft(){
+        return currentThread.getTimeLeft();
+    }
 
     /**
      * if possible creates a new Player in game and adds it to the array of players
@@ -157,6 +168,49 @@ public class MultiplayerGame extends Game {
     }
 
     /**
+     * Waits that all players choose a wpc; if it doesn't happen in a minutes from the call of this method the schemas
+     * will be chosen by the server between the 4 given to each player by calling the next method.
+     */
+    @Override
+    public void waitForWpcResponse(){
+        currentThread = new ChooseWpcThread(players, GameConstants.CHOOSE_WPC_WAITING_TIME + GameConstants.TASK_DELAY);
+        Thread waitForWpcs = new Thread(currentThread);
+
+        try {
+            System.out.println("Sto aspettando che i giocatori scelgano le wpc");
+            waitForWpcs.start();
+            waitForWpcs.join(GameConstants.CHOOSE_WPC_WAITING_TIME + GameConstants.TASK_DELAY);
+            System.out.println("Ho smesso di aspettare che i giocatori scelgano le wpc");
+            if (waitForWpcs.isAlive()) {
+                waitForWpcs.interrupt();
+                selectRandomWpc(wpcsByUser);
+                System.out.println("Ho estratto casualmente le wpc dei giocatori rimanenti");
+            }
+        } catch (InterruptedException e){
+
+        }
+    }
+
+    /**
+     * Chooses for each player one of the four schemas in a random way and sets it in the player in game object
+     *
+     * @param wpcsByUser is the HashMap which contains for the player username (keys) and the arrayLists with the schemas'
+     *                   ids
+     */
+    private void selectRandomWpc(HashMap<String,ArrayList<String>> wpcsByUser) {
+        for (PlayerInGame player : players){
+            if (player.getWPC() == null) {
+                try {
+                    Random r = new Random();
+                    setPlayerWpc(player, wpcsByUser.get(player.getUser()).get(r.nextInt(GameConstants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER)));
+                } catch (NotYourWpcException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    /**
      * when all players have done their turns this method is called. It puts all left dices in the round Track,
      * extracts the new dices from the diceBag and sets the first round player. It also sends a NextRound Notification
      * containing all new information.
@@ -240,13 +294,8 @@ public class MultiplayerGame extends Game {
     private void startTurnTimer() {
         turnFinished = false;
 
-        Thread waitForEndTurn = new Thread(() -> {
-            while (!turnFinished){
-                try {
-                    Thread.sleep( 500);
-                } catch (InterruptedException e) {/*Do nothing*/}
-            }
-        });
+        currentThread = new WaitForEndTurnThread(this, GameConstants.TIME_TO_PLAY_TURN_MULTIPLAYER + GameConstants.TASK_DELAY);
+        Thread waitForEndTurn = new Thread(currentThread);
 
         try {
             waitForEndTurn.start();

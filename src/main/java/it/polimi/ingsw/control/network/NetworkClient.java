@@ -157,22 +157,8 @@ public abstract class NetworkClient implements ResponseHandler {
             clientModel.setActive(response.active);
             clientModel.setPrivateObjectives(response.privateObjectives);
             clientModel.setToolCardClientNextActionInfo(response.nextActionInfo);
-
-
-//            clientModel.setGamePublicObjectiveCards(response.gamePublicObjectiveCards);
-//            clientModel.setGameToolCards(response.gameToolCards);
-//            clientModel.setRoundTrack(response.roundTrack);
-//            clientModel.setExtractedDices(response.extractedDices);
-//            clientModel.setWpcByUsername(response.wpcByUsername);
-//            clientModel.setGameActualPlayers(response.gameActualPlayers);
-////            clientModel.setGameID(response.gameID);
-////            clientModel.setGameNumPlayers(response.gameNumPlayers);
-////            clientModel.setCurrentRound(response.currentRound);
-//            clientModel.setCurrentTurn(response.currentTurn);
-//            clientModel.setPrivateObjectives(response.privateObjectives);
-//            clientModel.setActive(response.active);
-//            clientModel.setUserFavours(clientModel.getUsername(), response.favour);     //TODO: Ottenere i favours di tutti
-//            clientModel.setToolCardClientNextActionInfo(response.nextActionInfo);
+            clientModel.setTimeLeftToCompleteTask(
+                    (response.timeLeftToCompleteTask != null) ? response.timeLeftToCompleteTask : 0);
         }
     }
 

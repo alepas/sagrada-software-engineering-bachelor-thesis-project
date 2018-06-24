@@ -12,6 +12,7 @@ import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.dicebag.DiceBag;
 import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
+import it.polimi.ingsw.model.game.thread.ChooseWpcThread;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 import it.polimi.ingsw.model.wpc.WpcDB;
 
@@ -259,47 +260,6 @@ public abstract class Game extends Observable implements Runnable {
     }
 
     /**
-     * Waits that all players choose a wpc; if it doesn't happen in a minutes from the call of this method the schemas
-     * will be chosen by the server between the 4 given to each player by calling the next method.
-     */
-    private void waitForWpcResponse() {
-        Thread waitForWpcs = new Thread(new ChooseWpcThread(players));
-
-        try {
-            System.out.println("Sto aspettando che i giocatori scelgano le wpc");
-            waitForWpcs.start();
-            waitForWpcs.join(GameConstants.CHOOSE_WPC_WAITING_TIME + GameConstants.TASK_DELAY);
-            System.out.println("Ho smesso di aspettare che i giocatori scelgano le wpc");
-            if (waitForWpcs.isAlive()) {
-                waitForWpcs.interrupt();
-                selectRandomWpc(wpcsByUser);
-                System.out.println("Ho estratto casualmente le wpc dei giocatori rimanenti");
-            }
-        } catch (InterruptedException e){
-
-        }
-    }
-
-    /**
-     * Chooses for each player one of the four schemas in a random way and sets it in the player in game object
-     *
-     * @param wpcsByUser is the HashMap which contains for the player username (keys) and the arrayLists with the schemas'
-     *                   ids
-     */
-    private void selectRandomWpc(HashMap<String,ArrayList<String>> wpcsByUser) {
-        for (PlayerInGame player : players){
-            if (player.getWPC() == null) {
-                try {
-                    Random r = new Random();
-                    setPlayerWpc(player, wpcsByUser.get(player.getUser()).get(r.nextInt(GameConstants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER)));
-                } catch (NotYourWpcException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    /**
      * Sets in the player in game object the chosen schema.
      *
      * @param player is the player that has chosen a schema before the timer's end
@@ -371,6 +331,7 @@ public abstract class Game extends Observable implements Runnable {
     public abstract void endTurn(ClientEndTurnData endTurnData);
     abstract void calculateScore();
     abstract void saveScore();
+    abstract void waitForWpcResponse();
 
 
 }

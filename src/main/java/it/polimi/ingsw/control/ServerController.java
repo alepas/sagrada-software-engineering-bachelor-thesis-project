@@ -13,6 +13,7 @@ import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.UserNotInThisGameException;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
 import it.polimi.ingsw.model.game.Game;
+import it.polimi.ingsw.model.game.MultiplayerGame;
 import it.polimi.ingsw.model.game.RoundTrack;
 import it.polimi.ingsw.model.usersdb.DatabaseUsers;
 import it.polimi.ingsw.model.usersdb.MoveData;
@@ -178,8 +179,11 @@ public class ServerController {
 
     public Response getUpdatedGame(String userToken, Observer observer) throws CannotFindPlayerInDatabaseException {
         PlayerInGame player = databaseUsers.getPlayerInGameFromToken(userToken);
-        player.getGame().addObserver(observer);
-        ClientGame clientGame = player.getGame().getClientGame();
+        Game game = player.getGame();
+        Integer timeLeft = null;
+        if (game.getNumPlayers() > 1) timeLeft = ((MultiplayerGame) game).getCurrentTaskTimeLeft();
+        game.addObserver(observer);
+        ClientGame clientGame = game.getClientGame();
 
         Color[] playerPrivateObjs = player.getPrivateObjs();
         ClientColor[] clientPrivateObjs = new ClientColor[playerPrivateObjs.length];
@@ -191,7 +195,7 @@ public class ServerController {
         ToolCardClientNextActionInfo toolCardClientNextActionInfo = new ToolCardClientNextActionInfo(nextActionMove.wherePickNewDice,nextActionMove.wherePutNewDice,
                 nextActionMove.numbersToChoose,nextActionMove.diceChosen, nextActionMove.diceChosenLocation, nextActionMove.messageForStop, nextActionMove.bothYesAndNo, nextActionMove.showBackButton);
 
-        return new UpdatedGameResponse(clientGame, clientPrivateObjs, player.isActive(), nextActionMove.nextAction, toolCardClientNextActionInfo);
+        return new UpdatedGameResponse(clientGame, clientPrivateObjs, player.isActive(), timeLeft, nextActionMove.nextAction, toolCardClientNextActionInfo);
     }
 
 //    public Response getUpdatedGame(String userToken) throws CannotFindPlayerInDatabaseException {

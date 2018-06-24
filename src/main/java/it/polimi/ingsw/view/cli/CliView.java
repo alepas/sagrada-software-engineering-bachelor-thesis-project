@@ -284,6 +284,7 @@ public class CliView implements Observer, NotificationHandler {
         switch (nextAction){
             case WAIT_FOR_TURN: case MENU_ALL: case MENU_ONLY_PLACE_DICE: case MENU_ONLY_TOOLCARD: case MENU_ONLY_ENDTURN:
                 changeState(nextAction);
+                printText("TEMPO PER FINIRE LA TASK: " + controller.getTimeToCompleteTask());
                 break;
             case PLACE_DICE_TOOLCARD: case SELECT_DICE_TOOLCARD: case INTERRUPT_TOOLCARD: case SELECT_NUMBER_TOOLCARD: case SELECT_DICE_TO_ACTIVATE_TOOLCARD: case CANCEL_ACTION_TOOLCARD:
                 //TODO:

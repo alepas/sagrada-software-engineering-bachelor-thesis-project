@@ -1,11 +1,12 @@
-package it.polimi.ingsw.model.game;
+package it.polimi.ingsw.model.game.thread;
 
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 
-public class ChooseWpcThread implements Runnable {
+public class ChooseWpcThread extends WaiterThread {
     private PlayerInGame[] players;
 
-    ChooseWpcThread(PlayerInGame[] players) {
+    public ChooseWpcThread(PlayerInGame[] players, int timeLeft) {
+        super(timeLeft);
         this.players = players;
     }
 
@@ -13,7 +14,8 @@ public class ChooseWpcThread implements Runnable {
     public void run() {
         while (needToWaitPlayersWpc()){
             try {
-                Thread.sleep( 500);
+                Thread.sleep( sensibility);
+                timeLeft -= sensibility;
             } catch (InterruptedException e) {/*Do nothing*/}
         }
     }

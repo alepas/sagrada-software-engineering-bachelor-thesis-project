@@ -22,6 +22,7 @@ public class ClientModel implements Observer, NotificationHandler {
     private boolean active;
     private ToolCardClientNextActionInfo toolCardClientNextActionInfo;
     private ClientGame game;
+    private int timeLeftToCompleteTask;
 
     private ClientModel() {
     }
@@ -42,6 +43,7 @@ public class ClientModel implements Observer, NotificationHandler {
         this.gameStarted = false;
         this.active = false;
         this.toolCardClientNextActionInfo = null;
+        this.timeLeftToCompleteTask = 0;
     }
 
     public void clean() {
@@ -235,6 +237,14 @@ public class ClientModel implements Observer, NotificationHandler {
         }
 
         game.setToolCards(toolCards);
+    }
+
+    public int getTimeLeftToCompleteTask() {
+        return timeLeftToCompleteTask;
+    }
+
+    public void setTimeLeftToCompleteTask(int timeLeftToCompleteTask) {
+        this.timeLeftToCompleteTask = timeLeftToCompleteTask;
     }
 
     //----------------------------------- Notification Handler -------------------------------------

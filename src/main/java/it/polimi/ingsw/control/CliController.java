@@ -302,4 +302,8 @@ public class CliController {
     public ClientGame getGame(){
         return clientModel.getGame();
     }
+
+    public int getTimeToCompleteTask(){
+        return clientModel.getTimeLeftToCompleteTask();
+    }
 }
