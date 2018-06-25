@@ -217,11 +217,11 @@ public class MultiplayerGame extends Game {
      */
     @Override
     public void nextRound() {
-        ClientWpc oldClientWpc=null;
-        String oldUser=null;
-        if (endTurnData!=null){
-            oldClientWpc=endTurnData.wpcOldUser;
-            oldUser=endTurnData.oldUser;
+        ClientWpc oldClientWpc = null;
+        String oldUser = null;
+        if (endTurnData != null){
+            oldClientWpc = endTurnData.wpcOldUser;
+            oldUser = endTurnData.oldUser;
         }
 
         for (Dice dice : extractedDices) roundTrack.addDice(dice);
@@ -252,7 +252,7 @@ public class MultiplayerGame extends Game {
     public void endTurn(ClientEndTurnData endTurnData) {
         players[turnPlayer].setNotActive();
         turnFinished = true;
-        this.endTurnData=endTurnData;
+        this.endTurnData = endTurnData;
     }
 
 
@@ -265,8 +265,10 @@ public class MultiplayerGame extends Game {
         turnPlayer = nextPlayer();
         currentTurn++;
 
-        if (shouldSkipTurn()) {
-            changeAndNotifyObservers(new PlayerSkipTurnNotification(players[turnPlayer].getUser(), players[turnPlayer].getCardUsedBlockingTurn().getID()));
+        while (shouldSkipTurn()) {
+            PlayerInGame player = players[turnPlayer];
+            String toolcardUsedID = (player.getCardUsedBlockingTurn() != null) ? player.getCardUsedBlockingTurn().getID() : null;
+            changeAndNotifyObservers(new PlayerSkipTurnNotification(player.getUser(), toolcardUsedID, player.isDisconnected()));
 
             if (currentTurn < GameConstants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME*numPlayers) {
                 turnPlayer = nextPlayer();
@@ -284,7 +286,9 @@ public class MultiplayerGame extends Game {
      * @return true if the player must skip the turn, false if not
      */
     private boolean shouldSkipTurn(){
-        return players[turnPlayer].getCardUsedBlockingTurn() != null && players[turnPlayer].getTurnForRound() == 2 && players[turnPlayer].isDisconnected();
+        PlayerInGame player = players[turnPlayer];
+        return player.isDisconnected() ||
+                (player.getCardUsedBlockingTurn() != null && player.getTurnForRound() == 2);
     }
 
     /**

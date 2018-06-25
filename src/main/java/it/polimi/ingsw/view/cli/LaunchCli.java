@@ -45,7 +45,6 @@ public class LaunchCli {
                         quit = startRmiClient();
                     } catch (Exception e){
                         System.out.println(">>> Impossibile stabilire connessione RMI con il Server");
-                        e.printStackTrace();
                         tecnology = null;
                     }
                     break;

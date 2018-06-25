@@ -508,15 +508,9 @@ public class PlayerInGame {
     }
 
     public void disconnect() {
-       if (!active){
-           disconnected=true;
-           rmiObserver=false;
-           observer=null;
-           game.changeAndNotifyObservers(new PlayerDisconnectedNotification(username));
-           return;
-       }
-       forceEndTurn();
-        game.changeAndNotifyObservers(new PlayerDisconnectedNotification(username));
+       disconnected = true;
+       if (active) forceEndTurn();
+       game.changeAndNotifyObservers(new PlayerDisconnectedNotification(username));
     }
 
     public boolean isDisconnected() {

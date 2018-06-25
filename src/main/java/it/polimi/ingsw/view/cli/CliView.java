@@ -88,6 +88,12 @@ public class CliView implements Observer, NotificationHandler {
         }
     }
 
+    private void startNewTurnThread() {
+        if (turnThread != null) turnThread.stop();
+        turnThread = new TurnThread(this, task, timerWaiter);
+        (new Thread(turnThread)).start();
+    }
+
     private void changeState(NextAction action) {
         synchronized (waiter) {
             state = Status.change(action);
@@ -180,10 +186,7 @@ public class CliView implements Observer, NotificationHandler {
                         waitForTurn();
                         break;
 
-                    case MENU_ALL:
-                    case MENU_ONLY_PLACEDICE:
-                    case MENU_ONLY_TOOLCARD:
-                    case MENU_ONLY_ENDTURN:
+                    case MENU_ALL: case MENU_ONLY_PLACEDICE: case MENU_ONLY_TOOLCARD: case MENU_ONLY_ENDTURN:
                         showMenu();
                         break;
 
@@ -268,6 +271,7 @@ public class CliView implements Observer, NotificationHandler {
         } while (user == null);
 
         displayText(CliConstants.LOG_SUCCESS + user);
+
         NextAction nextAction = controller.checkIfInGame();
         if (nextAction != null) resumeGame(nextAction);
         else changeState(Status.MAIN_MENU_PHASE);
@@ -283,13 +287,23 @@ public class CliView implements Observer, NotificationHandler {
 
         switch (nextAction){
             case WAIT_FOR_TURN: case MENU_ALL: case MENU_ONLY_PLACE_DICE: case MENU_ONLY_TOOLCARD: case MENU_ONLY_ENDTURN:
-                changeState(nextAction);
-                printText("TEMPO PER FINIRE LA TASK: " + controller.getTimeToCompleteTask());
+
                 break;
             case PLACE_DICE_TOOLCARD: case SELECT_DICE_TOOLCARD: case INTERRUPT_TOOLCARD: case SELECT_NUMBER_TOOLCARD: case SELECT_DICE_TO_ACTIVATE_TOOLCARD: case CANCEL_ACTION_TOOLCARD:
-                //TODO:
+                showStartTurnInfo();
+                ToolCardClientNextActionInfo info = controller.getToolcardNextActionInfo();
+                if (info.diceChosen != null) {
+                    displayText("Stavi posizionando il dado: ");
+                    printText(cliRender.renderDice(info.diceChosen));
+                }
+                if (info.wherePickNewDice != null) displayText("Il dado provine da: " + info.wherePickNewDice);
+                if (info.wherePutNewDice != null) displayText("Il dado deve essere posizionato: " + info.wherePutNewDice);
                 break;
         }
+        printText("TEMPO PER FINIRE LA TASK: " + controller.getTimeToCompleteTask());
+        startNewTask(controller.getTimeToCompleteTask());
+        startNewTurnThread();
+        changeState(nextAction);
     }
 
     private void mainMenuPhase() {
@@ -555,6 +569,7 @@ public class CliView implements Observer, NotificationHandler {
         switch (action){
             case GET_PRIVATE_OBJ:
                 showPrivateObjectives();
+                printText("");
                 return true;
 
             case GET_POCS:
@@ -947,7 +962,7 @@ public class CliView implements Observer, NotificationHandler {
 
     @Override
     public void handle(NewRoundNotification notification) {
-//        displayText("Round: " + notification.roundNumber);
+
     }
 
     @Override
@@ -962,12 +977,7 @@ public class CliView implements Observer, NotificationHandler {
         }
 
         startNewTask(notification.timeToCompleteTask);
-        if (turnThread != null) {
-            turnThread.stop();
-            deleteTask();
-        }
-        turnThread = new TurnThread(this, task, timerWaiter);
-        (new Thread(turnThread)).start();
+        startNewTurnThread();
 
         synchronized (waiter){
             if (controller.isActive()) changeState(Status.MENU_ALL);
@@ -1039,8 +1049,11 @@ public class CliView implements Observer, NotificationHandler {
     @Override
     public void handle(PlayerSkipTurnNotification notification) {
         printText("");
-        displayText(notification.username +
-                " ha saltato il turno a causa dell'utilizzo della toolcard " + notification.cardId);
+        String disconnectedString = notification.username +
+                " ha saltato il turno poichè non è attualmente connesso alla partita";
+        String usedToolcardString = notification.username +
+                " ha saltato il turno a causa dell'utilizzo della toolcard " + notification.cardId;
+        displayText(notification.disconnected ? disconnectedString : usedToolcardString);
     }
 
     @Override

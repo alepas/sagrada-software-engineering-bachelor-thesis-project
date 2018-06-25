@@ -96,6 +96,8 @@ public class DatabaseUsers {
     public void removeClient(String userToken){
         String username = usersByToken.get(userToken).getUsername();
 
+        playerInGameByToken.get(userToken).disconnect();
+
         tokenByUsername.remove(username);
         usersByToken.remove(userToken);
         playerInGameByToken.remove(userToken);
