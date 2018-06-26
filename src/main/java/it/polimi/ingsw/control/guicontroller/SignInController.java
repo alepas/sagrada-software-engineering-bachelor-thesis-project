@@ -2,7 +2,9 @@ package it.polimi.ingsw.control.guicontroller;
 
 import it.polimi.ingsw.control.network.NetworkClient;
 import it.polimi.ingsw.model.clientModel.ClientModel;
+import it.polimi.ingsw.model.clientModel.NextAction;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotFindGameForUserInDatabaseException;
+import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotFindPlayerInDatabaseException;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.CannotLoginUserException;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -18,6 +20,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+
+import static java.lang.Thread.sleep;
 
 public class SignInController {
 
@@ -71,25 +75,19 @@ public class SignInController {
         Thread signIn = new Thread(()->{
             try {
                 networkClient.login(username, password);
+                sleep(500);
                 Platform.runLater(()->{
                     try {
-                        int numPlayers = networkClient.findAlreadyStartedGame(clientModel.getUserToken());
-                        System.out.println(numPlayers);
-                        switch (numPlayers){
-                            case 1:
-                                break;
-                            case 2:
-                                changeSceneHandle(event, "/view/gui/TwoPlayersGameScene.fxml");
-                                break;
-                            case 3:
-                                changeSceneHandle(event, "/view/gui/ThreePlayersGameScene.fxml");
-                                break;
-                            case 4:
-                                changeSceneHandle(event, "/view/gui/FourPlayersGameScene.fxml");
-                                break;
-
+                        NextAction nextAction = networkClient.getUpdatedGame(clientModel.getUserToken());
+                        if (clientModel.getGame() != null) {
+                            System.out.println("azione: " + clientModel.getGame().getId());
+                            if (clientModel.getMyWpc() != null) chooseGameScene(event);
+                            else {
+                                System.out.println("ehi");
+                                //changeSceneHandle(event, "/view/gui/SetNewGameSchene.fxml");
+                            }
                         }
-                    } catch (CannotFindGameForUserInDatabaseException e) {
+                    } catch (CannotFindPlayerInDatabaseException e) {
                         changeSceneHandle(event, "/view/gui/SetNewGameScene.fxml");
                     }
                 });
@@ -100,10 +98,37 @@ public class SignInController {
                     signInUsername.clear();
                     signInPassword.clear();
                 });
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
 
         });
         signIn.start();
+    }
+
+    /**
+     * Depending on the players' number a corresponding game scene will be set.
+     *
+     * @param event is the event that generated the login
+     */
+    private void chooseGameScene(ActionEvent event) {
+        Platform.runLater(()-> {
+            int numPlayers = clientModel.getGameNumPlayers();
+            switch (numPlayers) {
+                case 1:
+                    break;
+                case 2:
+                    changeSceneHandle(event, "/view/gui/TwoPlayersGameScene.fxml");
+                    break;
+                case 3:
+                    changeSceneHandle(event, "/view/gui/ThreePlayersGameScene.fxml");
+                    break;
+                case 4:
+                    changeSceneHandle(event, "/view/gui/FourPlayersGameScene.fxml");
+                    break;
+
+            }
+        });
     }
 
 

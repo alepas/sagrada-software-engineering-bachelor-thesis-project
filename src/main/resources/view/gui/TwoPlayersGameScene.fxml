@@ -118,22 +118,17 @@
                 <RowConstraints prefHeight="100.0"/>
                 <RowConstraints prefHeight="50.0"/>
             </rowConstraints>
-            <children>
 
-                <Label fx:id="secondWpcNameLabel" alignment="CENTER" contentDisplay="TOP" prefHeight="20.0"
-                       prefWidth="172.0" styleClass="Label" textAlignment="CENTER" GridPane.columnIndex="1"
-                       GridPane.columnSpan="3" GridPane.rowIndex="4"/>
+        <Label fx:id="secondWpcNameLabel" alignment="CENTER" contentDisplay="TOP" prefHeight="20.0"
+               prefWidth="172.0" styleClass="Label" textAlignment="CENTER" GridPane.columnIndex="1"
+               GridPane.columnSpan="3" GridPane.rowIndex="4"/>
 
                 <AnchorPane prefHeight="19.0" prefWidth="55.0" style="-fx-background-color: black;"
                             GridPane.columnIndex="4" GridPane.rowIndex="4">
-                    <children>
-                        <Label fx:id="secondFavourLabel" layoutX="16.0" layoutY="1.0" styleClass="FavoursLabel"/>
+                    <Label fx:id="secondFavourLabel" layoutX="16.0" layoutY="1.0" styleClass="FavoursLabel"/>
                         <Circle layoutX="42.0" layoutY="11.0" radius="6.0" styleClass="Favours"/>
-                    </children>
-                </AnchorPane>
-            </children>
-
-        </GridPane>
+                    </AnchorPane>
+            </GridPane>
 
         <Label fx:id="firstUserLabel" alignment="CENTER" layoutX="628.0" layoutY="107.0" styleClass="TitleLabel"
                textAlignment="CENTER"/>
@@ -151,61 +146,43 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
             </rowConstraints>
-            <children>
 
 
-                <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
-                    <children>
-                        <Button fx:id="zoomTool1" layoutX="16.0" layoutY="65.0" styleClass="Button"
-                                text="Zoom ToolCard 1"/>
-                        <Button fx:id="useTool1" layoutX="23.0" layoutY="116.0" styleClass="Button"
-                                text="Usa ToolCard 1"/>
-                        <ImageView fx:id="usedTool1Icon" fitHeight="53.0" fitWidth="105.0" layoutX="27.0"
-                                   layoutY="155.0" visible="false">
-                            <image>
-                                <Image url="@/view/gui/background/toolUsed.png"/>
-                            </image>
-                        </ImageView>
-                    </children>
-                </AnchorPane>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
 
-                <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                    <children>
+                <Button fx:id="zoomTool1" layoutX="16.0" layoutY="65.0" styleClass="Button" text="Zoom ToolCard 1"/>
+                <Button fx:id="useTool1" layoutX="23.0" layoutY="116.0" styleClass="Button" text="Usa ToolCard 1"/>
+                <ImageView fx:id="usedTool1Icon" fitHeight="53.0" fitWidth="105.0" layoutX="27.0"
+                               layoutY="155.0" visible="false">
+                    <Image url="@/view/gui/background/toolUsed.png"/>
+                </ImageView>
+            </AnchorPane>
 
-                        <Button fx:id="zoomTool2" layoutX="16.0" layoutY="62.0" styleClass="Button"
-                                text="Zoom ToolCard 2"/>
-                        <Button fx:id="useTool2" layoutX="23.0" layoutY="112.0" styleClass="Button"
-                                text="Usa ToolCard 2"/>
-                        <ImageView fx:id="usedTool2Icon" fitHeight="53.0" fitWidth="105.0" layoutX="27.0"
-                                   layoutY="155.0" visible="false">
-                            <image>
-                                <Image url="@/view/gui/background/toolUsed.png"/>
-                            </image>
-                        </ImageView>
-                    </children>
-                </AnchorPane>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
 
-                <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                    <children>
-                        <Button fx:id="zoomTool3" layoutX="16.0" layoutY="75.0" styleClass="Button"
-                                text="Zoom ToolCard 3"/>
-                        <Button fx:id="useTool3" layoutX="23.0" layoutY="124.0" styleClass="Button"
-                                text="Usa ToolCard 3"/>
-                        <ImageView fx:id="usedTool3Icon" fitHeight="54.0" fitWidth="105.0" layoutX="27.0"
-                                   layoutY="155.0" visible="false">
-                            <image>
-                                <Image url="@/view/gui/background/toolUsed.png"/>
-                            </image>
-                        </ImageView>
-                    </children>
-                </AnchorPane>
-            </children>
+                <Button fx:id="zoomTool2" layoutX="16.0" layoutY="62.0" styleClass="Button" text="Zoom ToolCard 2"/>
+                <Button fx:id="useTool2" layoutX="23.0" layoutY="112.0" styleClass="Button" text="Usa ToolCard 2"/>
+                <ImageView fx:id="usedTool2Icon" fitHeight="53.0" fitWidth="105.0" layoutX="27.0"
+                           layoutY="155.0" visible="false">
+                    <Image url="@/view/gui/background/toolUsed.png"/>
+                </ImageView>
+            </AnchorPane>
+
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                <Button fx:id="zoomTool3" layoutX="16.0" layoutY="75.0" styleClass="Button"
+                        text="Zoom ToolCard 3"/>
+                <Button fx:id="useTool3" layoutX="23.0" layoutY="124.0" styleClass="Button"
+                        text="Usa ToolCard 3"/>
+                <ImageView fx:id="usedTool3Icon" fitHeight="54.0" fitWidth="105.0" layoutX="27.0"
+                           layoutY="155.0" visible="false">
+                    <Image url="@/view/gui/background/toolUsed.png"/>
+                </ImageView>
+            </AnchorPane>
         </GridPane>
 
         <AnchorPane fx:id="privateObjPane" layoutX="896.0" layoutY="124.0" prefHeight="381.0" prefWidth="274.0"/>
         <AnchorPane fx:id="roundTrackPane" layoutX="866.0" layoutY="90.0" prefHeight="488.0" prefWidth="314.0"
                     visible="false">
-            <children>
 
                 <GridPane fx:id="roundTrackGrid" hgap="5.0" layoutX="67.0" layoutY="30.0" prefHeight="453.0"
                           prefWidth="239.0" vgap="5.0">
@@ -242,8 +219,7 @@
                 <Label layoutX="32.0" layoutY="354.0" styleClass="Label" text="8"/>
                 <Label layoutX="32.0" layoutY="401.0" styleClass="Label" text="9"/>
                 <Label layoutX="28.0" layoutY="445.0" styleClass="Label" text="10"/>
-            </children>
-        </AnchorPane>
+            </AnchorPane>
 
         <GridPane fx:id="extractedDicesGrid" layoutX="473.0" layoutY="346.0" prefHeight="450.0" prefWidth="96.0"
                   rotate="90.0">
@@ -273,10 +249,8 @@
             <effect>
                 <DropShadow blurType="GAUSSIAN"/>
             </effect>
-            <children>
-                <Button fx:id="zoomCardBackButton" layoutX="281.0" layoutY="540.0" styleClass="Button"
-                        text="Torna Indietro"/>
-            </children>
+            <Button fx:id="zoomCardBackButton" layoutX="281.0" layoutY="540.0" styleClass="Button"
+                    text="Torna Indietro"/>
         </AnchorPane>
 
         <GridPane fx:id="pocGrid" layoutX="867.0" layoutY="46.0" prefHeight="639.0" prefWidth="330.0" vgap="5.0"
@@ -290,118 +264,83 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
             </rowConstraints>
-            <children>
 
-                <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
-                    <children>
-                        <Button fx:id="zoomPoc1" layoutX="19.0" layoutY="90.0" styleClass="Button"
-                                text="Zoom Poc Card 1"/>
-                    </children>
-                </AnchorPane>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
+                <Button fx:id="zoomPoc1" layoutX="19.0" layoutY="90.0" styleClass="Button" text="Zoom Poc Card 1"/>
+            </AnchorPane>
 
-                <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                    <children>
-                        <Button fx:id="zoomPoc2" layoutX="19.0" layoutY="90.0" styleClass="Button"
-                                text="Zoom Poc Card 2"/>
-                    </children>
-                </AnchorPane>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <Button fx:id="zoomPoc2" layoutX="19.0" layoutY="90.0" styleClass="Button" text="Zoom Poc Card 2"/>
+            </AnchorPane>
 
-                <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                    <children>
-                        <Button fx:id="zoomPoc3" layoutX="19.0" layoutY="90.0" styleClass="Button"
-                                text="Zoom Poc Card 3"/>
-                    </children>
-                </AnchorPane>
-            </children>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                <Button fx:id="zoomPoc3" layoutX="19.0" layoutY="90.0" styleClass="Button" text="Zoom Poc Card 3"/>
+            </AnchorPane>
         </GridPane>
 
         <AnchorPane layoutX="23.0" layoutY="457.0" prefHeight="222.0" prefWidth="228.0">
-            <children>
-                <ImageView fitHeight="231.0" fitWidth="239.0" layoutY="-4.0" opacity="0.75" pickOnBounds="true"
-                           preserveRatio="true">
-                    <image>
-                        <Image url="@/view/gui/background/menuTrasparente.png"/>
-                    </image>
-                </ImageView>
-                <Label fx:id="message1Label" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="34.0"
-                       layoutY="136.0" prefHeight="60.0" prefWidth="165.0" textAlignment="CENTER" wrapText="true">
-                    <font>
-                        <Font name="Cooper Black" size="13.0"/>
-                    </font>
-                </Label>
-                <Label blendMode="SRC_ATOP" layoutX="69.0" layoutY="30.0" text="Message Area" wrapText="true">
-                    <font>
-                        <Font name="Cooper Black" size="14.0"/>
-                    </font>
-                </Label>
-                <Label fx:id="messageLabel" alignment="TOP_CENTER" blendMode="SRC_ATOP" contentDisplay="CENTER"
-                       layoutX="29.0" layoutY="64.0" prefHeight="60.0" prefWidth="175.0" textAlignment="CENTER"
-                       wrapText="true">
-                    <font>
-                        <Font name="Cooper Black" size="13.0"/>
-                    </font>
-                </Label>
-            </children>
+            <ImageView fitHeight="231.0" fitWidth="239.0" layoutY="-4.0" opacity="0.75" pickOnBounds="true"
+                       preserveRatio="true">
+                <Image url="@/view/gui/background/menuTrasparente.png"/>
+            </ImageView>
+            <Label fx:id="message1Label" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="34.0"
+                   layoutY="136.0" prefHeight="60.0" prefWidth="165.0" textAlignment="CENTER" wrapText="true">
+                <font>
+                    <Font name="Cooper Black" size="13.0"/>
+                </font>
+            </Label>
+            <Label blendMode="SRC_ATOP" layoutX="69.0" layoutY="30.0" text="Message Area" wrapText="true">
+                <font>
+                    <Font name="Cooper Black" size="14.0"/>
+                </font>
+            </Label>
+            <Label fx:id="messageLabel" alignment="TOP_CENTER" blendMode="SRC_ATOP" contentDisplay="CENTER"
+                   layoutX="29.0" layoutY="64.0" prefHeight="60.0" prefWidth="175.0" textAlignment="CENTER"
+                   wrapText="true">
+                <font>
+                    <Font name="Cooper Black" size="13.0"/>
+                </font>
+            </Label>
         </AnchorPane>
 
         <AnchorPane fx:id="plusMinusPane" layoutX="395.0" layoutY="619.0" prefHeight="75.0" prefWidth="253.0"
                     visible="false">
-            <children>
-                <ImageView fx:id="plusOneIcon" fitHeight="44.0" fitWidth="44.0" layoutX="160.0" layoutY="16.0"
-                           styleClass="ChangeNumberImage">
-                    <image>
-                        <Image url="@/view/gui/background/plus.png"/>
-                    </image>
-                </ImageView>
-                <ImageView fx:id="minusOneIcon" fitHeight="44.0" fitWidth="44.0" layoutX="44.0" layoutY="16.0"
-                           styleClass="ChangeNumberImage">
-                    <image>
-                        <Image url="@/view/gui/background/minus.png"/>
-                    </image>
-                </ImageView>
-            </children>
+            <ImageView fx:id="plusOneIcon" fitHeight="44.0" fitWidth="44.0" layoutX="160.0" layoutY="16.0"
+                       styleClass="ChangeNumberImage">
+                <Image url="@/view/gui/background/plus.png"/>
+            </ImageView>
+            <ImageView fx:id="minusOneIcon" fitHeight="44.0" fitWidth="44.0" layoutX="44.0" layoutY="16.0"
+                       styleClass="ChangeNumberImage">
+                <Image url="@/view/gui/background/minus.png"/>
+            </ImageView>
         </AnchorPane>
 
         <AnchorPane fx:id="changeNumberPane" layoutX="286.0" layoutY="625.0" prefHeight="63.0" prefWidth="409.0"
                     visible="false">
-            <children>
-                <ImageView fx:id="oneCircle" fitHeight="44.0" fitWidth="44.0" layoutX="45.0" layoutY="19.0"
-                           styleClass="ChangeNumberImage">
-                    <image>
-                        <Image url="@/view/gui/background/number1.png"/>
-                    </image>
-                </ImageView>
-                <ImageView fx:id="twoCircle" fitHeight="44.0" fitWidth="44.0" layoutX="106.0" layoutY="19.0"
-                           styleClass="ChangeNumberImage">
-                    <image>
-                        <Image url="@/view/gui/background/number2.png"/>
-                    </image>
-                </ImageView>
-                <ImageView fx:id="threeCircle" fitHeight="44.0" fitWidth="44.0" layoutX="168.0" layoutY="19.0"
-                           styleClass="ChangeNumberImage">
-                    <image>
-                        <Image url="@/view/gui/background/number3.png"/>
-                    </image>
-                </ImageView>
-                <ImageView fx:id="fourCircle" fitHeight="44.0" fitWidth="44.0" layoutX="228.0" layoutY="19.0"
-                           styleClass="ChangeNumberImage">
-                    <image>
-                        <Image url="@/view/gui/background/number4.png"/>
-                    </image>
-                </ImageView>
-                <ImageView fx:id="fiveCircle" fitHeight="44.0" fitWidth="44.0" layoutX="292.0" layoutY="19.0"
-                           styleClass="ChangeNumberImage">
-                    <image>
-                        <Image url="@/view/gui/background/number5.png"/>
-                    </image>
-                </ImageView>
-                <ImageView fx:id="sixCircle" fitHeight="44.0" fitWidth="44.0" layoutX="353.0" layoutY="19.0"
-                           styleClass="ChangeNumberImage">
-                    <image>
-                        <Image url="@/view/gui/background/number6.png"/>
-                    </image>
-                </ImageView>
-            </children>
+            <ImageView fx:id="oneCircle" fitHeight="44.0" fitWidth="44.0" layoutX="45.0" layoutY="19.0"
+                       styleClass="ChangeNumberImage">
+                <Image url="@/view/gui/background/number1.png"/>
+            </ImageView>
+            <ImageView fx:id="twoCircle" fitHeight="44.0" fitWidth="44.0" layoutX="106.0" layoutY="19.0"
+                       styleClass="ChangeNumberImage">
+                <Image url="@/view/gui/background/number2.png"/>
+            </ImageView>
+            <ImageView fx:id="threeCircle" fitHeight="44.0" fitWidth="44.0" layoutX="168.0" layoutY="19.0"
+                       styleClass="ChangeNumberImage">
+                <Image url="@/view/gui/background/number3.png"/>
+            </ImageView>
+            <ImageView fx:id="fourCircle" fitHeight="44.0" fitWidth="44.0" layoutX="228.0" layoutY="19.0"
+                       styleClass="ChangeNumberImage">
+                <Image url="@/view/gui/background/number4.png"/>
+            </ImageView>
+            <ImageView fx:id="fiveCircle" fitHeight="44.0" fitWidth="44.0" layoutX="292.0" layoutY="19.0"
+                       styleClass="ChangeNumberImage">
+                <Image url="@/view/gui/background/number5.png"/>
+            </ImageView>
+            <ImageView fx:id="sixCircle" fitHeight="44.0" fitWidth="44.0" layoutX="353.0" layoutY="19.0"
+                       styleClass="ChangeNumberImage">
+                <Image url="@/view/gui/background/number6.png"/>
+            </ImageView>
         </AnchorPane>
 
         <Button fx:id="cancelActionButton" layoutX="724.0" layoutY="641.0" styleClass="Button" text="Torna Indietro"

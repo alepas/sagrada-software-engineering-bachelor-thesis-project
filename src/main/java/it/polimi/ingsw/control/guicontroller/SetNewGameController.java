@@ -37,6 +37,8 @@ import static java.lang.String.valueOf;
 public class SetNewGameController implements Observer, NotificationHandler {
 
 
+    @FXML
+    private Button disconnectButton;
     private String wpc0ID;
     private String wpc1ID;
     private String wpc2ID;
@@ -194,21 +196,13 @@ public class SetNewGameController implements Observer, NotificationHandler {
         selectionArea.getChildren().addAll(lab, lab1, lab2, lab3);
 
         createGameButton.setOnAction(event -> {
-            if (soloPlayerBox.isSelected()) {
-                disableAll();
-                changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/SelectWPC.fxml");
-            } else if (twoPlayersBox.isSelected()) {
-                disableAll();
-                findGame(event, 2);
-            } else if (threePlayersBox.isSelected()) {
-                disableAll();
-                findGame(event,3);
-            } else if (fourPlayersBox.isSelected()) {
-                disableAll();
-                findGame(event,4);
-            } else {
+            if (soloPlayerBox.isSelected()) findGame(event, 1);
+            else if (twoPlayersBox.isSelected()) findGame(event, 2);
+            else if (threePlayersBox.isSelected()) findGame(event, 3);
+            else if (fourPlayersBox.isSelected()) findGame(event, 4);
+            else {
                 Platform.runLater(()->{
-                    errorLabel.setText("Select a number.");
+                    errorLabel.setText("Seleziona un numero");
                     errorLabel.setVisible(true);
                 });
             }
@@ -232,6 +226,8 @@ public class SetNewGameController implements Observer, NotificationHandler {
         thirdWPC.setOnMouseClicked(event -> pickWpc(wpc2ID));
 
         fourthWPC.setOnMouseClicked(event -> pickWpc(wpc3ID));
+
+        disconnectButton.setOnAction(event -> changeSceneHandle(event, "/view/gui/StartingScene.fxml"));
     }
 
 
@@ -258,6 +254,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
      * @param numPlayers is the number of players that the user wants inside the game that is going to play
      */
     private void findGame(Event event, int numPlayers) {
+        disableAll();
         Platform.runLater(() -> {
             try {
                 networkClient.findGame(clientModel.getUserToken(), numPlayers);
@@ -689,20 +686,11 @@ public class SetNewGameController implements Observer, NotificationHandler {
 
     @Override
     public void handle(PlayersChangedNotification notification) {
-        if (notification.joined){
-            Platform.runLater(() -> {
-                    lab2.setText(notification.username + " é entrato in partita!");
-                    lab2.setLayoutX(100);
-                    lab2.setLayoutY(360);
-
-                });
-        } else {
-           Platform.runLater(()->{
-               lab3.setText(newPlayer + " é uscito dalla partita!");
-               lab3.setLayoutX(100);
-               lab3.setLayoutY(340);
-           });
-        }
+        Platform.runLater(() -> {
+            lab2.setText(notification.username + " é entrato in partita!");
+            lab2.setLayoutX(100);
+            lab2.setLayoutY(360);
+        });
         synchronized (playerWaiter){ playerWaiter.notify(); }
     }
 
@@ -787,17 +775,21 @@ public class SetNewGameController implements Observer, NotificationHandler {
 
     @Override
     public void handle(PlayerDisconnectedNotification playerDisconnectedNotification) {
-
+        String user = playerDisconnectedNotification.username;
+        if (!gameStarted) Platform.runLater(() -> lab2.setText(user + " é uscito dalla partita!"));
+        else Platform.runLater(() -> lab2.setText(newPlayer + " si è disconnesso!"));
     }
 
     @Override
     public void handle(PlayerReconnectedNotification playerReconnectedNotification) {
+        String user = playerReconnectedNotification.username;
+        Platform.runLater(() -> lab2.setText(user + " si è disconnesso!"));
 
     }
 
     @Override
     public void handle(ForceDisconnectionNotification notification) {
-
+        Platform.runLater(()->disconnectButton.fire());
     }
 
 }
