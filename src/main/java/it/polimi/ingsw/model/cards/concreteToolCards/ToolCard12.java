@@ -28,7 +28,7 @@ public class ToolCard12 extends ToolCard {
         this.colorForDiceSingleUser = Color.BLUE;
         this.allowPlaceDiceAfterCard = true;
         this.cardBlocksNextTurn = false;
-        this.cardOnlyInFirstMove = true;
+        this.cardOnlyInFirstMove = false;
         this.used = false;
         defaultClean();
         firstDiceInitial = null;

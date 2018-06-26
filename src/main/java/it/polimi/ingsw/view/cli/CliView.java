@@ -204,6 +204,8 @@ public class CliView implements Observer, NotificationHandler {
 
                     case SELECT_DICE_TO_ACTIVE_TOOLCARD:
                         //TODO
+                        System.out.println("SCEGLI UN DADO PER ATTIVARE LA TOOLCARD. DEVE AVERE IL COLORE CORRETTO");
+                        pickDiceForToolCard();
                         break;
 
                     case PLACE_DICE:
