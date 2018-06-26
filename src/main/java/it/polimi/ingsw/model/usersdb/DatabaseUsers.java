@@ -134,6 +134,7 @@ public class DatabaseUsers {
 
     }
 
+    //TODO: In teoria inutile
     public synchronized String registerUser(String username, String password, Socket newsocket) throws CannotRegisterUserException {
         byte[] salt;
         String passwordHash;
@@ -193,7 +194,10 @@ public class DatabaseUsers {
             String newtoken = UUID.randomUUID().toString();
 
             if ((oldtoken = tokenByUsername.get(username)) != null) clientByToken.get(oldtoken).removeConnection();
-            if ((playerInGame = playerByUsername.get(username)) != null) playerInGameByToken.put(newtoken, playerInGame);
+            if ((playerInGame = playerByUsername.get(username)) != null) {
+                playerInGameByToken.put(newtoken, playerInGame);
+                playerInGame.setDisconnected(false);
+            }
 
             usersByToken.put(newtoken, foundUser);
             tokenByUsername.put(username, newtoken);

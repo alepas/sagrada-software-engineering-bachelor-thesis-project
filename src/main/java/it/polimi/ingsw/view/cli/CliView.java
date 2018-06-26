@@ -528,7 +528,7 @@ public class CliView implements Observer, NotificationHandler {
                         printText("Show menu error");
                     }
                     listenToResponseAndPerformAction(possibleActions);
-                } while (!stateChanged);
+                } while (!(stateChanged || state.equals(Status.RECONNECT)));
             });
             playTurn.start();
 
@@ -831,12 +831,11 @@ public class CliView implements Observer, NotificationHandler {
         Position pos = null;
         int id;
 
-        //TODO: Mostrare dado scelto (in attesa che mi metta il dado e non l'id)
         if (info.diceChosen == null) id = pickDice(info.wherePickNewDice);
         else {
             displayText("Stai per posizionare il dado");
             printText(cliRender.renderDice(info.diceChosen));
-            id = info.diceChosen.getDiceID(); //TODO: Mostra dado scelto
+            id = info.diceChosen.getDiceID();
         }
 
         do {
@@ -1042,6 +1041,7 @@ public class CliView implements Observer, NotificationHandler {
             displayText("Hai effettuato il login da un altro dispositivo");
             displayText("Sei pertanto stato disconesso dalla sessione");
         }
+        changeState(Status.RECONNECT);
         if (currentThread != null) currentThread.interrupt();
         clean();
     }

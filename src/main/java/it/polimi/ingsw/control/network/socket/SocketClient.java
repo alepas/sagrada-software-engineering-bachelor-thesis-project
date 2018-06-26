@@ -94,6 +94,7 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
                     lastResponse = null;
                     return response;
                 } catch (InterruptedException e) {
+                    //TODO: Persa connessione mentre ero in attesa di risposta
                     e.printStackTrace();
                 }
             }

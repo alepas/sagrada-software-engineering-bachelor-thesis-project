@@ -337,6 +337,7 @@ public class ClientModel implements Observer, NotificationHandler {
         if (notification.wpc != null) game.setUserWpc(notification.username, notification.wpc);
         if (notification.newExtractedDices != null) game.setExtractedDices(notification.newExtractedDices);
         if (notification.newRoundTrack != null) game.setRoundTrack(notification.newRoundTrack);
+        game.setUserFavours(notification.username, notification.favours);
         changeToolcard(notification.toolCard.getId(), notification.toolCard);
 
         for (Notification not : notification.movesNotifications) not.handle(this);
