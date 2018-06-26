@@ -1,11 +1,11 @@
 package it.polimi.ingsw.model.game.thread;
 
-import it.polimi.ingsw.model.game.MultiplayerGame;
+import it.polimi.ingsw.model.game.Game;
 
 public class WaitForEndTurnThread extends WaiterThread {
-    private MultiplayerGame game;
+    private Game game;
 
-    public WaitForEndTurnThread(MultiplayerGame game, int timeLeft) {
+    public WaitForEndTurnThread(Game game, int timeLeft) {
         super(timeLeft);
         this.game = game;
     }

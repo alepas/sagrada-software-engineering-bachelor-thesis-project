@@ -159,8 +159,6 @@ public abstract class ToolCard implements Cloneable {
     }
 
     protected void defaultClean() {
-        if (currentPlayer != null)
-            currentPlayer.setToolCardInUse(null);
         this.diceForSingleUser = null;
         this.currentPlayer = null;
         this.currentStatus = 0;

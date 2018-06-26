@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.game;
 
 import it.polimi.ingsw.control.network.commands.notifications.*;
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
+import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.clientModel.ClientDice;
 import it.polimi.ingsw.model.clientModel.ClientEndTurnData;
 import it.polimi.ingsw.model.clientModel.ClientWpc;
@@ -29,8 +30,6 @@ public class MultiplayerGame extends Game {
     private ClientEndTurnData endTurnData;
     private WaiterThread currentThread;
 
-    private boolean turnFinished = false;
-
     /**
      * Creates a multiplayerGame
      * @param numPlayers is the number of players what will take part to the game
@@ -55,10 +54,6 @@ public class MultiplayerGame extends Game {
 
     public int getRoundPlayer() { return roundPlayer; }
 
-    public boolean isTurnFinished() {
-        return turnFinished;
-    }
-
     public int getCurrentTaskTimeLeft(){
         return currentThread.getTimeLeft();
     }
@@ -72,6 +67,7 @@ public class MultiplayerGame extends Game {
      * @throws UserAlreadyInThisGameException the player was already inside the game
      * @throws CannotCreatePlayerException if there were problems in creating the playerIn game related to the user
      */
+    @Override
     public synchronized boolean addPlayer(String user) throws MaxPlayersExceededException, UserAlreadyInThisGameException, CannotCreatePlayerException {
 
         if (this.isFull()) throw new MaxPlayersExceededException(user, this);
@@ -189,6 +185,11 @@ public class MultiplayerGame extends Game {
         } catch (InterruptedException e){
 
         }
+    }
+
+    @Override
+    public void removeToolCardIfSingleGame(ToolCard card) {
+        return;
     }
 
     /**

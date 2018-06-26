@@ -196,7 +196,8 @@ public class SetNewGameController implements Observer, NotificationHandler {
         createGameButton.setOnAction(event -> {
             if (soloPlayerBox.isSelected()) {
                 disableAll();
-                changeSceneHandle(event, "/it/polimi/ingsw/view/gui/guiview/SelectWPC.fxml");
+                //changeSceneHandle(event, "/view/gui/SelectWPC.fxml");
+                findGame(event, 1);
             } else if (twoPlayersBox.isSelected()) {
                 disableAll();
                 findGame(event, 2);

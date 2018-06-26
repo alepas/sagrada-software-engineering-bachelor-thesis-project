@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.exceptions.databaseGameExceptions.GameNotInAvailabl
 import it.polimi.ingsw.model.exceptions.gameExceptions.*;
 import it.polimi.ingsw.model.game.Game;
 import it.polimi.ingsw.model.game.MultiplayerGame;
+import it.polimi.ingsw.model.game.SinglePlayerGame;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,7 +45,7 @@ public class DatabaseGames {
             throw new InvalidNumOfPlayersException(numPlayers);
 
         if (numPlayers != 1) {
-            for (MultiplayerGame game : availableGames) {
+            for (Game game : availableGames) {
                 if (game.getNumPlayers() == numPlayers) {
                     try {
                         if (game.addPlayer(username)) startGame(game);
@@ -89,6 +90,13 @@ public class DatabaseGames {
         gameThread.start();     //Fa iniziare la partita
     }
 
+    private synchronized void startSingleGame(Game game)  {
+        activeGames.add(game);
+        Thread gameThread = new Thread(game);
+        threadByGame.put(game, gameThread);
+        gameThread.start();     //Fa iniziare la partita
+    }
+
     private synchronized void moveGameToActive(Game game) throws GameNotInAvailableListException {
         if (!availableGames.remove(game)) { throw new GameNotInAvailableListException(game); }
         activeGames.add(game);
@@ -97,11 +105,21 @@ public class DatabaseGames {
     private synchronized Game createNewGame(String username, int numPlayers) throws InvalidNumOfPlayersException, CannotCreatePlayerException {
         Game game = null;
         if (numPlayers == 1) {
-            //Crea SingleplayerGame
+            try {
+                game = new SinglePlayerGame(numPlayers);
+            } catch (InvalidSinglePlayerGamePlayersException e) {
+                e.printStackTrace();
+            }
+            try {
+                game.addPlayer(username);
+            } catch (MaxPlayersExceededException | UserAlreadyInThisGameException e) {
+                e.printStackTrace();
+            }
+            startSingleGame(game);
         } else {
             try {
                 game = new MultiplayerGame(numPlayers);
-                ((MultiplayerGame) game).addPlayer(username);
+                game.addPlayer(username);
                 availableGames.add((MultiplayerGame) game);
 
             } catch (InvalidMultiplayerGamePlayersException e){
@@ -124,7 +142,7 @@ public class DatabaseGames {
 
     public synchronized void removeGame(Game game){
         activeGames.remove(game);
-        availableGames.remove( (MultiplayerGame) game);
+        availableGames.remove(game);
         threadByGame.remove(game);
         gameByID.remove(game.getID());
 
