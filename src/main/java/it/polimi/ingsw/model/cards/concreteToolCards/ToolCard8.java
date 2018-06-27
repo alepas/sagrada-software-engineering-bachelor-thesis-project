@@ -150,7 +150,7 @@ public class ToolCard8 extends ToolCard {
                 if (!all) break;
                 currentStatus=30;
                 try {
-                    return interuptToolCard(ToolCardInteruptValues.OK);
+                    return interruptToolCard(ToolCardInteruptValues.OK);
                 } catch (CannotInteruptToolCardException e) {
                     //impossible
                 }
@@ -158,7 +158,7 @@ public class ToolCard8 extends ToolCard {
             case 30:
                 if (!all) break;
                 try {
-                    return interuptToolCard(ToolCardInteruptValues.OK);
+                    return interruptToolCard(ToolCardInteruptValues.OK);
                 } catch (CannotInteruptToolCardException e) {
                     //impossible
                 }
@@ -246,7 +246,7 @@ public class ToolCard8 extends ToolCard {
     }
 
     @Override
-    public MoveData interuptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException {
+    public MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException {
         if (currentStatus != 30)
             throw new CannotInteruptToolCardException(username, id);
         if (value != ToolCardInteruptValues.OK)

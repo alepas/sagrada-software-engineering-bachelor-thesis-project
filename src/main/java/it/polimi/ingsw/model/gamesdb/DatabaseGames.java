@@ -108,7 +108,7 @@ public class DatabaseGames {
             try {
                 game = new SinglePlayerGame(numPlayers);
             } catch (InvalidSinglePlayerGamePlayersException e) {
-                e.printStackTrace();
+                throw new InvalidNumOfPlayersException(numPlayers);
             }
             try {
                 game.addPlayer(username);

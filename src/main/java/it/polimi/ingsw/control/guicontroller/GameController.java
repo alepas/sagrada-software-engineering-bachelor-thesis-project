@@ -285,6 +285,7 @@ public class GameController implements Observer, NotificationHandler {
                 networkClient.passTurn(clientModel.getUserToken());
                 clockLabel.setText("00:00");
                 timer.cancel();
+                lastNextAction = NextAction.WAIT_FOR_TURN;
             } catch (CannotFindPlayerInDatabaseException | PlayerNotAuthorizedException | CannotPerformThisMoveException e) {
                 message1Label.setText(e.getMessage());
                 stateAction(change(lastNextAction));
@@ -1588,7 +1589,10 @@ public class GameController implements Observer, NotificationHandler {
             //updateUsedToolCard();
             if(!clientModel.isActive()) stateAction(ANOTHER_PLAYER_TURN);
 
-            else synchronized (waiter) {waiter.notify();}
+            else{
+                if(lastNextAction== NextAction.WAIT_FOR_TURN) stateAction(MENU_ALL);
+                else synchronized (waiter) {waiter.notify();}
+            }
         });
     }
 
@@ -1651,8 +1655,7 @@ public class GameController implements Observer, NotificationHandler {
 
     @Override
     public void handle(PlayerSkipTurnNotification notification) {
-        Platform.runLater(()->message1Label.setText(notification.username + "salta il turno!"));
-        stateAction(MENU_ALL);//todo??
+        Platform.runLater(()->message1Label.setText(notification.username + " salta il turno!"));
     }
 
     @Override
@@ -1692,15 +1695,15 @@ public class GameController implements Observer, NotificationHandler {
 
     @Override
     public void handle(PlayerDisconnectedNotification playerDisconnectedNotification) {
-        Platform.runLater(()-> message1Label.setText(playerDisconnectedNotification.username + "si è disconnesso!"));
+        Platform.runLater(()-> message1Label.setText(playerDisconnectedNotification.username + " si è disconnesso!"));
     }
 
     @Override
     public void handle(PlayerReconnectedNotification playerReconnectedNotification) {
-        Platform.runLater(()-> message1Label.setText(playerReconnectedNotification.username + "si è connesso!"));
+        Platform.runLater(()-> message1Label.setText(playerReconnectedNotification.username + " è rientrato in partita!"));
     }
 
     @Override
-    public void handle(ForceDisconnectionNotification notification) { Platform.runLater(()->disconnectButton.fire());}
+    public void handle(ForceDisconnectionNotification notification) { Platform.runLater(()-> disconnectButton.fire());}
 
 }

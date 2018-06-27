@@ -20,6 +20,9 @@ public class ToolCard1 extends ToolCard {
     private Dice oldDice;
     private ArrayList<Integer> numbers;
 
+    /**
+     * Object constructor: creates a new concrete tool card 1 setting all his parameters
+     */
     public ToolCard1() {
         this.id = ToolCardConstants.TOOLCARD1_ID;
         this.name = ToolCardConstants.TOOL1_NAME;
@@ -36,23 +39,44 @@ public class ToolCard1 extends ToolCard {
     }
 
 
+    /**
+     * @return a copy of this object
+     */
     @Override
     public ToolCard getToolCardCopy() {
         return new ToolCard1();
     }
 
 
+    /**
+     * @param player //todo
+     * @return //todo
+     * @throws CannotUseToolCardException //todo
+     */
     @Override
     public MoveData setCard(PlayerInGame player) throws CannotUseToolCardException {
-       return setCardDefault(player,false,false,NextAction.SELECT_DICE_TOOLCARD,ClientDiceLocations.EXTRACTED,null);
+       return setCardDefault(player,false,false,NextAction.SELECT_DICE_TOOLCARD,
+               ClientDiceLocations.EXTRACTED,null);
     }
 
 
+    /**
+     * Checks if the game is a single player or multi player game: if it's a single player game it calls the related
+     * method, if it's multi first of all checks if the player can do the action and then searches the dice in the
+     * extracted array by calling a multi player game method and checks if the dice number is a bound number or not.
+     *
+     * @param diceId is the ID of the dice chosen by the player
+     * @return all the information related to the next action that the player will have to do and all new parameters created
+     *         by the call of this method
+     *
+     * @throws CannotPickDiceException every time there are problems in the return of the singlePlayer
+     * @throws CannotPerformThisMoveException every time that the current state is different from 1, this means that
+     * the player is trying to do an action that can't be done in that moment
+     */
     @Override
     public MoveData pickDice(int diceId) throws CannotPickDiceException, CannotPerformThisMoveException {
-        if ((currentStatus == 0) && (singlePlayerGame)) {
+        if ((currentStatus == 0) && (singlePlayerGame))
             return pickDiceInitializeSingleUserToolCard(diceId, NextAction.SELECT_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, null);
-        }
         if (currentStatus != 1)
             throw new CannotPerformThisMoveException(username, 2, false);
 
@@ -66,11 +90,23 @@ public class ToolCard1 extends ToolCard {
         if (tempNum < 6)
             numbers.add(1);
 
-
         return new MoveData(NextAction.SELECT_NUMBER_TOOLCARD, null, null, null, tempDice.getClientDice(), ClientDiceLocations.EXTRACTED, numbers, false);
     }
 
 
+    /**
+     * First of all it checks if the parameter respect all rules and if the current state is 2 or not; if no exceptions
+     * are thrown it calls the setNumber() methods which modifies the dice number.
+     *
+     * @param number define if the players wants to add one or subtract one to the chosen dice number
+     * @return all the information related to the next action that the player will have to do and all new parameters created
+     *         by the call of this method
+     * @throws CannotPerformThisMoveException every time that the current state is different from 2, this means that
+     *         the player is trying to do an action that can't be done in that moment
+     * @throws CannotPickNumberException if the parameter is a different number from -1 or +1 or if the chosen dice is 6
+     *         and the param number is +1 or if the chosen dice is 1 and the param number is -1 (those cases are forbidden
+     *         by sagrada's rules)
+     */
     @Override
     public MoveData pickNumber(int number) throws CannotPerformThisMoveException, CannotPickNumberException {
         if (currentStatus != 2)
@@ -89,15 +125,34 @@ public class ToolCard1 extends ToolCard {
         }
         currentStatus = 3;
         updateClientExtractedDices();
-        movesNotifications.add(new ToolCardDiceChangedNotification(username, oldDice.getClientDice(), dice.getClientDice(), ClientDiceLocations.EXTRACTED, ClientDiceLocations.EXTRACTED));
-        return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, ClientDiceLocations.WPC, null, tempExtractedDices, null, dice.getClientDice(), ClientDiceLocations.EXTRACTED);
+        movesNotifications.add(new ToolCardDiceChangedNotification(username, oldDice.getClientDice(),
+                dice.getClientDice(), ClientDiceLocations.EXTRACTED, ClientDiceLocations.EXTRACTED));
+        return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, ClientDiceLocations.WPC,
+                null, tempExtractedDices, null, dice.getClientDice(), ClientDiceLocations.EXTRACTED);
     }
 
+    /**
+     * @param value can be YES; NO; OK
+     * @return always the exception
+     * @throws CannotInteruptToolCardException everytime that it is called
+     */
     @Override
-    public MoveData interuptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException {
+    public MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException {
         throw new CannotInteruptToolCardException(username, id);
     }
 
+    /**
+     * if none of the exception has been thrown the method removes the chosen dice from the extractedDices, adds it to
+     * the player's wpc and clear the card.
+     *
+     * @param diceId is the id of the dice that could be place
+     * @param pos is the position where the player would like to place the chosen dice
+     * @return all the information related to the next action that the player will have to do and all new parameters created
+     *         by the call of this method
+     * @throws CannotPerformThisMoveException if the state isn't the correct one or the given position is null
+     * @throws CannotPickPositionException if the chosen position doesn't respect sagrada's rules
+     * @throws CannotPickDiceException if the id of the chosen dice is different from the dice modified by this
+     */
     @Override
     public MoveData placeDice(int diceId, Position pos) throws CannotPerformThisMoveException, CannotPickPositionException, CannotPickDiceException {
         if (currentStatus != 3)
@@ -154,7 +209,9 @@ public class ToolCard1 extends ToolCard {
     }*/
 
 
-
+    /**
+     * Sets object's parameters to null and creates a new array
+     */
     @Override
     protected void cleanCard() {
       defaultClean();
@@ -163,19 +220,24 @@ public class ToolCard1 extends ToolCard {
         numbers = new ArrayList<>();
     }
 
+    /**
+     *@return all the information related to the next action that the player will have to do and all new parameters
+     * created by the call of this method
+     */
     @Override
     public MoveData getNextMove() {
         switch (currentStatus) {
             case 0:
                 return defaultNextMoveStatusZero();
             case 1:
-                return new MoveData(NextAction.SELECT_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, null, null, tempExtractedDices, null, null, null);
+                return new MoveData(NextAction.SELECT_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, null,
+                        null, tempExtractedDices, null, null, null);
             case 2:
-                return new MoveData(NextAction.SELECT_NUMBER_TOOLCARD, null, tempExtractedDices, null, this.dice.getClientDice(), ClientDiceLocations.EXTRACTED, numbers, false);
-
-
+                return new MoveData(NextAction.SELECT_NUMBER_TOOLCARD, null, tempExtractedDices, null,
+                        this.dice.getClientDice(), ClientDiceLocations.EXTRACTED, numbers, false);
             case 3:
-                return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, ClientDiceLocations.WPC, null, tempExtractedDices, null, dice.getClientDice(), ClientDiceLocations.EXTRACTED);
+                return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, ClientDiceLocations.WPC,
+                        null, tempExtractedDices, null, dice.getClientDice(), ClientDiceLocations.EXTRACTED);
 
         }
         return null;
@@ -185,7 +247,6 @@ public class ToolCard1 extends ToolCard {
 
     @Override
     public MoveData cancelAction(boolean all) throws CannotCancelActionException {
-        MoveData temp;
         switch (currentStatus) {
             case 3: {
                 try {
@@ -216,8 +277,7 @@ public class ToolCard1 extends ToolCard {
                 }
 
         }
-        if (!all)
-        throw new CannotCancelActionException(username, id, 1);
+        if (!all) throw new CannotCancelActionException(username, id, 1);
         if (currentStatus==1){
             if (singlePlayerGame){
                 currentGame.getExtractedDices().add(diceForSingleUser);
@@ -234,6 +294,12 @@ public class ToolCard1 extends ToolCard {
 
     }
 
+    //----------------------------------- Used in testing -------------------------------------------------------
 
+    Dice getToolDice(){ return dice; }
+
+    Dice getOldDice() {return oldDice;}
+
+    int getNumeberSize(){return numbers.size();}
 }
 

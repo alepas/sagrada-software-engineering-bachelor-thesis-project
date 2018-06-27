@@ -41,7 +41,8 @@ public class SinglePlayerGame extends Game {
             throw new InvalidSinglePlayerGamePlayersException(numPlayers);
 
         numOfPrivateObjectivesForPlayer = GameConstants.NUM_PRIVATE_OBJ_FOR_PLAYER_IN_SINGLEPLAYER_GAME;
-        numOfToolCards = GameConstants.MAX_NUM_OF_TOOL_CARDS_IN_SINGLEPLAYER_GAME;
+        //numOfToolCards = GameConstants.MAX_NUM_OF_TOOL_CARDS_IN_SINGLEPLAYER_GAME;
+        numOfToolCards = GameConstants.NUM_TOOL_CARDS_IN_MULTIPLAYER_GAME;
         numOfPublicObjectiveCards = GameConstants.NUM_PUBLIC_OBJ_IN_SINGLEPLAYER_GAME;
     }
 
@@ -234,7 +235,6 @@ public class SinglePlayerGame extends Game {
      */
     @Override
     public void endTurn(ClientEndTurnData endTurnData) {
-        players[turnPlayer].setNotActive();
         turnFinished = true;
         this.endTurnData = endTurnData;
     }
@@ -304,7 +304,7 @@ public class SinglePlayerGame extends Game {
     /**
      * @return the //todo
      */
-    int nextPlayer(){
+    private int nextPlayer(){
         if (currentTurn == 2) {
             players[turnPlayer].setTurnInRound(2);
             return turnPlayer;

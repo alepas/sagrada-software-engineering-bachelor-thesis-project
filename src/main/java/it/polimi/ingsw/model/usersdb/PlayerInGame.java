@@ -271,7 +271,7 @@ public class PlayerInGame {
             throw new PlayerNotAuthorizedException(username);
         if (toolCardInUse == null)
             throw new NoToolCardInUseException(username);
-        MoveData tempResponse = toolCardInUse.interuptToolCard(value);
+        MoveData tempResponse = toolCardInUse.interruptToolCard(value);
         updateNextMoveAfterToolCard(tempResponse);
         return tempResponse;
     }
@@ -465,7 +465,6 @@ public class PlayerInGame {
 
     public DiceAndPosition dicePresentInLocation(int diceId, ClientDiceLocations location) throws CannotPickDiceException {
         DiceAndPosition tempResponse;
-
         if (location == ClientDiceLocations.EXTRACTED) {
             for (Dice tempDice : game.getExtractedDices()) {
                 if (tempDice.getId() == diceId) {

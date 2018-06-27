@@ -167,7 +167,7 @@ public class ToolCard6 extends ToolCard {
     }
 
     @Override
-    public MoveData interuptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException {
+    public MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException {
         if (currentStatus != 30)
             throw new CannotInteruptToolCardException(username, id);
         if (value != ToolCardInteruptValues.OK)

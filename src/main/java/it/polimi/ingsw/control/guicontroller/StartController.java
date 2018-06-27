@@ -40,22 +40,23 @@ public class StartController {
         rmiButton.setOnAction(event -> {
             try {
                 NetworkClient.getNewRmiInstance();
+                changeButton();
             } catch (Exception e) {
                 errorLabel.setText("Impossibile stabilire connessione RMI con il Server.");
             }
-            changeButton();
         });
 
         //if the socket button is selected the event tries to open a socket connection
         socketButton.setOnAction(event -> {
             try {
                 startSocketClient();
+                changeButton();
             } catch (ConnectException e) {
                 errorLabel.setText("Impossibile stabilire connessione Socket con il Server.");
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            changeButton();
+
         });
 
         signUpButton.setOnAction(event -> changeSceneHandle(event, "/view/gui/SignUpScene.fxml"));

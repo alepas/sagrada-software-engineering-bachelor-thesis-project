@@ -54,9 +54,7 @@ public class MultiplayerGame extends Game {
 
     public int getRoundPlayer() { return roundPlayer; }
 
-    public int getCurrentTaskTimeLeft(){
-        return currentThread.getTimeLeft();
-    }
+    public int getCurrentTaskTimeLeft(){ return currentThread.getTimeLeft(); }
 
     /**
      * if possible creates a new Player in game and adds it to the array of players
@@ -241,7 +239,9 @@ public class MultiplayerGame extends Game {
         else roundPlayer = 0;
         turnPlayer = roundPlayer;
 
-        while (currentTurn < GameConstants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME*numPlayers) nextTurn();
+        while (currentTurn < GameConstants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME*numPlayers){
+            nextTurn();
+        }
     }
 
 
@@ -262,7 +262,7 @@ public class MultiplayerGame extends Game {
      * the players it is necessary to check if he/she should skip the turn: if yes the method nextPlayer() will be called
      * again and a playerSkipNotification will be thrown.
      */
-    private void nextTurn(){
+    void nextTurn(){
         turnPlayer = nextPlayer();
         currentTurn++;
 
@@ -286,7 +286,7 @@ public class MultiplayerGame extends Game {
     /**
      * @return true if the player must skip the turn, false if not
      */
-    private boolean shouldSkipTurn(){
+    boolean shouldSkipTurn(){
         PlayerInGame player = players[turnPlayer];
         return player.isDisconnected() ||
                 (player.getCardUsedBlockingTurn() != null && player.getTurnForRound() == 2);

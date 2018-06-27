@@ -15,7 +15,6 @@ import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerExcepti
 import it.polimi.ingsw.model.exceptions.gameExceptions.MaxPlayersExceededException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.UserAlreadyInThisGameException;
-import it.polimi.ingsw.model.game.thread.ChooseWpcThread;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 import it.polimi.ingsw.model.wpc.WpcDB;
 
@@ -44,6 +43,11 @@ public abstract class Game extends Observable implements Runnable {
 
     HashMap<String, ArrayList<String>> wpcsByUser = new HashMap<>();
 
+    /**
+     * Initializes all parameters that must be inside the game.
+     *
+     * @param numPlayers depending on the number of players a different type of game will be created.
+     */
     Game(int numPlayers) {
         toolCards = new ArrayList<>();
         publicObjectiveCards = new ArrayList<>();
@@ -57,6 +61,11 @@ public abstract class Game extends Observable implements Runnable {
         turnFinished = false;
     }
 
+    /**
+     * Creates a copy of the game in the client.
+     *
+     * @return a client game
+     */
     public ClientGame getClientGame(){
         ClientGame clientCopy = new ClientGame(this.id, this.numPlayers);
         clientCopy.setGameActualPlayers(this.numActualPlayers());
