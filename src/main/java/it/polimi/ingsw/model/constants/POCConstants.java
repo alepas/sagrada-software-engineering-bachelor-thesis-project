@@ -1,5 +1,13 @@
 package it.polimi.ingsw.model.constants;
 
+/**
+ * This class contains all constants related to the public objective cards;
+ * for each card there are four constants:
+ * - the id which is a numeric string
+ * - the amount of points that will be assigned to the player each time he/she will be able to reach the goal
+ * - the name
+ * - the description which is used to explain to the player what to do to gain the POC points
+ */
 public class POCConstants {
 
     //PublicObjectiveCard1

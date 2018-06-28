@@ -8,7 +8,6 @@ import it.polimi.ingsw.model.clientModel.*;
 import it.polimi.ingsw.model.constants.ToolCardConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
-import it.polimi.ingsw.model.exceptions.dicebagExceptions.IncorrectNumberException;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
 import it.polimi.ingsw.model.usersdb.MoveData;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
@@ -28,7 +27,7 @@ public class ToolCard12 extends ToolCard {
         this.colorForDiceSingleUser = Color.BLUE;
         this.allowPlaceDiceAfterCard = true;
         this.cardBlocksNextTurn = false;
-        this.cardOnlyInFirstMove = true;
+        this.cardOnlyInFirstMove = false;
         this.used = false;
         defaultClean();
         firstDiceInitial = null;
@@ -134,7 +133,7 @@ public class ToolCard12 extends ToolCard {
                 }
             case 20: if (!all) break;
                 try {
-                    return interuptToolCard(ToolCardInteruptValues.NO);
+                    return interruptToolCard(ToolCardInteruptValues.NO);
                 } catch (CannotInteruptToolCardException e) {
                     //impossible
                 }
@@ -190,7 +189,7 @@ public class ToolCard12 extends ToolCard {
     }
 
     @Override
-    public MoveData interuptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException {
+    public MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException {
         if (currentStatus != 20)
             throw new CannotInteruptToolCardException(username, id);
         currentStatus = 2;

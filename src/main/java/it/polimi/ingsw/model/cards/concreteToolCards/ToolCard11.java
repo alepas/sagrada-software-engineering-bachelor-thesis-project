@@ -154,7 +154,7 @@ public class ToolCard11 extends ToolCard {
                     return new MoveData(NextAction.SELECT_NUMBER_TOOLCARD, null, tempExtractedDices, null, this.chosenDice.getClientDice(), ClientDiceLocations.EXTRACTED, numbers, false);
                 } else {
                     try {
-                        return interuptToolCard(ToolCardInteruptValues.OK);
+                        return interruptToolCard(ToolCardInteruptValues.OK);
                     } catch (CannotInteruptToolCardException e) {
                         //impossible
                     }
@@ -168,7 +168,7 @@ public class ToolCard11 extends ToolCard {
                 }
             case 20: if (!all) break;
                 try {
-                    return interuptToolCard(ToolCardInteruptValues.NO);
+                    return interruptToolCard(ToolCardInteruptValues.NO);
                 } catch (CannotInteruptToolCardException e) {
                     //impossible
                 }
@@ -232,7 +232,7 @@ public class ToolCard11 extends ToolCard {
     }
 
     @Override
-    public MoveData interuptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException {
+    public MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException {
         if (currentStatus == 20) {
             currentStatus = 2;
             updateClientExtractedDices();

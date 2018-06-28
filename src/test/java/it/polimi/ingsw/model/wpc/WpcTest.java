@@ -118,7 +118,6 @@ public class WpcTest {
 
 
 
-
         cell10 = mock(Cell.class);
         Position pos10 = mock(Position.class);
         when(pos10.getRow()).thenReturn(1);

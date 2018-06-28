@@ -2,6 +2,9 @@ package it.polimi.ingsw.model.game;
 
 import it.polimi.ingsw.model.cards.PublicObjectiveCard;
 import it.polimi.ingsw.model.cards.ToolCard;
+import it.polimi.ingsw.model.clientModel.ClientColor;
+import it.polimi.ingsw.model.clientModel.ClientEndTurnData;
+import it.polimi.ingsw.model.clientModel.ClientGame;
 import it.polimi.ingsw.model.constants.GameConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.exceptions.gameExceptions.*;
@@ -13,13 +16,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class MultiplayerGameTest {
+
     private MultiplayerGame game;
     private String username1 = "John", username2 = "Alice", username3 = "Bob", username4 = "Eva";
     private int defaulNumPlayers = 3;
@@ -38,13 +43,14 @@ public class MultiplayerGameTest {
         player1 = mock(PlayerInGame.class);
         when(player1.getUser()).thenReturn(username1);
         player2 = mock(PlayerInGame.class);
+        when(player2.getUser()).thenReturn(username2);
         player3 = mock(PlayerInGame.class);
         player4 = mock(PlayerInGame.class);
 
-//        db.login("John", "password1");
-//        db.login("Alice", "password2");
-//        db.login("Bob", "password3");
-//        db.login("Eva", "password4");
+/*        db.login("John", "password1");
+        db.login("Alice", "password2");
+        db.login("Bob", "password3");
+        db.login("Eva", "password4");*/
     }
 
     /**
@@ -384,16 +390,27 @@ public class MultiplayerGameTest {
         }
     }
 
+    /**
+     * tests if a game is initialized in a correct way, it also tests if the wpc time works in a correct way
+     */
     @Test
     public void initializeGameTest() {
         game.players[game.nextFree()] = player1;
         game.players[game.nextFree()] = player2;
         game.players[game.nextFree()] = player3;
+        Color[] color = new Color[2];
+        when(player1.getPrivateObjs()).thenReturn(color);
+        when(player2.getPrivateObjs()).thenReturn(color);
+        when(player3.getPrivateObjs()).thenReturn(color);
         game.initializeGame();
 
         assertEquals(3, game.getPlayers().length);
     }
 
+    /**
+     * given three players it checks if the nextPlayer() method and all methods related to the turn change
+     * work in a correct way
+     */
     @Test
     public void nextPlayerTest1() {
         game.players[game.nextFree()] = player1;
@@ -421,6 +438,13 @@ public class MultiplayerGameTest {
         assertEquals(0, game.nextPlayer());
     }
 
+
+
+    /**
+     * given three players it checks if the nextPlayer() method and all methods related to the turn change
+     * work in a correct way. it is different from the one above because it checks if those methods still work
+     * with a different order in the list.
+     */
     @Test
     public void nextPlayerTest2() {
         game.players[game.nextFree()] = player1;
@@ -449,11 +473,16 @@ public class MultiplayerGameTest {
         assertEquals(1, game.nextPlayer());
     }
 
+    /**
+     * given three players it checks if the nextPlayer() method and all methods related to the turn change
+     * work in a correct way. it is different from the one above because it checks if those methods still work
+     * with a different order in the list.
+     */
     @Test
-    public void nextPlayerTest3() throws Exception {
-        game.addPlayer(username1);
-        game.addPlayer(username2);
-        game.addPlayer(username3);
+    public void nextPlayerTest3() {
+        game.players[game.nextFree()] = player1;
+        game.players[game.nextFree()] = player2;
+        game.players[game.nextFree()] = player3;
 
         game.setCurrentTurn(1);
         game.setTurnPlayer(2);
@@ -480,17 +509,23 @@ public class MultiplayerGameTest {
     //TODO
     @Test
     public void nextTurnAndNextRoundTest() throws Exception {
-        game.addPlayer(username1);
-        game.addPlayer(username2);
-        game.addPlayer(username3);
+        game.players[game.nextFree()] = player1;
+        game.players[game.nextFree()] = player2;
+        game.players[game.nextFree()] = player3;
+
+        ClientEndTurnData endTurnData = mock(ClientEndTurnData.class);
         Assert.assertEquals(0, game.getRoundPlayer());
 
         Assert.assertEquals(0, game.getTurnPlayer());
-       // game.endTurn();
+        game.endTurn(endTurnData);
+        game.nextRound();
         Assert.assertEquals(1, game.getTurnPlayer());
-       // game.endTurn();
+
+        game.endTurn(endTurnData);
         Assert.assertEquals(2, game.getTurnPlayer());
-       // game.endTurn();
+
+        game.endTurn(endTurnData);
+        game.nextRound();
         Assert.assertEquals(2, game.getTurnPlayer());
       //  game.endTurn();
         Assert.assertEquals(1, game.getTurnPlayer());
@@ -514,6 +549,19 @@ public class MultiplayerGameTest {
     }
 
     //TODO
+    @Test
+    public void shouldSkippTurnTest(){
+        game.players[game.nextFree()] = player1;
+        game.players[game.nextFree()] = player2;
+        game.players[game.nextFree()] = player3;
+        when(player1.isDisconnected()).thenReturn(true);
+
+        game.currentTurn = 0;
+        assertEquals(0, game.getTurnPlayer());
+        game.numPlayers = 3;
+        assertTrue(game.shouldSkipTurn());
+
+    }
 //    @Test
 //    public void nextRoundTest() throws Exception {
 //        //mancano da testare i dati avanzati

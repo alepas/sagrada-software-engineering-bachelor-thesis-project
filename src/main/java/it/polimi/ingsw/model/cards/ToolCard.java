@@ -67,7 +67,7 @@ public abstract class ToolCard implements Cloneable {
         return new ClientToolCard(id, name, description, used);
     }
 
-    public abstract MoveData interuptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException;
+    public abstract MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException;
 
     public abstract MoveData cancelAction(boolean all) throws CannotCancelActionException;
 
@@ -159,8 +159,6 @@ public abstract class ToolCard implements Cloneable {
     }
 
     protected void defaultClean() {
-        if (currentPlayer != null)
-            currentPlayer.setToolCardInUse(null);
         this.diceForSingleUser = null;
         this.currentPlayer = null;
         this.currentStatus = 0;
@@ -179,5 +177,16 @@ public abstract class ToolCard implements Cloneable {
         else return null;
     }
 
+    //----------------------------------- Used in testing -------------------------------------------------------
+
+    public void setCurrentToolPlayer(PlayerInGame player){ currentPlayer = player; }
+
+    public void setCurrentToolGame(Game game){ currentGame = game; }
+
+    public void setCurrentToolStatus(int status){currentStatus = status;}
+
+    public void setToolUser(String username){ this.username = username;}
+
+    public void setSinglePlayerGame(boolean singlePlayer){ singlePlayerGame = singlePlayer;}
 
 }

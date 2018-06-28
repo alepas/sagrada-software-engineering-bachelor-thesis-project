@@ -11,8 +11,10 @@ import it.polimi.ingsw.model.constants.GameConstants;
 import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.dicebag.DiceBag;
+import it.polimi.ingsw.model.exceptions.gameExceptions.CannotCreatePlayerException;
+import it.polimi.ingsw.model.exceptions.gameExceptions.MaxPlayersExceededException;
 import it.polimi.ingsw.model.exceptions.gameExceptions.NotYourWpcException;
-import it.polimi.ingsw.model.game.thread.ChooseWpcThread;
+import it.polimi.ingsw.model.exceptions.gameExceptions.UserAlreadyInThisGameException;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 import it.polimi.ingsw.model.wpc.WpcDB;
 
@@ -24,6 +26,7 @@ public abstract class Game extends Observable implements Runnable {
     private String id;
     protected ArrayList<Dice> extractedDices;
     protected DiceBag diceBag;
+    protected boolean turnFinished;
 
     RoundTrack roundTrack;
     int numPlayers;
@@ -40,6 +43,11 @@ public abstract class Game extends Observable implements Runnable {
 
     HashMap<String, ArrayList<String>> wpcsByUser = new HashMap<>();
 
+    /**
+     * Initializes all parameters that must be inside the game.
+     *
+     * @param numPlayers depending on the number of players a different type of game will be created.
+     */
     Game(int numPlayers) {
         toolCards = new ArrayList<>();
         publicObjectiveCards = new ArrayList<>();
@@ -50,8 +58,14 @@ public abstract class Game extends Observable implements Runnable {
         roundTrack = new RoundTrack();
         this.numPlayers = numPlayers;
         players = new PlayerInGame[numPlayers];
+        turnFinished = false;
     }
 
+    /**
+     * Creates a copy of the game in the client.
+     *
+     * @return a client game
+     */
     public ClientGame getClientGame(){
         ClientGame clientCopy = new ClientGame(this.id, this.numPlayers);
         clientCopy.setGameActualPlayers(this.numActualPlayers());
@@ -321,6 +335,14 @@ public abstract class Game extends Observable implements Runnable {
     public DiceBag getDiceBag() { return diceBag; }
 
 
+    public boolean isTurnFinished() {
+        return turnFinished;
+    }
+
+    public void setTurnFinished(boolean turnFinished) {
+        this.turnFinished = turnFinished;
+    }
+
     public abstract boolean isSinglePlayerGame();
 
     //--------------------------------------- Abstract Methods --------------------------------------
@@ -332,6 +354,8 @@ public abstract class Game extends Observable implements Runnable {
     abstract void calculateScore();
     abstract void saveScore();
     abstract void waitForWpcResponse();
+    public abstract void removeToolCardIfSingleGame(ToolCard card);
+    public abstract boolean addPlayer(String user) throws MaxPlayersExceededException, UserAlreadyInThisGameException, CannotCreatePlayerException;
 
 
 }

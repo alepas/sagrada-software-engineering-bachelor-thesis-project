@@ -1,5 +1,12 @@
 package it.polimi.ingsw.model.constants;
 
+/**
+ * This class contains all constants related to the public objective cards;
+ * for each card there are four constants:
+ * - the id which is a numeric string
+ * - the name given by the game
+ * - the description which is used to explain to the player what can be done by activating it
+ */
 public class ToolCardConstants {
 
     //ToolCard1

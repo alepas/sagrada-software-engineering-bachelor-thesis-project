@@ -189,8 +189,10 @@ public class PlayerInGame {
             }
            if (temp==null)
                     return;
-            if (temp.canceledToolCard)
-                oldClientToolCard=null;
+            if (temp.canceledToolCard) {
+                oldClientToolCard = null;
+                toolCardInUse=null;
+            }
             ClientEndTurnData endTurnData= new ClientEndTurnData(username,temp.wpc,oldClientToolCard,temp.extractedDices,temp.roundTrack);
             game.endTurn(endTurnData);
         }
@@ -251,6 +253,7 @@ public class PlayerInGame {
             if (temp==null)
                 throw new CannotCancelActionException(username, null, 3);
             if (temp.canceledToolCard) {
+                toolCardInUse=null;
                 favours += lastFavoursRemoved;
                 allowPlaceDiceAfterCard = true;
                 cardUsedBlockingTurn = null;
@@ -268,7 +271,7 @@ public class PlayerInGame {
             throw new PlayerNotAuthorizedException(username);
         if (toolCardInUse == null)
             throw new NoToolCardInUseException(username);
-        MoveData tempResponse = toolCardInUse.interuptToolCard(value);
+        MoveData tempResponse = toolCardInUse.interruptToolCard(value);
         updateNextMoveAfterToolCard(tempResponse);
         return tempResponse;
     }
@@ -462,7 +465,6 @@ public class PlayerInGame {
 
     public DiceAndPosition dicePresentInLocation(int diceId, ClientDiceLocations location) throws CannotPickDiceException {
         DiceAndPosition tempResponse;
-
         if (location == ClientDiceLocations.EXTRACTED) {
             for (Dice tempDice : game.getExtractedDices()) {
                 if (tempDice.getId() == diceId) {
@@ -488,6 +490,8 @@ public class PlayerInGame {
 
     private void updateNextMoveAfterToolCard(MoveData tempResponse){
         if (tempResponse.moveFinished) {
+            game.removeToolCardIfSingleGame(toolCardInUse);
+            toolCardInUse=null;
             tempResponse.setNextAction(incrementActionInTurn(true));
         }
         else if (tempResponse.canceledToolCard){
@@ -495,6 +499,7 @@ public class PlayerInGame {
             allowPlaceDiceAfterCard = true;
             cardUsedBlockingTurn = null;
             placedDiceInTurn=true;
+            toolCardInUse=null;
             tempResponse.setNextAction(NextAction.MENU_ONLY_TOOLCARD);
         }
     }
