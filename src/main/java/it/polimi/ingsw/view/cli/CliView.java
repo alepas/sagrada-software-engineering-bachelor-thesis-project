@@ -13,7 +13,7 @@ import java.util.*;
 public class CliView implements Observer, NotificationHandler {
     private BufferedReader fromKeyBoard;
     private final CliRender cliRender;
-    private int strNum = 0;
+    private int strNum = CliConstants.COUNTER_START_NUMBER;
     private boolean isInterruptable = true;
     private Thread currentThread;
 
@@ -1007,17 +1007,27 @@ public class CliView implements Observer, NotificationHandler {
 
     @Override
     public void handle(ToolCardDiceChangedNotification notification) {
-
+        if (notification.oldPosition.equals(notification.newPosition)){
+            displayText(notification.username + " ha cambiato il dado\n\n" + cliRender.renderDice(notification.oldDice)
+                    + "\nnel dado\n\n" + cliRender.renderDice(notification.newDice));
+            displayText("Posizione: " + notification.oldPosition);
+        } else {
+            displayText(notification.username + " ha sostituio il dado\n\n" + cliRender.renderDice(notification.oldDice)
+                    + "\nposizionato in: " + notification.oldPosition + " con il dado\n\n" + cliRender.renderDice(notification.newDice)
+                    + "\nposizionato in: " + notification.newPosition);
+        }
     }
 
     @Override
     public void handle(ToolCardDicePlacedNotification notification) {
-
+        displayText(notification.username + " ha posizionato il dado " + notification.dice.getDiceID() +
+                " in posizione (" + (notification.position.getRow()+strNum) + ", " + (notification.position.getColumn()+strNum) + ")");
     }
 
     @Override
     public void handle(ToolCardExtractedDicesModifiedNotification notification) {
-
+        displayText("I dadi estratti sono stati rilanciati, ecco i nuovi:");
+        printText(cliRender.renderDices(controller.getExtractedDices()));
     }
 
     @Override

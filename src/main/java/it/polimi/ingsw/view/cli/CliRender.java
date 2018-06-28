@@ -14,6 +14,7 @@ public class CliRender {
     private final int wpcHeight = (cellHeight+1)*WpcConstants.ROWS_NUMBER + 1;
     private final int wpcLenght = (diceLenght+1)*WpcConstants.COLS_NUMBER+1;
     private final int wpcDistance = CliConstants.WpcSpacing;
+    private final int strNum = CliConstants.COUNTER_START_NUMBER;
 
     //Colors
     // Reset
@@ -84,6 +85,8 @@ public class CliRender {
 
 
     //Dices
+    private final String WPC_COLUMNS_NUMBERS = "    " + strNum + "       " + (strNum+1) + "       " + (strNum+2) +
+                                              "       " + (strNum+3) + "       " + (strNum+4) + "    ";
     private final String wpcLine = WPC_BORDER_COLOR + "+-------+-------+-------+-------+-------+";
     private final String colSeparator = WPC_BORDER_COLOR + "|";
 

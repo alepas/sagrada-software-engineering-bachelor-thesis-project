@@ -1,6 +1,7 @@
 package it.polimi.ingsw.view.cli;
 
 public class CliConstants {
+    public static final int COUNTER_START_NUMBER = 0;
 
     public static final String YES_RESPONSE = "y";
     public static final String NO_RESPONSE = "n";
