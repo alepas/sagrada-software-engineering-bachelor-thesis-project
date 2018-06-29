@@ -306,4 +306,8 @@ public class CliController {
     public int getTimeToCompleteTask(){
         return clientModel.getTimeLeftToCompleteTask();
     }
+
+    public HashMap<String, ArrayList<ClientWpc>> getWpcsProposedByUsername(){
+        return clientModel.getWpcsProposedByUsername();
+    }
 }

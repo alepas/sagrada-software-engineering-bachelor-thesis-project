@@ -112,9 +112,7 @@ public abstract class NetworkClient implements ResponseHandler {
         if (response.exception == null) {
             clientModel.exitGame();
             clientModel.setGame(new ClientGame(response.gameID, response.numPlayers));
-//            clientModel.setGameID(response.gameID);
             clientModel.setGameActualPlayers(response.actualPlayers);
-//            clientModel.setGameNumPlayers(response.numPlayers);
         }
     }
 
@@ -159,6 +157,8 @@ public abstract class NetworkClient implements ResponseHandler {
             clientModel.setToolCardClientNextActionInfo(response.nextActionInfo);
             clientModel.setTimeLeftToCompleteTask(
                     (response.timeLeftToCompleteTask != null) ? response.timeLeftToCompleteTask : 0);
+            clientModel.setGameStarted(true);
+            clientModel.setWpcsArrived(true);
         }
     }
 

@@ -8,6 +8,7 @@ public class ClientGame implements Serializable {
     private final String id;
     private int gameActualPlayers;
     private final int gameNumPlayers;
+    private final HashMap<String, ArrayList<ClientWpc>> wpcsProposedByUsername;
     private HashMap<String, ClientWpc> wpcByUsername;
     private HashMap<String, Integer> favoursByUsername;
     private ArrayList<ClientToolCard> toolCards;
@@ -16,12 +17,17 @@ public class ClientGame implements Serializable {
     private int currentTurn;
     private ClientRoundTrack roundTrack;
 
-    public ClientGame(String id, int gameNumPlayers) {
+    public ClientGame(String id, int gameNumPlayers, HashMap<String, ArrayList<ClientWpc>> wpcsProposedByUsername) {
         this.id = id;
         this.gameNumPlayers = gameNumPlayers;
 
         this.wpcByUsername = new HashMap<>();
         this.favoursByUsername = new HashMap<>();
+        this.wpcsProposedByUsername = wpcsProposedByUsername;
+    }
+
+    public ClientGame(String id, int gameNumPlayers) {
+        this(id, gameNumPlayers, null);
     }
 
     public String getId() {
@@ -102,5 +108,9 @@ public class ClientGame implements Serializable {
 
     public void setRoundTrack(ClientRoundTrack roundTrack) {
         this.roundTrack = roundTrack;
+    }
+
+    public HashMap<String, ArrayList<ClientWpc>> getWpcsProposedByUsername() {
+        return wpcsProposedByUsername;
     }
 }

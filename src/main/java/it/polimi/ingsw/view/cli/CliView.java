@@ -284,7 +284,7 @@ public class CliView implements Observer, NotificationHandler {
         displayText(CliConstants.LOG_SUCCESS + user);
 
         NextAction nextAction = controller.checkIfInGame();
-        if (nextAction != null) resumeGame(nextAction);
+        if (controller.getGame() != null) resumeGame(nextAction);
         else changeState(Status.MAIN_MENU_PHASE);
     }
 
@@ -292,29 +292,46 @@ public class CliView implements Observer, NotificationHandler {
         ClientGame game = controller.getGame();
         displayText("Riconnesso alla partita: " + game.getId());
 
-        showPrivateObjectives();
-        showPocs();
-        showToolcards();
-
-        switch (nextAction){
-            case WAIT_FOR_TURN: case MENU_ALL: case MENU_ONLY_PLACE_DICE: case MENU_ONLY_TOOLCARD: case MENU_ONLY_ENDTURN:
-
-                break;
-            case PLACE_DICE_TOOLCARD: case SELECT_DICE_TOOLCARD: case INTERRUPT_TOOLCARD: case SELECT_NUMBER_TOOLCARD: case SELECT_DICE_TO_ACTIVATE_TOOLCARD: case CANCEL_ACTION_TOOLCARD:
-                showStartTurnInfo();
-                ToolCardClientNextActionInfo info = controller.getToolcardNextActionInfo();
-                if (info.diceChosen != null) {
-                    displayText("Stavi posizionando il dado: ");
-                    printText(cliRender.renderDice(info.diceChosen));
-                }
-                if (info.wherePickNewDice != null) displayText("Il dado provine da: " + info.wherePickNewDice);
-                if (info.wherePutNewDice != null) displayText("Il dado deve essere posizionato: " + info.wherePutNewDice);
-                break;
-        }
-        printText("TEMPO PER FINIRE LA TASK: " + controller.getTimeToCompleteTask());
         startNewTask(controller.getTimeToCompleteTask());
-        startNewTurnThread();
-        changeState(nextAction);
+
+        if (game.getWpcsProposedByUsername() != null){
+            showPrivateObjectives();
+            printWpcs(game.getWpcsProposedByUsername().get(controller.getUser()));
+            changeState(Status.START_GAME_PHASE);
+        } else {
+            showPrivateObjectives();
+            showPocs();
+            showToolcards();
+
+            switch (nextAction) {
+                case WAIT_FOR_TURN:
+                case MENU_ALL:
+                case MENU_ONLY_PLACE_DICE:
+                case MENU_ONLY_TOOLCARD:
+                case MENU_ONLY_ENDTURN:
+
+                    break;
+                case PLACE_DICE_TOOLCARD:
+                case SELECT_DICE_TOOLCARD:
+                case INTERRUPT_TOOLCARD:
+                case SELECT_NUMBER_TOOLCARD:
+                case SELECT_DICE_TO_ACTIVATE_TOOLCARD:
+                case CANCEL_ACTION_TOOLCARD:
+                    showStartTurnInfo();
+                    ToolCardClientNextActionInfo info = controller.getToolcardNextActionInfo();
+                    if (info.diceChosen != null) {
+                        displayText("Stavi posizionando il dado: ");
+                        printText(cliRender.renderDice(info.diceChosen));
+                    }
+                    if (info.wherePickNewDice != null) displayText("Il dado provine da: " + info.wherePickNewDice);
+                    if (info.wherePutNewDice != null)
+                        displayText("Il dado deve essere posizionato: " + info.wherePutNewDice);
+                    break;
+            }
+
+            startNewTurnThread();
+            changeState(nextAction);
+        }
     }
 
     private void mainMenuPhase() {
@@ -660,6 +677,20 @@ public class CliView implements Observer, NotificationHandler {
         printText("\n");
     }
 
+    private void printWpcs(ArrayList<ClientWpc> userWpcs){
+        displayText("Le tue wpc sono:\n\n");
+
+        ClientWpc[] wpcs = new ClientWpc[2];
+        int num;
+
+        for(int i = 0; i < userWpcs.size(); i++){
+            num = i%2;
+            wpcs[num] = userWpcs.get(i);
+            if ( (i == userWpcs.size()-1) && (num == 0) ) printText(cliRender.renderWpc(wpcs[num], true));
+            if (num == 1) printText(cliRender.renderWpcs(wpcs, CliConstants.WpcSpacing));;
+        }
+    }
+
     //-------------------------------------- Place Dice --------------------------------------
 
     private boolean placeDice() {
@@ -929,17 +960,7 @@ public class CliView implements Observer, NotificationHandler {
     @Override
     public void handle(WpcsExtractedNotification notification) {
         ArrayList<ClientWpc> userWpcs = notification.wpcsByUser.get(controller.getUser());
-        displayText("Le tue wpc sono:\n\n");
-
-        ClientWpc[] wpcs = new ClientWpc[2];
-        int num;
-
-        for(int i = 0; i < userWpcs.size(); i++){
-            num = i%2;
-            wpcs[num] = userWpcs.get(i);
-            if ( (i == userWpcs.size()-1) && (num == 0) ) printText(cliRender.renderWpc(wpcs[num], true));
-            if (num == 1) printText(cliRender.renderWpcs(wpcs, CliConstants.WpcSpacing));;
-        }
+        printWpcs(userWpcs);
 
         showPrivateObjectives();
 

@@ -24,11 +24,7 @@ public class RoundTrack implements Serializable {
     public RoundTrack(){
         currentRound = 0;
         dicesNotUsed = new Dice[MAX_DICES_FOR_ROUND][NUM_OF_ROUNDS];
-//        for (int row = 0;  row< NUM_OF_ROUNDS; row++ ) {
-//
-//            for (int column = 0; column < NUM_OF_ROUNDS; column++)
-//                dicesNotUsed[row][column] = null;
-//        }
+
     }
 
     public int getCurrentRound() {
@@ -89,13 +85,12 @@ public class RoundTrack implements Serializable {
     void addDice(Dice dice){
             int row = currentRound - 1;
             int column = 0;
-            
-            do {
+
+            while(column < MAX_DICES_FOR_ROUND && isThereADice(column,row)) {
                 column++;
-            }while(column < MAX_DICES_FOR_ROUND && isThereADice(column,row));
+            };
             
             dicesNotUsed[column][row] = dice;
-                
     }
 
 

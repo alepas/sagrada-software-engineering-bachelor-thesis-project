@@ -247,6 +247,18 @@ public class ClientModel implements Observer, NotificationHandler {
         this.timeLeftToCompleteTask = timeLeftToCompleteTask;
     }
 
+    public HashMap<String, ArrayList<ClientWpc>> getWpcsProposedByUsername(){
+        return game.getWpcsProposedByUsername();
+    }
+
+    public void setGameStarted(boolean gameStarted) {
+        this.gameStarted = gameStarted;
+    }
+
+    public void setWpcsArrived(boolean arrived){
+        this.wpcsArrived = arrived;
+    }
+
     //----------------------------------- Notification Handler -------------------------------------
     @Override
     public void update(Observable o, Object arg) {

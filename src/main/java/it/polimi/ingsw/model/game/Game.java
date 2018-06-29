@@ -67,33 +67,47 @@ public abstract class Game extends Observable implements Runnable {
      * @return a client game
      */
     public ClientGame getClientGame(){
-        ClientGame clientCopy = new ClientGame(this.id, this.numPlayers);
+        HashMap<String,ArrayList<ClientWpc>> wpcProposed = getWpcProposed();
+        ClientGame clientCopy = new ClientGame(this.id, this.numPlayers, wpcProposed);
         clientCopy.setGameActualPlayers(this.numActualPlayers());
-
-        for(PlayerInGame player : players){
-            clientCopy.setUserWpc(player.getUser(), player.getWPC().getClientWpc());
-            clientCopy.setUserFavours(player.getUser(), player.getFavours());
-        }
-
-        ArrayList<ClientToolCard> clientToolCards = new ArrayList<>();
-        for(ToolCard card : this.toolCards) clientToolCards.add(card.getClientToolcard());
-        clientCopy.setToolCards(clientToolCards);
-
-        ArrayList<ClientPoc> clientPocs = new ArrayList<>();
-        for(PublicObjectiveCard card : this.publicObjectiveCards) clientPocs.add(card.getClientPoc());
-        clientCopy.setPublicObjectiveCards(clientPocs);
-
-        ArrayList<ClientDice> clientDices = new ArrayList<>();
-        for(Dice dice : this.extractedDices) clientDices.add(dice.getClientDice());
-        clientCopy.setExtractedDices(clientDices);
-
         clientCopy.setCurrentTurn(this.currentTurn);
         clientCopy.setRoundTrack(this.roundTrack.getClientRoundTrack());
 
+        if (wpcProposed == null) {
+            for (PlayerInGame player : players) {
+                clientCopy.setUserWpc(player.getUser(), player.getWPC().getClientWpc());
+                clientCopy.setUserFavours(player.getUser(), player.getFavours());
+            }
+
+            ArrayList<ClientToolCard> clientToolCards = new ArrayList<>();
+            for (ToolCard card : this.toolCards) clientToolCards.add(card.getClientToolcard());
+            clientCopy.setToolCards(clientToolCards);
+
+            ArrayList<ClientPoc> clientPocs = new ArrayList<>();
+            for (PublicObjectiveCard card : this.publicObjectiveCards) clientPocs.add(card.getClientPoc());
+            clientCopy.setPublicObjectiveCards(clientPocs);
+
+            ArrayList<ClientDice> clientDices = new ArrayList<>();
+            for (Dice dice : this.extractedDices) clientDices.add(dice.getClientDice());
+            clientCopy.setExtractedDices(clientDices);
+        }
         return clientCopy;
     }
 
+    private HashMap<String,ArrayList<ClientWpc>> getWpcProposed() {
+        HashMap<String, ArrayList<ClientWpc>> wpcsProposed = null;
 
+        if (wpcsByUser != null){
+            wpcsProposed = new HashMap<>();
+            for (PlayerInGame player : players){
+                ArrayList<ClientWpc> clientWpcs = new ArrayList<>();
+                for (String wpc : wpcsByUser.get(player.getUser())) clientWpcs.add(wpcDB.getWpcByID(wpc).getClientWpc());
+                wpcsProposed.put(player.getUser(), clientWpcs);
+            }
+        }
+
+        return wpcsProposed;
+    }
 
 
     //----------------------------------------------------------------------------------

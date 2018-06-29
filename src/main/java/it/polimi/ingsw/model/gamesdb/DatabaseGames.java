@@ -145,8 +145,5 @@ public class DatabaseGames {
         availableGames.remove(game);
         threadByGame.remove(game);
         gameByID.remove(game.getID());
-
-        for(String id: gameByID.keySet())
-        System.out.println(id);
     }
 }

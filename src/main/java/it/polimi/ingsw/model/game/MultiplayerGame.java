@@ -415,7 +415,6 @@ public class MultiplayerGame extends Game {
                 e.printStackTrace();
             }
         }
-        endGame();
     }
 
     /**
