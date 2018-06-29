@@ -40,7 +40,7 @@ public class DatabaseGames {
         return gameByID.get(id);
     }
 
-    public synchronized Game findGameForUser(String username, int numPlayers) throws InvalidNumOfPlayersException, CannotCreatePlayerException {
+    public synchronized Game findGameForUser(String username, int numPlayers, int level) throws InvalidNumOfPlayersException, CannotCreatePlayerException {
         if (numPlayers < GameConstants.MIN_NUM_PLAYERS || numPlayers > GameConstants.MAX_NUM_PLAYERS)
             throw new InvalidNumOfPlayersException(numPlayers);
 

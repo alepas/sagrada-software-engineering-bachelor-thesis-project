@@ -257,7 +257,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
         disableAll();
         Platform.runLater(() -> {
             try {
-                networkClient.findGame(clientModel.getUserToken(), numPlayers);
+                networkClient.findGame(clientModel.getUserToken(), numPlayers, 0);
             } catch (CannotFindUserInDBException | InvalidNumOfPlayersException | CannotCreatePlayerException e) {
                 errorLabel.setText(e.getMessage());
                 errorLabel.setVisible(true);

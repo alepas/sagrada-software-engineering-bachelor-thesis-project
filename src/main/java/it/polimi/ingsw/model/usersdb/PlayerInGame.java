@@ -36,8 +36,6 @@ public class PlayerInGame {
     private boolean placedDiceInTurn;
     private boolean allowPlaceDiceAfterCard;
     private ToolCard cardUsedBlockingTurn;
-    private Observer observer;
-    private boolean rmiObserver;
     private boolean disconnected = false;
     private ClientEndTurnData endTurnData;
 
@@ -62,14 +60,6 @@ public class PlayerInGame {
         turnForRound = 0;
         toolCardInUse=null;
         cardUsedBlockingTurn=null;
-    }
-
-    public Observer getObserver() {
-        return observer;
-    }
-
-    public void setObserver(Observer observer) {
-        this.observer = observer;
     }
 
     public String getUser() {
@@ -125,14 +115,6 @@ public class PlayerInGame {
     public void addAbandonedGame() throws CannotUpdateStatsForUserException {
         db.addAbandonedGamesFromUsername(username);
 
-    }
-
-    public boolean isRmiObserver() {
-        return rmiObserver;
-    }
-
-    public void setRmiObserver(boolean rmiObserver) {
-        this.rmiObserver = rmiObserver;
     }
 
     public void setDisconnected(boolean disconnected) {

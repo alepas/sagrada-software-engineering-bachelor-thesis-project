@@ -93,7 +93,8 @@ class DatabaseUsersTest {
         void differentTokensSameUserMoreLogins() throws CannotLoginUserException {
             Assertions.assertNotEquals(db1.login("affo", "12345"), db1.login("affo", "12345"));
         }
-
+//TODO test da rimuovere forse
+        /*
         @Test
         void getWonGamesFromWrongToken() {
             Assertions.assertThrows(CannotFindUserInDBException.class, () -> {
@@ -151,7 +152,7 @@ class DatabaseUsersTest {
             Assertions.assertThrows(CannotFindUserInDBException.class, () -> {
                 db1.getRankingFromToken(null);
             });
-        }
+        }*/
 
 
         @Nested
@@ -162,8 +163,9 @@ class DatabaseUsersTest {
 
             neededDbToken() throws CannotRegisterUserException {
             }
+//TODO test da rimuovere forse
 
-
+/*
             @Test
             void getRankingFromRightToken() {
                 Assertions.assertDoesNotThrow(() -> {
@@ -190,7 +192,7 @@ class DatabaseUsersTest {
                 Assertions.assertDoesNotThrow(() -> {
                     db1.getLostGamesFromToken(token);
                 });
-            }
+            }*/
         }
 
 

@@ -17,7 +17,7 @@ public interface RemoteServer extends Remote {
 
     Response login(String username, String password, RemoteObserver observer) throws RemoteException, CannotLoginUserException;
 
-    Response findGame(String userToken, int numPlayers) throws RemoteException, InvalidNumOfPlayersException, CannotFindUserInDBException, CannotCreatePlayerException;
+    Response findGame(String userToken, int numPlayers, int level) throws RemoteException, InvalidNumOfPlayersException, CannotFindUserInDBException, CannotCreatePlayerException;
 
     Response pickWpc(String userToken, String wpcID) throws RemoteException, CannotFindPlayerInDatabaseException, NotYourWpcException;
 
@@ -52,8 +52,6 @@ public interface RemoteServer extends Remote {
     Response getNextMove(String userToken) throws RemoteException, CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException ;
 
     Response getUserStat(String userToken) throws RemoteException, CannotFindUserInDBException;
-
-    Response findAlreadyStartedGame(String userToken, RemoteObserver observer) throws RemoteException, CannotFindGameForUserInDatabaseException;
 
     void poll(String userToken) throws RemoteException;
     }
