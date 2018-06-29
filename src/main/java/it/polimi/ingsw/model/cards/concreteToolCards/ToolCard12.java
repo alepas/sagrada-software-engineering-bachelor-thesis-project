@@ -43,7 +43,7 @@ public class ToolCard12 extends ToolCard {
 
     @Override
     public MoveData setCard(PlayerInGame player) throws CannotUseToolCardException {
-        return setCardDefault(player,true,false,NextAction.PLACE_DICE_TOOLCARD,ClientDiceLocations.WPC,ClientDiceLocations.WPC);
+        return setCardDefault(player, true, false, 0, ClientDiceLocations.WPC, ClientDiceLocations.WPC, NextAction.PLACE_DICE_TOOLCARD);
     }
 
 
@@ -62,7 +62,7 @@ public class ToolCard12 extends ToolCard {
 
 
     private boolean checkColorInRoundTrack(Dice dice) {
-        ArrayList<Dice> roundTrackDices = currentGame.getRoundTrack().getDicesNotUsed();
+        ArrayList<Dice> roundTrackDices = cardRoundTrack.getDicesNotUsed();
         for (Dice tempDice : roundTrackDices) {
             if (tempDice.getDiceColor() == dice.getDiceColor())
                 return true;
@@ -77,18 +77,18 @@ public class ToolCard12 extends ToolCard {
             firstDiceInitial = currentPlayer.dicePresentInLocation(diceId, ClientDiceLocations.WPC);
             Dice tempDice = firstDiceInitial.getDice();
             if (pos == null) {
-                throw new CannotPerformThisMoveException(currentPlayer.getUser(), 2, false);
+                throw new CannotPerformThisMoveException(username, 2, false);
             }
             if (!checkColorInRoundTrack(tempDice))
                 throw new CannotPickDiceException(username, tempDice.getDiceNumber(), tempDice.getDiceColor(), ClientDiceLocations.WPC, 2);
             chosenColor = tempDice.getDiceColor();
-            currentPlayer.getWPC().removeDice(firstDiceInitial.getPosition());
-            if (!currentPlayer.getWPC().addDiceWithAllRestrictions(tempDice, pos)) {
-                currentPlayer.getWPC().addDicePersonalizedRestrictions(tempDice, firstDiceInitial.getPosition(), false, false, false, false, false);
+            cardWpc.removeDice(firstDiceInitial.getPosition());
+            if (!cardWpc.addDiceWithAllRestrictions(tempDice, pos)) {
+                cardWpc.addDicePersonalizedRestrictions(tempDice, firstDiceInitial.getPosition(), false, false, false, false, false);
                 throw new CannotPickPositionException(username, pos);
             }
             this.currentStatus = 20;
-            updateClientWPC();
+            updateAndCopyToGameData(true, true, false);
             movesNotifications.add(new ToolCardDicePlacedNotification(username, tempDice.getClientDice(), pos));
             String text = "Vuoi spostare un altro dado dello stesso colore del dado appena spostato?";
             return new MoveData(NextAction.INTERRUPT_TOOLCARD, text, true, false, tempClientWpc, null, null, null, null, null, false);
@@ -98,23 +98,23 @@ public class ToolCard12 extends ToolCard {
             secondDiceInitial = currentPlayer.dicePresentInLocation(diceId, ClientDiceLocations.WPC);
             Dice tempDice = secondDiceInitial.getDice();
             if (pos == null) {
-                throw new CannotPerformThisMoveException(currentPlayer.getUser(), 2, false);
+                throw new CannotPerformThisMoveException(username, 2, false);
             }
             if (tempDice.getDiceColor() != chosenColor)
                 throw new CannotPickDiceException(username, tempDice.getDiceNumber(), tempDice.getDiceColor(), ClientDiceLocations.WPC, 2);
-            currentPlayer.getWPC().removeDice(secondDiceInitial.getPosition());
-            if (!currentPlayer.getWPC().addDiceWithAllRestrictions(tempDice, pos)) {
-                currentPlayer.getWPC().addDicePersonalizedRestrictions(tempDice, secondDiceInitial.getPosition(), false, false, false, false, false);
+            cardWpc.removeDice(secondDiceInitial.getPosition());
+            if (!cardWpc.addDiceWithAllRestrictions(tempDice, pos)) {
+                cardWpc.addDicePersonalizedRestrictions(tempDice, secondDiceInitial.getPosition(), false, false, false, false, false);
                 throw new CannotPickPositionException(username, pos);
             }
             this.used = true;
-            updateClientWPC();
+            updateAndCopyToGameData(true, true, false);
             movesNotifications.add(new ToolCardDicePlacedNotification(username, tempDice.getClientDice(), pos));
-            currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, tempExtractedDices, null, currentPlayer.getFavours()));
+            currentGame.changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, tempClientExtractedDices, null, currentPlayer.getFavours()));
             ClientWpc tempWpc = tempClientWpc;
             cleanCard();
             return new MoveData(true, tempWpc, null, null);
-        } else throw new CannotPerformThisMoveException(currentPlayer.getUser(), 2, false);
+        } else throw new CannotPerformThisMoveException(username, 2, false);
 
 
     }
@@ -124,44 +124,31 @@ public class ToolCard12 extends ToolCard {
     public MoveData cancelAction(boolean all) throws CannotCancelActionException {
         MoveData temp;
         boolean canceledCard = true;
+
+        if (!all) {
+            switch (currentStatus) {
+                case 2:
+                    currentStatus = 20;
+                    return getNextMove();
+                case 1:
+                    return cancelStatusOne();
+                case 0:
+                    return cancelStatusZero();
+            }
+            throw new CannotCancelActionException(username, id, 1);
+
+        }
         switch (currentStatus) {
             case 2:
                 currentStatus = 20;
-                if (!all) {
-                    String text = "Vuoi spostare un altro dado dello stesso colore del dado appena spostato?";
-                    return new MoveData(NextAction.INTERRUPT_TOOLCARD, text, true, false, null, null, null, null, null, null, false);
-                }
-            case 20: if (!all) break;
+            case 20:
                 try {
                     return interruptToolCard(ToolCardInteruptValues.NO);
                 } catch (CannotInteruptToolCardException e) {
                     //impossible
                 }
-
-            case 1:
-                if (!all) return cancelStatusOne();
-            case 0:
-                if (!all) {
-                    return cancelStatusZero();
-                }
-
         }
-        if (!all)
-            throw new CannotCancelActionException(username, id, 1);
-        if (currentStatus == 1) {
-            if (singlePlayerGame) {
-                currentGame.getExtractedDices().add(diceForSingleUser);
-            }
-        }
-        updateClientWPC();
-        updateClientExtractedDices();
-        updateClientRoundTrack();
-        ClientWpc tempWpc = tempClientWpc;
-        ArrayList<ClientDice> tempExtracted = tempExtractedDices;
-        ClientRoundTrack tempRound = tempRoundTrack;
-        cleanCard();
-        return new MoveData(true, canceledCard, tempWpc, tempExtracted, tempRound, null, null, null);
-
+        return cancelCardFinalAction();
     }
 
     @Override
@@ -175,9 +162,10 @@ public class ToolCard12 extends ToolCard {
     @Override
     public MoveData getNextMove() {
         switch (currentStatus) {
-            case 0:  return defaultNextMoveStatusZero();
+            case 0:
+                return defaultNextMoveStatusZero();
             case 1:
-                return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.WPC, ClientDiceLocations.WPC, null, tempExtractedDices, null, null, null);
+                return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.WPC, ClientDiceLocations.WPC, null, tempClientExtractedDices, null, null, null);
             case 2:
                 return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.WPC, ClientDiceLocations.WPC, tempClientWpc, null, null, null, null);
 
@@ -199,7 +187,7 @@ public class ToolCard12 extends ToolCard {
             throw new CannotInteruptToolCardException(username, id);
         updateClientWPC();
         updateClientExtractedDices();
-        currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, tempExtractedDices, null, currentPlayer.getFavours()));
+        currentGame.changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, tempClientExtractedDices, null, currentPlayer.getFavours()));
         this.used = true;
         cleanCard();
         return new MoveData(true, null, null, null);

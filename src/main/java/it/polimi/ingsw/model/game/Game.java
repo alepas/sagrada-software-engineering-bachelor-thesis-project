@@ -114,8 +114,6 @@ public abstract class Game extends Observable implements Runnable {
 
     public PlayerInGame[] getPlayers() { return players; }
 
-    public void removeExtractedDice(Dice dice){ extractedDices.remove(dice); }
-
     public RoundTrack getRoundTrack() {
         return roundTrack;
     }
@@ -344,6 +342,18 @@ public abstract class Game extends Observable implements Runnable {
     }
 
     public abstract boolean isSinglePlayerGame();
+
+    public void updateRoundTrack(RoundTrack roundTrack){
+        this.roundTrack=roundTrack;
+    }
+
+    public void updateExtractedDices(ArrayList<Dice> extractedDices){
+        this.extractedDices=extractedDices;
+    }
+
+
+
+
 
     //--------------------------------------- Abstract Methods --------------------------------------
 

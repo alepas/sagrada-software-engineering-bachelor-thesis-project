@@ -7,7 +7,6 @@ import it.polimi.ingsw.model.cards.ToolCard;
 import it.polimi.ingsw.model.clientModel.*;
 import it.polimi.ingsw.model.constants.ToolCardConstants;
 import it.polimi.ingsw.model.dicebag.Color;
-import it.polimi.ingsw.model.exceptions.dicebagExceptions.IncorrectNumberException;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
 import it.polimi.ingsw.model.usersdb.MoveData;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
@@ -29,8 +28,8 @@ public class ToolCard5 extends ToolCard {
         this.cardOnlyInFirstMove = true;
         this.used = false;
         defaultClean();
-        fromExtracted=null;
-        fromRoundTrack=null;
+        fromExtracted = null;
+        fromRoundTrack = null;
 
     }
 
@@ -42,7 +41,7 @@ public class ToolCard5 extends ToolCard {
 
     @Override
     public MoveData setCard(PlayerInGame player) throws CannotUseToolCardException {
-        return setCardDefault(player,false,true,NextAction.SELECT_DICE_TOOLCARD,ClientDiceLocations.EXTRACTED,null);
+        return setCardDefault(player, false, true, 0, ClientDiceLocations.EXTRACTED, null, NextAction.SELECT_DICE_TOOLCARD);
     }
 
 
@@ -58,14 +57,13 @@ public class ToolCard5 extends ToolCard {
         } else if (currentStatus == 2) {
             this.fromRoundTrack = currentPlayer.dicePresentInLocation(diceId, ClientDiceLocations.ROUNDTRACK);
             currentStatus = 3;
-
-            currentGame.getExtractedDices().remove(fromExtracted.getDice());
-            currentGame.getRoundTrack().swapDice(fromExtracted.getDice(), fromRoundTrack.getPosition());
-            currentGame.getExtractedDices().add(fromRoundTrack.getDice());
+            int indexDice = cardExtractedDices.indexOf(fromExtracted.getDice());
+            cardRoundTrack.swapDice(fromExtracted.getDice(), fromRoundTrack.getPosition());
+            cardExtractedDices.set(indexDice, fromRoundTrack.getDice());
             updateClientExtractedDices();
             updateClientRoundTrack();
             movesNotifications.add(new ToolCardDiceChangedNotification(username, fromExtracted.getDice().getClientDice(), fromRoundTrack.getDice().getClientDice(), ClientDiceLocations.EXTRACTED, ClientDiceLocations.ROUNDTRACK));
-            return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, ClientDiceLocations.WPC, null, tempExtractedDices, tempRoundTrack, fromRoundTrack.getDice().getClientDice(), ClientDiceLocations.EXTRACTED);
+            return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, ClientDiceLocations.WPC, null, tempClientExtractedDices, tempClientRoundTrack, fromRoundTrack.getDice().getClientDice(), ClientDiceLocations.EXTRACTED);
         } else throw new CannotPerformThisMoveException(username, 2, false);
     }
 
@@ -78,23 +76,21 @@ public class ToolCard5 extends ToolCard {
     @Override
     public MoveData placeDice(int diceId, Position pos) throws CannotPerformThisMoveException, CannotPickPositionException, CannotPickDiceException {
         if (currentStatus != 3)
-            throw new CannotPerformThisMoveException(currentPlayer.getUser(), 2, false);
+            throw new CannotPerformThisMoveException(username, 2, false);
         if (pos == null)
-            throw new CannotPerformThisMoveException(currentPlayer.getUser(), 2, false);
+            throw new CannotPerformThisMoveException(username, 2, false);
         if (diceId != this.fromRoundTrack.getDice().getId())
             throw new CannotPickDiceException(username, diceId, ClientDiceLocations.EXTRACTED, 3);
-        if (!currentPlayer.getWPC().addDiceWithAllRestrictions(this.fromRoundTrack.getDice(), pos))
+        if (!cardWpc.addDiceWithAllRestrictions(this.fromRoundTrack.getDice(), pos))
             throw new CannotPickPositionException(username, pos);
-        currentGame.getExtractedDices().remove(this.fromRoundTrack.getDice());
+        cardExtractedDices.remove(this.fromRoundTrack.getDice());
         currentStatus = 4;
-
         this.used = true;
-        updateClientWPC();
-        updateClientExtractedDices();
+        updateAndCopyToGameData(true, true, true);
         movesNotifications.add(new ToolCardDicePlacedNotification(username, this.fromRoundTrack.getDice().getClientDice(), pos));
-        currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, tempExtractedDices, tempRoundTrack, currentPlayer.getFavours()));
+        currentGame.changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, tempClientExtractedDices, tempClientRoundTrack, currentPlayer.getFavours()));
         ClientWpc tempWpc = tempClientWpc;
-        ArrayList<ClientDice> tempExtracted = tempExtractedDices;
+        ArrayList<ClientDice> tempExtracted = tempClientExtractedDices;
         cleanCard();
         return new MoveData(true, tempWpc, tempExtracted, null);
     }
@@ -102,57 +98,33 @@ public class ToolCard5 extends ToolCard {
 
     @Override
     public MoveData cancelAction(boolean all) throws CannotCancelActionException {
-        MoveData temp;
-        switch (currentStatus) {
-            case 3: {
-                currentGame.getRoundTrack().swapDice(fromRoundTrack.getDice(), fromRoundTrack.getPosition());
-                currentGame.getExtractedDices().remove(fromRoundTrack.getDice());
-                currentGame.getExtractedDices().add(fromExtracted.getDice());
-                updateClientRoundTrack();
-                updateClientExtractedDices();
-                this.fromRoundTrack = null;
-                this.currentStatus = 2;
-                movesNotifications.remove(movesNotifications.size() - 1);
-                if (!all)
-                    return new MoveData(NextAction.SELECT_DICE_TOOLCARD, ClientDiceLocations.ROUNDTRACK, null, null, tempExtractedDices, tempRoundTrack, fromExtracted.getDice().getClientDice(), ClientDiceLocations.EXTRACTED);
-            }
-            case 2: {
-                this.fromExtracted = null;
-                this.currentStatus = 1;
-                if (!all)
+        if (!all) {
+            switch (currentStatus) {
+                case 3: {
+                    cardRoundTrack.swapDice(fromRoundTrack.getDice(), fromRoundTrack.getPosition());
+                    int indexDice = cardExtractedDices.indexOf(fromRoundTrack.getDice());
+                    cardExtractedDices.set(indexDice, fromExtracted.getDice());
+                    updateClientRoundTrack();
+                    updateClientExtractedDices();
+                    this.fromRoundTrack = null;
+                    this.currentStatus = 2;
+                    movesNotifications.remove(movesNotifications.size() - 1);
+                    return new MoveData(NextAction.SELECT_DICE_TOOLCARD, ClientDiceLocations.ROUNDTRACK, null, null, tempClientExtractedDices, tempClientRoundTrack, fromExtracted.getDice().getClientDice(), ClientDiceLocations.EXTRACTED);
+                }
+                case 2: {
+                    this.fromExtracted = null;
+                    this.currentStatus = 1;
                     return new MoveData(NextAction.SELECT_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED);
-            }
-
-            case 1:
-                if (!all) return cancelStatusOne();
-            case 0:
-                if (!all){
-                    return cancelStatusZero();
                 }
 
-        }
-        if (!all)
-            throw new CannotCancelActionException(username, id, 1);
-        if (currentStatus==1){
-            if (singlePlayerGame){
-                currentGame.getExtractedDices().add(diceForSingleUser);
+                case 1:
+                    return cancelStatusOne();
+                case 0:
+                    return cancelStatusZero();
             }
+            throw new CannotCancelActionException(username, id, 1);
         }
-        updateClientWPC();
-        updateClientExtractedDices();
-        updateClientRoundTrack();
-        ClientWpc tempWpc = tempClientWpc;
-        ArrayList<ClientDice> tempExtracted = tempExtractedDices;
-        ClientRoundTrack tempRound = tempRoundTrack;
-        cleanCard();
-        return new MoveData(true, true, tempWpc,tempExtracted,tempRound,null,null,null);
-
-
-
-
-
-
-
+        return cancelCardFinalAction();
 
     }
 
@@ -160,8 +132,8 @@ public class ToolCard5 extends ToolCard {
     @Override
     protected void cleanCard() {
         defaultClean();
-        fromExtracted=null;
-        fromRoundTrack=null;
+        fromExtracted = null;
+        fromRoundTrack = null;
     }
 
     @Override
@@ -170,11 +142,11 @@ public class ToolCard5 extends ToolCard {
             case 0:
                 return defaultNextMoveStatusZero();
             case 1:
-                return new MoveData(NextAction.SELECT_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, null, null, tempExtractedDices, null, null, null);
+                return new MoveData(NextAction.SELECT_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, null, null, tempClientExtractedDices, null, null, null);
             case 2:
-                return new MoveData(NextAction.SELECT_DICE_TOOLCARD, ClientDiceLocations.ROUNDTRACK, null, null, tempExtractedDices, null, fromExtracted.getDice().getClientDice(), ClientDiceLocations.EXTRACTED);
+                return new MoveData(NextAction.SELECT_DICE_TOOLCARD, ClientDiceLocations.ROUNDTRACK, null, null, tempClientExtractedDices, null, fromExtracted.getDice().getClientDice(), ClientDiceLocations.EXTRACTED);
             case 3:
-                return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, ClientDiceLocations.WPC, null, tempExtractedDices, tempRoundTrack, fromRoundTrack.getDice().getClientDice(), ClientDiceLocations.EXTRACTED);
+                return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, ClientDiceLocations.WPC, null, tempClientExtractedDices, tempClientRoundTrack, fromRoundTrack.getDice().getClientDice(), ClientDiceLocations.EXTRACTED);
 
         }
         return null;

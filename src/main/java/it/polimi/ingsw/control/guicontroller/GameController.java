@@ -1272,18 +1272,21 @@ public class GameController implements Observer, NotificationHandler {
      * Goes back to the previous action.
      */
     private void cancelLastOperation() {
-        ToolCardClientNextActionInfo info = clientModel.getToolCardClientNextActionInfo();
+        ToolCardClientNextActionInfo info;
         try {
             NextAction previousAction = networkClient.cancelAction(clientModel.getUserToken());
+            info = clientModel.getToolCardClientNextActionInfo();
+            updateGraphic();
             switch (previousAction) {
                 case MENU_ALL:
+                    message1Label.setText("Tool Card cancellata");
                     usedToolCard = false;
                     diceBagIcon.setVisible(false);
                     break;
                 case SELECT_DICE_TOOLCARD:
                     plusMinusPane.setVisible(false);
                     changeNumberPane.setVisible(false);
-                    makeSelectedDiceLessVisible(info.diceChosenLocation);
+                    makeSelectedDiceLessVisible(info.wherePickNewDice);
                     break;
                 case SELECT_NUMBER_TOOLCARD:
                     Platform.runLater(()->{
@@ -1293,6 +1296,8 @@ public class GameController implements Observer, NotificationHandler {
                     });
                     break;
                 case MENU_ONLY_TOOLCARD:
+                    message1Label.setText("Tool Card cancellata");
+                    diceBagIcon.setVisible(false);
                     usedToolCard = false;
                     break;
                 case MENU_ONLY_PLACE_DICE:
@@ -1586,6 +1591,9 @@ public class GameController implements Observer, NotificationHandler {
         usedToolCard = false;
         Platform.runLater(()->{
             updateGraphic();
+            plusMinusPane.setVisible(false);
+            changeNumberPane.setVisible(false);
+            diceBagIcon.setVisible(false);
             //updateUsedToolCard();
             if(!clientModel.isActive()) stateAction(ANOTHER_PLAYER_TURN);
 

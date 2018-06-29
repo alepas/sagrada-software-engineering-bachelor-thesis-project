@@ -12,8 +12,6 @@ import it.polimi.ingsw.model.usersdb.MoveData;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
 import it.polimi.ingsw.model.wpc.DiceAndPosition;
 
-import java.util.ArrayList;
-
 public class ToolCard2 extends ToolCard {
 
     /**
@@ -42,16 +40,16 @@ public class ToolCard2 extends ToolCard {
 
     @Override
     public MoveData setCard(PlayerInGame player) throws CannotUseToolCardException {
-        return setCardDefault(player,true,false,NextAction.PLACE_DICE_TOOLCARD,ClientDiceLocations.WPC,ClientDiceLocations.WPC);
+        return setCardDefault(player, true, false, 0, ClientDiceLocations.WPC, ClientDiceLocations.WPC, NextAction.PLACE_DICE_TOOLCARD);
     }
 
 
     /**
      * @param diceId is the id of the chosen dice
      * @return all the information related to the next action that the player will have to do and all new parameters created
-     *         by the call of this method
-     * @throws CannotPickDiceException  if the chosen dice isn't available, for example it is not located where the
-     *         player has to pick the dice
+     * by the call of this method
+     * @throws CannotPickDiceException        if the chosen dice isn't available, for example it is not located where the
+     *                                        player has to pick the dice
      * @throws CannotPerformThisMoveException if the game in a multi player game
      */
     @Override
@@ -66,9 +64,9 @@ public class ToolCard2 extends ToolCard {
     /**
      * @param number define if the players wants to add one or subtract one to the chosen dice number
      * @return all the information related to the next action that the player will have to do and all new parameters created
-     *         by the call of this method
+     * by the call of this method
      * @throws CannotPerformThisMoveException every time that this method is called because it is not
-     *          possible to pick a number while this card is used
+     *                                        possible to pick a number while this card is used
      */
     @Override
     public MoveData pickNumber(int number) throws CannotPerformThisMoveException {
@@ -80,33 +78,33 @@ public class ToolCard2 extends ToolCard {
      * the player's wpc and clear the card. The placement doesn't check cell color restrictions.
      *
      * @param diceId is the id of the chosen dice
-     * @param pos is the position where the player would like to place the chosen dice
+     * @param pos    is the position where the player would like to place the chosen dice
      * @return all the information related to the next action that the player will have to do and all new parameters created
-     *         by the call of this method
+     * by the call of this method
      * @throws CannotPerformThisMoveException if the status is different from 1 or if the chosen position is null
-     * @throws CannotPickPositionException if it is not possible to add the chosen dice to the chosen position
-     * @throws CannotPickDiceException if it is not possible to pick the chosen dice
+     * @throws CannotPickPositionException    if it is not possible to add the chosen dice to the chosen position
+     * @throws CannotPickDiceException        if it is not possible to pick the chosen dice
      */
     @Override
     public MoveData placeDice(int diceId, Position pos) throws CannotPerformThisMoveException,
             CannotPickPositionException, CannotPickDiceException {
         if (currentStatus != 1)
-            throw new CannotPerformThisMoveException(currentPlayer.getUser(), 2, false);
+            throw new CannotPerformThisMoveException(username, 2, false);
 
         if (pos == null)
-            throw new CannotPerformThisMoveException(currentPlayer.getUser(), 2, false);
+            throw new CannotPerformThisMoveException(username, 2, false);
 
         DiceAndPosition diceAndPosition = currentPlayer.dicePresentInLocation(diceId, ClientDiceLocations.WPC);
         Dice tempDice = diceAndPosition.getDice();
-        currentPlayer.getWPC().removeDice(diceAndPosition.getPosition());
-        if (!currentPlayer.getWPC().addDicePersonalizedRestrictions(tempDice, pos, false, true, true, true, false)) {
-            currentPlayer.getWPC().addDicePersonalizedRestrictions(tempDice, diceAndPosition.getPosition(), false, false, false, false, false);
+        cardWpc.removeDice(diceAndPosition.getPosition());
+        if (!cardWpc.addDicePersonalizedRestrictions(tempDice, pos, false, true, true, true, false)) {
+            cardWpc.addDicePersonalizedRestrictions(tempDice, diceAndPosition.getPosition(), false, false, false, false, false);
             throw new CannotPickPositionException(username, pos);
         }
         this.used = true;
-        updateClientWPC();
+        updateAndCopyToGameData(true, true, false);
         movesNotifications.add(new ToolCardDicePlacedNotification(username, tempDice.getClientDice(), pos));
-        currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(),
+        currentGame.changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(),
                 movesNotifications, tempClientWpc, null, null, currentPlayer.getFavours()));
         ClientWpc tempWpc = tempClientWpc;
         cleanCard();
@@ -116,32 +114,23 @@ public class ToolCard2 extends ToolCard {
 
     /**
      * goes back to the last action that has been done, it changes all elements. Everything comes back on a step
+     *
      * @param all //todo
      * @return all the information related to the previous action that the player has done while using this toolcard
-     *
      * @throws CannotCancelActionException if the current status isn't correct or the boolean is false
      */
     @Override
     public MoveData cancelAction(boolean all) throws CannotCancelActionException {
-        switch (currentStatus) {
-            case 1:
-                if (!all) return cancelStatusOne();
-            case 0:
-                if (!all) return cancelStatusZero();
-        }
-        if (!all)
+        if (!all) {
+            switch (currentStatus) {
+                case 1:
+                    return cancelStatusOne();
+                case 0:
+                    return cancelStatusZero();
+            }
             throw new CannotCancelActionException(username, id, 1);
-        if (currentStatus == 1 && singlePlayerGame)
-            currentGame.getExtractedDices().add(diceForSingleUser);
-        updateClientWPC();
-        updateClientExtractedDices();
-        updateClientRoundTrack();
-        ClientWpc tempWpc = tempClientWpc;
-        ArrayList<ClientDice> tempExtracted = tempExtractedDices;
-        ClientRoundTrack tempRound = tempRoundTrack;
-        cleanCard();
-        return new MoveData(true, true, tempWpc,tempExtracted,tempRound,null,null,null);
-
+        }
+        return cancelCardFinalAction();
     }
 
     /**
@@ -163,7 +152,7 @@ public class ToolCard2 extends ToolCard {
                 return defaultNextMoveStatusZero();
             case 1:
                 return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.WPC,
-                        ClientDiceLocations.WPC, null, tempExtractedDices, null, null, null);
+                        ClientDiceLocations.WPC, null, tempClientExtractedDices, null, null, null);
         }
         return null;
     }

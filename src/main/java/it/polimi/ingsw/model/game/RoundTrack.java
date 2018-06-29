@@ -189,4 +189,21 @@ public class RoundTrack implements Serializable {
         return count;
     }
 
+
+    private RoundTrack (int currentRound,Dice[][] dicesNotUsed){
+        this.currentRound=currentRound;
+        this.dicesNotUsed=dicesNotUsed;
+    }
+
+    public RoundTrack getCopy(){
+        Dice[][] tempDices = new Dice[NUM_OF_ROUNDS][NUM_OF_ROUNDS];
+
+        for (int row = 0;  row< NUM_OF_ROUNDS; row++ ) {
+
+            for (int column = 0; column < NUM_OF_ROUNDS; column++)
+                tempDices[row][column] = dicesNotUsed[row][column];
+        }
+        return new RoundTrack(this.currentRound, tempDices);
+    }
+
 }

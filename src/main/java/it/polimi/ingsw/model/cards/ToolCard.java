@@ -6,8 +6,10 @@ import it.polimi.ingsw.model.dicebag.Color;
 import it.polimi.ingsw.model.dicebag.Dice;
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
 import it.polimi.ingsw.model.game.Game;
+import it.polimi.ingsw.model.game.RoundTrack;
 import it.polimi.ingsw.model.usersdb.MoveData;
 import it.polimi.ingsw.model.usersdb.PlayerInGame;
+import it.polimi.ingsw.model.wpc.Wpc;
 
 import java.util.ArrayList;
 
@@ -27,9 +29,12 @@ public abstract class ToolCard implements Cloneable {
     protected boolean singlePlayerGame = false;
     protected String username = null;
     protected ArrayList<Notification> movesNotifications;
-    protected ArrayList<ClientDice> tempExtractedDices;
+    protected ArrayList<Dice> cardExtractedDices;
+    protected Wpc cardWpc;
+    protected RoundTrack cardRoundTrack;
+    protected ArrayList<ClientDice> tempClientExtractedDices;
     protected ClientWpc tempClientWpc;
-    protected ClientRoundTrack tempRoundTrack;
+    protected ClientRoundTrack tempClientRoundTrack;
 
 
     public abstract ToolCard getToolCardCopy();
@@ -78,17 +83,17 @@ public abstract class ToolCard implements Cloneable {
 
 
     protected void updateClientExtractedDices() {
-        tempExtractedDices.clear();
-        for (Dice tempdice : currentPlayer.getUpdatedExtractedDices())
-            tempExtractedDices.add(tempdice.getClientDice());
+        tempClientExtractedDices.clear();
+        for (Dice tempdice : cardExtractedDices)
+            tempClientExtractedDices.add(tempdice.getClientDice());
     }
 
     protected void updateClientWPC() {
-        tempClientWpc = currentPlayer.getWPC().getClientWpc();
+        tempClientWpc = cardWpc.getClientWpc();
     }
 
     protected void updateClientRoundTrack() {
-        tempRoundTrack = currentGame.getRoundTrack().getClientRoundTrack();
+        tempClientRoundTrack = cardRoundTrack.getClientRoundTrack();
     }
 
     protected MoveData cancelStatusOne() {
@@ -96,11 +101,11 @@ public abstract class ToolCard implements Cloneable {
             cleanCard();
             return new MoveData(true, true);
         }
-        currentGame.getExtractedDices().add(diceForSingleUser);
+        cardExtractedDices.add(diceForSingleUser);
         updateClientExtractedDices();
         diceForSingleUser = null;
         this.currentStatus = 0;
-        return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD, ClientDiceLocations.EXTRACTED, null, null, tempExtractedDices, null, null, null);
+        return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD, ClientDiceLocations.EXTRACTED, null, null, tempClientExtractedDices, null, null, null);
     }
 
 
@@ -120,14 +125,25 @@ public abstract class ToolCard implements Cloneable {
             throw new CannotPickDiceException(username, tempDice.getDiceNumber(), tempDice.getDiceColor(), ClientDiceLocations.EXTRACTED, 1);
         this.currentStatus = 1;
         this.diceForSingleUser = tempDice;
-        currentGame.getExtractedDices().remove(this.diceForSingleUser);
+        cardExtractedDices.remove(this.diceForSingleUser);
         updateClientExtractedDices();
-        return new MoveData(nextAction, initial, finish, null, tempExtractedDices, null, null, null);
+        return new MoveData(nextAction, initial, finish, null, tempClientExtractedDices, null, null, null);
 
     }
 
 
-    protected MoveData setCardDefault(PlayerInGame player, boolean dicesOnWpc, boolean dicesOnRoundTrack, NextAction nextAction, ClientDiceLocations from, ClientDiceLocations finish) throws CannotUseToolCardException {
+    protected MoveData setCardDefault(PlayerInGame player, boolean dicesOnWpc, boolean dicesOnRoundTrack, int turn, ClientDiceLocations from, ClientDiceLocations finish, NextAction nextAction) throws CannotUseToolCardException {
+        setCardInitialStep(player, dicesOnWpc, dicesOnRoundTrack, turn);
+        if (currentGame.isSinglePlayerGame()) {
+            singlePlayerGame = true;
+            return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD, ClientDiceLocations.EXTRACTED);
+        } else {
+            this.currentStatus = 1;
+            return new MoveData(nextAction, from, finish);
+        }
+    }
+
+    protected void setCardInitialStep(PlayerInGame player, boolean dicesOnWpc, boolean dicesOnRoundTrack, int turn) throws CannotUseToolCardException {
         if ((currentPlayer != null) || (currentStatus != 0)) {
             throw new CannotUseToolCardException(id, 9);
         }
@@ -140,22 +156,26 @@ public abstract class ToolCard implements Cloneable {
         if (dicesOnRoundTrack)
             if (player.getUpdatedRoundTrack().getNumberOfDices() == 0)
                 throw new CannotUseToolCardException(id, 6);
+        if (turn !=0){
+            if (player.getTurnForRound() != turn){
+                if (turn==1){
+                    throw new CannotUseToolCardException(id, 7);
+                }
+                else throw new CannotUseToolCardException(id, 8);
+            }
+        }
         this.currentPlayer = player;
         this.currentGame = player.getGame();
         this.username = player.getUser();
+        copyExtractedDicesToCard();
+        copyWpcToCard();
+        copyRoundTrackToCard();
         currentPlayer.setAllowPlaceDiceAfterCard(allowPlaceDiceAfterCard);
         if (cardBlocksNextTurn) {
             currentPlayer.setCardUsedBlockingTurn(this);
         }
         this.currentPlayer.setToolCardInUse(this);
         updateClientExtractedDices();
-        if (currentGame.isSinglePlayerGame()) {
-            singlePlayerGame = true;
-            return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD, ClientDiceLocations.EXTRACTED);
-        } else {
-            this.currentStatus = 1;
-            return new MoveData(nextAction, from, finish);
-        }
     }
 
     protected void defaultClean() {
@@ -165,17 +185,73 @@ public abstract class ToolCard implements Cloneable {
         this.currentGame = null;
         this.username = null;
         this.tempClientWpc = null;
-        this.tempRoundTrack = null;
+        this.tempClientRoundTrack = null;
         this.singlePlayerGame = false;
-        this.tempExtractedDices = new ArrayList<>();
+        this.tempClientExtractedDices = new ArrayList<>();
         this.movesNotifications = new ArrayList<>();
+        this.cardExtractedDices =new ArrayList<>();
+        this.cardRoundTrack = null;
+        this.cardWpc =null;
     }
 
     protected MoveData defaultNextMoveStatusZero(){
         if (singlePlayerGame)
-            return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD, ClientDiceLocations.EXTRACTED, tempExtractedDices);
+            return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD, ClientDiceLocations.EXTRACTED, tempClientExtractedDices);
         else return null;
     }
+
+    protected void copyExtractedDicesToCard(){
+        cardExtractedDices.clear();
+        cardExtractedDices.addAll(currentGame.getExtractedDices());
+    }
+
+    protected void copyExtractedDicesToGame(){
+        currentGame.updateExtractedDices(cardExtractedDices);
+    }
+
+    protected void copyWpcToCard(){
+        cardWpc=currentPlayer.getWPC().copyWpc();
+    }
+
+    protected void copyWpcToGame(){
+       currentPlayer.updateWpc(cardWpc);
+    }
+
+    protected void copyRoundTrackToCard(){
+        cardRoundTrack=currentGame.getRoundTrack().getCopy();
+    }
+
+    protected void copyRoundTrackToGame(){
+        currentGame.updateRoundTrack(cardRoundTrack);
+    }
+
+
+    protected MoveData cancelCardFinalAction(){
+        ClientWpc tempWpc = currentPlayer.getWPC().getClientWpc();
+        ArrayList<ClientDice> tempExtracted = new ArrayList<>();
+        tempClientExtractedDices.clear();
+        for (Dice tempdice : currentGame.getExtractedDices())
+            tempExtracted.add(tempdice.getClientDice());
+        ClientRoundTrack tempRound = currentGame.getRoundTrack().getClientRoundTrack();
+        cleanCard();
+        return new MoveData(true, true, tempWpc, tempExtracted, tempRound, null, null, null);
+    }
+
+    protected void updateAndCopyToGameData(boolean extracted, boolean wpc, boolean roundtrack){
+        if (extracted){
+            copyExtractedDicesToGame();
+            updateClientExtractedDices();
+        }
+        if (wpc){
+            copyWpcToGame();
+            updateClientWPC();
+        }
+        if (roundtrack) {
+            copyRoundTrackToGame();
+            updateClientRoundTrack();
+        }
+    }
+
 
     //----------------------------------- Used in testing -------------------------------------------------------
 
