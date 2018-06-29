@@ -35,7 +35,7 @@ public class ToolCard9 extends ToolCard {
 
     @Override
     public MoveData setCard(PlayerInGame player) throws CannotUseToolCardException {
-        return setCardDefault(player,false,false,NextAction.PLACE_DICE_TOOLCARD,ClientDiceLocations.EXTRACTED,ClientDiceLocations.WPC);
+        return setCardDefault(player, false, false, 0, ClientDiceLocations.EXTRACTED, ClientDiceLocations.WPC, NextAction.PLACE_DICE_TOOLCARD);
     }
 
 
@@ -55,21 +55,20 @@ public class ToolCard9 extends ToolCard {
     @Override
     public MoveData placeDice(int diceId, Position pos) throws CannotPerformThisMoveException, CannotPickPositionException, CannotPickDiceException {
         if (currentStatus != 1)
-            throw new CannotPerformThisMoveException(currentPlayer.getUser(), 2, false);
+            throw new CannotPerformThisMoveException(username, 2, false);
         Dice tempDice = currentPlayer.dicePresentInLocation(diceId, ClientDiceLocations.EXTRACTED).getDice();
         if (pos == null) {
-            throw new CannotPerformThisMoveException(currentPlayer.getUser(), 2, false);
+            throw new CannotPerformThisMoveException(username, 2, false);
         }
-        if (!currentPlayer.getWPC().addDicePersonalizedRestrictions(tempDice, pos, true, true, true, false, true)) {
+        if (!cardWpc.addDicePersonalizedRestrictions(tempDice, pos, true, true, true, false, true)) {
             throw new CannotPickPositionException(username, pos);
         }
-        currentGame.getExtractedDices().remove(tempDice);
+        cardExtractedDices.remove(tempDice);
         this.used = true;
-        updateClientWPC();
-        updateClientExtractedDices();
+        updateAndCopyToGameData(true, true, false);
         movesNotifications.add(new ToolCardDicePlacedNotification(username, tempDice.getClientDice(), pos));
-        currentPlayer.getGame().changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, null, null, currentPlayer.getFavours()));
-        ArrayList<ClientDice> tempDices = tempExtractedDices;
+        currentGame.changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, null, null, currentPlayer.getFavours()));
+        ArrayList<ClientDice> tempDices = tempClientExtractedDices;
         ClientWpc tempWpc = tempClientWpc;
         cleanCard();
         return new MoveData(true, tempWpc, tempDices, null);
@@ -78,32 +77,16 @@ public class ToolCard9 extends ToolCard {
 
     @Override
     public MoveData cancelAction(boolean all) throws CannotCancelActionException {
-        MoveData temp;
-        switch (currentStatus) {
-            case 1:
-                if (!all) return cancelStatusOne();
-            case 0:
-                if (!all){
+        if (!all) {
+            switch (currentStatus) {
+                case 1:
+                    return cancelStatusOne();
+                case 0:
                     return cancelStatusZero();
-                }
-
-        }
-        if (!all)
-            throw new CannotCancelActionException(username, id, 1);
-        if (currentStatus==1){
-            if (singlePlayerGame){
-                currentGame.getExtractedDices().add(diceForSingleUser);
             }
+            throw new CannotCancelActionException(username, id, 1);
         }
-        updateClientWPC();
-        updateClientExtractedDices();
-        updateClientRoundTrack();
-        ClientWpc tempWpc = tempClientWpc;
-        ArrayList<ClientDice> tempExtracted = tempExtractedDices;
-        ClientRoundTrack tempRound = tempRoundTrack;
-        cleanCard();
-        return new MoveData(true, true, tempWpc,tempExtracted,tempRound,null,null,null);
-
+        return cancelCardFinalAction();
     }
 
 
@@ -116,9 +99,10 @@ public class ToolCard9 extends ToolCard {
     @Override
     public MoveData getNextMove() {
         switch (currentStatus) {
-            case 0:  return defaultNextMoveStatusZero();
+            case 0:
+                return defaultNextMoveStatusZero();
             case 1:
-                return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, ClientDiceLocations.WPC, null, tempExtractedDices, null, null, null);
+                return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, ClientDiceLocations.WPC, null, tempClientExtractedDices, null, null, null);
 
         }
         return null;

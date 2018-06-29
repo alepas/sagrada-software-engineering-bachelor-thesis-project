@@ -149,6 +149,9 @@ public class PlayerInGame {
             favours = wpc.getFavours();
     }
 
+    public void updateWpc(Wpc tempWpc) {
+        wpc=tempWpc;
+    }
 
     public int getFavours() {
 

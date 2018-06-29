@@ -23,7 +23,7 @@ public class Cell {
     }
 
     Cell(Cell cell){
-        dice = null;
+        dice = cell.dice;
         this.color = cell.getColor();
         this.number = cell.getNumber();
         this.position = cell.getCellPosition();

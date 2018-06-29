@@ -36,12 +36,20 @@ public class Wpc {
             this.schema.add(new Cell(cell));
     }
 
+    private Wpc (String id, int favours, ArrayList<Cell> schema, boolean firstDicePutted, boolean onlyFirstDice){
+        this.id = id;
+        this.favours = favours;
+        for (Cell cell : schema)
+            this.schema.add(new Cell(cell));
+        this.firstDicePutted=firstDicePutted;
+        this.onlyFirstDice=onlyFirstDice;
+    }
 
     /**
      * @return the new object with is a copy of this.
      */
     public Wpc copyWpc() {
-        return new Wpc(id, favours, schema);
+        return new Wpc(id, favours, schema, firstDicePutted, onlyFirstDice);
     }
 
 
@@ -49,13 +57,13 @@ public class Wpc {
      * @return an object equivalent to this but for the client model
      */
     public ClientWpc getClientWpc() {
+        Dice dice;
+        ClientDice clientDice;
         ArrayList<ClientCell> cells = new ArrayList<>();
         for (Cell cell : schema) {
-            Dice dice = cell.getDice();
-            ClientDice clientDice;
+            dice = cell.getDice();
             if (dice != null) clientDice = dice.getClientDice();
             else clientDice = null;
-
             cells.add(new ClientCell(clientDice, Color.getClientColor(cell.getColor()),
                     cell.getNumber(), cell.getCellPosition()));
         }
