@@ -1,6 +1,7 @@
 package it.polimi.ingsw.control.network.rmi;
 
 import it.polimi.ingsw.control.ServerController;
+import it.polimi.ingsw.control.network.ClientHandler;
 import it.polimi.ingsw.control.network.commands.responses.*;
 import it.polimi.ingsw.model.clientModel.Position;
 import it.polimi.ingsw.model.clientModel.ToolCardInteruptValues;
@@ -17,12 +18,10 @@ import java.util.*;
 public class RmiServer implements RemoteServer {
     private transient final ServerController controller;
     private transient HashMap<String, RmiClientHandler> clientByToken;
-    private transient DatabaseUsers userdb;
 
     public RmiServer(ServerController controller) throws RemoteException {
         this.controller = controller;
         clientByToken = new HashMap<>();
-        userdb = DatabaseUsers.getInstance();
     }
 
 
@@ -47,12 +46,13 @@ public class RmiServer implements RemoteServer {
 //        }
     }
 
-    void removeClient(String userToken, Observer observer){
-        clientByToken.remove(userToken);
+    void removeClient(RmiClientHandler handler){
         try {
-            userdb.getPlayerInGameFromToken(userToken).getGame().deleteObserver(observer);
+            controller.deleteObserverFromGame(handler.getUsername(),handler);
         } catch (CannotFindPlayerInDatabaseException e) { /*Do nothing: user not in game*/ }
-        userdb.removeClient(userToken);
+        controller.removeSessionFromDatabase(handler.getToken());
+        clientByToken.remove(handler.getToken());
+        controller.removeClient(handler.getUsername(),handler);
     }
 
 
@@ -62,9 +62,10 @@ public class RmiServer implements RemoteServer {
     public Response createUser(String username, String password, RemoteObserver observer) throws CannotRegisterUserException {
         CreateUserResponse response = (CreateUserResponse) controller.createUser(username, password, null);
         RmiClientHandler client = new RmiClientHandler(response.userToken, this);
+        controller.addClientConnection(response.username, client);
         client.setObserver(observer);
+        client.setUsername(response.username);
         clientByToken.put(response.userToken, client);
-        userdb.addClient(client);
         return response;
     }
 
@@ -72,15 +73,16 @@ public class RmiServer implements RemoteServer {
     public Response login(String username, String password, RemoteObserver observer) throws CannotLoginUserException {
         LoginResponse response = (LoginResponse) controller.login(username, password, null);
         RmiClientHandler client = new RmiClientHandler(response.userToken, this);
+        controller.addClientConnection(response.username, client);
         client.setObserver(observer);
+        client.setUsername(response.username);
         clientByToken.put(response.userToken, client);
-        userdb.addClient(client);
         return response;
     }
 
     @Override
-    public Response findGame(String userToken, int numPlayers) throws CannotFindUserInDBException, InvalidNumOfPlayersException, CannotCreatePlayerException {
-        return controller.findGame(userToken, numPlayers, clientByToken.get(userToken));
+    public Response findGame(String userToken, int numPlayers, int level) throws CannotFindUserInDBException, InvalidNumOfPlayersException, CannotCreatePlayerException {
+        return controller.findGame(userToken, numPlayers, level, clientByToken.get(userToken));
     }
 
     @Override
@@ -182,11 +184,5 @@ public class RmiServer implements RemoteServer {
 //        return response;
 //    }
 
-    //TODO: Eliminare metodo
-    @Override
-    public Response findAlreadyStartedGame(String userToken, RemoteObserver observer) throws CannotFindGameForUserInDatabaseException {
-        Response response = controller.findAlreadyStartedGame(userToken, clientByToken.get(userToken), true);
-        clientByToken.get(userToken).setObserver(observer);
-        return response;
-    }
+
 }

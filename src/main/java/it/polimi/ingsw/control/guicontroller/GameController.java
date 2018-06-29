@@ -1141,10 +1141,10 @@ public class GameController implements Observer, NotificationHandler {
     private void selectNumberToolCard() {
         diceBagIcon.setVisible(false);
         ToolCardClientNextActionInfo info = clientModel.getToolCardClientNextActionInfo();
-        for (ClientDice clientDice : clientModel.getExtractedDices()) {
+/*        for (ClientDice clientDice : clientModel.getExtractedDices()) {
             for (ImageView dice : extractDices){
                 if (dice.getId().equals(String.valueOf(clientDice.getDiceID()))) changeStyle(dice, clientDice);}
-        }
+        }*/
         if (info.numbersToChoose.size() <= 2) {
             messageLabel.setText("Aggiungi 1 o sottrai 1");
             plusMinusPane.setVisible(true);

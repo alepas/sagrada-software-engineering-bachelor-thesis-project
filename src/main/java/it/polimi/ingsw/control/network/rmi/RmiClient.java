@@ -75,9 +75,9 @@ public class RmiClient extends NetworkClient {
     }
 
     @Override
-    public void findGame(String token, int numPlayers) throws CannotFindUserInDBException, InvalidNumOfPlayersException, CannotCreatePlayerException {
+    public void findGame(String token, int numPlayers, int level) throws CannotFindUserInDBException, InvalidNumOfPlayersException, CannotCreatePlayerException {
         try {
-            (remoteServer.findGame(token, numPlayers)).handle(this);
+            (remoteServer.findGame(token, numPlayers, level)).handle(this);
         } catch (RemoteException e){
 
         }
@@ -220,18 +220,6 @@ public class RmiClient extends NetworkClient {
             return response.nextAction;
         } catch (RemoteException e) {
             return null;
-        }
-    }
-
-    @Override
-    public int findAlreadyStartedGame(String userToken) throws CannotFindGameForUserInDatabaseException {
-        try {
-            RemoteObserver remoteObserver = new RmiRemoteObserver();
-            UpdatedGameResponse response = (UpdatedGameResponse) remoteServer.findAlreadyStartedGame(userToken, remoteObserver);
-            response.handle(this);
-            return response.game.getGameNumPlayers();
-        } catch (RemoteException e) {
-            return 0;
         }
     }
 

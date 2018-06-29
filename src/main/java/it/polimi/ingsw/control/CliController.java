@@ -66,7 +66,7 @@ public class CliController {
         // 0  se ha trovato una partita ma mancano dei giocatori
         // 1  se ha trovato una partita e sono presenti tutti i giocatori
         try {
-            client.findGame(clientModel.getUserToken(), numPlayers);
+            client.findGame(clientModel.getUserToken(), numPlayers,0);
         } catch (InvalidNumOfPlayersException e) {
             view.displayText(e.getMessage());
         } catch (CannotFindUserInDBException e) {

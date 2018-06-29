@@ -12,7 +12,6 @@ import it.polimi.ingsw.model.exceptions.gameExceptions.UserNotInThisGameExceptio
 import it.polimi.ingsw.model.exceptions.usersAndDatabaseExceptions.*;
 import it.polimi.ingsw.model.usersdb.DatabaseUsers;
 
-import javax.management.Notification;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -27,7 +26,6 @@ public class SocketClientHandler extends ClientHandler implements Runnable, Obse
     private final ObjectOutputStream out;
     private final ServerController controller;
     private boolean stop;
-    private DatabaseUsers userdb;
 
 
     public SocketClientHandler(Socket socket) throws IOException {
@@ -37,7 +35,6 @@ public class SocketClientHandler extends ClientHandler implements Runnable, Obse
         this.in = new ObjectInputStream(socket.getInputStream());
         this.controller = ServerController.getInstance();
         this.stop = false;
-        userdb = DatabaseUsers.getInstance();
     }
 
     private void respond(Object response) {
@@ -103,9 +100,10 @@ public class SocketClientHandler extends ClientHandler implements Runnable, Obse
         //Ho perso la connessione con il client
         System.out.println("Socket client disconnesso");
         try {
-            userdb.getPlayerInGameFromToken(userToken).getGame().deleteObserver(this);
+            controller.deleteObserverFromGame(username,this);
         } catch (CannotFindPlayerInDatabaseException e) { /*Do nothing: user not in game*/ }
-        userdb.removeClient(userToken);
+        controller.removeSessionFromDatabase(userToken);
+        controller.removeClient(username,this);
         close();
     }
 
@@ -115,9 +113,10 @@ public class SocketClientHandler extends ClientHandler implements Runnable, Obse
         System.out.println("Socket client buttato fuori");
         respond(new ForceDisconnectionNotification(false));
         try {
-            userdb.getPlayerInGameFromToken(userToken).getGame().deleteObserver(this);
+            controller.deleteObserverFromGame(username,this);
         } catch (CannotFindPlayerInDatabaseException e) { /*Do nothing: user not in game*/ }
-        userdb.removeClient(userToken);
+        controller.removeSessionFromDatabase(userToken);
+        controller.removeClient(username,this);
         close();
     }
 
@@ -126,9 +125,9 @@ public class SocketClientHandler extends ClientHandler implements Runnable, Obse
     @Override
     public Response handle(CreateUserRequest request){
         try {
-            CreateUserResponse response = (CreateUserResponse) controller.createUser(request.username, request.password, socket);
+            CreateUserResponse response = (CreateUserResponse) controller.createUser(request.username, request.password,this);
             userToken = response.userToken;
-            userdb.addClient(this);
+            username = response.username;
             return response;
         } catch (CannotRegisterUserException e){
             return new CreateUserResponse(request.username, null, e);
@@ -138,9 +137,9 @@ public class SocketClientHandler extends ClientHandler implements Runnable, Obse
     @Override
     public Response handle(LoginRequest request) {
         try {
-            LoginResponse response = (LoginResponse) controller.login(request.username, request.password, socket);
+            LoginResponse response = (LoginResponse) controller.login(request.username, request.password, this);
             userToken = response.userToken;
-            userdb.addClient(this);
+            username = response.username;
             return response;
         } catch (CannotLoginUserException e){
             return new LoginResponse(request.username, null, e);
@@ -150,7 +149,7 @@ public class SocketClientHandler extends ClientHandler implements Runnable, Obse
     @Override
     public Response handle(FindGameRequest request) {
         try {
-            return controller.findGame(request.token, request.numPlayers, this);
+            return controller.findGame(request.token, request.numPlayers, request.levelOfDifficulty, this);
         } catch (InvalidNumOfPlayersException|CannotFindUserInDBException|CannotCreatePlayerException e){
             return new FindGameResponse(null, 0, 0, e);
         }
@@ -310,16 +309,6 @@ public class SocketClientHandler extends ClientHandler implements Runnable, Obse
             return controller.getUserStat(request.userToken);
         } catch (CannotFindUserInDBException e) {
             return new GetUserStatResponse(null, e);
-        }
-    }
-
-    @Override
-    public Response handle(FindAlreadyStartedGameRequest request) {
-        try{
-            //TODO: Eliminare rmiObserver: false
-            return controller.findAlreadyStartedGame(request.token, this,false);
-        } catch (CannotFindGameForUserInDatabaseException e) {
-            return new UpdatedGameResponse(e);
         }
     }
 

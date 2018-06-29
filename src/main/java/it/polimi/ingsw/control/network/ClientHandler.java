@@ -1,10 +1,22 @@
 package it.polimi.ingsw.control.network;
 
-public abstract class ClientHandler {
+import java.util.Observer;
+
+public abstract class ClientHandler implements Observer {
     protected String userToken;
+    protected String username;
 
     public ClientHandler(String userToken) {
         this.userToken = userToken;
+        this.username=null;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     public String getToken() {

@@ -26,17 +26,12 @@ public class DatabaseUsers {
     private static DatabaseUsers instance;
     private DatabaseGames databaseGames;
 
-    private RmiServer rmiServer;
-
-
     private HashMap<String, User> usersByUsername;
 
 
     private HashMap<String, String> tokenByUsername;
     private HashMap<String, User> usersByToken;
-    private HashMap<String, Socket> socketByToken;               //TODO: non serve più?
     private HashMap<String, PlayerInGame> playerInGameByToken;
-    private HashMap<String, ClientHandler> clientByToken;
     private HashMap<String, PlayerInGame> playerByUsername;
 
 
@@ -52,17 +47,12 @@ public class DatabaseUsers {
 
             instance.usersByToken = new HashMap<String, User>();
 
-            instance.socketByToken = new HashMap<>();
-
             instance.playerInGameByToken = new HashMap<>();
-
-            instance.clientByToken = new HashMap<>();
 
             instance.playerByUsername = new HashMap<>();
 
             instance.databaseGames = DatabaseGames.getInstance();
 
-            instance.rmiServer = null;
         }
         return instance;
     }
@@ -75,12 +65,8 @@ public class DatabaseUsers {
             instance.tokenByUsername = new HashMap<String, String>();
 
             instance.usersByToken = new HashMap<String, User>();
-            instance.socketByToken = new HashMap<>();
             instance.playerInGameByToken = new HashMap<>();
             instance.playerByUsername = new HashMap<>();
-            instance.clientByToken = new HashMap<>();
-            instance.rmiServer = null;
-
 
         }
         return instance;
@@ -89,19 +75,22 @@ public class DatabaseUsers {
 
     private DatabaseUsers() { }
 
-    public void addClient(ClientHandler client){
-        clientByToken.put(client.getToken(), client);
-    }
+
 
     public void removeClient(String userToken){
-        String username = usersByToken.get(userToken).getUsername();
-
-        playerInGameByToken.get(userToken).disconnect();
-
-        tokenByUsername.remove(username);
+        String username;
+        try {
+            username = getUsernameByToken(userToken);
+            if (tokenByUsername.get(username).equals(userToken))
+                tokenByUsername.remove(username);
+        } catch (CannotFindUserInDBException e) {
+            //do nothing
+        }
+        PlayerInGame player = playerInGameByToken.get(userToken);
+        if (player!=null)
+            player.disconnect();
         usersByToken.remove(userToken);
         playerInGameByToken.remove(userToken);
-        clientByToken.remove(userToken);
     }
 
     public synchronized String registerUser(String username, String password) throws CannotRegisterUserException {
@@ -134,40 +123,6 @@ public class DatabaseUsers {
 
     }
 
-    //TODO: In teoria inutile
-    public synchronized String registerUser(String username, String password, Socket newsocket) throws CannotRegisterUserException {
-        byte[] salt;
-        String passwordHash;
-        String newtoken = null;
-
-        if (usersByUsername.containsKey(username)) {
-            throw new CannotRegisterUserException(username, 1);
-
-        }
-        System.out.println(">>> Creo nuovo utente: " + username);
-        try {
-            salt = getSalt();
-            passwordHash = SHAFunction.getShaPwd(password, salt);
-            User newuser = new User(username, passwordHash, salt);
-            usersByUsername.put(username, newuser);
-            updateFileDB();
-            newtoken = UUID.randomUUID().toString();
-            usersByToken.put(newtoken, newuser);
-            tokenByUsername.put(username, newtoken);
-            socketByToken.put(newtoken, newsocket);
-
-        } catch (PasswordParsingException e) {
-            throw new CannotRegisterUserException(username, 0);
-        } catch (DatabaseFileErrorException e) {
-            usersByUsername.remove(username);
-            throw new CannotRegisterUserException(username, 0);
-        }
-
-        return newtoken;
-
-
-    }
-
     public synchronized String login(String username, String password) throws CannotLoginUserException {
         String passwordHash;
         String storedPasswordHash;
@@ -189,16 +144,7 @@ public class DatabaseUsers {
         }
         storedPasswordHash = foundUser.getPassword();
         if (passwordHash.equals(storedPasswordHash)) {
-            PlayerInGame playerInGame;
-            String oldtoken;
             String newtoken = UUID.randomUUID().toString();
-
-            if ((oldtoken = tokenByUsername.get(username)) != null) clientByToken.get(oldtoken).removeConnection();
-            if ((playerInGame = playerByUsername.get(username)) != null) {
-                playerInGameByToken.put(newtoken, playerInGame);
-                playerInGame.setDisconnected(false);
-            }
-
             usersByToken.put(newtoken, foundUser);
             tokenByUsername.put(username, newtoken);
 
@@ -206,68 +152,6 @@ public class DatabaseUsers {
         } else {
             throw new CannotLoginUserException(username, 1);
         }
-    }
-
-    //TODO: Non serve più
-//    public synchronized String login(String username, String password, Socket socket) throws CannotLoginUserException {
-//        String passwordHash;
-//        String storedPasswordHash;
-//        String newtoken;
-//        PlayerInGame playerInGame = null;
-//        String oldtoken = null;
-//
-//        // username isn't registered
-//
-//        System.out.println("username ricevuto: " + username + " password: " + password);
-//        if (!usersByUsername.containsKey(username)) {
-//            throw new CannotLoginUserException(username, 2);
-//        }
-//        User foundUser = null;
-//        foundUser = usersByUsername.get(username);
-//        try {
-//            byte[] salt = foundUser.getSalt();
-//
-//
-//            passwordHash = SHAFunction.getShaPwd(password, salt);
-//        } catch (PasswordParsingException e) {
-//            throw new CannotLoginUserException(username, 0);
-//        }
-//        storedPasswordHash = foundUser.getPassword();
-//        if (passwordHash.equals(storedPasswordHash)) {
-//            newtoken = UUID.randomUUID().toString();
-//            if ((oldtoken = tokenByUsername.get(username)) != null) {
-//
-//                playerInGame = playerInGameByToken.get(oldtoken);
-//
-//
-//                try {
-//                    removeSocketFromToken(oldtoken);
-//                } catch (CannotCloseOldConnectionException e) {
-//                    if (e.getErrorId() == 0)
-//                        throw new CannotLoginUserException(username, 3);
-//                }
-//                usersByToken.remove(oldtoken);
-//                playerInGameByToken.remove(oldtoken);
-//
-//            }
-//
-//            usersByToken.put(newtoken, foundUser);
-//            tokenByUsername.put(username, newtoken);
-//            if (playerInGame != null)
-//                playerInGameByToken.put(newtoken, playerInGame);
-//            socketByToken.put(newtoken, socket);
-//            return newtoken;
-//        } else {
-//            throw new CannotLoginUserException(username, 1);
-//        }
-//    }
-
-    synchronized String getTokenFromUsername(String user) throws CannotFindUserInDBException {
-        String token;
-        token = tokenByUsername.get(user);
-        if (token == null)
-            throw new CannotFindUserInDBException(user);
-        return token;
     }
 
     public synchronized ClientUser getClientUserByToken(String token) throws CannotFindUserInDBException {
@@ -280,15 +164,20 @@ public class DatabaseUsers {
     }
 
 
-    public synchronized String getUsernameByToken(String token) throws CannotFindUserInDBException {
+    synchronized String getUsernameByToken(String token) throws CannotFindUserInDBException {
         if (token == null) throw new CannotFindUserInDBException("");
 
-        String username = usersByToken.get(token).getUsername();            //TODO: Attenzione, NullPointerException se la get restituisce null
+        User user = usersByToken.get(token);
+        if (user==null)
+            throw new CannotFindUserInDBException("");
+        String username=user.getUsername();
         if (username == null) throw new CannotFindUserInDBException("");
         return username;
     }
 
-    public synchronized int getWonGamesFromToken(String token) throws CannotFindUserInDBException {
+    //TODO rimuovere questi metodi se non servono
+    /*
+     synchronized int getWonGamesFromToken(String token) throws CannotFindUserInDBException {
         if (token == null)
             throw new CannotFindUserInDBException("");
 
@@ -299,7 +188,8 @@ public class DatabaseUsers {
         return us.getWonGames();
     }
 
-    public synchronized int getLostGamesFromToken(String token) throws CannotFindUserInDBException {
+
+    synchronized int getLostGamesFromToken(String token) throws CannotFindUserInDBException {
         if (token == null)
             throw new CannotFindUserInDBException("");
         User us = usersByToken.get(token);
@@ -308,7 +198,7 @@ public class DatabaseUsers {
         return us.getLostGames();
     }
 
-    public synchronized int getAbandonedGamesFromToken(String token) throws CannotFindUserInDBException {
+    synchronized int getAbandonedGamesFromToken(String token) throws CannotFindUserInDBException {
         if (token == null)
             throw new CannotFindUserInDBException("");
 
@@ -318,7 +208,7 @@ public class DatabaseUsers {
         return us.getAbandonedGames();
     }
 
-    public synchronized int getRankingFromToken(String token) throws CannotFindUserInDBException {
+    synchronized int getRankingFromToken(String token) throws CannotFindUserInDBException {
         if (token == null)
             throw new CannotFindUserInDBException("");
 
@@ -327,9 +217,10 @@ public class DatabaseUsers {
             throw new CannotFindUserInDBException("");
         return us.getRanking();
     }
+*/
 
 
-    public synchronized void addPlayerInGameToDB(PlayerInGame play) throws CannotAddPlayerInDatabaseException {
+    synchronized void addPlayerInGameToDB(PlayerInGame play) throws CannotAddPlayerInDatabaseException {
         String token = tokenByUsername.get(play.getUser());
         if (token == null)
             throw new CannotAddPlayerInDatabaseException();
@@ -339,18 +230,27 @@ public class DatabaseUsers {
 
     public synchronized void removePlayerInGameFromDB(PlayerInGame play) throws CannotFindPlayerInDatabaseException {
         String token = tokenByUsername.get(play.getUser());
-        if (token == null)
-            throw new CannotFindPlayerInDatabaseException();
-        playerInGameByToken.remove(token);
+        if (token != null)
+            playerInGameByToken.remove(token);
         playerByUsername.remove(play.getUser());
     }
 
 
     public synchronized PlayerInGame getPlayerInGameFromToken(String token) throws CannotFindPlayerInDatabaseException {
+        return getPlayer(token,false);
+    }
+
+    public synchronized PlayerInGame getPlayerInGameFromUsername(String username) throws CannotFindPlayerInDatabaseException {
+        return getPlayer(username,true);
+    }
+
+    private PlayerInGame getPlayer(String key, boolean username) throws CannotFindPlayerInDatabaseException {
         PlayerInGame play;
-        if (token == null)
+        if (key == null)
             throw new CannotFindPlayerInDatabaseException();
-        play = playerInGameByToken.get(token);
+        if (username)
+        play = playerByUsername.get(key);
+        else play = playerInGameByToken.get(key);
         if (play == null)
             throw new CannotFindPlayerInDatabaseException();
         return play;
@@ -450,7 +350,7 @@ public class DatabaseUsers {
     }
 
 
-    static synchronized byte[] getSalt() throws PasswordParsingException {
+    private static synchronized byte[] getSalt() throws PasswordParsingException {
         SecureRandom sr;
         try {
             sr = SecureRandom.getInstance("SHA1PRNG");
@@ -464,38 +364,6 @@ public class DatabaseUsers {
     }
 
 
-    synchronized void removeSocketFromUsername(String user) throws CannotCloseOldConnectionException {
-        Socket oldsocket;
-        String token = tokenByUsername.get(user);
-        if (token == null) {
-            throw new CannotCloseOldConnectionException(user, 1);
-        }
-        oldsocket = socketByToken.get(token);
-        if (oldsocket == null)
-            throw new CannotCloseOldConnectionException(user, 1);
-        try {
-            oldsocket.close();
-            socketByToken.remove(token);
-        } catch (IOException e) {
-            throw new CannotCloseOldConnectionException(user, 0);
-        }
-    }
-
-    synchronized void removeSocketFromToken(String token) throws CannotCloseOldConnectionException {
-        Socket oldsocket;
-        if (token == null) {
-            throw new CannotCloseOldConnectionException("", 1);
-        }
-        oldsocket = socketByToken.get(token);
-        if (oldsocket == null)
-            throw new CannotCloseOldConnectionException("", 1);
-        try {
-            oldsocket.close();
-            socketByToken.remove(token);
-        } catch (IOException e) {
-            throw new CannotCloseOldConnectionException("", 0);
-        }
-    }
 
     private synchronized void updateFileDB() throws DatabaseFileErrorException {
         try {
@@ -518,57 +386,34 @@ public class DatabaseUsers {
 
     }
 
-    public synchronized Game findAlreadyStartedGame(String userToken, Observer observer, boolean rmiObserver) {
-        PlayerInGame player = playerInGameByToken.get(userToken);
-        Game game;
-        if (player != null) {
-            game = player.getGame();
-            if (player.getObserver() != null) {
-                if (player.isRmiObserver())
-                    rmiServer.removeRemoteObserver(player.getUser());
-                else game.deleteObserver(player.getObserver());
-            }
-            game.addObserver(observer);
-            player.setObserver(observer);
-            player.setRmiObserver(rmiObserver);
-            return game;
+    public synchronized PlayerInGame findOldPlayer(String token) throws CannotFindPlayerInDatabaseException {
+        PlayerInGame play;
+        String username;
+        try {
+            username = getUsernameByToken(token);
+        } catch (CannotFindUserInDBException e) {
+            throw new CannotFindPlayerInDatabaseException();
         }
-        return null;
-
+        play = playerByUsername.get(username);
+        if (play == null)
+            throw new CannotFindPlayerInDatabaseException();
+        play.setDisconnected(false);
+        playerInGameByToken.put(token, play);
+        return play;
     }
 
-
-    public synchronized Game findNewGame(String userToken, int numPlayers, Observer observer) throws InvalidNumOfPlayersException, CannotCreatePlayerException, CannotFindUserInDBException {
-        PlayerInGame player = playerInGameByToken.get(userToken);
-        Game game;
+    public synchronized Game findNewGame(String userToken, int numPlayers, int levelOfDifficulty, Observer observer) throws InvalidNumOfPlayersException, CannotCreatePlayerException, CannotFindUserInDBException {
+        String username = getUsernameByToken(userToken);
+        PlayerInGame player = playerByUsername.get(username);
         if (player != null) {
             throw new CannotCreatePlayerException(player.getUser());
         }
-        game = databaseGames.findGameForUser(getUsernameByToken(userToken), numPlayers);
-//        player = playerInGameByToken.get(userToken);      //TODO: Non servono più?
+        Game game = databaseGames.findGameForUser(username, numPlayers, levelOfDifficulty);
         game.addObserver(observer);
-//        player.setObserver(observer);
-//        player.setRmiObserver(rmiObserver);
         return game;
     }
 
 
-    public synchronized void disconnectUser(String userToken){
-        PlayerInGame player = playerInGameByToken.get(userToken);
-
-        if (player.getObserver() != null) {
-            if (player.isRmiObserver())
-                rmiServer.removeRemoteObserver(player.getUser());
-            else player.getGame().deleteObserver(player.getObserver());
-            try {
-                removeSocketFromToken(userToken);
-            } catch (CannotCloseOldConnectionException e) {
-            }
-            player.disconnect();
-
-        }
-
-    }
 
     private void loadDatabaseFromFile() {
         try {
@@ -582,7 +427,5 @@ public class DatabaseUsers {
         }
     }
 
-    public void setRmiServer(RmiServer rmiServer) {
-        this.rmiServer = rmiServer;
-    }
+
 }

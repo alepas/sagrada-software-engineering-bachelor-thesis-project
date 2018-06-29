@@ -44,5 +44,4 @@ public interface RequestHandler {
 
     Response handle(GetUserStatRequest request);
 
-    Response handle(FindAlreadyStartedGameRequest findAlreadyStartedGameRequest);
 }

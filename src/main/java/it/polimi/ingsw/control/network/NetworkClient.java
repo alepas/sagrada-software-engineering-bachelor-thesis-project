@@ -40,7 +40,7 @@ public abstract class NetworkClient implements ResponseHandler {
 
     public abstract void login(String username, String password) throws CannotLoginUserException;
 
-    public abstract void findGame(String token, int numPlayers) throws InvalidNumOfPlayersException, CannotFindUserInDBException, CannotCreatePlayerException;
+    public abstract void findGame(String token, int numPlayers, int level) throws InvalidNumOfPlayersException, CannotFindUserInDBException, CannotCreatePlayerException;
 
     public abstract void pickWpc(String userToken, String wpcID) throws CannotFindPlayerInDatabaseException, NotYourWpcException;
 
@@ -62,8 +62,6 @@ public abstract class NetworkClient implements ResponseHandler {
     public abstract NextAction interuptToolCard(String userToken, ToolCardInteruptValues value) throws  CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotInteruptToolCardException, NoToolCardInUseException;
 
 
-
-    public abstract int findAlreadyStartedGame(String userToken) throws CannotFindGameForUserInDatabaseException;
 
     public abstract void getUpdatedExtractedDices(String userToken) throws CannotFindPlayerInDatabaseException;
 
