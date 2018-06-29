@@ -9,6 +9,7 @@ import it.polimi.ingsw.model.wpc.DiceAndPosition;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import static it.polimi.ingsw.model.constants.GameConstants.MAX_DICES_FOR_ROUND;
 import static it.polimi.ingsw.model.constants.GameConstants.NUM_OF_ROUNDS;
 
 public class RoundTrack implements Serializable {
@@ -22,12 +23,12 @@ public class RoundTrack implements Serializable {
      */
     public RoundTrack(){
         currentRound = 0;
-        dicesNotUsed = new Dice[NUM_OF_ROUNDS][NUM_OF_ROUNDS];
-        for (int row = 0;  row< NUM_OF_ROUNDS; row++ ) {
-
-            for (int column = 0; column < NUM_OF_ROUNDS; column++)
-                dicesNotUsed[row][column] = null;
-        }
+        dicesNotUsed = new Dice[MAX_DICES_FOR_ROUND][NUM_OF_ROUNDS];
+//        for (int row = 0;  row< NUM_OF_ROUNDS; row++ ) {
+//
+//            for (int column = 0; column < NUM_OF_ROUNDS; column++)
+//                dicesNotUsed[row][column] = null;
+//        }
     }
 
     public int getCurrentRound() {
@@ -91,7 +92,7 @@ public class RoundTrack implements Serializable {
             
             do {
                 column++;
-            }while(isThereADice(column,row) && column < NUM_OF_ROUNDS);
+            }while(column < MAX_DICES_FOR_ROUND && isThereADice(column,row));
             
             dicesNotUsed[column][row] = dice;
                 

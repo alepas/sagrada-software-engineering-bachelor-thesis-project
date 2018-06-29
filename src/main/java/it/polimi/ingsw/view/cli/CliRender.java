@@ -11,7 +11,7 @@ public class CliRender {
     private final int cellHeight = 3;
     private final int diceDistance = 5;
     private final int diceLenght = 7;
-    private final int wpcHeight = (cellHeight+1)*WpcConstants.ROWS_NUMBER + 1;
+    private final int wpcHeight = (cellHeight+1)*WpcConstants.ROWS_NUMBER + 3;
     private final int wpcLenght = (diceLenght+1)*WpcConstants.COLS_NUMBER+1;
     private final int wpcDistance = CliConstants.WpcSpacing;
     private final int strNum = CliConstants.COUNTER_START_NUMBER;
@@ -85,9 +85,9 @@ public class CliRender {
 
 
     //Dices
-    private final String WPC_COLUMNS_NUMBERS = "    " + strNum + "       " + (strNum+1) + "       " + (strNum+2) +
+    private final String WPC_COLUMNS_NUMBERS = "       " + strNum + "       " + (strNum+1) + "       " + (strNum+2) +
                                               "       " + (strNum+3) + "       " + (strNum+4) + "    ";
-    private final String wpcLine = WPC_BORDER_COLOR + "+-------+-------+-------+-------+-------+";
+    private final String wpcLine = WPC_BORDER_COLOR + "   +-------+-------+-------+-------+-------+";
     private final String colSeparator = WPC_BORDER_COLOR + "|";
 
     private final String[] emptyDice = {"       ",
@@ -222,7 +222,7 @@ public class CliRender {
         for(int i = 0; i < wpcs.length; i++){
             stringWpcs[i] = convertWpcToString(wpcs[i]);
             title = "ID: " + wpcs[i].getWpcID() + "    Favours: " + wpcs[i].getFavours();
-            titleSpacing = calculateSpace(distance, title, wpcLenght);
+            titleSpacing = calculateSpace(distance, title, wpcLenght+3);
             wpcsRendered.append(title + titleSpacing);
         }
         wpcsRendered.append("\n");
@@ -259,6 +259,8 @@ public class CliRender {
         StringBuilder str;
         int i = 0;
 
+        stringWpc[i++] = "";
+        stringWpc[i++] = WPC_COLUMNS_NUMBERS;
         stringWpc[i++] = wpcLine;
 
         ArrayList<ClientCell> allCells = wpc.getSchema();
@@ -269,6 +271,7 @@ public class CliRender {
 
             for(int cellRow = 0; cellRow < cellHeight; cellRow++){
                 str = new StringBuilder();
+                str.append(cellRow == 1 ? (row+strNum) + "  " : "   ");
                 for(String[] cell : stringsCells){
                     str.append(colSeparator);
                     str.append(cell[cellRow]);

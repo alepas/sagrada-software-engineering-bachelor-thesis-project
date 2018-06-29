@@ -29,7 +29,8 @@ public enum Status {
     MENU_ONLY_TOOLCARD,
     MENU_ONLY_ENDTURN,
     SELECT_DICE_TO_ACTIVE_TOOLCARD,
-    ANOTHER_PLAYER_TURN;
+    ANOTHER_PLAYER_TURN,
+    RETURN_TO_MAIN_MENU;
 
     public static Status change(NextAction nextAction){
         switch (nextAction){

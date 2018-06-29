@@ -3,6 +3,7 @@ package it.polimi.ingsw.view.cli;
 import it.polimi.ingsw.control.CliController;
 import it.polimi.ingsw.control.network.commands.notifications.*;
 import it.polimi.ingsw.model.clientModel.*;
+import it.polimi.ingsw.model.wpc.WpcDB;
 import it.polimi.ingsw.view.Status;
 
 import java.io.BufferedReader;
@@ -119,8 +120,13 @@ public class CliView implements Observer, NotificationHandler {
     }
 
     private void returnToMainMenu() {
-        changeState(Status.MAIN_MENU_PHASE);
         controller.exitGame();
+        deleteTask();
+        if (turnThread != null) turnThread.stop();
+        printText("");
+        displayText("Premi invio per tornare al menù principale");
+        while (userInput() == null);
+        changeState(Status.MAIN_MENU_PHASE);
     }
 
     //---------------------------- External methods ----------------------------
@@ -144,6 +150,9 @@ public class CliView implements Observer, NotificationHandler {
                         break;
                     case RECONNECT:
                         quit = true;
+                        break;
+                    case RETURN_TO_MAIN_MENU:
+                        returnToMainMenu();
                         break;
 
                     case UNKNOWN:
@@ -384,9 +393,7 @@ public class CliView implements Observer, NotificationHandler {
         synchronized (waiter){
             try {
                 while (state.equals(Status.UNKNOWN))  waiter.wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            } catch (InterruptedException e) { /*La partita è finita*/}
         }
     }
 
@@ -495,7 +502,7 @@ public class CliView implements Observer, NotificationHandler {
             case MENU_ONLY_TOOLCARD:
                 return new MenuAction[] {MenuAction.GET_PRIVATE_OBJ, MenuAction.GET_POCS,
                         MenuAction.GET_TOOLS, MenuAction.SEE_ALL_WPCS, MenuAction.SEE_ROUND_TRACK,
-                        MenuAction.END_TURN};
+                        MenuAction.USE_TOOLCARD, MenuAction.END_TURN};
             case MENU_ONLY_ENDTURN:
                 return new MenuAction[] {MenuAction.GET_PRIVATE_OBJ, MenuAction.GET_POCS,
                         MenuAction.GET_TOOLS, MenuAction.SEE_ALL_WPCS, MenuAction.SEE_ROUND_TRACK,
@@ -1071,6 +1078,7 @@ public class CliView implements Observer, NotificationHandler {
     @Override
     public void handle(ScoreNotification notification) {
         printText("");
+        displayText("Partita terminata");
         displayText("Classifica finale:");
 
         ArrayList<Map.Entry<String, Integer>> scores = new ArrayList<>(notification.scoreList.entrySet());
@@ -1082,9 +1090,7 @@ public class CliView implements Observer, NotificationHandler {
                     + entry.getValue() + " punti");
         }
 
-//        printText("");
-//        displayText("Premi invio per tornare al menù principale");
-//        userInput();
-//        returnToMainMenu();
+        changeState(Status.RETURN_TO_MAIN_MENU);
+        currentThread.interrupt();
     }
 }
