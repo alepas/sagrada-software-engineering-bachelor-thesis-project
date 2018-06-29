@@ -59,7 +59,7 @@ public class RoundTrack implements Serializable {
     public ArrayList<Dice> getDicesNotUsed() {
         ArrayList<Dice> allRoundTrackDices = new ArrayList<>();
 
-        for (int row = 0;  row< NUM_OF_ROUNDS; row++ ) {
+        for (int row = 0;  row< MAX_DICES_FOR_ROUND; row++ ) {
 
             for (int column = 0; column < NUM_OF_ROUNDS; column++)
                 if (isThereADice(row, column))
@@ -126,7 +126,7 @@ public class RoundTrack implements Serializable {
      * @return the dice and position associated to the with the chosen id
      */
     public DiceAndPosition getDiceAndPosition(int diceId){
-        for (int row = 0; row < NUM_OF_ROUNDS; row++) {
+        for (int row = 0; row < MAX_DICES_FOR_ROUND; row++) {
 
             for (int column = 0; column < NUM_OF_ROUNDS; column++) {
                 if (isThereADice(row, column))
@@ -157,8 +157,8 @@ public class RoundTrack implements Serializable {
      * @return the clientRoundTrack
      */
     public ClientRoundTrack getClientRoundTrack(){
-        ClientDice[][] roundTrackTable=new ClientDice[NUM_OF_ROUNDS][NUM_OF_ROUNDS];
-        for (int i=0; i<NUM_OF_ROUNDS; i++){
+        ClientDice[][] roundTrackTable=new ClientDice[MAX_DICES_FOR_ROUND][NUM_OF_ROUNDS];
+        for (int i=0; i< MAX_DICES_FOR_ROUND; i++){
             for (int j=0;j<NUM_OF_ROUNDS;j++){
                 if(dicesNotUsed[i][j]!= null)
                     roundTrackTable[i][j] = dicesNotUsed[i][j].getClientDice();
@@ -177,7 +177,7 @@ public class RoundTrack implements Serializable {
      */
     public int getNumberOfDices(){
         int count=0;
-        for (int row = 0;  row < NUM_OF_ROUNDS; row++ ) {
+        for (int row = 0;  row < MAX_DICES_FOR_ROUND; row++ ) {
             for (int column = 0; column < NUM_OF_ROUNDS; column++)
                 if (isThereADice(row, column))
                     count++;
@@ -192,9 +192,9 @@ public class RoundTrack implements Serializable {
     }
 
     public RoundTrack getCopy(){
-        Dice[][] tempDices = new Dice[NUM_OF_ROUNDS][NUM_OF_ROUNDS];
+        Dice[][] tempDices = new Dice[MAX_DICES_FOR_ROUND][NUM_OF_ROUNDS];
 
-        for (int row = 0;  row< NUM_OF_ROUNDS; row++ ) {
+        for (int row = 0;  row< MAX_DICES_FOR_ROUND; row++ ) {
 
             for (int column = 0; column < NUM_OF_ROUNDS; column++)
                 tempDices[row][column] = dicesNotUsed[row][column];

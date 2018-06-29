@@ -306,9 +306,9 @@ public abstract class Game extends Observable implements Runnable {
         Collections.shuffle(ids);
 
         ids.clear();
-        ids.add("12");
+        ids.add("1");
         ids.add("11");
-        ids.add("10");
+        ids.add("6");
 
         ArrayList<String> toolCardsExtracted = new ArrayList<>(ids.subList(0, numOfToolCards));
         ArrayList<ClientToolCard> clientToolCards = new ArrayList<>();

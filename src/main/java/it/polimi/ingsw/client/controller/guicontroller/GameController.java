@@ -4,6 +4,7 @@ import it.polimi.ingsw.client.constants.ClientWpcConstants;
 import it.polimi.ingsw.client.network.ClientInfo;
 import it.polimi.ingsw.client.network.NetworkClient;
 import it.polimi.ingsw.client.view.Status;
+import it.polimi.ingsw.server.constants.GameConstants;
 import it.polimi.ingsw.shared.clientInfo.*;
 import it.polimi.ingsw.shared.exceptions.usersAndDatabaseExceptions.*;
 import it.polimi.ingsw.shared.network.commands.notifications.*;
@@ -1271,7 +1272,7 @@ public class GameController implements Observer, NotificationHandler {
         try {
             NextAction previousAction = networkClient.cancelAction(clientInfo.getUserToken());
             info = clientInfo.getToolCardClientNextActionInfo();
-            updateGraphic();
+
             switch (previousAction) {
                 case MENU_ALL:
                     message1Label.setText("Tool Card cancellata");
@@ -1507,7 +1508,7 @@ public class GameController implements Observer, NotificationHandler {
         roundTrackDices.clear();
         roundTrackGrid.getChildren().clear();
         ClientDice[][] dice = roundTrack.getAllDices();
-        for (int row = 0; row < NUM_OF_ROUNDS; row++) {
+        for (int row = 0; row < GameConstants.MAX_DICES_FOR_ROUND; row++) {
             for (int column = 0; column < NUM_OF_ROUNDS; column++) {
                 if (dice[column][row] != null) {
                     ImageView image = setDiceStyle(dice[column][row]);
