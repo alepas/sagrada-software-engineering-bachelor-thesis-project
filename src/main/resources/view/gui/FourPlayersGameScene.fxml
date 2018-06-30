@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Font?>
 <AnchorPane maxHeight="800.0" maxWidth="1300.0" minHeight="800.0" minWidth="1300.0" prefHeight="800.0"
             prefWidth="1300.0" styleClass="Scene" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.controller.guicontroller.GameController">
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controller.guicontroller.GameController">
     <ImageView fitHeight="800.0" fitWidth="1300.0">
         <Image url="@/view/gui/background/gameScene.jpg"/>
     </ImageView>
