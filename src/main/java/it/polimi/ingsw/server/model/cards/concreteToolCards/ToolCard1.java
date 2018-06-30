@@ -6,6 +6,7 @@ import it.polimi.ingsw.server.model.dicebag.Color;
 import it.polimi.ingsw.server.model.dicebag.Dice;
 import it.polimi.ingsw.server.model.users.MoveData;
 import it.polimi.ingsw.server.model.users.PlayerInGame;
+import it.polimi.ingsw.server.model.wpc.Cell;
 import it.polimi.ingsw.shared.clientInfo.*;
 import it.polimi.ingsw.shared.exceptions.dicebagExceptions.IncorrectNumberException;
 import it.polimi.ingsw.shared.exceptions.usersAndDatabaseExceptions.*;

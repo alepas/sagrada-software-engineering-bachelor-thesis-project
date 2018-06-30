@@ -17,7 +17,9 @@ public class ToolCard4 extends ToolCard {
     private Position firstDiceFinalPos;
     private DiceAndPosition secondDiceInitial;
 
-
+    /**
+     * Object constructor: creates a new concrete tool card 4 by setting all its parameters
+     */
     public ToolCard4() {
         this.id = ToolCardConstants.TOOLCARD4_ID;
         this.name = ToolCardConstants.TOOL4_NAME;
@@ -34,11 +36,14 @@ public class ToolCard4 extends ToolCard {
 
     }
 
-
+    /**
+     * @return a copy of this object
+     */
     @Override
     public ToolCard getToolCardCopy() {
         return new ToolCard4();
     }
+
 
     @Override
     public MoveData setCard(PlayerInGame player) throws CannotUseToolCardException {
@@ -46,6 +51,17 @@ public class ToolCard4 extends ToolCard {
     }
 
 
+    /**
+     * In this ToolCard this method should be called only when the game is a single player game; the
+     * first action that a single player must to do use a ToolCard is to pick a dice of the give color
+     *
+     * @param diceId is the id of the chosen dice
+     * @return all the information related to the next action that the player will have to do and all new parameters created
+     *         by the call of this method
+     * @throws CannotPickDiceException if the chosen dice isn't available, for example it is not located where the
+     *                                 player has to pick the dice
+     * @throws CannotPerformThisMoveException if the game in a multi player game
+     */
     @Override
     public MoveData pickDice(int diceId) throws CannotPickDiceException, CannotPerformThisMoveException {
         if ((currentStatus == 0) && (singlePlayerGame)) {
@@ -53,12 +69,31 @@ public class ToolCard4 extends ToolCard {
         } else throw new CannotPerformThisMoveException(username, 2, false);
     }
 
-
+    /**
+     * @param number is a chosen number
+     * @return all the information related to the next action that the player will have to do and all new parameters
+     * created by the call of this method
+     * @throws CannotPerformThisMoveException every time that this method is called because it is not possible to pick
+     * a number while this card is used
+     */
     @Override
     public MoveData pickNumber(int number) throws CannotPerformThisMoveException {
         throw new CannotPerformThisMoveException(username, 2, false);
     }
 
+    /**
+     * if none of the exception has been thrown the method removes the chosen dice from his first position, adds it to
+     * the player's wpc in the new position and clear the card. this method is called twice because this ToolCard let
+     * the player move to dices in his/her schema.
+     *
+     * @param diceId is the id of the chosen dice
+     * @param pos    is the position where the player would like to place the chosen dice
+     * @return all the information related to the next action that the player will have to do and all new parameters created
+     * by the call of this method
+     * @throws CannotPerformThisMoveException if the status is different from 1 or if the chosen position is null
+     * @throws CannotPickPositionException    if it is not possible to add the chosen dice to the chosen position
+     * @throws CannotPickDiceException        if it is not possible to pick the chosen dice
+     */
     @Override
     public MoveData placeDice(int diceId, Position pos) throws CannotPerformThisMoveException, CannotPickPositionException, CannotPickDiceException {
 

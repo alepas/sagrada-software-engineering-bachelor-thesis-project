@@ -2,7 +2,6 @@ package it.polimi.ingsw.server.model.cards.concreteToolCards;
 
 import it.polimi.ingsw.server.constants.ToolCardConstants;
 import it.polimi.ingsw.server.model.cards.ToolCard;
-import it.polimi.ingsw.server.model.cards.concreteToolCards.ToolCard1;
 import it.polimi.ingsw.server.model.dicebag.Dice;
 import it.polimi.ingsw.server.model.game.Game;
 import it.polimi.ingsw.server.model.users.MoveData;

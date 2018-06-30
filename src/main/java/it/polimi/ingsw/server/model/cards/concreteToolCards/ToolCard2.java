@@ -45,6 +45,9 @@ public class ToolCard2 extends ToolCard {
 
 
     /**
+     * In this ToolCard this method should be called only when the game is a single player game, the
+     *      * first action that a single player must to do use a ToolCard is to pick a dice of the give color
+     *
      * @param diceId is the id of the chosen dice
      * @return all the information related to the next action that the player will have to do and all new parameters created
      * by the call of this method
@@ -62,7 +65,7 @@ public class ToolCard2 extends ToolCard {
 
 
     /**
-     * @param number define if the players wants to add one or subtract one to the chosen dice number
+     * @param number is a chosen number
      * @return all the information related to the next action that the player will have to do and all new parameters created
      * by the call of this method
      * @throws CannotPerformThisMoveException every time that this method is called because it is not

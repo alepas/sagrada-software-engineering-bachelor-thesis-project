@@ -158,6 +158,6 @@
         <Label layoutX="15.0" layoutY="4.0" styleClass="Label" text="Seleziona il tuo schema di gioco." />
     </AnchorPane>
 
-    <Button fx:id="disconnectButton" layoutX="746.0" layoutY="641.0" styleClass="Button" visible="false"/>
+    <Button fx:id="disconnectionButton" layoutX="746.0" layoutY="641.0" styleClass="Button" visible="false"/>
     <Label fx:id="wpcInfoLabel" alignment="CENTER" layoutX="928.0" layoutY="600.0" prefHeight="17.0" prefWidth="250.0" textAlignment="CENTER" />
 </AnchorPane>

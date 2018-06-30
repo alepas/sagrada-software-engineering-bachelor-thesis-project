@@ -490,6 +490,7 @@ public class GameController implements Observer, NotificationHandler {
     private NextAction placeDice(AnchorPane cell, int id) {
         Position position;
         NextAction nextAction;
+        System.out.println("placedice "+ usedToolCard);
         if (cell != null) {
             int row = Integer.parseInt(cell.getId().substring(0, 1));
             int column = Integer.parseInt(cell.getId().substring(1, 2));
@@ -1137,10 +1138,10 @@ public class GameController implements Observer, NotificationHandler {
     private void selectNumberToolCard() {
         diceBagIcon.setVisible(false);
         ToolCardClientNextActionInfo info = clientInfo.getToolCardClientNextActionInfo();
-/*        for (ClientDice clientDice : clientInfo.getExtractedDices()) {
+        for (ClientDice clientDice : clientInfo.getExtractedDices()) {
             for (ImageView dice : extractDices){
                 if (dice.getId().equals(String.valueOf(clientDice.getDiceID()))) changeStyle(dice, clientDice);}
-        }*/
+        }
         if (info.numbersToChoose.size() <= 2) {
             messageLabel.setText("Aggiungi 1 o sottrai 1");
             plusMinusPane.setVisible(true);
@@ -1586,7 +1587,7 @@ public class GameController implements Observer, NotificationHandler {
     public void handle(NextTurnNotification notification) {
         usedToolCard = false;
         Platform.runLater(()->{
-            updateGraphic();
+//            updateGraphic();
             plusMinusPane.setVisible(false);
             changeNumberPane.setVisible(false);
             diceBagIcon.setVisible(false);
