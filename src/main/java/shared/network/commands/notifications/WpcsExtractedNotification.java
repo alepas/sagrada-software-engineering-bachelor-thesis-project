@@ -1,7 +1,7 @@
 package shared.network.commands.notifications;
 
-import server.constants.GameConstants;
 import shared.clientInfo.ClientWpc;
+import shared.constants.GameConstants;
 
 import java.util.ArrayList;
 import java.util.HashMap;

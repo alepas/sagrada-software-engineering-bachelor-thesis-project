@@ -5,7 +5,6 @@ import org.junit.After;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import server.model.users.LoadingFromFile;
 import shared.exceptions.usersAndDatabaseExceptions.DatabaseFileErrorException;
 
 import java.io.File;

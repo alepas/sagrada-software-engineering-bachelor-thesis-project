@@ -1,7 +1,7 @@
 package shared.network.commands.notifications;
 
-import server.constants.GameConstants;
 import shared.clientInfo.ClientEndTurnData;
+import shared.constants.GameConstants;
 
 public class NextTurnNotification implements Notification {
     public final int turnNumber;

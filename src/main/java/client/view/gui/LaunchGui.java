@@ -29,17 +29,16 @@ public class LaunchGui extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
-        Parent root = FXMLLoader.load(getClass().getResource("/view/gui/StartingScene.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("fxml/StartingScene.fxml"));
         stage.setTitle("Sagrada");
         stage.setScene(new Scene(root));
         stage.setResizable(false);
 
-        final java.net.URL resource = getClass().getResource("/view/gui/song.mp3");
+        final java.net.URL resource = getClass().getResource("song.mp3");
         final Media media = new Media(resource.toString());
         final MediaPlayer mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         mediaPlayer.play();
-
         stage.show();
 
         stage.setOnCloseRequest(event -> {

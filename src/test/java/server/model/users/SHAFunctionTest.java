@@ -2,7 +2,6 @@ package server.model.users;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import server.model.users.SHAFunction;
 import shared.exceptions.usersAndDatabaseExceptions.PasswordParsingException;
 
 class SHAFunctionTest {

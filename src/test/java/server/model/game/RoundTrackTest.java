@@ -3,7 +3,6 @@ package server.model.game;
 import org.junit.Before;
 import org.junit.Test;
 import server.model.dicebag.Dice;
-import server.model.game.RoundTrack;
 import shared.clientInfo.Position;
 
 import static org.junit.Assert.assertEquals;

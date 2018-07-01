@@ -2,7 +2,6 @@ package server.model.cards.concretePublicObjectiveCards;
 
 import org.junit.Before;
 import org.junit.Test;
-import server.model.cards.concretePublicObjectiveCards.*;
 import server.model.dicebag.Color;
 import server.model.dicebag.Dice;
 import server.model.wpc.Wpc;

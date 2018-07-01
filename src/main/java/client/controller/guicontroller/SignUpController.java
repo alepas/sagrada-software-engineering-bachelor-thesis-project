@@ -52,7 +52,7 @@ public class SignUpController {
 
         signUpUsername.setOnMouseClicked(event -> signUpErrorLabel.setVisible(false));
 
-        backButton.setOnAction(event -> changeSceneHandle(event, "/view/gui/ChooseHowToSignScene.fxml"));
+        backButton.setOnAction(event -> changeSceneHandle(event, "/client/view/gui/fxml/ChooseHowToSignScene.fxml"));
     }
 
     /**
@@ -88,7 +88,7 @@ public class SignUpController {
         Thread signUp = new Thread(()->{
             try {
                 networkClient.createUser(username, password);
-                Platform.runLater(() -> changeSceneHandle(event, "/view/gui/SetNewGameScene.fxml"));
+                Platform.runLater(() -> changeSceneHandle(event, "/client/view/gui/fxml/SetNewGameScene.fxml"));
             } catch (CannotRegisterUserException e) {
                 Platform.runLater(()->{
                 signUpErrorLabel.setText(e.getMessage());

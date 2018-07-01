@@ -8,7 +8,7 @@
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controller.guicontroller.StartController">
     
     <ImageView styleClass="ImageEffect" fitHeight="705.0" fitWidth="900.0" layoutX="151.0">
-        <Image url="@/view/gui/background/startingScene.jpg" />
+        <Image url="@../background/startingScene.jpg" />
 
     </ImageView>
 

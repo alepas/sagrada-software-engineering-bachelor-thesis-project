@@ -21,10 +21,16 @@ public class ClientGame implements Serializable {
     public ClientGame(String id, int gameNumPlayers, HashMap<String, ArrayList<ClientWpc>> wpcsProposedByUsername) {
         this.id = id;
         this.gameNumPlayers = gameNumPlayers;
+        this.toolCards = new ArrayList<>();
+        this.publicObjectiveCards = new ArrayList<>();
+        this.extractedDices = new ArrayList<>();
 
         this.wpcByUsername = new HashMap<>();
         this.favoursByUsername = new HashMap<>();
-        this.wpcsProposedByUsername = wpcsProposedByUsername;
+        this.wpcsProposedByUsername = new HashMap<>();
+        if (wpcsProposedByUsername != null)
+            this.wpcsProposedByUsername.putAll(wpcsProposedByUsername);
+
     }
 
     public ClientGame(String id, int gameNumPlayers) {
@@ -64,10 +70,13 @@ public class ClientGame implements Serializable {
     }
 
     public void setWpcByUsername(HashMap<String, ClientWpc> wpcByUsername) {
-        this.wpcByUsername = wpcByUsername;
+        if (wpcByUsername != null) {
+            this.wpcByUsername.clear();
+            this.wpcByUsername.putAll(wpcByUsername);
+        }
     }
 
-    public void setUserWpc(String username, ClientWpc wpc){
+    public void setUserWpc(String username, ClientWpc wpc) {
         wpcByUsername.put(username, wpc);
     }
 
@@ -80,7 +89,10 @@ public class ClientGame implements Serializable {
     }
 
     public void setFavoursByUsername(HashMap<String, Integer> favoursByUsername) {
-        this.favoursByUsername = favoursByUsername;
+        if (favoursByUsername != null) {
+            this.favoursByUsername.clear();
+            this.favoursByUsername.putAll(favoursByUsername);
+        }
     }
 
     public ArrayList<ClientToolCard> getToolCards() {

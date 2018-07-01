@@ -14,7 +14,6 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import shared.clientInfo.NextAction;
 import shared.exceptions.usersAndDatabaseExceptions.CannotFindPlayerInDatabaseException;
 import shared.exceptions.usersAndDatabaseExceptions.CannotLoginUserException;
 
@@ -57,7 +56,7 @@ public class SignInController {
 
         signInUsername.setOnMouseClicked(event -> signInErrorLabel.setVisible(false));
 
-        backButton.setOnAction(event -> changeSceneHandle(event, "/view/gui/ChooseHowToSignScene.fxml"));
+        backButton.setOnAction(event -> changeSceneHandle(event, "/client/view/gui/fxml/ChooseHowToSignScene.fxml"));
     }
 
 
@@ -77,17 +76,13 @@ public class SignInController {
                 sleep(500);
                 Platform.runLater(()->{
                     try {
-                        NextAction nextAction = networkClient.getUpdatedGame(clientInfo.getUserToken());
+                        networkClient.getUpdatedGame(clientInfo.getUserToken());
                         if (clientInfo.getGame() != null) {
-                            System.out.println("azione: " + clientInfo.getGame().getId());
                             if (clientInfo.getMyWpc() != null) chooseGameScene(event);
-                            else {
-                                System.out.println("ehi");
-                                //changeSceneHandle(event, "/view/gui/SetNewGameSchene.fxml");
-                            }
+                            else changeSceneHandle(event, "/view/gui/SetNewGameScene.fxml");
                         }
                     } catch (CannotFindPlayerInDatabaseException e) {
-                        changeSceneHandle(event, "/view/gui/SetNewGameScene.fxml");
+                        changeSceneHandle(event, "/client/view/gui/fxml/SetNewGameScene.fxml");
                     }
                 });
             } catch (CannotLoginUserException e) {
@@ -111,23 +106,23 @@ public class SignInController {
      * @param event is the event that generated the login
      */
     private void chooseGameScene(ActionEvent event) {
-        Platform.runLater(()-> {
+        //Platform.runLater(()-> {
             int numPlayers = clientInfo.getGameNumPlayers();
             switch (numPlayers) {
                 case 1:
                     break;
                 case 2:
-                    changeSceneHandle(event, "/view/gui/TwoPlayersGameScene.fxml");
+                    changeSceneHandle(event, "/client/view/gui/fxml/TwoPlayersGameScene.fxml");
                     break;
                 case 3:
-                    changeSceneHandle(event, "/view/gui/ThreePlayersGameScene.fxml");
+                    changeSceneHandle(event, "/client/view/gui/fxml/ThreePlayersGameScene.fxml");
                     break;
                 case 4:
-                    changeSceneHandle(event, "/view/gui/FourPlayersGameScene.fxml");
+                    changeSceneHandle(event, "/client/view/gui/fxml/FourPlayersGameScene.fxml");
                     break;
 
             }
-        });
+        //});
     }
 
 

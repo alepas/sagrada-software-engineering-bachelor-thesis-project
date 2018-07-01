@@ -3,15 +3,12 @@ package server.model.game;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import server.constants.GameConstants;
 import server.model.cards.PublicObjectiveCard;
 import server.model.cards.ToolCard;
 import server.model.dicebag.Color;
-import server.model.game.Game;
-import server.model.game.MultiplayerGame;
 import server.model.users.DatabaseUsers;
 import server.model.users.PlayerInGame;
-import shared.clientInfo.ClientEndTurnData;
+import shared.constants.GameConstants;
 import shared.exceptions.gameExceptions.InvalidMultiplayerGamePlayersException;
 import shared.exceptions.gameExceptions.MaxPlayersExceededException;
 import shared.exceptions.gameExceptions.UserAlreadyInThisGameException;
@@ -20,7 +17,6 @@ import shared.exceptions.gameExceptions.UserNotInThisGameException;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

@@ -1,6 +1,5 @@
 package server.model.game;
 
-import server.constants.GameConstants;
 import server.model.cards.PocDB;
 import server.model.cards.PublicObjectiveCard;
 import server.model.cards.ToolCard;
@@ -11,6 +10,7 @@ import server.model.dicebag.DiceBag;
 import server.model.users.PlayerInGame;
 import server.model.wpc.WpcDB;
 import shared.clientInfo.*;
+import shared.constants.GameConstants;
 import shared.exceptions.gameExceptions.*;
 import shared.network.commands.notifications.*;
 
@@ -72,7 +72,6 @@ public abstract class Game extends Observable implements Runnable {
         clientCopy.setRoundTrack(this.roundTrack.getClientRoundTrack());
         clientCopy.setStarted(started);
 
-        if (currentTurn != 0) {
             for (PlayerInGame player : players) {
                 clientCopy.setUserWpc(player.getUser(), player.getWPC().getClientWpc());
                 clientCopy.setUserFavours(player.getUser(), player.getFavours());
@@ -89,7 +88,7 @@ public abstract class Game extends Observable implements Runnable {
             ArrayList<ClientDice> clientDices = new ArrayList<>();
             for (Dice dice : this.extractedDices) clientDices.add(dice.getClientDice());
             clientCopy.setExtractedDices(clientDices);
-        }
+
         return clientCopy;
     }
 
@@ -318,11 +317,6 @@ public abstract class Game extends Observable implements Runnable {
     void extractToolCards() {
         ArrayList<String> ids = toolcardDB.getCardsIDs();
         Collections.shuffle(ids);
-
-        ids.clear();
-        ids.add("1");
-        ids.add("11");
-        ids.add("6");
 
         ArrayList<String> toolCardsExtracted = new ArrayList<>(ids.subList(0, numOfToolCards));
         ArrayList<ClientToolCard> clientToolCards = new ArrayList<>();

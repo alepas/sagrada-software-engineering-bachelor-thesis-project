@@ -53,8 +53,9 @@ public class SetNewGameController implements Observer, NotificationHandler {
     private boolean pocExtracted = false;
     private boolean privateObjExtractd = false;
     private boolean toolExtracted = false;
+    private boolean reconnected = false;
 
-    private ClientColor[] colors;
+    private ClientColor[] colors = new ClientColor[2];
     private ArrayList<ClientWpc> userWpcs = new ArrayList<>();
 
     private NetworkClient networkClient;
@@ -84,6 +85,9 @@ public class SetNewGameController implements Observer, NotificationHandler {
 
     @FXML
     private Button personalAreaButton;
+
+     @FXML
+     private Button reconnectionButton;
 
     @FXML
     private Circle fourthWpcCircle4;
@@ -190,6 +194,17 @@ public class SetNewGameController implements Observer, NotificationHandler {
         clientInfo = ClientInfo.getInstance();
         clientInfo.addObserver(this);
 
+
+        if(clientInfo.getGame()!= null && clientInfo.getMyWpc() == null){
+            reconnected = true;
+            disableAll();
+            String username = clientInfo.getUsername();
+            colors[0] = clientInfo.getPrivateObjectives()[0];
+            userWpcs.addAll(clientInfo.getWpcsProposedByUsername().get(username));
+            initializeWpc();
+
+        }
+
         ToggleGroup group = new ToggleGroup();
         soloPlayerBox.setToggleGroup(group);
         twoPlayersBox.setToggleGroup(group);
@@ -219,17 +234,19 @@ public class SetNewGameController implements Observer, NotificationHandler {
         fourPlayersBox.setOnMouseClicked(event -> errorLabel.setVisible(false));
 
         personalAreaButton.setOnAction(event -> changeSceneHandle(event,
-                "/view/gui/PersonalAreaScene.fxml"));
+                "/client/client/view/gui/fxml/fxml/PersonalAreaScene.fxml"));
 
-        firstWPC.setOnMouseClicked(event -> pickWpc(wpc0ID));
+        firstWPC.setOnMouseClicked(event -> pickWpc(event, wpc0ID));
 
-        secondWPC.setOnMouseClicked(event -> pickWpc(wpc1ID));
+        secondWPC.setOnMouseClicked(event -> pickWpc(event, wpc1ID));
 
-        thirdWPC.setOnMouseClicked(event -> pickWpc(wpc2ID));
+        thirdWPC.setOnMouseClicked(event -> pickWpc(event, wpc2ID));
 
-        fourthWPC.setOnMouseClicked(event -> pickWpc(wpc3ID));
+        fourthWPC.setOnMouseClicked(event -> pickWpc(event, wpc3ID));
 
-        disconnectionButton.setOnAction(event -> changeSceneHandle(event, "/view/gui/StartingScene.fxml"));
+        reconnectionButton.setOnAction(this::waitPlayGameAfterDisconnection);
+
+        disconnectionButton.setOnAction(event -> changeSceneHandle(event, "/client/view/gui/fxml/StartingScene.fxml"));
     }
 
 
@@ -366,44 +383,45 @@ public class SetNewGameController implements Observer, NotificationHandler {
                     }
                 }
             }
-            Platform.runLater(() -> {
-                    selectionArea.setVisible(false);
-                    for (int i = 0; i < userWpcs.size(); i++) {
-                        ClientWpc wpc = userWpcs.get(i);
-                        switch (i) {
-                            case 0:
-                                wpc0ID = wpc.getWpcID();
-                                wpc0Name.setText(ClientWpcConstants.setWpcName(wpc.getWpcID()));
-                                setWpc(firstWPC, wpc);
-                                setFirstWpcFavours(wpc.getFavours());
-                                break;
-                            case 1:
-                                wpc1ID = wpc.getWpcID();
-                                wpc1Name.setText(ClientWpcConstants.setWpcName(wpc.getWpcID()));
-                                setWpc(secondWPC, wpc);
-                                setSecondWpcFavours(wpc.getFavours());
-                                break;
-                            case 2:
-                                wpc2ID = wpc.getWpcID();
-                                wpc2Name.setText(ClientWpcConstants.setWpcName(wpc.getWpcID()));
-                                setWpc(thirdWPC, wpc);
-                                setThirdWpcFavours(wpc.getFavours());
-                                break;
-                            case 3:
-                                wpc3ID = wpc.getWpcID();
-                                wpc3Name.setText(ClientWpcConstants.setWpcName(wpc.getWpcID()));
-                                setWpc(fourthWPC, wpc);
-                                setFourthWpcFavours(wpc.getFavours());
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    setVisibleWpcSelection();
-                });
-
+            Platform.runLater(this::initializeWpc);
         });
         waitingWPC.start();
+    }
+
+    private void initializeWpc(){
+        selectionArea.setVisible(false);
+        for (int i = 0; i < userWpcs.size(); i++) {
+            ClientWpc wpc = userWpcs.get(i);
+            switch (i) {
+                case 0:
+                    wpc0ID = wpc.getWpcID();
+                    wpc0Name.setText(ClientWpcConstants.setWpcName(wpc.getWpcID()));
+                    setWpc(firstWPC, wpc);
+                    setFirstWpcFavours(wpc.getFavours());
+                    break;
+                case 1:
+                    wpc1ID = wpc.getWpcID();
+                    wpc1Name.setText(ClientWpcConstants.setWpcName(wpc.getWpcID()));
+                    setWpc(secondWPC, wpc);
+                    setSecondWpcFavours(wpc.getFavours());
+                    break;
+                case 2:
+                    wpc2ID = wpc.getWpcID();
+                    wpc2Name.setText(ClientWpcConstants.setWpcName(wpc.getWpcID()));
+                    setWpc(thirdWPC, wpc);
+                    setThirdWpcFavours(wpc.getFavours());
+                    break;
+                case 3:
+                    wpc3ID = wpc.getWpcID();
+                    wpc3Name.setText(ClientWpcConstants.setWpcName(wpc.getWpcID()));
+                    setWpc(fourthWPC, wpc);
+                    setFourthWpcFavours(wpc.getFavours());
+                    break;
+                default:
+                    break;
+            }
+        }
+        setVisibleWpcSelection();
     }
 
     /**
@@ -429,9 +447,13 @@ public class SetNewGameController implements Observer, NotificationHandler {
      */
     private void startClockAnimation(){
         Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            int clock = 60;
+        int time;
 
+        if (!reconnected)time = 60;
+        else time = clientInfo.getTimeLeftToCompleteTask()/1000;
+
+        timer.scheduleAtFixedRate(new TimerTask() {
+            int clock = time;
             public void run() {
                 if (clock > 0) {
                     Platform.runLater(() -> clockLabel.setText("00:" + clock));
@@ -601,7 +623,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
      *
      * @param wpcID  is the ID of the schema chosen by the player
      */
-    public void pickWpc(String wpcID) {
+    public void pickWpc(Event event, String wpcID) {
         Platform.runLater(()-> {
             try {
                 networkClient.pickWpc(clientInfo.getUserToken(), wpcID);
@@ -615,13 +637,15 @@ public class SetNewGameController implements Observer, NotificationHandler {
             thirdWPC.setDisable(true);
             fourthWPC.setDisable(true);
         });
+        if(reconnected) waitPlayGameAfterDisconnection(event);
     }
 
 
     /**
-     * when all game parameters have been settled the window change scene; it depends on the actual players number.
+     * when all game parameters have been set the window changes scene; the scene that will raise up depends by
+     * the players number.
      *
-     * @param event is the event necessry to change scene
+     * @param event is the event necessary to change scene
      */
     private void playGame(Event event) {
         Thread startGame = new Thread(() -> {
@@ -634,27 +658,64 @@ public class SetNewGameController implements Observer, NotificationHandler {
                     }
                 }
             }
-            Platform.runLater(()->{
-                switch (clientInfo.getGameNumPlayers()){
-                    case 1:
-                        changeSceneHandle(event, "/view/gui/SoloPlayerGameScene.fxml");
-                        break;
-                    case 2:
-                        changeSceneHandle(event, "/view/gui/TwoPlayersGameScene.fxml");
-                        break;
-                    case 3:
-                        changeSceneHandle(event, "/view/gui/ThreePlayersGameScene.fxml");
-                        break;
-                    case 4:
-                        changeSceneHandle(event, "/view/gui/FourPlayersGameScene.fxml");
-                        break;
-                }
-            });
+            Platform.runLater(()-> chooseScene(event));
         });
         startGame.start();
     }
 
+    /**
+     *when all schemas have been chosen the window changes scene; the scene that will raise up depends by
+     *the players number.
+     *
+     * @param event is the event necessary to change scene
+     */
+    private void waitPlayGameAfterDisconnection(Event event){
+        System.out.println("bu");
+        Thread playGame = new Thread(() -> {
+            System.out.println("ehi");
+            while (!allWpcsPicked) {
+                synchronized (cardWaiter){
+                    try {
+                        cardWaiter.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            Platform.runLater(()-> chooseScene(event));
+        });
+        playGame.start();
+    }
 
+    /**
+     * Selects which scene must me raised up.
+     *
+     * @param event is the event necessary to change scene
+     */
+    private void chooseScene(Event event){
+        switch (clientInfo.getGameNumPlayers()){
+            case 1:
+                changeSceneHandle(event, "/client/view/gui/fxml/SoloPlayerGameScene.fxml");
+                break;
+            case 2:
+                changeSceneHandle(event, "/client/view/gui/fxml/TwoPlayersGameScene.fxml");
+                break;
+            case 3:
+                changeSceneHandle(event, "/client/view/gui/fxml/ThreePlayersGameScene.fxml");
+                break;
+            case 4:
+                changeSceneHandle(event, "/client/view/gui/fxml/FourPlayersGameScene.fxml");
+                break;
+        }
+    }
+
+
+    /**
+     * Changes the scene in the window.
+     *
+     * @param event the event related to the desire of the player to change scene
+     * @param path is the path of the next scene
+     */
     private void changeSceneHandle(Event event, String path) {
 
         AnchorPane nextNode = new AnchorPane();
@@ -719,6 +780,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
         else
             Platform.runLater(()-> wpcInfoLabel.setText(user + " ha scelto lo schema numero" + id));
         allWpcsPicked = clientInfo.allPlayersChooseWpc();
+        synchronized (cardWaiter){cardWaiter.notify();}
     }
 
     @Override
@@ -778,25 +840,25 @@ public class SetNewGameController implements Observer, NotificationHandler {
     @Override
     public void handle(PlayerDisconnectedNotification playerDisconnectedNotification) {
         String user = playerDisconnectedNotification.username;
-        if (!gameStarted) Platform.runLater(() -> lab2.setText(user + " é uscito dalla partita!"));
-        else Platform.runLater(() -> lab2.setText(newPlayer + " si è disconnesso!"));
+        if (!gameStarted) Platform.runLater(() -> wpcInfoLabel.setText(user + " é uscito dalla partita!"));
+        else Platform.runLater(() -> wpcInfoLabel.setText(user + " si è disconnesso!"));
     }
 
     @Override
     public void handle(PlayerReconnectedNotification playerReconnectedNotification) {
         String user = playerReconnectedNotification.username;
-        Platform.runLater(() -> lab2.setText(user + " si è disconnesso!"));
+        Platform.runLater(() -> wpcInfoLabel.setText(user + " si è riconnesso!"));
 
     }
 
     @Override
     public void handle(ForceDisconnectionNotification notification) {
-        Platform.runLater(()-> disconnectionButton.fire());
+        Platform.runLater(disconnectionButton::fire);
     }
 
     @Override
     public void handle(ForceStartGameNotification notification) {
-
+        Platform.runLater(disconnectionButton::fire);
     }
 
 }

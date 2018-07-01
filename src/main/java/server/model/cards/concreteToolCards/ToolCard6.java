@@ -63,7 +63,7 @@ public class ToolCard6 extends ToolCard {
             else {
                 this.currentStatus = 30;
                 String text = "Il dado non può essere posizionato sulla Window Pattern Card. È stato riposizionato nei dadi estratti.";
-                return new MoveData(NextAction.INTERRUPT_TOOLCARD, text, false, false);
+                return new MoveData(NextAction.INTERRUPT_TOOLCARD, text, false, false,null, tempClientExtractedDices, null,this.dice.getClientDice(), ClientDiceLocations.EXTRACTED,null,false);
             }
         } else throw new CannotPerformThisMoveException(username, 2, false);
 
@@ -153,7 +153,7 @@ public class ToolCard6 extends ToolCard {
                 return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, ClientDiceLocations.WPC, null, tempClientExtractedDices, null, this.dice.getClientDice(), ClientDiceLocations.EXTRACTED);
             case 30:
                 String text = "Il dado non può essere posizionato sulla Window Pattern Card. È stato riposizionato nei dadi estratti.";
-                return new MoveData(NextAction.INTERRUPT_TOOLCARD, text, false, false);
+                return new MoveData(NextAction.INTERRUPT_TOOLCARD, text, false, false,null, tempClientExtractedDices, null,this.dice.getClientDice(), ClientDiceLocations.EXTRACTED,null,false);
 
         }
         return null;
@@ -167,6 +167,7 @@ public class ToolCard6 extends ToolCard {
             throw new CannotInteruptToolCardException(username, id);
         updateClientExtractedDices();
         ArrayList<ClientDice> tempExtracted = tempClientExtractedDices;
+        currentGame.changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, tempClientExtractedDices, null, currentPlayer.getFavours()));
         this.used = true;
         cleanCard();
         return new MoveData(true, null, tempExtracted, null);

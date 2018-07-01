@@ -3,7 +3,6 @@ package server.model.dicebag;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import server.model.dicebag.Color;
 import shared.clientInfo.ClientColor;
 
 import static server.model.dicebag.Color.getClientColor;

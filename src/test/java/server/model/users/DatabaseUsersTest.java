@@ -2,7 +2,6 @@ package server.model.users;
 
 
 import org.junit.jupiter.api.*;
-import server.model.users.DatabaseUsers;
 import shared.exceptions.usersAndDatabaseExceptions.CannotFindUserInDBException;
 import shared.exceptions.usersAndDatabaseExceptions.CannotLoginUserException;
 import shared.exceptions.usersAndDatabaseExceptions.CannotRegisterUserException;
