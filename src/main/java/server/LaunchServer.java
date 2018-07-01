@@ -1,9 +1,7 @@
 package server;
 
 import server.controller.ServerController;
-import server.model.cards.PocDB;
-import server.model.cards.ToolCardDB;
-import server.model.wpc.WpcDB;
+import server.model.configLoader.ConfigLoader;
 import server.network.rmi.RmiServer;
 import server.network.socket.SocketServer;
 import shared.constants.NetworkConstants;
@@ -18,13 +16,10 @@ import java.rmi.server.UnicastRemoteObject;
 public class LaunchServer {
 
     public static void main(String[] args) throws IOException {
-        //Caricamento delle wpc
-        WpcDB.getInstance();
-        ToolCardDB cardDB=ToolCardDB.getInstance();
-        PocDB pocDB= PocDB.getInstance();
+        ConfigLoader.loadConfig();
 
         //Avvio della socket
-        new Thread(){
+        new Thread() {
             @Override
             public void run() {
                 try {
@@ -35,7 +30,7 @@ public class LaunchServer {
                     } finally {
                         server.close();
                     }
-                } catch (IOException e){
+                } catch (IOException e) {
                     this.interrupt();
                 }
             }
@@ -49,8 +44,9 @@ public class LaunchServer {
             Registry registry = LocateRegistry.createRegistry(NetworkConstants.RMI_SERVER_PORT);
             registry.rebind(NetworkConstants.RMI_CONTROLLER_NAME, stub);
             System.out.println(">>> RMI Server is running\t\tAddress: " + NetworkConstants.SERVER_ADDRESS + "\tPort: " + NetworkConstants.RMI_SERVER_PORT);
-            while (true) Thread.sleep(100*1000);            //Utilizzato per non far terminare questo thread: vedi nota sotto
-        } catch (RemoteException e){
+            while (true)
+                Thread.sleep(100 * 1000);            //Utilizzato per non far terminare questo thread: vedi nota sotto
+        } catch (RemoteException e) {
             System.out.println(">>> " + e.getMessage());
         } catch (InterruptedException e) {
             System.out.println("RMI interrotto");
