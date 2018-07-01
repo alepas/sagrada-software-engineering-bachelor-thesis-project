@@ -1478,8 +1478,11 @@ public class GameController implements Observer, NotificationHandler {
      * @param id is the id of the dice that must be removed from the xtracted dices
      */
     private synchronized void removeDiceImage(String id){
-        for (ImageView image : extractDices)
-            if (image.getId().equals(id)) extractDices.remove(image);
+        for (ImageView image : extractDices) {
+            if (image.getId().equals(id)){
+                extractDices.remove(image);
+                return;
+        }}
     }
 
 
