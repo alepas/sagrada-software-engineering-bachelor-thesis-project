@@ -4,8 +4,10 @@ import org.junit.Before;
 import org.junit.Test;
 import server.constants.ToolCardConstants;
 import server.model.cards.ToolCard;
+import server.model.dicebag.Color;
 import server.model.dicebag.Dice;
 import server.model.game.Game;
+import server.model.game.RoundTrack;
 import server.model.users.MoveData;
 import server.model.users.PlayerInGame;
 import server.model.wpc.Cell;
@@ -29,6 +31,7 @@ public class ToolCard1Test {
     private Game game;
     private ArrayList<Dice> extractedDices = new ArrayList<>();
     private ClientDice clientMiddleDice;
+    private Position position;
 
     @Before
     public void Before() throws CannotPickDiceException {
@@ -38,6 +41,7 @@ public class ToolCard1Test {
 
         chosenDiceMiddleNumber = mock(Dice.class);
         when(chosenDiceMiddleNumber.getId()).thenReturn(1);
+        when(chosenDiceMiddleNumber.getDiceColor()).thenReturn(Color.VIOLET);
         when(chosenDiceMiddleNumber.getDiceNumber()).thenReturn(4);
 
         chosenDice1Number = mock(Dice.class);
@@ -52,6 +56,10 @@ public class ToolCard1Test {
         extractedDices.add(chosenDiceMiddleNumber);
         extractedDices.add(chosenDice1Number);
         extractedDices.add(chosenDice6Number);
+
+        position = mock(Position.class);
+        when(position.getRow()).thenReturn(0);
+        when(position.getColumn()).thenReturn(0);
 
         when(player.getGame()).thenReturn(game);
         when(game.getExtractedDices()).thenReturn(extractedDices);
@@ -118,6 +126,23 @@ public class ToolCard1Test {
     @Test(expected = CannotPerformThisMoveException.class)
     public void pickDiceIllegalStatusTest() throws CannotPickDiceException, CannotPerformThisMoveException {
         toolCard1.pickDice(chosenDiceMiddleNumber.getId());
+    }
+
+
+    /**
+     * if the game is a single player game the pickDice() method checks if the picked dice as the correct color and
+     * then goes to the next action.
+     *
+     * @throws CannotPickDiceException not in this test
+     * @throws CannotPerformThisMoveException not in this test
+     */
+    @Test
+    public void pickDiceSinglePlayerTest() throws CannotPickDiceException, CannotPerformThisMoveException {
+        toolCard1.setSinglePlayerGame(true);
+        MoveData moveData = toolCard1.pickDice(chosenDiceMiddleNumber.getId());
+
+        assertEquals(NextAction.SELECT_DICE_TOOLCARD, moveData.nextAction);
+        assertEquals(ClientDiceLocations.EXTRACTED, moveData.wherePickNewDice);
     }
 
 
@@ -327,13 +352,10 @@ public class ToolCard1Test {
         toolCard1.pickNumber(1);
 
         setSchema();
-        Position position = mock(Position.class);
-        when(position.getRow()).thenReturn(0);
-        when(position.getColumn()).thenReturn(0);
-        when(player.getWPC().addDiceWithAllRestrictions(chosenDice1Number, position)).thenReturn(true);
+
+        when(toolCard1.getCardWpc().addDiceWithAllRestrictions(chosenDice1Number, position)).thenReturn(true);
         MoveData moveData = toolCard1.placeDice(chosenDice1Number.getId(), position);
         assertTrue(moveData.moveFinished);
-        assertEquals(2, game.getExtractedDices().size());
 
         /*at the end of placeDice() method the clean on is called, those assertions checks if it reset parameters in
           a correct way: Both dice and oldDice must be null and the arrayList size must be zero
@@ -366,6 +388,9 @@ public class ToolCard1Test {
         assertNull(moveData.roundTrack);
         assertNull(moveData.diceChosen);
         assertNull(moveData.diceChosenLocation);
+
+        toolCard1.setCurrentToolStatus(4);
+        assertNull(toolCard1.getNextMove());
     }
 
     /**
@@ -376,7 +401,108 @@ public class ToolCard1Test {
         toolCard1.interruptToolCard(ToolCardInteruptValues.OK);
     }
 
-//todo: cancel method
+    /**
+     * Checks if the ToolCard ends in a correct way.
+     *
+     * @throws CannotCancelActionException not in this test
+     */
+    @Test
+    public void cancelLastOperationTest() throws CannotCancelActionException {
+        setSchema();
+        ClientWpc clientWpc = mock(ClientWpc.class);
+        when(player.getWPC().getClientWpc()).thenReturn(clientWpc);
+
+        RoundTrack roundTrack = mock(RoundTrack.class);
+        when(game.getRoundTrack()).thenReturn(roundTrack);
+        ClientRoundTrack clientRoundTrack = mock(ClientRoundTrack.class);
+        when(game.getRoundTrack().getClientRoundTrack()).thenReturn(clientRoundTrack);
+
+        MoveData moveData = toolCard1.cancelAction(true);
+        assertTrue(moveData.moveFinished);
+        assertTrue(moveData.canceledToolCard);
+    }
+
+    /**
+     * Checks if the Tool Card goes back in a correct way from status 3 to status 2.
+     *
+     * @throws CannotCancelActionException not in this test
+     * @throws CannotPerformThisMoveException not in this test
+     * @throws CannotPickDiceException not in this test
+     * @throws CannotPickNumberException not in this test
+     *
+     */
+    @Test
+    public void cancelLastOperationStateThreeTest() throws CannotCancelActionException,
+            CannotPerformThisMoveException, CannotPickDiceException, CannotPickNumberException {
+        toolCard1.setCurrentToolStatus(1);
+        toolCard1.pickDice(chosenDiceMiddleNumber.getId());
+        toolCard1.pickNumber(1);
+
+        MoveData moveData = toolCard1.cancelAction(false);
+
+        assertEquals(2, toolCard1.getCurrentStatus());
+        assertEquals(NextAction.SELECT_NUMBER_TOOLCARD, moveData.nextAction);
+        assertNull(moveData.wpc);
+        assertNull(moveData.roundTrack);
+    }
+
+
+    /**
+     * Checks if the Tool Card goes back in a correct way from status 2 to status 1.
+     *
+     * @throws CannotCancelActionException not in this test
+     */
+    @Test
+    public void cancelLastOperationStateTwoTest() throws CannotCancelActionException {
+        toolCard1.setCurrentToolStatus(2);
+        MoveData moveData = toolCard1.cancelAction(false);
+
+        assertEquals(1, toolCard1.getCurrentStatus());
+        assertEquals(NextAction.SELECT_DICE_TOOLCARD, moveData.nextAction);
+        assertNull(moveData.wpc);
+        assertNull(moveData.roundTrack);
+    }
+
+    /**
+     * Tests if it is possible to cancel in a correct way the action done while the status was 1
+     *
+     * @throws CannotCancelActionException in any case in this test
+     */
+    @Test
+    public void cancelLastOperationStatusOneTest() throws CannotCancelActionException {
+        toolCard1.setCurrentToolStatus(1);
+        setSchema();
+
+        RoundTrack roundTrack = mock(RoundTrack.class);
+        ClientRoundTrack clientRoundTrack = mock(ClientRoundTrack.class);
+        when(roundTrack.getClientRoundTrack()).thenReturn(clientRoundTrack);
+        when(game.getRoundTrack()).thenReturn(roundTrack);
+
+        MoveData moveData = toolCard1.cancelAction(false);
+        assertEquals(0, toolCard1.getCurrentStatus());
+        assertTrue(moveData.moveFinished);
+        assertTrue(moveData.canceledToolCard);
+
+    }
+
+    /**
+     * @throws CannotCancelActionException because the game is a multi player game
+     */
+    @Test (expected = CannotCancelActionException.class)
+    public void cancelLastOperationIllegalStatusZeroTest() throws CannotCancelActionException {
+        toolCard1.setCurrentToolStatus(0);
+        toolCard1.cancelAction(false);
+    }
+
+    /**
+     * @throws CannotCancelActionException because the boolean is false and the status isn't a valid one
+     */
+    @Test (expected = CannotCancelActionException.class)
+    public void cancelLastOperationIllegalStatusTest() throws CannotCancelActionException {
+        toolCard1.setCurrentToolStatus(6);
+        toolCard1.cancelAction(false);
+    }
+
     //---------------------------------------------- Not Test Methods --------------------------------------------------
 
     /**
@@ -419,6 +545,12 @@ public class ToolCard1Test {
 
         when(wpc.getSchema()).thenReturn(schema);
         when(player.getWPC()).thenReturn(wpc);
+        when(player.getWPC().copyWpc()).thenReturn(wpc);
+
+        toolCard1.setCardWpc(wpc);
+
+        ClientWpc clientWpc = mock(ClientWpc.class);
+        when(wpc.getClientWpc()).thenReturn(clientWpc);
     }
 
 }

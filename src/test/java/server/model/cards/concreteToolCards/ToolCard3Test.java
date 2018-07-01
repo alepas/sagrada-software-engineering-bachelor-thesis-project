@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import server.constants.ToolCardConstants;
 import server.model.cards.ToolCard;
+import server.model.dicebag.Color;
 import server.model.dicebag.Dice;
 import server.model.game.Game;
 import server.model.game.RoundTrack;
@@ -27,7 +28,6 @@ public class ToolCard3Test {
     private Dice chosenDice;
     private PlayerInGame player;
     private Position position;
-    private ClientDice clientDice;
     private Wpc wpc;
 
     @Before
@@ -39,6 +39,7 @@ public class ToolCard3Test {
         when(player.getGame()).thenReturn(game);
         chosenDice = mock(Dice.class);
         when(chosenDice.getId()).thenReturn(1);
+        when(chosenDice.getDiceColor()).thenReturn(Color.RED);
         when(chosenDice.getDiceNumber()).thenReturn(4);
 
         //mock the DiceAndPosition to do not have integration problems with the playerInGame class
@@ -46,6 +47,7 @@ public class ToolCard3Test {
         when(diceAndPosition1.getDice()). thenReturn(chosenDice);
         when(diceAndPosition1.getPosition()).thenReturn(null);
         when(player.dicePresentInLocation(chosenDice.getId(), ClientDiceLocations.WPC)).thenReturn(diceAndPosition1);
+        when(player.dicePresentInLocation(chosenDice.getId(), ClientDiceLocations.EXTRACTED)).thenReturn(diceAndPosition1);
 
         toolCard3.setCurrentToolGame(game);
         toolCard3.setCurrentToolPlayer(player);
@@ -56,7 +58,7 @@ public class ToolCard3Test {
         when(position.getColumn()).thenReturn(1);
         when(position.getRow()).thenReturn(1);
 
-        clientDice = mock(ClientDice.class);
+        ClientDice clientDice = mock(ClientDice.class);
         when(chosenDice.getClientDice()).thenReturn(clientDice);
 
     }
@@ -95,9 +97,10 @@ public class ToolCard3Test {
     @Test
     public void pickDiceTest() throws CannotPickDiceException, CannotPerformThisMoveException {
         toolCard3.setSinglePlayerGame(true);
-//        MoveData moveData = toolCard2.pickDice(chosenDice.getId());
-
-//        assertEquals(chosenDice.getId(), moveData.diceChosen.getDiceID());
+        MoveData moveData = toolCard3.pickDice(chosenDice.getId());
+        assertEquals(NextAction.PLACE_DICE_TOOLCARD, moveData.nextAction);
+        assertEquals(ClientDiceLocations.WPC, moveData.wherePickNewDice);
+        assertEquals(ClientDiceLocations.WPC, moveData.wherePutNewDice);
     }
 
     /**
@@ -161,7 +164,7 @@ public class ToolCard3Test {
         MoveData moveData = toolCard3.placeDice(chosenDice.getId(), position1);
 
         assertTrue(moveData.moveFinished);
-        assertNull(moveData.wpc);
+        assertNotNull(moveData.wpc);
         assertNull(moveData.roundTrack);
 
         moveData = toolCard3.getNextMove();
@@ -188,7 +191,7 @@ public class ToolCard3Test {
         MoveData moveData = toolCard3.placeDice(chosenDice.getId(), position1);
 
         assertTrue(moveData.moveFinished);
-        assertNull(moveData.wpc);
+        assertNotNull(moveData.wpc);
         assertNull(moveData.roundTrack);
 
         moveData = toolCard3.getNextMove();
@@ -278,8 +281,6 @@ public class ToolCard3Test {
 
         MoveData moveData = toolCard3.cancelAction(false);
         assertEquals(0, toolCard3.getCurrentStatus());
-//todo: devo finire la cancel
-//        assertEquals(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD, moveData.nextAction);
     }
 
     /**
@@ -333,6 +334,12 @@ public class ToolCard3Test {
 
         when(wpc.getSchema()).thenReturn(schema);
         when(player.getWPC()).thenReturn(wpc);
+        when(player.getWPC().copyWpc()).thenReturn(wpc);
+
+        toolCard3.setCardWpc(wpc);
+
+        ClientWpc clientWpc = mock(ClientWpc.class);
+        when(wpc.getClientWpc()).thenReturn(clientWpc);
 
     }
 

@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import server.constants.ToolCardConstants;
 import server.model.cards.ToolCard;
+import server.model.dicebag.Color;
 import server.model.dicebag.Dice;
 import server.model.game.Game;
 import server.model.game.RoundTrack;
@@ -39,6 +40,7 @@ public class ToolCard4Test {
         when(player.getGame()).thenReturn(game);
         chosenDice = mock(Dice.class);
         when(chosenDice.getId()).thenReturn(1);
+        when(chosenDice.getDiceColor()).thenReturn(Color.YELLOW);
         when(chosenDice.getDiceNumber()).thenReturn(4);
 
         //mock the DiceAndPosition to do not have integration problems with the playerInGame class
@@ -46,6 +48,7 @@ public class ToolCard4Test {
         when(diceAndPosition1.getDice()). thenReturn(chosenDice);
         when(diceAndPosition1.getPosition()).thenReturn(null);
         when(player.dicePresentInLocation(chosenDice.getId(), ClientDiceLocations.WPC)).thenReturn(diceAndPosition1);
+        when(player.dicePresentInLocation(chosenDice.getId(), ClientDiceLocations.EXTRACTED)).thenReturn(diceAndPosition1);
 
         toolCard4.setCurrentToolGame(game);
         toolCard4.setCurrentToolPlayer(player);
@@ -95,9 +98,10 @@ public class ToolCard4Test {
     @Test
     public void pickDiceTest() throws CannotPickDiceException, CannotPerformThisMoveException {
         toolCard4.setSinglePlayerGame(true);
-//        MoveData moveData = toolCard2.pickDice(chosenDice.getId());
-
-//        assertEquals(chosenDice.getId(), moveData.diceChosen.getDiceID());
+        MoveData moveData = toolCard4.pickDice(chosenDice.getId());
+        assertEquals(NextAction.PLACE_DICE_TOOLCARD, moveData.nextAction);
+        assertEquals(ClientDiceLocations.WPC, moveData.wherePickNewDice);
+        assertEquals(ClientDiceLocations.WPC, moveData.wherePutNewDice);
     }
 
     /**
@@ -334,9 +338,8 @@ public class ToolCard4Test {
         when(roundTrack.getClientRoundTrack()).thenReturn(clientRoundTrack);
         when(game.getRoundTrack()).thenReturn(roundTrack);
 
-        MoveData moveData = toolCard4.cancelAction(false);
+        toolCard4.cancelAction(false);
         assertEquals(0, toolCard4.getCurrentStatus());
-        //assertEquals(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD, moveData.nextAction);
     }
 
 
@@ -392,6 +395,12 @@ public class ToolCard4Test {
 
         when(wpc.getSchema()).thenReturn(schema);
         when(player.getWPC()).thenReturn(wpc);
+        when(player.getWPC().copyWpc()).thenReturn(wpc);
+
+        toolCard4.setCardWpc(wpc);
+
+        ClientWpc clientWpc = mock(ClientWpc.class);
+        when(wpc.getClientWpc()).thenReturn(clientWpc);
 
     }
 }

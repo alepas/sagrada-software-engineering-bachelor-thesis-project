@@ -171,4 +171,10 @@ public class ToolCard6 extends ToolCard {
         cleanCard();
         return new MoveData(true, null, tempExtracted, null);
     }
+
+    //--------------------------------------Methods for Tests-----------------------------------------------------------
+
+    Dice getOldDice(){return  oldDice;}
+
+    Dice getToolDice(){return dice;}
 }

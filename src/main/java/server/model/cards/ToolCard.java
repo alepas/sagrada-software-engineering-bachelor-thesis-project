@@ -265,4 +265,8 @@ public abstract class ToolCard implements Cloneable {
 
     public void setSinglePlayerGame(boolean singlePlayer){ singlePlayerGame = singlePlayer;}
 
+    public void setCardWpc (Wpc wpc){cardWpc = wpc;}
+
+    public Wpc getCardWpc(){ return cardWpc;}
+
 }

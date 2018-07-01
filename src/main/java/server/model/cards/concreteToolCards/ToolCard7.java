@@ -60,9 +60,7 @@ public class ToolCard7 extends ToolCard {
     public MoveData pickDice(int diceId) throws CannotPickDiceException, CannotPerformThisMoveException {
         if ((currentStatus == 0) && (singlePlayerGame)) {
             pickDiceInitializeSingleUserToolCard(diceId, null, null, null);
-            for (Dice extDice : cardExtractedDices) {
-                extDice.rollDice();
-            }
+            for (Dice extDice : cardExtractedDices) extDice.rollDice();
             this.used = true;
             updateAndCopyToGameData(true, false, false);
             ArrayList<ClientDice> tempExtracted = tempClientExtractedDices;
@@ -83,10 +81,8 @@ public class ToolCard7 extends ToolCard {
     }
 
     @Override
-    public MoveData placeDice(int diceId, Position pos) throws CannotPerformThisMoveException, CannotPickPositionException, CannotPickDiceException {
+    public MoveData placeDice(int diceId, Position pos) throws CannotPerformThisMoveException {
         throw new CannotPerformThisMoveException(username, 2, false);
-
-
     }
 
 
@@ -99,17 +95,11 @@ public class ToolCard7 extends ToolCard {
 
 
     @Override
-    protected void cleanCard() {
-        defaultClean();
-
-    }
+    protected void cleanCard() { defaultClean(); }
 
     @Override
     public MoveData getNextMove() {
-        switch (currentStatus) {
-            case 0:
-                return defaultNextMoveStatusZero();
-        }
+        if(currentStatus == 0) return defaultNextMoveStatusZero();
         return null;
     }
 

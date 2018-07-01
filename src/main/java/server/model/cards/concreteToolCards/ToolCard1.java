@@ -49,9 +49,9 @@ public class ToolCard1 extends ToolCard {
 
 
     /**
-     * @param player //todo
-     * @return //todo
-     * @throws CannotUseToolCardException //todo
+     * @param player is the player that wants to use the ToolCard
+     * @return the first action that the player has to do with the ToolCard
+     * @throws CannotUseToolCardException when it is not pssible to use te object
      */
     @Override
     public MoveData setCard(PlayerInGame player) throws CannotUseToolCardException {

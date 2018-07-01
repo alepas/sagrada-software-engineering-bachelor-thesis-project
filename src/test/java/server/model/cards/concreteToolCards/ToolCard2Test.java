@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 import server.constants.ToolCardConstants;
 import server.model.cards.ToolCard;
-import server.model.cards.concreteToolCards.ToolCard2;
 import server.model.dicebag.Color;
 import server.model.dicebag.Dice;
 import server.model.game.Game;
@@ -175,7 +174,7 @@ public class ToolCard2Test {
         MoveData moveData = toolCard2.placeDice(chosenDice.getId(), position1);
 
         assertTrue(moveData.moveFinished);
-        assertNull(moveData.wpc);
+        assertNotNull(moveData.wpc);
         assertNull(moveData.roundTrack);
 
         moveData = toolCard2.getNextMove();
@@ -203,7 +202,7 @@ public class ToolCard2Test {
         MoveData moveData = toolCard2.placeDice(chosenDice.getId(), position1);
 
         assertTrue(moveData.moveFinished);
-        assertNull(moveData.wpc);
+        assertNotNull( moveData.wpc);
         assertNull(moveData.roundTrack);
 
         moveData = toolCard2.getNextMove();
@@ -359,6 +358,12 @@ public class ToolCard2Test {
 
         when(wpc.getSchema()).thenReturn(schema);
         when(player.getWPC()).thenReturn(wpc);
+        when(player.getWPC().copyWpc()).thenReturn(wpc);
+
+        toolCard2.setCardWpc(wpc);
+
+        ClientWpc clientWpc = mock(ClientWpc.class);
+        when(wpc.getClientWpc()).thenReturn(clientWpc);
 
     }
 

@@ -53,9 +53,9 @@ public class ToolCard3 extends ToolCard {
      */
     @Override
     public MoveData pickDice(int diceId) throws CannotPickDiceException, CannotPerformThisMoveException {
-        if ((currentStatus == 0) && (singlePlayerGame)) {
+        if ((currentStatus == 0) && (singlePlayerGame))
             return pickDiceInitializeSingleUserToolCard(diceId, NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.WPC, ClientDiceLocations.WPC);
-        } else throw new CannotPerformThisMoveException(username, 2, false);
+        else throw new CannotPerformThisMoveException(username, 2, false);
     }
 
 
