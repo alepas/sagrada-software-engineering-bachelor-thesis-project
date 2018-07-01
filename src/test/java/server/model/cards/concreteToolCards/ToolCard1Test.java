@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 import server.constants.ToolCardConstants;
 import server.model.cards.ToolCard;
-import server.model.cards.concreteToolCards.ToolCard1;
 import server.model.dicebag.Dice;
 import server.model.game.Game;
 import server.model.users.MoveData;

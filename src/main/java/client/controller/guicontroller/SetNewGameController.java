@@ -38,9 +38,6 @@ import static java.lang.String.valueOf;
 
 public class SetNewGameController implements Observer, NotificationHandler {
 
-
-    @FXML
-    private Button disconnectButton;
     private String wpc0ID;
     private String wpc1ID;
     private String wpc2ID;
@@ -81,6 +78,9 @@ public class SetNewGameController implements Observer, NotificationHandler {
 
     @FXML
     private Button createGameButton;
+
+    @FXML
+    private Button disconnectionButton;
 
     @FXML
     private Button personalAreaButton;
@@ -229,7 +229,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
 
         fourthWPC.setOnMouseClicked(event -> pickWpc(wpc3ID));
 
-        disconnectButton.setOnAction(event -> changeSceneHandle(event, "/view/gui/StartingScene.fxml"));
+        disconnectionButton.setOnAction(event -> changeSceneHandle(event, "/view/gui/StartingScene.fxml"));
     }
 
 
@@ -791,7 +791,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
 
     @Override
     public void handle(ForceDisconnectionNotification notification) {
-        Platform.runLater(()->disconnectButton.fire());
+        Platform.runLater(()-> disconnectionButton.fire());
     }
 
     @Override

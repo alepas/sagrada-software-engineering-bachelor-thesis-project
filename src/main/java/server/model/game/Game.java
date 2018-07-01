@@ -311,6 +311,7 @@ public abstract class Game extends Observable implements Runnable {
         changeAndNotifyObservers(new UserPickedWpcNotification(player.getUser(), wpcDB.getClientWpcByID(wpcID)));
     }
 
+
     /**
      * Chooses in a random way 3 ToolCard from the 12 available in the ToolCard data base
      */
