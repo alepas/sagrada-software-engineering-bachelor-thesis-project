@@ -121,6 +121,7 @@ public class SinglePlayerGame extends Game {
 
         System.out.println("La partità è iniziata");
         initializeGame();
+        allWpcsChosen=true;
 
         while (roundTrack.getCurrentRound() < GameConstants.NUM_OF_ROUNDS){
             nextRound();

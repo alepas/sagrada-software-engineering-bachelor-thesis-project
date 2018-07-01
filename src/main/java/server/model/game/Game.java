@@ -23,6 +23,8 @@ public abstract class Game extends Observable implements Runnable {
     protected ArrayList<Dice> extractedDices;
     protected DiceBag diceBag;
     protected boolean turnFinished;
+    protected boolean allWpcsChosen;
+
 
     RoundTrack roundTrack;
     int numPlayers;
@@ -57,6 +59,7 @@ public abstract class Game extends Observable implements Runnable {
         players = new PlayerInGame[numPlayers];
         turnFinished = false;
         started = false;
+        allWpcsChosen=false;
     }
 
     /**
@@ -72,6 +75,7 @@ public abstract class Game extends Observable implements Runnable {
         clientCopy.setRoundTrack(this.roundTrack.getClientRoundTrack());
         clientCopy.setStarted(started);
 
+        if (allWpcsChosen) {
             for (PlayerInGame player : players) {
                 clientCopy.setUserWpc(player.getUser(), player.getWPC().getClientWpc());
                 clientCopy.setUserFavours(player.getUser(), player.getFavours());
@@ -88,7 +92,7 @@ public abstract class Game extends Observable implements Runnable {
             ArrayList<ClientDice> clientDices = new ArrayList<>();
             for (Dice dice : this.extractedDices) clientDices.add(dice.getClientDice());
             clientCopy.setExtractedDices(clientDices);
-
+        }
         return clientCopy;
     }
 
@@ -317,6 +321,11 @@ public abstract class Game extends Observable implements Runnable {
     void extractToolCards() {
         ArrayList<String> ids = toolcardDB.getCardsIDs();
         Collections.shuffle(ids);
+        ids.clear();
+        ids.add("1");
+        ids.add("2");
+        ids.add("3");
+
 
         ArrayList<String> toolCardsExtracted = new ArrayList<>(ids.subList(0, numOfToolCards));
         ArrayList<ClientToolCard> clientToolCards = new ArrayList<>();
