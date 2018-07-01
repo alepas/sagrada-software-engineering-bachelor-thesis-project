@@ -497,9 +497,12 @@ public class PlayerInGame {
     }
 
     public void disconnect() {
-       disconnected = true;
-       if (active) forceEndTurn();
-       game.changeAndNotifyObservers(new PlayerDisconnectedNotification(username));
+        try {
+            disconnected = true;
+            game.disconnectPlayer(username);
+            if (active) forceEndTurn();
+            game.changeAndNotifyObservers(new PlayerDisconnectedNotification(username));
+        } catch (UserNotInThisGameException e){ }
     }
 
     public boolean isDisconnected() {

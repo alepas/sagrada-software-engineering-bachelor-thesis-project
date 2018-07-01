@@ -150,7 +150,7 @@ public class SocketClientHandler extends ClientHandler implements Runnable, Obse
         try {
             return controller.findGame(request.token, request.numPlayers, request.levelOfDifficulty, this);
         } catch (InvalidNumOfPlayersException|CannotFindUserInDBException |CannotCreatePlayerException e){
-            return new FindGameResponse(null, 0, 0, e);
+            return new FindGameResponse(e);
         }
     }
 

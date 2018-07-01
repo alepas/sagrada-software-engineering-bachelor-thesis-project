@@ -11,10 +11,7 @@ import server.model.dicebag.DiceBag;
 import server.model.users.PlayerInGame;
 import server.model.wpc.WpcDB;
 import shared.clientInfo.*;
-import shared.exceptions.gameExceptions.CannotCreatePlayerException;
-import shared.exceptions.gameExceptions.MaxPlayersExceededException;
-import shared.exceptions.gameExceptions.NotYourWpcException;
-import shared.exceptions.gameExceptions.UserAlreadyInThisGameException;
+import shared.exceptions.gameExceptions.*;
 import shared.network.commands.notifications.*;
 
 import java.util.*;
@@ -31,6 +28,7 @@ public abstract class Game extends Observable implements Runnable {
     int numPlayers;
     protected int currentTurn;
     PlayerInGame[] players;
+    boolean started;
 
     int numOfPrivateObjectivesForPlayer;
     int numOfToolCards;
@@ -58,6 +56,7 @@ public abstract class Game extends Observable implements Runnable {
         this.numPlayers = numPlayers;
         players = new PlayerInGame[numPlayers];
         turnFinished = false;
+        started = false;
     }
 
     /**
@@ -71,8 +70,9 @@ public abstract class Game extends Observable implements Runnable {
         clientCopy.setGameActualPlayers(this.numActualPlayers());
         clientCopy.setCurrentTurn(this.currentTurn);
         clientCopy.setRoundTrack(this.roundTrack.getClientRoundTrack());
+        clientCopy.setStarted(started);
 
-        if (wpcProposed == null) {
+        if (currentTurn != 0) {
             for (PlayerInGame player : players) {
                 clientCopy.setUserWpc(player.getUser(), player.getWPC().getClientWpc());
                 clientCopy.setUserFavours(player.getUser(), player.getFavours());
@@ -96,7 +96,7 @@ public abstract class Game extends Observable implements Runnable {
     private HashMap<String,ArrayList<ClientWpc>> getWpcProposed() {
         HashMap<String, ArrayList<ClientWpc>> wpcsProposed = null;
 
-        if (wpcsByUser != null){
+        if (started && currentTurn == 0){
             wpcsProposed = new HashMap<>();
             for (PlayerInGame player : players){
                 ArrayList<ClientWpc> clientWpcs = new ArrayList<>();
@@ -110,6 +110,19 @@ public abstract class Game extends Observable implements Runnable {
 
 
     //----------------------------------------------------------------------------------
+
+
+    public void setNumPlayers(int numPlayers) {
+        this.numPlayers = numPlayers;
+    }
+
+    public boolean isStarted() {
+        return started;
+    }
+
+    public void setStarted(boolean started) {
+        this.started = started;
+    }
 
     public ArrayList<ToolCard> getToolCards() {
         return toolCards;
@@ -298,6 +311,7 @@ public abstract class Game extends Observable implements Runnable {
         changeAndNotifyObservers(new UserPickedWpcNotification(player.getUser(), wpcDB.getClientWpcByID(wpcID)));
     }
 
+
     /**
      * Chooses in a random way 3 ToolCard from the 12 available in the ToolCard data base
      */
@@ -379,6 +393,6 @@ public abstract class Game extends Observable implements Runnable {
     abstract void waitForWpcResponse();
     public abstract void removeToolCardIfSingleGame(ToolCard card);
     public abstract boolean addPlayer(String user) throws MaxPlayersExceededException, UserAlreadyInThisGameException, CannotCreatePlayerException;
-
+    public abstract void disconnectPlayer(String user) throws UserNotInThisGameException;
 
 }

@@ -294,6 +294,11 @@ public class CliView implements Observer, NotificationHandler {
 
         startNewTask(controller.getTimeToCompleteTask());
 
+        if (!controller.isGameStarted()) {
+            changeState(Status.START_GAME_PHASE);
+            return;
+        }
+
         if (game.getWpcsProposedByUsername() != null){
             showPrivateObjectives();
             printWpcs(game.getWpcsProposedByUsername().get(controller.getUser()));
@@ -1063,13 +1068,13 @@ public class CliView implements Observer, NotificationHandler {
     @Override
     public void handle(PlayerDisconnectedNotification notification) {
         printText("");
-        displayText(notification.username + " è uscito dalla partita");
+        displayText(notification.username + " si è disconesso");
     }
 
     @Override
     public void handle(PlayerReconnectedNotification notification) {
         printText("");
-        displayText(notification.username + " è rientrato in partita");
+        displayText(notification.username + " si è riconesso");
     }
 
     @Override
@@ -1084,6 +1089,11 @@ public class CliView implements Observer, NotificationHandler {
         changeState(Status.RECONNECT);
         if (currentThread != null) currentThread.interrupt();
         clean();
+    }
+
+    @Override
+    public void handle(ForceStartGameNotification notification) {
+        displayText("Tempo per attendere nuovi giocatori terminato. La partita inizierà comunque");
     }
 
     @Override
