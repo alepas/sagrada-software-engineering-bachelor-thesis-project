@@ -22,7 +22,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import shared.clientInfo.*;
-import shared.constants.GameConstants;
 import shared.exceptions.usersAndDatabaseExceptions.*;
 import shared.network.commands.notifications.*;
 
@@ -30,7 +29,6 @@ import java.io.IOException;
 import java.util.*;
 
 import static java.lang.Thread.sleep;
-import static shared.clientInfo.ClientConstants.NUM_OF_ROUNDS;
 import static shared.clientInfo.ClientDiceLocations.*;
 import static shared.clientInfo.ToolCardInteruptValues.*;
 
@@ -1493,8 +1491,8 @@ public class GameController implements Observer, NotificationHandler {
         roundTrackDices.clear();
         roundTrackGrid.getChildren().clear();
         ClientDice[][] dice = roundTrack.getAllDices();
-        for (int row = 0; row < GameConstants.MAX_DICES_FOR_ROUND; row++) {
-            for (int column = 0; column < NUM_OF_ROUNDS; column++) {
+        for (int row = 0; row < dice.length; row++) {
+            for (int column = 0; column < dice[row].length; column++)
                 if (dice[column][row] != null) {
                     ImageView image = setDiceStyle(dice[column][row]);
                     image.setFitHeight(30);
@@ -1502,7 +1500,6 @@ public class GameController implements Observer, NotificationHandler {
                     roundTrackGrid.add(image, column, row);
                     roundTrackDices.add(image);
                 }
-            }
         }
     }
 
