@@ -16,6 +16,7 @@ import static shared.constants.WpcConstants.ROWS_NUMBER;
 
 public class Wpc {
     private String id;
+    private String name;
     private int favours;
     ArrayList<Cell> schema = new ArrayList<>();
     private boolean firstDicePutted = false;
@@ -29,15 +30,17 @@ public class Wpc {
      * @param favours is the number of favours of the schema
      * @param schema  is the Arraylist composed by cell's objects
      */
-    Wpc(String id, int favours, ArrayList<Cell> schema) {
+    Wpc(String id, String name, int favours, ArrayList<Cell> schema) {
         this.id = id;
+        this.name = name;
         this.favours = favours;
         for (Cell cell : schema)
             this.schema.add(new Cell(cell));
     }
 
-    private Wpc (String id, int favours, ArrayList<Cell> schema, boolean firstDicePutted, boolean onlyFirstDice){
+    private Wpc (String id, String name, int favours, ArrayList<Cell> schema, boolean firstDicePutted, boolean onlyFirstDice){
         this.id = id;
+        this.name = name;
         this.favours = favours;
         for (Cell cell : schema)
             this.schema.add(new Cell(cell));
@@ -49,7 +52,7 @@ public class Wpc {
      * @return the new object with is a copy of this.
      */
     public Wpc copyWpc() {
-        return new Wpc(id, favours, schema, firstDicePutted, onlyFirstDice);
+        return new Wpc(id, name, favours, schema, firstDicePutted, onlyFirstDice);
     }
 
 
@@ -67,7 +70,7 @@ public class Wpc {
             cells.add(new ClientCell(clientDice, Color.getClientColor(cell.getColor()),
                     cell.getNumber(), cell.getCellPosition()));
         }
-        return new ClientWpc(id, favours, cells);
+        return new ClientWpc(id, name, favours, cells);
     }
 
     public int getFavours() {

@@ -1,6 +1,5 @@
 package client.controller.guicontroller;
 
-import client.constants.ClientWpcConstants;
 import client.network.ClientInfo;
 import client.network.NetworkClient;
 import client.view.Status;
@@ -48,6 +47,8 @@ public class GameController implements Observer, NotificationHandler {
     private GridPane fourthWpcGrid;
     @FXML
     private Label fourthFavourLabel;
+    @FXML
+    private Label fourthWpcNameLabel;
     @FXML
     private Label fourthUserLabel;
     @FXML
@@ -505,7 +506,6 @@ public class GameController implements Observer, NotificationHandler {
     private NextAction placeDice(AnchorPane cell, int id) {
         Position position;
         NextAction nextAction;
-        System.out.println("placedice " + usedToolCard);
         if (cell != null) {
             int row = Integer.parseInt(cell.getId().substring(0, 1));
             int column = Integer.parseInt(cell.getId().substring(1, 2));
@@ -738,25 +738,18 @@ public class GameController implements Observer, NotificationHandler {
      * associated to the specific controller.
      */
     private void setWpc() {
+        ClientWpc clientWpc;
         switch (wpc.size()) {
             case 1:
-                firstUserLabel.setText(username);
-                fillWpc(firstWpcGrid, wpc.get(username));
-                firstWpcNameLabel.setText(ClientWpcConstants.setWpcName(wpc.get(username).getWpcID()));
+                fillLabel(firstUserLabel, firstFavourLabel, firstWpcNameLabel, firstWpcGrid, username, wpc.get(username));
                 break;
             case 2:
                 for (String wpcUser : wpc.keySet()) {
-                    if (wpcUser.equals(username)) {
-                        firstUserLabel.setText(username);
-                        firstFavourLabel.setText(String.valueOf(wpc.get(username).getFavours()).concat("X"));
-                        firstWpcNameLabel.setText(ClientWpcConstants.setWpcName(wpc.get(username).getWpcID()));
-                        fillWpc(firstWpcGrid, wpc.get(wpcUser));
-                    } else {
-                        secondUserLabel.setText(wpcUser);
-                        secondFavourLabel.setText(String.valueOf(wpc.get(wpcUser).getFavours()).concat("X"));
-                        secondWpcNameLabel.setText(ClientWpcConstants.setWpcName(wpc.get(wpcUser).getWpcID()));
-                        fillWpc(secondWpcGrid, wpc.get(wpcUser));
-                    }
+                    clientWpc  = wpc.get(wpcUser);
+                    if (wpcUser.equals(username))
+                        fillLabel(firstUserLabel, firstFavourLabel, firstWpcNameLabel, firstWpcGrid, username, clientWpc);
+                    else
+                        fillLabel(secondUserLabel, secondFavourLabel, secondWpcNameLabel, secondWpcGrid, wpcUser, clientWpc);
                 }
                 break;
             case 3:
@@ -776,23 +769,16 @@ public class GameController implements Observer, NotificationHandler {
     private void setThreeWpcs(HashMap<String, ClientWpc> wpc) {
         int numPlayer = 1;
         for (String wpcUser : wpc.keySet()) {
-            if (wpcUser.equals(username)) {
-                firstUserLabel.setText(username);
-                firstFavourLabel.setText(String.valueOf(wpc.get(username).getFavours()).concat("X"));
-                firstWpcNameLabel.setText(ClientWpcConstants.setWpcName(wpc.get(username).getWpcID()));
-                fillWpc(firstWpcGrid, wpc.get(wpcUser));
-            } else if (!wpcUser.equals(username) && numPlayer == 1) {
-                secondUserLabel.setText(wpcUser);
-                secondFavourLabel.setText(String.valueOf(wpc.get(wpcUser).getFavours()).concat("X"));
-                secondWpcNameLabel.setText(ClientWpcConstants.setWpcName(wpc.get(wpcUser).getWpcID()));
-                fillWpc(secondWpcGrid, wpc.get(wpcUser));
-                numPlayer = 2;
-            } else if (!wpcUser.equals(username) && numPlayer == 2) {
-                thirdUserLabel.setText(wpcUser);
-                thirdFavourLabel.setText(String.valueOf(wpc.get(wpcUser).getFavours()).concat("X"));
-                thirdWpcNameLabel.setText(ClientWpcConstants.setWpcName(wpc.get(wpcUser).getWpcID()));
-                fillWpc(thirdWpcGrid, wpc.get(wpcUser));
+            ClientWpc clientWpc = wpc.get(wpcUser);
+            if (wpcUser.equals(username))
+                fillLabel(firstUserLabel, firstFavourLabel, firstWpcNameLabel, firstWpcGrid, username, clientWpc);
+            else if (!wpcUser.equals(username) && numPlayer == 1) {
+                fillLabel(secondUserLabel, secondFavourLabel, secondWpcNameLabel, secondWpcGrid, wpcUser, clientWpc);
+                numPlayer++;
             }
+            else if (!wpcUser.equals(username) && numPlayer == 2)
+                fillLabel(thirdUserLabel, thirdFavourLabel, thirdWpcNameLabel, thirdWpcGrid, wpcUser, clientWpc);
+
         }
     }
 
@@ -804,28 +790,37 @@ public class GameController implements Observer, NotificationHandler {
     private void setFourWpcs(HashMap<String, ClientWpc> wpc) {
         int numPlayer = 1;
         for (String wpcUser : wpc.keySet()) {
-            if (wpcUser.equals(username)) {
-                firstUserLabel.setText(username);
-                firstFavourLabel.setText(String.valueOf(wpc.get(username).getFavours()).concat("X"));
-                firstWpcNameLabel.setText(ClientWpcConstants.setWpcName(wpc.get(username).getWpcID()));
-                fillWpc(firstWpcGrid, wpc.get(wpcUser));
-            } else if (!wpcUser.equals(username) && numPlayer == 1) {
-                secondUserLabel.setText(wpcUser);
-                secondFavourLabel.setText(String.valueOf(wpc.get(wpcUser).getFavours()).concat("X"));
-                secondWpcNameLabel.setText(ClientWpcConstants.setWpcName(wpc.get(wpcUser).getWpcID()));
-                fillWpc(secondWpcGrid, wpc.get(wpcUser));
-                numPlayer = 2;
-            } else if (!wpcUser.equals(username) && numPlayer == 2) {
-                thirdUserLabel.setText(wpcUser);
-                thirdFavourLabel.setText(String.valueOf(wpc.get(wpcUser).getFavours()).concat("X"));
-                fillWpc(thirdWpcGrid, wpc.get(wpcUser));
-                numPlayer = 3;
-            } else if (!wpcUser.equals(username) && numPlayer == 3) {
-                fourthUserLabel.setText(wpcUser);
-                fourthFavourLabel.setText(String.valueOf(wpc.get(wpcUser).getFavours()).concat("X"));
-                fillWpc(fourthWpcGrid, wpc.get(wpcUser));
+            ClientWpc clientWpc = wpc.get(wpcUser);
+            if (wpcUser.equals(username))
+                fillLabel(firstUserLabel, firstFavourLabel, firstWpcNameLabel, firstWpcGrid, username, clientWpc);
+            else if (!wpcUser.equals(username) && numPlayer == 1) {
+                fillLabel(secondUserLabel, secondFavourLabel, secondWpcNameLabel, secondWpcGrid, wpcUser, clientWpc);
+                numPlayer++;
             }
+            else if (!wpcUser.equals(username) && numPlayer == 2) {
+                fillLabel(thirdUserLabel, thirdFavourLabel, thirdWpcNameLabel, thirdWpcGrid, wpcUser, clientWpc);
+                numPlayer++;
+            }
+            else if (!wpcUser.equals(username) && numPlayer == 3)
+                fillLabel(fourthUserLabel, fourthFavourLabel, fourthWpcNameLabel, fourthWpcGrid, wpcUser, clientWpc);
         }
+    }
+
+    /**
+     * Sets all label related to a player and calls the fillWpc() method
+     *
+     * @param username is the Label which shows the username of the player
+     * @param favours is the Label which shows the number of favours of the player
+     * @param wpcName is the Label which shows the schema's name
+     * @param grid is the Label related to the grid pane of the player
+     * @param user is the player's username
+     * @param clientWpc is the player's schema
+     */
+    private void fillLabel(Label username, Label favours, Label wpcName,GridPane grid, String user, ClientWpc clientWpc){
+        username.setText(user);
+        favours.setText(String.valueOf(clientWpc.getFavours()).concat("X"));
+        wpcName.setText(clientWpc.getName());
+        fillWpc(grid, clientWpc);
     }
 
 
@@ -956,9 +951,7 @@ public class GameController implements Observer, NotificationHandler {
         extractedDicesGrid.setDisable(false);
         setDisableAndInvisible();
         messageLabel.setText("Posiziona un dado o passa il turno!");
-        Platform.runLater(() -> {
-            dragAndDrop();
-        });
+        Platform.runLater(() -> dragAndDrop());
     }
 
     /**

@@ -1,6 +1,5 @@
 package client.controller.guicontroller;
 
-import client.constants.ClientWpcConstants;
 import client.network.ClientInfo;
 import client.network.NetworkClient;
 import javafx.animation.Animation;
@@ -66,7 +65,6 @@ public class SetNewGameController implements Observer, NotificationHandler {
     private Label lab2 = new Label();
     private Label lab3 = new Label();
 
-    private String newPlayer = null;
 
     @FXML
     private AnchorPane clockArea;
@@ -395,33 +393,69 @@ public class SetNewGameController implements Observer, NotificationHandler {
             switch (i) {
                 case 0:
                     wpc0ID = wpc.getWpcID();
-                    wpc0Name.setText(ClientWpcConstants.setWpcName(wpc.getWpcID()));
-                    setWpc(firstWPC, wpc);
-                    setFirstWpcFavours(wpc.getFavours());
+                    setLabelAndFavours(wpc, firstWPC, wpc0Name, firstWpcCircle4, firstWpcCircle5, firstWpcCircle6 );
                     break;
                 case 1:
                     wpc1ID = wpc.getWpcID();
-                    wpc1Name.setText(ClientWpcConstants.setWpcName(wpc.getWpcID()));
-                    setWpc(secondWPC, wpc);
-                    setSecondWpcFavours(wpc.getFavours());
+                    setLabelAndFavours(wpc, secondWPC, wpc1Name, secondWpcCircle4, secondWpcCircle5, secondWpcCircle6 );
                     break;
                 case 2:
                     wpc2ID = wpc.getWpcID();
-                    wpc2Name.setText(ClientWpcConstants.setWpcName(wpc.getWpcID()));
-                    setWpc(thirdWPC, wpc);
-                    setThirdWpcFavours(wpc.getFavours());
+                    setLabelAndFavours(wpc, thirdWPC, wpc2Name, thirdWpcCircle4, thirdWpcCircle5, thirdWpcCircle6);
                     break;
                 case 3:
                     wpc3ID = wpc.getWpcID();
-                    wpc3Name.setText(ClientWpcConstants.setWpcName(wpc.getWpcID()));
-                    setWpc(fourthWPC, wpc);
-                    setFourthWpcFavours(wpc.getFavours());
+                    setLabelAndFavours(wpc, fourthWPC, wpc3Name, fourthWpcCircle4, fourthWpcCircle5, fourthWpcCircle6);
                     break;
                 default:
                     break;
             }
         }
         setVisibleWpcSelection();
+    }
+
+    /**
+     * Sets all label and calls all methods necessary to shows the schemas.
+     *
+     * @param wpc is the wpc that must be shown to the player
+     * @param grid is the grid that must be filled with the wpc
+     * @param wpcName is the Label which shows the schema's name
+     * @param circle4 is the Circle which represent the 4th favour
+     * @param circle5 is the Circle which represent the 5th favour
+     * @param circle6 is the Circle which represent the 6th favour
+     */
+    private void setLabelAndFavours(ClientWpc wpc, GridPane grid, Label wpcName, Circle circle4, Circle circle5, Circle circle6){
+        wpcName.setText(wpc.getName());
+        setWpc(grid, wpc);
+        setFirstWpcFavours(wpc.getFavours(), circle4, circle5, circle6);
+    }
+
+    /**
+     * Sets visible as many circles as many favours the schema has.
+     *
+     * @param favours is the number of favours of the 1st schema.
+     * @param circle4 is the Circle which represent the 4th favour
+     * @param circle5 is the Circle which represent the 5th favour
+     * @param circle6 is the Circle which represent the 6th favour
+     */
+    private void setFirstWpcFavours(int favours, Circle circle4,Circle circle5, Circle circle6) {
+        switch (favours) {
+            case 3:
+                circle6.setVisible(false);
+                circle5.setVisible(false);
+                circle4.setVisible(false);
+                break;
+            case 4:
+                circle6.setVisible(false);
+                circle5.setVisible(false);
+                break;
+            case 5:
+                circle6.setVisible(false);
+                break;
+            default:
+                break;
+
+        }
     }
 
     /**
@@ -466,104 +500,6 @@ public class SetNewGameController implements Observer, NotificationHandler {
         }, 1000, 1000);
     }
 
-    /**
-     * Sets visible as many circles as many favours the schema has.
-     *
-     * @param favours is the numebr of favours of the 4th schema.
-     */
-    private void setFourthWpcFavours(int favours) {
-        switch (favours) {
-            case 3:
-                fourthWpcCircle6.setVisible(false);
-                fourthWpcCircle5.setVisible(false);
-                fourthWpcCircle4.setVisible(false);
-                break;
-            case 4:
-                fourthWpcCircle6.setVisible(false);
-                fourthWpcCircle5.setVisible(false);
-                break;
-            case 5:
-                fourthWpcCircle6.setVisible(false);
-                break;
-            default:
-                break;
-        }
-    }
-
-
-    /**
-     * Sets visible as many cyrcles as many favours the schema has.
-     *
-     * @param favours is the numebr of favours of the 3rd schema.
-     */
-    private void setThirdWpcFavours(int favours) {
-        switch (favours) {
-            case 3:
-                thirdWpcCircle6.setVisible(false);
-                thirdWpcCircle5.setVisible(false);
-                thirdWpcCircle4.setVisible(false);
-                break;
-            case 4:
-                thirdWpcCircle6.setVisible(false);
-                thirdWpcCircle5.setVisible(false);
-                break;
-            case 5:
-                thirdWpcCircle6.setVisible(false);
-                break;
-            default:
-                break;
-        }
-    }
-
-
-    /**
-     * Sets visible as many cyrcles as many favours the schema has.
-     *
-     * @param favours is the numebr of favours of the 2nd schema.
-     */
-    private void setSecondWpcFavours(int favours) {
-        switch (favours) {
-            case 3:
-                secondWpcCircle6.setVisible(false);
-                secondWpcCircle5.setVisible(false);
-                secondWpcCircle4.setVisible(false);
-                break;
-            case 4:
-                secondWpcCircle6.setVisible(false);
-                secondWpcCircle5.setVisible(false);
-                break;
-            case 5:
-                secondWpcCircle6.setVisible(false);
-                break;
-            default:
-                break;
-        }
-    }
-
-    /**
-     * Sets visible as many cyrcles as many favours the schema has.
-     *
-     * @param favours is the numebr of favours of the 1st schema.
-     */
-    private void setFirstWpcFavours(int favours) {
-        switch (favours) {
-            case 3:
-                firstWpcCircle6.setVisible(false);
-                firstWpcCircle5.setVisible(false);
-                firstWpcCircle4.setVisible(false);
-                break;
-            case 4:
-                firstWpcCircle6.setVisible(false);
-                firstWpcCircle5.setVisible(false);
-                break;
-            case 5:
-                firstWpcCircle6.setVisible(false);
-                break;
-            default:
-                break;
-
-        }
-    }
 
 
     /**
@@ -588,7 +524,6 @@ public class SetNewGameController implements Observer, NotificationHandler {
             fillNumber(cellXY, number);
         }
     }
-
 
     /**
      * @param cell is the anchorPane that i have to fill
@@ -773,12 +708,12 @@ public class SetNewGameController implements Observer, NotificationHandler {
 
     @Override
     public void handle(UserPickedWpcNotification notification) {
-        String id = notification.wpc.getWpcID();
+        String name = notification.wpc.getName();
         String user = notification.username;
         if(user.equals(clientInfo.getUsername()))
-            Platform.runLater(()-> wpcInfoLabel.setText("Hai scelta lo schema numero "+ id));
+            Platform.runLater(()-> wpcInfoLabel.setText("Hai scelto lo schema "+ name));
         else
-            Platform.runLater(()-> wpcInfoLabel.setText(user + " ha scelto lo schema numero" + id));
+            Platform.runLater(()-> wpcInfoLabel.setText(user + " ha scelto lo schema " + name));
         allWpcsPicked = clientInfo.allPlayersChooseWpc();
         synchronized (cardWaiter){cardWaiter.notify();}
     }

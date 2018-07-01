@@ -63,6 +63,7 @@ public class WpcDB {
         int favours = 0;
         String wpcID;
         Color color = null;
+        String name;
         ArrayList<Cell> schema = new ArrayList<>();
 
         try {
@@ -82,6 +83,7 @@ public class WpcDB {
                     eElementID = (Element) wpcNode;
                     wpcID = eElementID.getAttribute("id");
 
+                    name = eElementID.getAttribute("name");
                     wpcRow = eElementID.getElementsByTagName("row");
                     //scorro tutti i nodi con tagname row
                     for (int j = 0; j < wpcRow.getLength(); j++) {
@@ -137,7 +139,7 @@ public class WpcDB {
                         }
                     }
 
-                    wpcTemp = new Wpc(wpcID, favours, schema);
+                    wpcTemp = new Wpc(wpcID ,name, favours, schema);
                     map.put(wpcID,wpcTemp);
                     schema.clear();
                 }

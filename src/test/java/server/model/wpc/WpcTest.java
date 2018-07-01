@@ -17,6 +17,7 @@ import static org.mockito.Mockito.when;
 public class WpcTest {
     private Wpc wpc0;
     private Wpc wpc2;
+    private String name;
 
     private ArrayList<Cell> schema = new ArrayList<>();
     private ArrayList<Cell> schema1 = new ArrayList<>();
@@ -72,7 +73,7 @@ public class WpcTest {
 
         int favour = 4;
         String wpcID = "1";
-        wpc0 = new Wpc(wpcID, favour,schema);
+        wpc0 = new Wpc(wpcID, name ,favour,schema);
 
 
         cell00 = mock(Cell.class);
@@ -233,7 +234,7 @@ public class WpcTest {
         when(cell34.getCellPosition()).thenReturn(pos34);
         schema1.add(cell34);
 
-        wpc2 = new Wpc(wpcID, favour, schema1);
+        wpc2 = new Wpc(wpcID, name, favour, schema1);
     }
 
 

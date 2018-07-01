@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wpcs>
-    <wpc id= "1" >
+    <wpc id= "1" name= "Virtus">
         <favour>5</favour>
         <row x="0">
             <column y="0">
@@ -91,7 +91,7 @@
             </column>
         </row>
     </wpc>
-    <wpc id="2">
+    <wpc id= "2" name= "Kaleidoscopic Dreams">
         <favour>4</favour>
         <row x="0">
             <column y="0">
@@ -182,7 +182,7 @@
             </column>
         </row>
     </wpc>
-    <wpc id="3">
+    <wpc id= "3" name= "Vialux">
         <favour>4</favour>
         <row x="0">
             <column y="0">
@@ -273,7 +273,7 @@
             </column>
         </row>
     </wpc>
-    <wpc id="4">
+    <wpc id= "4" name= "Aurorae Magnificus">
         <favour>5</favour>
         <row x="0">
             <column y="0">
@@ -364,7 +364,7 @@
             </column>
         </row>
     </wpc>
-    <wpc id="5">
+    <wpc id= "5" name= "Bellesguard">
         <favour>3</favour>
         <row x="0">
             <column y="0">
@@ -455,7 +455,7 @@
             </column>
         </row>
     </wpc>
-    <wpc id="6">
+    <wpc id= "6" name= "Sun Catcher">
         <favour>3</favour>
         <row x="0">
             <column y="0">
@@ -546,7 +546,7 @@
             </column>
         </row>
     </wpc>
-    <wpc id="7">
+    <wpc id= "7" name= "Symphony Of Life">
         <favour>6</favour>
         <row x="0">
             <column y="0">
@@ -637,7 +637,7 @@
             </column>
         </row>
     </wpc>
-    <wpc id="8">
+    <wpc id= "8" name= "Firmitas">
         <favour>5</favour>
         <row x="0">
             <column y="0">
@@ -728,7 +728,7 @@
             </column>
         </row>
     </wpc>
-    <wpc id="9">
+    <wpc id= "9" name= "Industria">
         <favour>5</favour>
         <row x="0">
             <column y="0">
@@ -819,7 +819,7 @@
             </column>
         </row>
     </wpc>
-    <wpc id="10">
+    <wpc id= "10" name= "Aurorae Sagradis">
         <favour>4</favour>
         <row x="0">
             <column y="0">
@@ -910,7 +910,7 @@
             </column>
         </row>
     </wpc>
-    <wpc id="11">
+    <wpc id= "11" name= "Batllò">
         <favour>5</favour>
         <row x="0">
             <column y="0">
@@ -1001,7 +1001,7 @@
             </column>
         </row>
     </wpc>
-    <wpc id="12">
+    <wpc id= "12" name= "Shadow Thief">
         <favour>5</favour>
         <row x="0">
             <column y="0">
@@ -1092,7 +1092,7 @@
             </column>
         </row>
     </wpc>
-    <wpc id="13">
+    <wpc id= "13" name= "Fractal Drops">
         <favour>3</favour>
         <row x="0">
             <column y="0">
@@ -1183,7 +1183,7 @@
             </column>
         </row>
     </wpc>
-    <wpc id="14">
+    <wpc id= "14" name= "Gravitas">
         <favour>5</favour>
         <row x="0">
             <column y="0">
@@ -1274,7 +1274,7 @@
             </column>
         </row>
     </wpc>
-    <wpc id="15">
+    <wpc id= "15" name= "Chromatic Splendor">
         <favour>4</favour>
         <row x="0">
             <column y="0">
@@ -1365,7 +1365,7 @@
             </column>
         </row>
     </wpc>
-    <wpc id="16">
+    <wpc id= "16" name= "Lux Astram">
         <favour>5</favour>
         <row x="0">
             <column y="0">
@@ -1456,7 +1456,7 @@
             </column>
         </row>
     </wpc>
-    <wpc id="17">
+    <wpc id= "17" name= "Lux Celestial">
         <favour>3</favour>
         <row x="0">
             <column y="0">
@@ -1547,7 +1547,7 @@
             </column>
         </row>
     </wpc>
-    <wpc id="18">
+    <wpc id= "18" name= "Firelight">
         <favour>5</favour>
         <row x="0">
             <column y="0">
@@ -1638,7 +1638,7 @@
             </column>
         </row>
     </wpc>
-    <wpc id="19">
+    <wpc id= "19" name= "Ripples Of Light">
         <favour>5</favour>
         <row x="0">
             <column y="0">
@@ -1729,7 +1729,7 @@
             </column>
         </row>
     </wpc>
-    <wpc id="20">
+    <wpc id= "20" name= "Water Of Life">
         <favour>6</favour>
         <row x="0">
             <column y="0">
@@ -1820,7 +1820,7 @@
             </column>
         </row>
     </wpc>
-    <wpc id="21">
+    <wpc id= "21" name= "Comitas">
         <favour>5</favour>
         <row x="0">
             <column y="0">
@@ -1911,7 +1911,7 @@
             </column>
         </row>
     </wpc>
-    <wpc id="22">
+    <wpc id= "22" name= "Lux Mundi">
         <favour>6</favour>
         <row x="0">
             <column y="0">
@@ -2002,7 +2002,7 @@
             </column>
         </row>
     </wpc>
-    <wpc id="23">
+    <wpc id= "23" name= "Fulgor Del Cielo">
         <favour>5</favour>
         <row x="0">
             <column y="0">
@@ -2093,7 +2093,7 @@
             </column>
         </row>
     </wpc>
-    <wpc id="24">
+    <wpc id= "24" name= "Sun's Glory">
         <favour>6</favour>
         <row x="0">
             <column y="0">
