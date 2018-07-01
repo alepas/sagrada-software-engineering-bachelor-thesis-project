@@ -78,7 +78,7 @@ public class SignInController {
                     try {
                         networkClient.getUpdatedGame(clientInfo.getUserToken());
                         if (clientInfo.getGame() != null) {
-                            if (clientInfo.getMyWpc() != null) chooseGameScene(event);
+                            if (clientInfo.allPlayersChooseWpc()) chooseGameScene(event);
                             else changeSceneHandle(event, "/client/view/gui/fxml/SetNewGameScene.fxml");
                         }
                     } catch (CannotFindPlayerInDatabaseException e) {

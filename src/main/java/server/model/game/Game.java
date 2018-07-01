@@ -8,6 +8,7 @@ import server.model.dicebag.Color;
 import server.model.dicebag.Dice;
 import server.model.dicebag.DiceBag;
 import server.model.users.PlayerInGame;
+import server.model.wpc.Wpc;
 import server.model.wpc.WpcDB;
 import shared.clientInfo.*;
 import shared.constants.GameConstants;
@@ -75,10 +76,13 @@ public abstract class Game extends Observable implements Runnable {
         clientCopy.setRoundTrack(this.roundTrack.getClientRoundTrack());
         clientCopy.setStarted(started);
 
-        if (allWpcsChosen) {
+            Wpc tempWpc;
             for (PlayerInGame player : players) {
-                clientCopy.setUserWpc(player.getUser(), player.getWPC().getClientWpc());
-                clientCopy.setUserFavours(player.getUser(), player.getFavours());
+                tempWpc=player.getWPC();
+                if (tempWpc!=null) {
+                    clientCopy.setUserWpc(player.getUser(), tempWpc.getClientWpc());
+                    clientCopy.setUserFavours(player.getUser(), player.getFavours());
+                }
             }
 
             ArrayList<ClientToolCard> clientToolCards = new ArrayList<>();
@@ -92,7 +96,7 @@ public abstract class Game extends Observable implements Runnable {
             ArrayList<ClientDice> clientDices = new ArrayList<>();
             for (Dice dice : this.extractedDices) clientDices.add(dice.getClientDice());
             clientCopy.setExtractedDices(clientDices);
-        }
+
         return clientCopy;
     }
 
