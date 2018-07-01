@@ -1,0 +1,11 @@
+{
+  "network": {
+    "SERVER_ADDRESS": "localhost",
+    "SOCKET_SERVER_PORT": 8000,
+    "RMI_SERVER_PORT": 1099,
+    "RMI_CONTROLLER_NAME": "controller",
+    "RMI_INITIAL_POLLING_TIME": 3000,
+    "RMI_POLLING_TIME": 300,
+    "RMI_MAX_POLLS_MISSED": 3
+  }
+}
