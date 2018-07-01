@@ -114,10 +114,12 @@ public class MultiplayerGame extends Game {
         if (!started) {
             removePlayer(username);
             if (numActualPlayers() == 1) ((WaitPlayersThread) currentThread).setPause(true);
+        } else {
+            int numConnected = 0;
+            for(PlayerInGame player : players) if (!player.isDisconnected()) numConnected++;
+            if (numConnected == 1) forceEndGame();
         }
     }
-
-
 
 
     //------------------------------- Metodi validi solo lato server ------------------------------
@@ -486,6 +488,11 @@ public class MultiplayerGame extends Game {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void forceEndGame() {
+        //è rimasto solamente un giocatore
+        //TODO:
     }
 
     @Override
