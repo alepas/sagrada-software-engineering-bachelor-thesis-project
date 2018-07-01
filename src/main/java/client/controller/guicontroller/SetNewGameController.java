@@ -201,7 +201,6 @@ public class SetNewGameController implements Observer, NotificationHandler {
             String username = clientInfo.getUsername();
             colors[0] = clientInfo.getPrivateObjectives()[0];
             userWpcs.addAll(clientInfo.getWpcsProposedByUsername().get(username));
-            reconnectionButton.fire();
             initializeWpc();
 
         }
@@ -237,13 +236,13 @@ public class SetNewGameController implements Observer, NotificationHandler {
         personalAreaButton.setOnAction(event -> changeSceneHandle(event,
                 "/client/client/view/gui/fxml/fxml/PersonalAreaScene.fxml"));
 
-        firstWPC.setOnMouseClicked(event -> pickWpc(wpc0ID));
+        firstWPC.setOnMouseClicked(event -> pickWpc(event, wpc0ID));
 
-        secondWPC.setOnMouseClicked(event -> pickWpc(wpc1ID));
+        secondWPC.setOnMouseClicked(event -> pickWpc(event, wpc1ID));
 
-        thirdWPC.setOnMouseClicked(event -> pickWpc(wpc2ID));
+        thirdWPC.setOnMouseClicked(event -> pickWpc(event, wpc2ID));
 
-        fourthWPC.setOnMouseClicked(event -> pickWpc(wpc3ID));
+        fourthWPC.setOnMouseClicked(event -> pickWpc(event, wpc3ID));
 
         reconnectionButton.setOnAction(this::waitPlayGameAfterDisconnection);
 
@@ -624,7 +623,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
      *
      * @param wpcID  is the ID of the schema chosen by the player
      */
-    public void pickWpc(String wpcID) {
+    public void pickWpc(Event event, String wpcID) {
         Platform.runLater(()-> {
             try {
                 networkClient.pickWpc(clientInfo.getUserToken(), wpcID);
@@ -638,6 +637,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
             thirdWPC.setDisable(true);
             fourthWPC.setDisable(true);
         });
+        if(reconnected) waitPlayGameAfterDisconnection(event);
     }
 
 

@@ -113,7 +113,6 @@ public class GameController implements Observer, NotificationHandler {
     private boolean usedToolCard = false;
     private NextAction lastNextAction;
     private Timer timer;
-    private boolean firstMove;
 
     @FXML
     private Label messageLabel;
@@ -304,7 +303,7 @@ public class GameController implements Observer, NotificationHandler {
                 lastNextAction = NextAction.WAIT_FOR_TURN;
             } catch (CannotFindPlayerInDatabaseException | PlayerNotAuthorizedException | CannotPerformThisMoveException e) {
                 message1Label.setText(e.getMessage());
-                stateAction(Status.change(lastNextAction));
+                stateAction(Objects.requireNonNull(Status.change(lastNextAction)));
             }
         });
 
@@ -350,7 +349,6 @@ public class GameController implements Observer, NotificationHandler {
      * @param state is the state in which the player is.
      */
     private synchronized void stateAction(Status state) {
-            System.out.println("state: " + state);
             updateGraphic();
             switch (state) {
                 case ANOTHER_PLAYER_TURN:
@@ -385,8 +383,7 @@ public class GameController implements Observer, NotificationHandler {
                     selectNumberToolCard();
                     break;
                 case SELECT_DICE_TO_ACTIVE_TOOLCARD:
-
-                    //TODO
+                    pickDiceInExtractedDices();
                     break;
                 case PLACE_DICE_TOOLCARD:
                     isChosenDiceIdActive();
@@ -795,6 +792,7 @@ public class GameController implements Observer, NotificationHandler {
             } else if (!wpcUser.equals(username) && numPlayer == 2) {
                 thirdUserLabel.setText(wpcUser);
                 thirdFavourLabel.setText(String.valueOf(wpc.get(wpcUser).getFavours()).concat("X"));
+                thirdWpcNameLabel.setText(ClientWpcConstants.setWpcName(wpc.get(wpcUser).getWpcID()));
                 fillWpc(thirdWpcGrid, wpc.get(wpcUser));
             }
         }
@@ -1014,10 +1012,9 @@ public class GameController implements Observer, NotificationHandler {
                             if (!dice.getId().equals(String.valueOf(info.diceChosen.getDiceID())))
                                 dice.setDisable(true);
                             else {
-                                for (ClientDice clientDice : clientInfo.getExtractedDices()) {
+                                for (ClientDice clientDice : clientInfo.getExtractedDices())
                                     if (String.valueOf(clientDice.getDiceID()).equals(dice.getId()))
                                         changeDiceStyle(dice, clientDice);
-                                }
                             }
                         } else dice.setDisable(false);
                     }
@@ -1049,42 +1046,65 @@ public class GameController implements Observer, NotificationHandler {
         ToolCardClientNextActionInfo info = clientInfo.getToolCardClientNextActionInfo();
         switch (info.wherePickNewDice) {
             case EXTRACTED:
-                extractedDicesGrid.setDisable(false);
-                messageLabel.setText("Clicca su un dado della riserva!");
-                for (ImageView extractDice : extractDices) {
-                    extractDice.setOnMouseClicked(event -> {
-                        makeSelectedDiceVisible(extractDice, EXTRACTED);
-                        NextAction nextAction = pickDice(Integer.parseInt(extractDice.getId()), EXTRACTED);
-                        stateAction(Objects.requireNonNull(Status.change(nextAction)));
-                    });
-                }
+                pickDiceInExtractedDices();
                 break;
             case ROUNDTRACK:
-                roundTrackGrid.setDisable(false);
-                for (ImageView roundTrackDice : roundTrackDices)
-                    roundTrackDice.setDisable(false);
-                messageLabel.setText("Clicca su un dado del Round Track!");
-                for (ImageView roundTrackDice : roundTrackDices) {
-                    roundTrackDice.setOnMouseClicked(event -> {
-                        System.out.println("dado roundTrack: " + roundTrackDice);
-                        makeSelectedDiceVisible(roundTrackDice, ROUNDTRACK);
-                        NextAction nextAction = pickDice(Integer.parseInt(roundTrackDice.getId()), ROUNDTRACK);
-                        stateAction(Objects.requireNonNull(Status.change(nextAction)));
-                    });
-                }
+                pickDiceInRoundTrack();
                 break;
-
             case WPC:
-                messageLabel.setText("Clicca su un dado del tuo schema di gioco!");
-                for (ImageView schemaDice : schemaDices) {
-                    schemaDice.setOnMouseClicked(event -> {
-                        NextAction nextAction = pickDice(Integer.parseInt(schemaDice.getId()), WPC);
-                        stateAction(Objects.requireNonNull(Status.change(nextAction)));
-                    });
-                }
+                pickDiceInWpc();
                 break;
         }
     }
+
+    /**
+     * Modifies the gui to let the player choose a dice inside his/her schema
+     */
+    private void pickDiceInWpc(){
+        messageLabel.setText("Clicca su un dado del tuo schema di gioco!");
+        for (ImageView schemaDice : schemaDices) {
+            schemaDice.setOnMouseClicked(event -> {
+                NextAction nextAction = pickDice(Integer.parseInt(schemaDice.getId()));
+                stateAction(Objects.requireNonNull(Status.change(nextAction)));
+            });
+        }
+    }
+
+    /**
+     * Modifies the gui to let the player choose a dice inside the extracted dice grid
+     */
+    private void pickDiceInExtractedDices(){
+        ToolCardClientNextActionInfo info = clientInfo.getToolCardClientNextActionInfo();
+        extractedDicesGrid.setDisable(false);
+        if(clientInfo.getGameNumPlayers() == 1){
+            messageLabel.setText("Attiva la ToolCard scegliendo dalla riserva un dado"+ ClientColor.GREEN );
+        }
+        messageLabel.setText("Clicca su un dado della riserva!");
+        for (ImageView extractDice : extractDices) {
+            extractDice.setOnMouseClicked(event -> {
+                makeSelectedDiceVisible(extractDice, EXTRACTED);
+                NextAction nextAction = pickDice(Integer.parseInt(extractDice.getId()));
+                stateAction(Objects.requireNonNull(Status.change(nextAction)));
+            });
+        }
+    }
+
+    /**
+     * Modifies the gui to let the player choose a dice inside the round track
+     */
+    private void pickDiceInRoundTrack(){
+        roundTrackGrid.setDisable(false);
+        for (ImageView roundTrackDice : roundTrackDices)
+            roundTrackDice.setDisable(false);
+        messageLabel.setText("Clicca su un dado del Round Track!");
+        for (ImageView roundTrackDice : roundTrackDices) {
+            roundTrackDice.setOnMouseClicked(event -> {
+                makeSelectedDiceVisible(roundTrackDice, ROUNDTRACK);
+                NextAction nextAction = pickDice(Integer.parseInt(roundTrackDice.getId()));
+                stateAction(Objects.requireNonNull(Status.change(nextAction)));
+            });
+        }}
+
 
     /**
      * Calls the method pickDiceForToolCard in the networkClient.
@@ -1092,7 +1112,7 @@ public class GameController implements Observer, NotificationHandler {
      * @param id is the dice's is the player want to pick
      * @return the next action that the player can do
      */
-    private NextAction pickDice(int id, ClientDiceLocations locations) {
+    private NextAction pickDice(int id) {
         NextAction nextAction = null;
         try {
             nextAction = networkClient.pickDiceForToolCard(clientInfo.getUserToken(), id);
@@ -1117,20 +1137,6 @@ public class GameController implements Observer, NotificationHandler {
     }
 
     /**
-     * makes the dice go back to the old style.
-     *
-     * @param dice       is the imageView selected
-     * @param clientDice is the old client dice with the old information of the selected dice
-     */
-    private void changeStyle(ImageView dice, ClientDice clientDice) {
-        String col = clientDice.getDiceColor().toString().toLowerCase();
-        String num = String.valueOf(clientDice.getDiceNumber());
-        String style = col.concat(num);
-        dice.getStyleClass().clear();
-        dice.getStyleClass().add(style);
-    }
-
-    /**
      * Shows the icons to increase, decrease or change the dice's number; contains the lambda's action on those icons.
      */
     private void selectNumberToolCard() {
@@ -1145,14 +1151,11 @@ public class GameController implements Observer, NotificationHandler {
                 if (info.numbersToChoose.get(0) == 1) minusOneIcon.setVisible(false);
                 else plusOneIcon.setVisible(false);
             }
-            plusOneIcon.setOnMouseClicked(event -> {
-                pickNumberForToolCard(1);
-            });
+            plusOneIcon.setOnMouseClicked(event -> pickNumberForToolCard(1));
 
-            minusOneIcon.setOnMouseClicked(event -> {
-                pickNumberForToolCard(-1);
-            });
-        } else {
+            minusOneIcon.setOnMouseClicked(event -> pickNumberForToolCard(-1));
+        }
+        else {
             changeNumberPane.setVisible(true);
 
             oneCircle.setOnMouseClicked(event -> pickNumberForToolCard(1));
@@ -1273,11 +1276,8 @@ public class GameController implements Observer, NotificationHandler {
                     makeSelectedDiceLessVisible(info.wherePickNewDice);
                     break;
                 case SELECT_NUMBER_TOOLCARD:
-                    // Platform.runLater(()->{
-                    System.out.println(info.numbersToChoose);
                     if (info.numbersToChoose.size() <= 2) plusMinusPane.setVisible(true);
                     else changeNumberPane.setVisible(true);
-                    //  });
                     break;
                 case MENU_ONLY_TOOLCARD:
                     message1Label.setText("Tool Card cancellata");
@@ -1423,14 +1423,12 @@ public class GameController implements Observer, NotificationHandler {
         Node tempNode;
 
         ArrayList<String> extractedorderedIds = new ArrayList<>();
-        for (ClientDice dice : clientInfo.getExtractedDices()) {
+        for (ClientDice dice : clientInfo.getExtractedDices())
             extractedorderedIds.add(String.valueOf(dice.getDiceID()));
-        }
 
         ArrayList<String> extractedDicesImageViewIds = new ArrayList<>();
-        for (Node dice : extractedDicesGrid.getChildren()) {
+        for (Node dice : extractedDicesGrid.getChildren())
             extractedDicesImageViewIds.add(dice.getId());
-        }
 
         if (extractedDicesGrid.getChildren().size() > extractedorderedIds.size()) {
 
@@ -1472,17 +1470,15 @@ public class GameController implements Observer, NotificationHandler {
                 }
 
             }
-        } else {
-            //TODO caso in cui restituisco un dado ai dadi estratti
         }
     }
 
+    /**
+     * @param id is the id of the dice that must be removed from the xtracted dices
+     */
     private synchronized void removeDiceImage(String id){
-        for (ImageView image : extractDices) {
-            if (image.getId().equals(id)){
-                extractDices.remove(image);
-                return;
-        }}
+        for (ImageView image : extractDices)
+            if (image.getId().equals(id)) extractDices.remove(image);
     }
 
 
@@ -1547,32 +1543,25 @@ public class GameController implements Observer, NotificationHandler {
     //-------------------------------- Notification Handler ------------------------------------
 
     @Override
-    public void handle(GameStartedNotification notification) {
-    }
+    public void handle(GameStartedNotification notification) {}
 
     @Override
-    public void handle(PlayersChangedNotification notification) {
-    }
+    public void handle(PlayersChangedNotification notification) {}
 
     @Override
-    public void handle(WpcsExtractedNotification notification) {
-    }
+    public void handle(WpcsExtractedNotification notification) {}
 
     @Override
-    public void handle(PrivateObjExtractedNotification notification) {
-    }
+    public void handle(PrivateObjExtractedNotification notification) {}
 
     @Override
-    public void handle(UserPickedWpcNotification notification) {
-    }
+    public void handle(UserPickedWpcNotification notification) {}
 
     @Override
-    public void handle(ToolcardsExtractedNotification notification) {
-    }
+    public void handle(ToolcardsExtractedNotification notification) {}
 
     @Override
-    public void handle(PocsExtractedNotification notification) {
-    }
+    public void handle(PocsExtractedNotification notification) {}
 
     @Override
     public void handle(NewRoundNotification notification) {
@@ -1586,21 +1575,17 @@ public class GameController implements Observer, NotificationHandler {
             plusMinusPane.setVisible(false);
             changeNumberPane.setVisible(false);
             diceBagIcon.setVisible(false);
-            //updateUsedToolCard();
             if (!clientInfo.isActive()) stateAction(Status.ANOTHER_PLAYER_TURN);
 
             else {
                 if (lastNextAction == NextAction.WAIT_FOR_TURN) stateAction(Status.MENU_ALL);
-                else synchronized (waiter) {
-                    waiter.notify();
-                }
+                else synchronized (waiter) { waiter.notify(); }
             }
         });
     }
 
     @Override
-    public void handle(ToolCardDiceChangedNotification notification) {
-    }
+    public void handle(ToolCardDiceChangedNotification notification) {}
 
     @Override
     public void handle(DicePlacedNotification notification) {
