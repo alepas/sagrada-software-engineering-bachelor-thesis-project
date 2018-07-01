@@ -14,7 +14,7 @@ public class ClientConfigLoader {
         JSONParser parser = new JSONParser();
         try {
 //            JSONObject jsonServerObject = (JSONObject) parser.parse(new FileReader("src/main/resources/config/server/serverConfig.json"));
-            JSONObject jsonSharedObject = (JSONObject) parser.parse(new FileReader("src/main/resources/config/shared/sharedConfig.json"));
+            JSONObject jsonSharedObject = (JSONObject) parser.parse(new FileReader("src/main/resources/shared/config/sharedConfig.json"));
 
             JSONObject jsonNetwork = (JSONObject) jsonSharedObject.get("network");
 
