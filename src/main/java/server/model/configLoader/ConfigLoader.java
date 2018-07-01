@@ -16,8 +16,8 @@ public class ConfigLoader {
     public static void loadConfig(){
         JSONParser parser = new JSONParser();
         try {
-            JSONObject jsonServerObject = (JSONObject) parser.parse(new FileReader("src/main/resources/config/server/serverConfig.json"));
-            JSONObject jsonSharedObject = (JSONObject) parser.parse(new FileReader("src/main/resources/config/shared/sharedConfig.json"));
+            JSONObject jsonServerObject = (JSONObject) parser.parse(new FileReader("src/main/resources/server/model/configLoader/serverConfig.json"));
+            JSONObject jsonSharedObject = (JSONObject) parser.parse(new FileReader("src/main/resources/shared/config/sharedConfig.json"));
 
             JSONObject jsonGame = (JSONObject) jsonServerObject.get("game");
             JSONObject jsonDiceBag = (JSONObject) jsonServerObject.get("dicebag");
