@@ -621,9 +621,9 @@ public class GameController implements Observer, NotificationHandler {
         round = String.valueOf(clientInfo.getCurrentRound());
         String turn = String.valueOf(clientInfo.getCurrentTurn());
         Platform.runLater(() -> {
-            if (turn.equals("3")) messageLabel.setText("Tocca ancora a te!");
+            if (Integer.parseInt(turn)==(clientInfo.getGameNumPlayers()+1)) messageLabel.setText("Tocca ancora a te!");
             else messageLabel.setText("Tocca a te!");
-            // message1Label.setText("");
+            //message1Label.setText("");
             roundLabel.setText("Round numero " + round + ", turno di " + username);
             endTurnButton.setVisible(true);
             endTurnButton.setDisable(false);
@@ -958,6 +958,9 @@ public class GameController implements Observer, NotificationHandler {
         extractedDicesGrid.setDisable(false);
         setDisableAndInvisible();
         messageLabel.setText("Posiziona un dado o passa il turno!");
+        Platform.runLater(() -> {
+            dragAndDrop();
+        });
     }
 
     /**
@@ -1618,21 +1621,21 @@ public class GameController implements Observer, NotificationHandler {
                 usedTool3Icon.setVisible(true);
 
             message1Label.setText(notification.username + " ha usato la ToolCard " + notification.toolCard.getId());
-            updateGraphicExtractedDices();
-            firstFavourLabel.setText(favours + "X");
-            if (secondUserLabel != null && notification.username.equals(secondUserLabel.getText())) {
-                fillWpc(secondWpcGrid, clientInfo.getWpcByUsername().get(notification.username));
-                secondFavourLabel.setText(favours + "X");
-            } else if (thirdUserLabel != null && notification.username.equals(thirdUserLabel.getText())) {
-                fillWpc(thirdWpcGrid, clientInfo.getWpcByUsername().get(notification.username));
-                thirdFavourLabel.setText(favours + "X");
-            } else if (fourthUserLabel != null && notification.username.equals(fourthUserLabel.getText())) {
-                fillWpc(fourthWpcGrid, clientInfo.getWpcByUsername().get(notification.username));
-                fourthFavourLabel.setText(favours + "X");
-            }
-            if (!notification.username.equals(username)) {
+            if (!notification.username.equals(username)){
+                updateGraphicExtractedDices();
+                if (secondUserLabel != null && notification.username.equals(secondUserLabel.getText())) {
+                    fillWpc(secondWpcGrid, clientInfo.getWpcByUsername().get(notification.username));
+                    secondFavourLabel.setText(favours + "X");
+                } else if (thirdUserLabel != null && notification.username.equals(thirdUserLabel.getText())) {
+                    fillWpc(thirdWpcGrid, clientInfo.getWpcByUsername().get(notification.username));
+                    thirdFavourLabel.setText(favours + "X");
+                } else if (fourthUserLabel != null && notification.username.equals(fourthUserLabel.getText())) {
+                    fillWpc(fourthWpcGrid, clientInfo.getWpcByUsername().get(notification.username));
+                    fourthFavourLabel.setText(favours + "X");
+                }
                 for (Notification not : notification.movesNotifications) not.handle(this);
             }
+            else firstFavourLabel.setText(favours + "X");
         });
     }
 
