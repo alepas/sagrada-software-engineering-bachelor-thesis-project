@@ -1,11 +1,11 @@
 package server.model.game;
 
-import server.constants.GameConstants;
 import server.model.dicebag.Dice;
 import server.model.wpc.DiceAndPosition;
 import shared.clientInfo.ClientDice;
 import shared.clientInfo.ClientRoundTrack;
 import shared.clientInfo.Position;
+import shared.constants.GameConstants;
 
 import java.io.Serializable;
 import java.util.ArrayList;

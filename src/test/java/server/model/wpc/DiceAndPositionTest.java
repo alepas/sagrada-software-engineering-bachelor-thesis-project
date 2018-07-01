@@ -4,7 +4,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import server.model.dicebag.Dice;
-import server.model.wpc.DiceAndPosition;
 import shared.clientInfo.Position;
 
 import static org.mockito.Mockito.mock;

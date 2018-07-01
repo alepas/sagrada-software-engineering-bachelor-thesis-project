@@ -2,7 +2,6 @@ package server.model.cards;
 
 import org.junit.Before;
 import org.junit.Test;
-import server.model.cards.PocDB;
 import server.model.cards.concretePublicObjectiveCards.PublicObjectiveCard3;
 
 import static org.junit.Assert.*;

@@ -14,7 +14,7 @@ class LoadingFromFile {
     static Object fromFile(String name) throws DatabaseFileErrorException {
         Object output;
 
-        try (FileInputStream fis = new FileInputStream(name);
+        try (InputStream fis = new FileInputStream(name);
                 ObjectInputStream ois=new ObjectInputStream(fis);
                 ) {
             output = ois.readObject();

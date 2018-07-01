@@ -1,6 +1,5 @@
 package server.model.game;
 
-import server.constants.GameConstants;
 import server.model.cards.PublicObjectiveCard;
 import server.model.cards.ToolCard;
 import server.model.dicebag.Color;
@@ -15,6 +14,7 @@ import server.model.wpc.Wpc;
 import shared.clientInfo.ClientDice;
 import shared.clientInfo.ClientEndTurnData;
 import shared.clientInfo.ClientWpc;
+import shared.constants.GameConstants;
 import shared.exceptions.gameExceptions.*;
 import shared.exceptions.usersAndDatabaseExceptions.CannotAddPlayerInDatabaseException;
 import shared.exceptions.usersAndDatabaseExceptions.CannotFindPlayerInDatabaseException;

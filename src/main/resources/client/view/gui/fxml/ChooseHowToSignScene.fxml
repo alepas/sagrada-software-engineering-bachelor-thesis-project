@@ -4,11 +4,11 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<AnchorPane styleClass="Scene" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8"
+<AnchorPane styleClass="Scene" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/8"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controller.guicontroller.ChooseHowToSignController">
 
     <ImageView styleClass="ImageEffect" fitHeight="705.0" fitWidth="900.0" layoutX="151.0">
-        <Image url="@/view/gui/background/startingScene.jpg"/>
+        <Image url="@../background/startingScene.jpg"/>
     </ImageView>
 
     <Button fx:id="signInButton" layoutX="535.0" layoutY="345.0" styleClass="FirstSceneButton" text="Sign in"/>

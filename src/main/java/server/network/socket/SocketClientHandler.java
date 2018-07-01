@@ -39,6 +39,8 @@ public class SocketClientHandler extends ClientHandler implements Runnable, Obse
     private void respond(Object response) {
         try {
             out.writeObject(response);
+            out.flush();
+            out.reset();
         } catch (IOException e) {
             //TODO: Non riesco a contattare il client
             printError("IO - " + e.getMessage());

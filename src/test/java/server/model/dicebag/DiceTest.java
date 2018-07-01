@@ -4,8 +4,6 @@ package server.model.dicebag;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import server.model.dicebag.Color;
-import server.model.dicebag.Dice;
 import shared.clientInfo.ClientDice;
 import shared.exceptions.dicebagExceptions.IncorrectNumberException;
 

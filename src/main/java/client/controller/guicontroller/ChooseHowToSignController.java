@@ -23,9 +23,9 @@ public class ChooseHowToSignController {
     @FXML
     void initialize(){
 
-        signUpButton.setOnAction(event -> changeSceneHandle(event, "/view/gui/SignUpScene.fxml"));
+        signUpButton.setOnAction(event -> changeSceneHandle(event, "/client/view/gui/fxml/SignUpScene.fxml"));
 
-        signInButton.setOnAction(event -> changeSceneHandle(event, "/view/gui/SignInScene.fxml"));
+        signInButton.setOnAction(event -> changeSceneHandle(event, "/client/view/gui/fxml/SignInScene.fxml"));
     }
 
     /**

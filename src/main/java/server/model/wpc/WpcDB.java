@@ -10,7 +10,7 @@ import shared.clientInfo.Position;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -19,7 +19,7 @@ public class WpcDB {
     private HashMap<String, Wpc> map;
 
     public static WpcDB getInstance(){
-        if (instance == null) instance = new WpcDB("src/main/resources/wpc/wpc_schema");
+        if (instance == null) instance = new WpcDB("wpc_schema");
         return instance;
 
     }
@@ -69,7 +69,8 @@ public class WpcDB {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance(); //inizializzo la factory per processare il flusso di dati
             DocumentBuilder builder = factory.newDocumentBuilder(); //inzializzo documento
             Document document;
-            document = builder.parse(new File(pathFile)); //pathname del file con tutte le wpc
+            InputStream in = getClass().getResourceAsStream(pathFile);
+            document = builder.parse(in); //pathname del file con tutte le wpc
             document.getDocumentElement().normalize();
             wpcList = document.getElementsByTagName("wpc");
 

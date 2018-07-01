@@ -1,6 +1,6 @@
 package shared.exceptions.gameExceptions;
 
-import server.constants.GameConstants;
+import shared.constants.GameConstants;
 
 public class InvalidMultiplayerGamePlayersException extends Exception {
     private final int numPlayers;

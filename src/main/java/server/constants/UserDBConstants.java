@@ -6,7 +6,7 @@ package server.constants;
 public class UserDBConstants {
     private UserDBConstants(){}
 
-    private static final String PATH_DB_FILE = "src/main/resources/database/store.db";
+    private static final String PATH_DB_FILE = "./store.db";
 
     public static String getPathDbFile() {
         return PATH_DB_FILE;

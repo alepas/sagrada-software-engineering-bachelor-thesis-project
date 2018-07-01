@@ -235,7 +235,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
         fourPlayersBox.setOnMouseClicked(event -> errorLabel.setVisible(false));
 
         personalAreaButton.setOnAction(event -> changeSceneHandle(event,
-                "/view/gui/PersonalAreaScene.fxml"));
+                "/client/client/view/gui/fxml/fxml/PersonalAreaScene.fxml"));
 
         firstWPC.setOnMouseClicked(event -> pickWpc(wpc0ID));
 
@@ -247,7 +247,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
 
         reconnectionButton.setOnAction(this::waitPlayGameAfterDisconnection);
 
-        disconnectionButton.setOnAction(event -> changeSceneHandle(event, "/view/gui/StartingScene.fxml"));
+        disconnectionButton.setOnAction(event -> changeSceneHandle(event, "/client/view/gui/fxml/StartingScene.fxml"));
     }
 
 
@@ -695,16 +695,16 @@ public class SetNewGameController implements Observer, NotificationHandler {
     private void chooseScene(Event event){
         switch (clientInfo.getGameNumPlayers()){
             case 1:
-                changeSceneHandle(event, "/view/gui/SoloPlayerGameScene.fxml");
+                changeSceneHandle(event, "/client/view/gui/fxml/SoloPlayerGameScene.fxml");
                 break;
             case 2:
-                changeSceneHandle(event, "/view/gui/TwoPlayersGameScene.fxml");
+                changeSceneHandle(event, "/client/view/gui/fxml/TwoPlayersGameScene.fxml");
                 break;
             case 3:
-                changeSceneHandle(event, "/view/gui/ThreePlayersGameScene.fxml");
+                changeSceneHandle(event, "/client/view/gui/fxml/ThreePlayersGameScene.fxml");
                 break;
             case 4:
-                changeSceneHandle(event, "/view/gui/FourPlayersGameScene.fxml");
+                changeSceneHandle(event, "/client/view/gui/fxml/FourPlayersGameScene.fxml");
                 break;
         }
     }

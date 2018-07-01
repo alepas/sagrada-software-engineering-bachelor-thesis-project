@@ -1,6 +1,5 @@
 package server.model.users;
 
-import server.constants.GameConstants;
 import server.model.cards.PublicObjectiveCard;
 import server.model.cards.ToolCard;
 import server.model.dicebag.Color;
@@ -12,6 +11,7 @@ import server.model.wpc.DiceAndPosition;
 import server.model.wpc.Wpc;
 import server.model.wpc.WpcDB;
 import shared.clientInfo.*;
+import shared.constants.GameConstants;
 import shared.exceptions.gameExceptions.UserNotInThisGameException;
 import shared.exceptions.usersAndDatabaseExceptions.*;
 import shared.network.commands.notifications.DicePlacedNotification;

@@ -3,9 +3,6 @@ package server.model.dicebag;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import server.model.dicebag.Color;
-import server.model.dicebag.Dice;
-import server.model.dicebag.DiceBag;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

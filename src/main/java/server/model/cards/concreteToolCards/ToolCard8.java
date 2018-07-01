@@ -6,14 +6,17 @@ import server.model.dicebag.Color;
 import server.model.dicebag.Dice;
 import server.model.users.MoveData;
 import server.model.users.PlayerInGame;
+import server.model.wpc.DiceAndPosition;
 import shared.clientInfo.*;
 import shared.exceptions.usersAndDatabaseExceptions.*;
+import shared.network.commands.notifications.DicePlacedNotification;
 import shared.network.commands.notifications.ToolCardDicePlacedNotification;
 import shared.network.commands.notifications.ToolCardUsedNotification;
 
 import java.util.ArrayList;
 
 public class ToolCard8 extends ToolCard {
+    private DiceAndPosition diceAndPosition;
 
     public ToolCard8() {
         this.id = ToolCardConstants.TOOLCARD8_ID;
@@ -59,6 +62,7 @@ public class ToolCard8 extends ToolCard {
             if (!cardWpc.addDiceWithAllRestrictions(tempDice, pos)) {
                 throw new CannotPickPositionException(username, pos);
             }
+            diceAndPosition= new DiceAndPosition(tempDice,pos);
             cardExtractedDices.remove(tempDice);
             updateClientWPC();
             updateClientExtractedDices();
@@ -70,7 +74,7 @@ public class ToolCard8 extends ToolCard {
                 this.currentStatus = 30;
                 String text = "Nessun dado tra quelli estratti può essere posizionato sulla Window Pattern Card.\n" +
                         "Il primo piazzamento è considerato valido. L'utilizzo della toolCard è stato annullato.";
-                return new MoveData(NextAction.INTERRUPT_TOOLCARD, text, false, false);
+                return new MoveData(NextAction.INTERRUPT_TOOLCARD, text, false, false, null, tempClientExtractedDices,null,null,null,null,false);
             }
 
         } else if ((currentStatus == 2) || (currentStatus == 10)) {
@@ -152,6 +156,7 @@ public class ToolCard8 extends ToolCard {
     @Override
     protected void cleanCard() {
         defaultClean();
+        diceAndPosition=null;
     }
 
     @Override
@@ -168,7 +173,7 @@ public class ToolCard8 extends ToolCard {
             case 30:
                 String text = "Nessun dado tra quelli estratti può essere posizionato sulla Window Pattern Card.\n" +
                         "Il primo piazzamento è considerato valido. L'utilizzo della toolCard è stato annullato.";
-                return new MoveData(NextAction.INTERRUPT_TOOLCARD, text, false, false);
+                return new MoveData(NextAction.INTERRUPT_TOOLCARD, text, false, false, null, tempClientExtractedDices,null,null,null,null,false);
 
         }
         return null;
@@ -190,10 +195,10 @@ public class ToolCard8 extends ToolCard {
             throw new CannotInteruptToolCardException(username, id);
         if (value != ToolCardInteruptValues.OK)
             throw new CannotInteruptToolCardException(username, id);
-        this.used = false;
         if (singlePlayerGame)
             cardExtractedDices.add(diceForSingleUser);
         updateAndCopyToGameData(true, true, false);
+        currentGame.changeAndNotifyObservers(new DicePlacedNotification(username, this.diceAndPosition.getDice().getClientDice(), this.diceAndPosition.getPosition(), tempClientWpc, tempClientExtractedDices, null));
         ClientWpc tempWpc = tempClientWpc;
         ArrayList<ClientDice> tempDices = tempClientExtractedDices;
         cleanCard();

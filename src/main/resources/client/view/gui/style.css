@@ -135,226 +135,226 @@
 
 
 #prOCviolet{
-    -fx-background-image: url("/view/cards/public/pub16.jpg");
+    -fx-background-image: url("cards/public/pub16.jpg");
     -fx-background-size: cover;
 }
 
 
 #prOCblue{
-    -fx-background-image: url("/view/cards/public/pub15.jpg");
+    -fx-background-image: url("cards/public/pub15.jpg");
     -fx-background-size: cover;
 }
 
 #prOCyellow{
-    -fx-background-image: url("/view/cards/public/pub13.jpg");
+    -fx-background-image: url("cards/public/pub13.jpg");
     -fx-background-size: cover;
 }
 
 
 #prOCgreen{
-    -fx-background-image: url("/view/cards/public/pub14.jpg");
+    -fx-background-image: url("cards/public/pub14.jpg");
     -fx-background-size: cover;
 }
 
 #prOCred{
-     -fx-background-image: url("/view/cards/public/pub12.jpg");
+     -fx-background-image: url("cards/public/pub12.jpg");
      -fx-background-size: cover;
 }
 
 #poc1{
-    -fx-background-image: url("/view/cards/public/pub1.jpg");
+    -fx-background-image: url("cards/public/pub1.jpg");
     -fx-background-size: cover;
 }
 
 
 #poc2{
-    -fx-background-image: url("/view/cards/public/pub2.jpg");
+    -fx-background-image: url("cards/public/pub2.jpg");
     -fx-background-size: cover;
 }
 
 
 #poc3{
-    -fx-background-image: url("/view/cards/public/pub3.jpg");
+    -fx-background-image: url("cards/public/pub3.jpg");
     -fx-background-size: cover;
 }
 
 
 #poc4{
-    -fx-background-image: url("/view/cards/public/pub4.jpg");
+    -fx-background-image: url("cards/public/pub4.jpg");
     -fx-background-size: cover;
 }
 
 
 #poc5{
-    -fx-background-image: url("/view/cards/public/pub5.jpg");
+    -fx-background-image: url("cards/public/pub5.jpg");
     -fx-background-size: cover;
 }
 
 
 #poc6{
-    -fx-background-image: url("/view/cards/public/pub6.jpg");
+    -fx-background-image: url("cards/public/pub6.jpg");
     -fx-background-size: cover;
 }
 
 
 #poc7{
-    -fx-background-image: url("/view/cards/public/pub7.jpg");
+    -fx-background-image: url("cards/public/pub7.jpg");
     -fx-background-size: cover;
 }
 
 
 #poc8{
-    -fx-background-image: url("/view/cards/public/pub8.jpg");
+    -fx-background-image: url("cards/public/pub8.jpg");
     -fx-background-size: cover;
 }
 
 
 #poc9{
-    -fx-background-image: url("/view/cards/public/pub9.jpg");
+    -fx-background-image: url("cards/public/pub9.jpg");
     -fx-background-size: cover;
 }
 
 
 #poc10{
-    -fx-background-image: url("/view/cards/public/pub10.jpg");
+    -fx-background-image: url("cards/public/pub10.jpg");
     -fx-background-size: cover;
 }
 
 
 #tool1{
-    -fx-background-image: url("/view/cards/util/util1.jpg");
+    -fx-background-image: url("cards/util/util1.jpg");
     -fx-background-size: cover;
 }
 
 
 #tool2{
-    -fx-background-image: url("/view/cards/util/util2.jpg");
+    -fx-background-image: url("cards/util/util2.jpg");
     -fx-background-size: cover;
 }
 
 
 #tool3{
-    -fx-background-image: url("/view/cards/util/util3.jpg");
+    -fx-background-image: url("cards/util/util3.jpg");
     -fx-background-size: cover;
 }
 
 
 #tool4{
-    -fx-background-image: url("/view/cards/util/util4.jpg");
+    -fx-background-image: url("cards/util/util4.jpg");
     -fx-background-size: cover;
 }
 
 
 #tool5{
-    -fx-background-image: url("/view/cards/util/util5.jpg");
+    -fx-background-image: url("cards/util/util5.jpg");
     -fx-background-size: cover;
 }
 
 
 #tool6{
-    -fx-background-image: url("/view/cards/util/util6.jpg");
+    -fx-background-image: url("cards/util/util6.jpg");
     -fx-background-size: cover;
 }
 
 
 #tool7{
-    -fx-background-image: url("/view/cards/util/util7.jpg");
+    -fx-background-image: url("cards/util/util7.jpg");
     -fx-background-size: cover;
 }
 
 
 #tool8{
-    -fx-background-image: url("/view/cards/util/util8.jpg");
+    -fx-background-image: url("cards/util/util8.jpg");
     -fx-background-size: cover;
 }
 
 
 #tool9{
-    -fx-background-image: url("/view/cards/util/util9.jpg");
+    -fx-background-image: url("cards/util/util9.jpg");
     -fx-background-size: cover;
 }
 
 
 #tool10{
-    -fx-background-image: url("/view/cards/util/util10.jpg");
+    -fx-background-image: url("cards/util/util10.jpg");
     -fx-background-size: cover;
 }
 
 
 #tool11{
-    -fx-background-image: url("/view/cards/util/util11.jpg");
+    -fx-background-image: url("cards/util/util11.jpg");
     -fx-background-size: cover;
 }
 
 
 #tool12{
-    -fx-background-image: url("/view/cards/util/util12.jpg");
+    -fx-background-image: url("cards/util/util12.jpg");
     -fx-background-size: cover;
 }
 
 
 .num1{
-    -fx-background-image: url("/view/wpc/pos1.png");
+    -fx-background-image: url("wpc/pos1.png");
     -fx-background-size: cover;
 }
 
 
 .num2{
-    -fx-background-image: url("/view/wpc/pos2.png");
+    -fx-background-image: url("wpc/pos2.png");
     -fx-background-size: cover;
 }
 
 
 .num3{
-    -fx-background-image: url("/view/wpc/pos3.png");
+    -fx-background-image: url("wpc/pos3.png");
     -fx-background-size: cover;
 }
 
 
 .num4{
-    -fx-background-image: url("/view/wpc/pos4.png");
+    -fx-background-image: url("wpc/pos4.png");
     -fx-background-size: cover;
 }
 
 
 .num5{
-    -fx-background-image: url("/view/wpc/pos5.png");
+    -fx-background-image: url("wpc/pos5.png");
     -fx-background-size: cover;
 }
 
 
 .num6{
-    -fx-background-image: url("/view/wpc/pos6.png");
+    -fx-background-image: url("wpc/pos6.png");
     -fx-background-size: cover;
 }
 
 
 .yellow{
-    -fx-background-image: url("/view/wpc/dfd207.png");
+    -fx-background-image: url("wpc/dfd207.png");
     -fx-background-size: cover;
 }
 
 
 .green{
-    -fx-background-image: url("/view/wpc/30a35e.png");
+    -fx-background-image: url("wpc/30a35e.png");
     -fx-background-size: cover;
 }
 
 
 .red{
-    -fx-background-image: url("/view/wpc/d41d22.png");
+    -fx-background-image: url("wpc/d41d22.png");
     -fx-background-size: cover;
 }
 
 
 .blue{
-    -fx-background-image: url("/view/wpc/5cc7d8.png");
+    -fx-background-image: url("wpc/5cc7d8.png");
     -fx-background-size: cover;
 }
 
 
 .violet{
-    -fx-background-image: url("/view/wpc/98258d.png");
+    -fx-background-image: url("wpc/98258d.png");
     -fx-background-size: cover;
 }
 
@@ -365,208 +365,208 @@
 
 
 .red1{
-    -fx-image: url("/view/dices/red/red1.png");
+    -fx-image: url("dices/red/red1.png");
     -fx-image-fitWidth: 100;
     -fx-image-fitHeight: 100;
 }
 
 
 .red2{
-    -fx-image: url("/view/dices/red/red2.png");
+    -fx-image: url("dices/red/red2.png");
     -fx-image-fitWidth: 100;
     -fx-image-fitHeight: 100;
 }
 
 
 .red3{
-    -fx-image: url("/view/dices/red/red3.png");
+    -fx-image: url("dices/red/red3.png");
     -fx-image-fitWidth: 100;
     -fx-image-fitHeight: 100;
 }
 
 
 .red4{
-    -fx-image: url("/view/dices/red/red4.png");
+    -fx-image: url("dices/red/red4.png");
     -fx-image-fitWidth: 100;
     -fx-image-fitHeight: 100;
 }
 
 
 .red5{
-    -fx-image: url("/view/dices/red/red5.png");
+    -fx-image: url("dices/red/red5.png");
     -fx-image-fitWidth: 100;
     -fx-image-fitHeight: 100;
 }
 
 
 .red6{
-    -fx-image: url("/view/dices/red/red6.png");
+    -fx-image: url("dices/red/red6.png");
     -fx-image-fitWidth: 100;
     -fx-image-fitHeight: 100;
 }
 
 
 .blue1{
-    -fx-image: url("/view/dices/blue/blue1.png");
+    -fx-image: url("dices/blue/blue1.png");
     -fx-image-fitWidth: 100;
     -fx-image-fitHeight: 100;
 }
 
 
 .blue2{
-    -fx-image: url("/view/dices/blue/blue2.png");
+    -fx-image: url("dices/blue/blue2.png");
     -fx-image-fitWidth: 100;
     -fx-image-fitHeight: 100;
 }
 
 
 .blue3{
-    -fx-image: url("/view/dices/blue/blue3.png");
+    -fx-image: url("dices/blue/blue3.png");
     -fx-image-fitWidth: 100;
     -fx-image-fitHeight: 100;
 }
 
 
 .blue4{
-    -fx-image: url("/view/dices/blue/blue4.png");
+    -fx-image: url("dices/blue/blue4.png");
     -fx-image-fitWidth: 100;
     -fx-image-fitHeight: 100;
 }
 
 
 .blue5{
-    -fx-image: url("/view/dices/blue/blue5.png");
+    -fx-image: url("dices/blue/blue5.png");
     -fx-image-fitWidth: 100;
     -fx-image-fitHeight: 100;
 }
 
 .blue6{
-    -fx-image: url("/view/dices/blue/blue6.png");
+    -fx-image: url("dices/blue/blue6.png");
     -fx-image-fitWidth: 100;
     -fx-image-fitHeight: 100;
 }
 
 
 .yellow1{
-    -fx-image: url("/view/dices/yellow/yellow1.png");
+    -fx-image: url("dices/yellow/yellow1.png");
     -fx-image-fitWidth: 100;
     -fx-image-fitHeight: 100;
 }
 
 
 .yellow2{
-    -fx-image: url("/view/dices/yellow/yellow2.png");
+    -fx-image: url("dices/yellow/yellow2.png");
     -fx-image-fitWidth: 100;
     -fx-image-fitHeight: 100;
 }
 
 
 .yellow3{
-    -fx-image: url("/view/dices/yellow/yellow3.png");
+    -fx-image: url("dices/yellow/yellow3.png");
     -fx-image-fitWidth: 100;
     -fx-image-fitHeight: 100;
 }
 
 
 .yellow4{
-    -fx-image: url("/view/dices/yellow/yellow4.png");
+    -fx-image: url("dices/yellow/yellow4.png");
     -fx-image-fitWidth: 100;
     -fx-image-fitHeight: 100;
 }
 
 
 .yellow5{
-    -fx-image: url("/view/dices/yellow/yellow5.png");
+    -fx-image: url("dices/yellow/yellow5.png");
     -fx-image-fitWidth: 100;
     -fx-image-fitHeight: 100;
 }
 
 
 .yellow6{
-    -fx-image: url("/view/dices/yellow/yellow6.png");
+    -fx-image: url("dices/yellow/yellow6.png");
     -fx-image-fitWidth: 100;
     -fx-image-fitHeight: 100;
 }
 
 
 .green1{
-    -fx-image: url("/view/dices/green/green1.png");
+    -fx-image: url("dices/green/green1.png");
     -fx-image-fitWidth: 100;
     -fx-image-fitHeight: 100;
 }
 
 
 .green2{
-    -fx-image: url("/view/dices/green/green2.png");
+    -fx-image: url("dices/green/green2.png");
     -fx-image-fitWidth: 100;
     -fx-image-fitHeight: 100;
 }
 
 
 .green3{
-    -fx-image: url("/view/dices/green/green3.png");
+    -fx-image: url("dices/green/green3.png");
     -fx-image-fitWidth: 100;
     -fx-image-fitHeight: 100;
 }
 
 
 .green4{
-    -fx-image: url("/view/dices/green/green4.png");
+    -fx-image: url("dices/green/green4.png");
     -fx-image-fitWidth: 100;
     -fx-image-fitHeight: 100;
 }
 
 
 .green5{
-    -fx-image: url("/view/dices/green/green5.png");
+    -fx-image: url("dices/green/green5.png");
     -fx-image-fitWidth: 100;
     -fx-image-fitHeight: 100;
 }
 
 
 .green6{
-    -fx-image: url("/view/dices/green/green6.png");
+    -fx-image: url("dices/green/green6.png");
     -fx-image-fitWidth: 100;
     -fx-image-fitHeight: 100;
 }
 
 
 .violet1{
-    -fx-image: url("/view/dices/violet/violet1.png");
+    -fx-image: url("dices/violet/violet1.png");
     -fx-image-fitWidth: 100;
     -fx-image-fitHeight: 100;
 }
 
 
 .violet2{
-    -fx-image: url("/view/dices/violet/violet2.png");
+    -fx-image: url("dices/violet/violet2.png");
     -fx-image-fitWidth: 100;
     -fx-image-fitHeight: 100;
 }
 
 .violet3{
-    -fx-image: url("/view/dices/violet/violet3.png");
+    -fx-image: url("dices/violet/violet3.png");
     -fx-image-fitWidth: 100;
     -fx-image-fitHeight: 100;
 }
 
 
 .violet4{
-    -fx-image: url("/view/dices/violet/violet4.png");
+    -fx-image: url("dices/violet/violet4.png");
     -fx-image-fitWidth: 100;
     -fx-image-fitHeight: 100;
 }
 
 
 .violet5{
-    -fx-image: url("/view/dices/violet/violet5.png");
+    -fx-image: url("dices/violet/violet5.png");
     -fx-image-fitWidth: 100;
     -fx-image-fitHeight: 100;
 }
 
 
 .violet6{
-    -fx-image: url("/view/dices/violet/violet6.png");
+    -fx-image: url("dices/violet/violet6.png");
     -fx-image-fitWidth: 100;
     -fx-image-fitHeight: 100;
 }
