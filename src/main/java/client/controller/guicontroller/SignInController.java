@@ -77,14 +77,10 @@ public class SignInController {
                 sleep(500);
                 Platform.runLater(()->{
                     try {
-                        NextAction nextAction = networkClient.getUpdatedGame(clientInfo.getUserToken());
+                        networkClient.getUpdatedGame(clientInfo.getUserToken());
                         if (clientInfo.getGame() != null) {
-                            System.out.println("azione: " + clientInfo.getGame().getId());
                             if (clientInfo.getMyWpc() != null) chooseGameScene(event);
-                            else {
-                                System.out.println("ehi");
-                                //changeSceneHandle(event, "/view/gui/SetNewGameSchene.fxml");
-                            }
+                            else changeSceneHandle(event, "/view/gui/SetNewGameScene.fxml");
                         }
                     } catch (CannotFindPlayerInDatabaseException e) {
                         changeSceneHandle(event, "/view/gui/SetNewGameScene.fxml");
