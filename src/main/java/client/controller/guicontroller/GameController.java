@@ -1709,4 +1709,9 @@ public class GameController implements Observer, NotificationHandler {
     @Override
     public void handle(ForceDisconnectionNotification notification) { Platform.runLater(()-> disconnectButton.fire());}
 
+    @Override
+    public void handle(ForceStartGameNotification notification) {
+
+    }
+
 }

@@ -22,6 +22,7 @@ public class GameConstants {
     public static final int NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME = 2;
     public static final int MULTIPLAYER_MIN_NUM_PLAYERS = 2;
     public static final int TIME_TO_PLAY_TURN_MULTIPLAYER = 90 * 1000; //Time in milliseconds
+    public static final int TIME_WAITING_PLAYERS_TO_ENTER_GAME = 30 * 1000;
 
     //SingleplayerGame
     public static final int NUM_PRIVATE_OBJ_FOR_PLAYER_IN_SINGLEPLAYER_GAME = 2;

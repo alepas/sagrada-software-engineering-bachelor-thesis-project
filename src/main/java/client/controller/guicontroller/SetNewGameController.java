@@ -794,4 +794,9 @@ public class SetNewGameController implements Observer, NotificationHandler {
         Platform.runLater(()->disconnectButton.fire());
     }
 
+    @Override
+    public void handle(ForceStartGameNotification notification) {
+
+    }
+
 }

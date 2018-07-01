@@ -45,14 +45,11 @@ public class DatabaseGames {
             throw new InvalidNumOfPlayersException(numPlayers);
 
         if (numPlayers != 1) {
-            for (Game game : availableGames) {
+            for (MultiplayerGame game : availableGames) {
                 if (game.getNumPlayers() == numPlayers) {
                     try {
-                        if (game.addPlayer(username)) startGame(game);
-                        return game;
-
-                    } catch (NotEnoughPlayersException e){
-                        e.printStackTrace();
+                        if (game.addPlayer(username)) moveGameToActive(game);
+                        if (game.restartWaitPlayersTimer()) startGame(game);
                         return game;
 
                     } catch (MaxPlayersExceededException e) {
@@ -61,9 +58,6 @@ public class DatabaseGames {
                     } catch (UserAlreadyInThisGameException e){
                         try {
                             if (game.isFull()) startGame(game);
-                        } catch (NotEnoughPlayersException exc){
-                            exc.printStackTrace();
-                            return game;
                         } catch (GameNotInAvailableListException exc){
                             //TODO: destroy game
                         }
@@ -80,11 +74,7 @@ public class DatabaseGames {
         return createNewGame(username, numPlayers);
     }
 
-    private synchronized void startGame(Game game) throws GameNotInAvailableListException, NotEnoughPlayersException {
-
-        if (!game.isFull()) throw new NotEnoughPlayersException(game);
-
-        moveGameToActive(game);
+    private synchronized void startGame(Game game) throws GameNotInAvailableListException {
         Thread gameThread = new Thread(game);
         threadByGame.put(game, gameThread);
         gameThread.start();     //Fa iniziare la partita

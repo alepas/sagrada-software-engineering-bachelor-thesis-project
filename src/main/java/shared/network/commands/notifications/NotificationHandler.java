@@ -38,4 +38,6 @@ public interface NotificationHandler {
     void handle(PlayerReconnectedNotification notification);
 
     void handle(ForceDisconnectionNotification notification);
+
+    void handle(ForceStartGameNotification notification);
 }

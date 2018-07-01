@@ -19,7 +19,6 @@ public class ClientInfo implements Observer, NotificationHandler {
     //Game
     private ClientColor[] myPrivateObjectives;
     private boolean wpcsArrived;
-    private boolean gameStarted;
     private boolean active;
     private ToolCardClientNextActionInfo toolCardClientNextActionInfo;
     private ClientGame game;
@@ -41,7 +40,6 @@ public class ClientInfo implements Observer, NotificationHandler {
         this.game = null;
         this.myPrivateObjectives = null;
         this.wpcsArrived = false;
-        this.gameStarted = false;
         this.active = false;
         this.toolCardClientNextActionInfo = null;
         this.timeLeftToCompleteTask = 0;
@@ -202,7 +200,7 @@ public class ClientInfo implements Observer, NotificationHandler {
     }
 
     public boolean isGameStarted() {
-        return gameStarted;
+        return game != null && game.isStarted();
     }
 
     public boolean areToolcardsArrived() {
@@ -253,7 +251,7 @@ public class ClientInfo implements Observer, NotificationHandler {
     }
 
     public void setGameStarted(boolean gameStarted) {
-        this.gameStarted = gameStarted;
+        game.setStarted(gameStarted);
     }
 
     public void setWpcsArrived(boolean arrived){
@@ -271,7 +269,7 @@ public class ClientInfo implements Observer, NotificationHandler {
 
     @Override
     public void handle(GameStartedNotification notification) {
-        gameStarted = true;
+        game.setStarted(true);
     }
 
     @Override
@@ -388,5 +386,10 @@ public class ClientInfo implements Observer, NotificationHandler {
     @Override
     public void handle(ForceDisconnectionNotification notification) {
         clean();
+    }
+
+    @Override
+    public void handle(ForceStartGameNotification notification) {
+        this.game = notification.game;
     }
 }

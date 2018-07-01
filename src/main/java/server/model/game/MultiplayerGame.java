@@ -7,6 +7,7 @@ import server.model.dicebag.Color;
 import server.model.dicebag.Dice;
 import server.model.game.thread.ChooseWpcThread;
 import server.model.game.thread.WaitForEndTurnThread;
+import server.model.game.thread.WaitPlayersThread;
 import server.model.game.thread.WaiterThread;
 import server.model.gamesdb.DatabaseGames;
 import server.model.users.DatabaseUsers;
@@ -29,6 +30,7 @@ public class MultiplayerGame extends Game {
     private HashMap<String, Integer> scoreList = new HashMap<>();
     private ClientEndTurnData endTurnData;
     private WaiterThread currentThread;
+    private Thread waitPlayersThread;
 
     /**
      * Creates a multiplayerGame
@@ -81,8 +83,8 @@ public class MultiplayerGame extends Game {
         players[nextFree()] = player;
 
         changeAndNotifyObservers(new PlayersChangedNotification(user, true, numActualPlayers(), numPlayers));
-
-        return this.isFull();
+        started = this.isFull();
+        return started;
     }
 
     /**
@@ -92,11 +94,27 @@ public class MultiplayerGame extends Game {
      * @throws UserNotInThisGameException if the player is not in this game
      */
     public synchronized void removePlayer(String user) throws UserNotInThisGameException {
-        int index = playerIndex(user);
-        if (index < 0) throw new UserNotInThisGameException(user, this);
-        removeArrayIndex(players, index);
+        try {
+            int index = playerIndex(user);
+            if (index < 0) throw new UserNotInThisGameException(user, this);
 
-        changeAndNotifyObservers(new PlayersChangedNotification(user, false, numActualPlayers(), numPlayers));
+            PlayerInGame player = players[index];
+            DatabaseUsers.getInstance().removePlayerInGameFromDB(player);
+            removeArrayIndex(players, index);
+
+            changeAndNotifyObservers(new PlayersChangedNotification(user, false, numActualPlayers(), numPlayers));
+        } catch (CannotFindPlayerInDatabaseException e) {
+            //TODO:
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public synchronized void disconnectPlayer(String username) throws UserNotInThisGameException {
+        if (!started) {
+            removePlayer(username);
+            if (numActualPlayers() == 1) ((WaitPlayersThread) currentThread).setPause(true);
+        }
     }
 
 
@@ -106,12 +124,19 @@ public class MultiplayerGame extends Game {
 
     @Override
     public void run() {
-        //Codice che regola il funzionamento della partita
+        try {
+            waitPlayersThread.join();
+            if (!started) forceStarGame();
+        } catch (InterruptedException e) {
+            //TODO: game interrotto mentre aspettava i giocatori
+            e.printStackTrace();
+        }
+
         waitPlayers(3000);//Aspetta 3 secondi che i giocatori si connettano tutti
-            /* Quando l'ultimo giocatore si connette il thread della partita viene avviato immediatamente,
-               ma l'ultimo giocatore, di fatto, non è ancora in partita: lo è solo il suo playerInGame lato
-               server. Occorre aspettare che l'ultimo utente riceva la partita in cui è entrato e che si metta
-               in ascolto di eventuali cambiamenti. Ecco il perchè di questa attesa*/
+                                /* Quando l'ultimo giocatore si connette il thread della partita viene avviato immediatamente,
+                                   ma l'ultimo giocatore, di fatto, non è ancora in partita: lo è solo il suo playerInGame lato
+                                   server. Occorre aspettare che l'ultimo utente riceva la partita in cui è entrato e che si metta
+                                   in ascolto di eventuali cambiamenti. Ecco il perchè di questa attesa*/
         changeAndNotifyObservers(new GameStartedNotification());
 
         System.out.println("La partità è iniziata");
@@ -126,6 +151,25 @@ public class MultiplayerGame extends Game {
         endGame();
     }
 
+    private void forceStarGame() {
+        System.out.println("Forzo l'inizio del game");
+
+        for (PlayerInGame player : players){
+            if (player != null && player.isDisconnected()) {
+                try {removePlayer(player.getUser());}
+                catch (UserNotInThisGameException e) { /*Go home game you're drunk*/}
+            }
+        }
+
+        PlayerInGame[] newPlayers = new PlayerInGame[numActualPlayers()];
+        System.arraycopy(players, 0, newPlayers, 0, newPlayers.length);
+        players = newPlayers;
+
+        numPlayers = players.length;
+        changeAndNotifyObservers(new ForceStartGameNotification(this.getClientGame()));
+        started = true;
+    }
+
     /**
      * @param time is the ammount of time that the thread sleeps
      */
@@ -135,6 +179,18 @@ public class MultiplayerGame extends Game {
         } catch (InterruptedException e){
             //TODO: La partita è stata sospesa forzatamente
         }
+    }
+
+    //Restituisce true se il thread è stato creato
+    public boolean restartWaitPlayersTimer(){
+        if (currentThread == null) {
+            currentThread = new WaitPlayersThread(GameConstants.TIME_WAITING_PLAYERS_TO_ENTER_GAME, this);
+            waitPlayersThread = new Thread(currentThread);
+            waitPlayersThread.start();
+            return true;
+        }
+        ((WaitPlayersThread) currentThread).setTimeLeft(GameConstants.TIME_WAITING_PLAYERS_TO_ENTER_GAME);
+        return false;
     }
 
     /**

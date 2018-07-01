@@ -85,6 +85,11 @@ public class SinglePlayerGame extends Game {
         return this.isFull();
     }
 
+    @Override
+    public void disconnectPlayer(String user) throws UserNotInThisGameException {
+
+    }
+
     /**
      * removes a player from the players' array
      *

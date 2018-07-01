@@ -7,7 +7,7 @@ import java.util.HashMap;
 public class ClientGame implements Serializable {
     private final String id;
     private int gameActualPlayers;
-    private final int gameNumPlayers;
+    private int gameNumPlayers;
     private final HashMap<String, ArrayList<ClientWpc>> wpcsProposedByUsername;
     private HashMap<String, ClientWpc> wpcByUsername;
     private HashMap<String, Integer> favoursByUsername;
@@ -16,6 +16,7 @@ public class ClientGame implements Serializable {
     private ArrayList<ClientDice> extractedDices;
     private int currentTurn;
     private ClientRoundTrack roundTrack;
+    private boolean started;
 
     public ClientGame(String id, int gameNumPlayers, HashMap<String, ArrayList<ClientWpc>> wpcsProposedByUsername) {
         this.id = id;
@@ -32,6 +33,18 @@ public class ClientGame implements Serializable {
 
     public String getId() {
         return id;
+    }
+
+    public void setGameNumPlayers(int gameNumPlayers) {
+        this.gameNumPlayers = gameNumPlayers;
+    }
+
+    public boolean isStarted() {
+        return started;
+    }
+
+    public void setStarted(boolean started) {
+        this.started = started;
     }
 
     public int getGameActualPlayers() {

@@ -17,7 +17,6 @@ public abstract class NetworkClient implements ResponseHandler {
     protected final ClientInfo clientInfo = ClientInfo.getInstance();
     protected Observer observer = ClientInfo.getInstance();
 
-    //TODO: Da eliminare signleton
     public static SocketClient getNewSocketInstance(String host, int port){
         instance = new SocketClient(host, port);
         return (SocketClient) instance;
@@ -153,7 +152,6 @@ public abstract class NetworkClient implements ResponseHandler {
             clientInfo.setToolCardClientNextActionInfo(response.nextActionInfo);
             clientInfo.setTimeLeftToCompleteTask(
                     (response.timeLeftToCompleteTask != null) ? response.timeLeftToCompleteTask : 0);
-            clientInfo.setGameStarted(true);
             clientInfo.setWpcsArrived(true);
         }
     }
