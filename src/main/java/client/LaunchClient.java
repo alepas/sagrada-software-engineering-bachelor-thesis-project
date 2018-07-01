@@ -1,5 +1,6 @@
 package client;
 
+import client.configLoader.ClientConfigLoader;
 import client.view.cli.LaunchCli;
 import client.view.gui.LaunchGui;
 
@@ -14,6 +15,7 @@ public class LaunchClient {
     }
 
     public static void main(String[] args) {
+        ClientConfigLoader.loadConfig();
 //        printLogo();
 
         String answer;
