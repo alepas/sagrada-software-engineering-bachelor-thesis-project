@@ -3,7 +3,9 @@ package server.model.users;
 import shared.exceptions.usersAndDatabaseExceptions.DatabaseFileErrorException;
 
 import java.io.*;
-
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 
 class LoadingFromFile {
@@ -13,6 +15,12 @@ class LoadingFromFile {
 
     static Object fromFile(String name) throws DatabaseFileErrorException {
         Object output;
+        Path pathToFile = Paths.get(name);
+        try {
+            Files.createDirectories(pathToFile.getParent());
+        } catch (IOException e) {
+            throw new DatabaseFileErrorException(1);
+        }
 
         try (InputStream fis = new FileInputStream(name);
                 ObjectInputStream ois=new ObjectInputStream(fis);
@@ -30,8 +38,12 @@ class LoadingFromFile {
     }
 
     static void toFile(Object root, String name) throws DatabaseFileErrorException {
-
-
+        Path pathToFile = Paths.get(name);
+        try {
+            Files.createDirectories(pathToFile.getParent());
+        } catch (IOException e) {
+            throw new DatabaseFileErrorException(1);
+        }
         try (
                 FileOutputStream fos = new FileOutputStream(name);
                 ObjectOutputStream oos = new ObjectOutputStream(fos);

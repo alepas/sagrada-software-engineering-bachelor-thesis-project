@@ -1,7 +1,7 @@
 {
   "settings": {
     "language": "ita",
-    "userdb_path": "./store.db"
+    "userdb_path": "./serverdata/store.db"
   },
   "game": {
     "CHOOSE_WPC_WAITING_TIME": 60000,

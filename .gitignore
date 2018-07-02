@@ -151,3 +151,9 @@ buildNumber.properties
 # userdb
 src/main/resources/database/store.db
 store.db
+
+#dataLoaded
+clientconfig/
+serverconfig/
+serverdata/
+manifests/
