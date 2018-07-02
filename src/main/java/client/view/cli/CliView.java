@@ -111,7 +111,7 @@ public class CliView implements Observer, NotificationHandler {
         }
     }
 
-    private void returnToPreviousState(){
+    private void returnToPreviousStateWhileNotInGame(){
         synchronized (waiter) {
             state = state.getPrevious();
             stateChanged = true;
@@ -200,7 +200,7 @@ public class CliView implements Observer, NotificationHandler {
                         break;
 
                     case INTERRUPT_TOOLCARD:
-                        //TODO
+                        interruptToolcard();
                         break;
 
                     case SELECT_DICE_TOOLCARD:
@@ -215,10 +215,6 @@ public class CliView implements Observer, NotificationHandler {
                         //TODO
                         System.out.println("SCEGLI UN DADO PER ATTIVARE LA TOOLCARD. DEVE AVERE IL COLORE CORRETTO");
                         pickDiceForToolCard();
-                        break;
-
-                    case PLACE_DICE:
-                        //TODO: ha senso???
                         break;
 
                     case PLACE_DICE_TOOLCARD:
@@ -269,7 +265,7 @@ public class CliView implements Observer, NotificationHandler {
             if (username == null) return;
 
             if (username.equals(CliConstants.ESCAPE_RESPONSE)){
-                returnToPreviousState();
+                returnToPreviousStateWhileNotInGame();
                 return;
             }
 
@@ -625,8 +621,7 @@ public class CliView implements Observer, NotificationHandler {
                 return placeDice();
 
             case USE_TOOLCARD:
-                useToolcard();
-                return true;
+                return useToolcard();
 
             case END_TURN:
                 printText("\n");
@@ -735,18 +730,21 @@ public class CliView implements Observer, NotificationHandler {
 
     //--------------------------------------- Toolcard ---------------------------------------
 
-    private void useToolcard(){
+    private boolean useToolcard(){
         NextAction nextAction = null;
 
         do {
             showToolcards();
-            displayText("Seleziona l'ID della toolcard da utilizzare");
+            displayText("Seleziona l'ID della toolcard da utilizzare. (Digita \'" + CliConstants.ESCAPE_RESPONSE +
+            "\' per tornare indietro)");
             String response = userInput();
-            if (response == null) return;
+            if (response == null) return false;
+            if (response.equals(CliConstants.ESCAPE_RESPONSE)) return false;
             nextAction = controller.useToolcard(response);
         } while (nextAction == null);
 
         changeState(nextAction);
+        return true;
     }
 
     private void pickDiceForToolCard() {
@@ -757,7 +755,7 @@ public class CliView implements Observer, NotificationHandler {
         do {
             id = pickDice(info.wherePickNewDice);
             if (id >= 0) nextAction = controller.pickDiceForToolCard(id);
-        } while (id >= 0 && nextAction == null);
+        } while (!stateChanged && id >= 0 && nextAction == null);
 
         if (nextAction != null) changeState(nextAction);
     }
@@ -788,12 +786,16 @@ public class CliView implements Observer, NotificationHandler {
 
                 printText(cliRender.renderWpc(wpc, false));
 
-                displayText("Inserisci la riga del dado");
+                displayText("Inserisci la riga del dado. (Digita \'" + CliConstants.ESCAPE_RESPONSE + "\' per tornare indietro)");
                 if ((response = userInput()) == null) return -1;
+                checkToolBack(response);
+                if (stateChanged) return -1;
                 int row = Integer.parseInt(response)-strNum;
 
-                displayText("Indica la colonna del dado");
+                displayText("Indica la colonna del dado. (Digita \'" + CliConstants.ESCAPE_RESPONSE + "\' per tornare indietro)");
                 if ((response = userInput()) == null) return -1;
+                checkToolBack(response);
+                if (stateChanged) return -1;
                 int col = Integer.parseInt(response)-strNum;
 
                 Position pos = new Position(row, col);
@@ -829,8 +831,11 @@ public class CliView implements Observer, NotificationHandler {
             try {
                 printText(cliRender.renderDices(dices));
 
-                displayText("Inserisci l'ID del dado da utilizzare");
+                displayText("Inserisci l'ID del dado da utilizzare. Digita \'" + CliConstants.ESCAPE_RESPONSE +
+                    "\' per tornare indietro)");
                 if ((response = userInput()) == null) return -1;
+                checkToolBack(response);
+                if (stateChanged) return -1;
                 id = Integer.parseInt(response);
 
             } catch (NumberFormatException e) {
@@ -849,12 +854,17 @@ public class CliView implements Observer, NotificationHandler {
             try {
                 printText(cliRender.renderWpc(wpc, false));
 
-                displayText("Indica la riga in cui posizionare il dado");
+                displayText("Indica la riga in cui posizionare il dado. (Digita \'" + CliConstants.ESCAPE_RESPONSE + "\' per tornare indietro)");
                 if ((response = userInput()) == null) return null;
+                checkToolBack(response);
+                if (stateChanged) return null;
+
                 int row = Integer.parseInt(response)-strNum;
 
-                displayText("Indica la colonna in cui posizionare il dado");
+                displayText("Indica la colonna in cui posizionare il dado. (Digita \'" + CliConstants.ESCAPE_RESPONSE + "\' per tornare indietro)");
                 if ((response = userInput()) == null) return null;
+                checkToolBack(response);
+                if (stateChanged) return null;
                 int col = Integer.parseInt(response)-strNum;
 
                 Position pos = new Position(row, col);
@@ -870,24 +880,38 @@ public class CliView implements Observer, NotificationHandler {
         } while (true);
     }
 
+    private void checkToolBack(String response) {
+        if (response.equals(CliConstants.ESCAPE_RESPONSE)) {
+            NextAction nextAction = controller.cancelToolcardAction();
+            if (nextAction != null) changeState(nextAction);
+        }
+    }
+
     private void placeDiceForToolcard(){
         NextAction nextAction = null;
         ToolCardClientNextActionInfo info = controller.getToolcardNextActionInfo();
         Position pos = null;
         int id;
 
-        if (info.diceChosen == null) id = pickDice(info.wherePickNewDice);
-        else {
-            displayText("Stai per posizionare il dado");
-            printText(cliRender.renderDice(info.diceChosen));
-            id = info.diceChosen.getDiceID();
-        }
-
         do {
+            if (info.diceChosen == null) {
+                id = pickDice(info.wherePickNewDice);
+                if (stateChanged) return;
+            }
+            else {
+                displayText("Stai per posizionare il dado");
+                printText(cliRender.renderDice(info.diceChosen));
+                id = info.diceChosen.getDiceID();
+            }
+
             if (info.wherePutNewDice.equals(ClientDiceLocations.WPC)) {
                 pos = selectWpcPosition();
                 if (pos == null) return;
+                if (stateChanged) return;
             }
+            if (info.wherePutNewDice.equals(ClientDiceLocations.DICEBAG))
+                displayText("Stai posizionando il dado nel sacchetto");
+
             nextAction = controller.placeDiceForToolCard(id, pos);
         } while (nextAction == null);
 
@@ -906,10 +930,12 @@ public class CliView implements Observer, NotificationHandler {
 
         do {
             displayText(str.toString());
-            displayText("Scegli il nuovo numero tra quelli mostrati sopra");
+            displayText("Scegli il nuovo numero tra quelli mostrati sopra. (Digita \'" + CliConstants.ESCAPE_RESPONSE + "\' per tornare indietro)");
 
             try {
                 if ((response = userInput()) == null) return;
+                checkToolBack(response);
+                if (stateChanged) return;
                 int num = Integer.parseInt(response);
                 if (!info.numbersToChoose.contains(num)) {
                     displayText("Inserire un numero tra quelli presenti");
@@ -920,6 +946,35 @@ public class CliView implements Observer, NotificationHandler {
             } catch (NumberFormatException e) {
                 displayText("Inserire un numero intero");
             }
+        } while (nextAction == null);
+
+        changeState(nextAction);
+    }
+
+    private void interruptToolcard() {
+        ToolCardClientNextActionInfo info = controller.getToolcardNextActionInfo();
+        NextAction nextAction = null;
+
+        do {
+            if (info.diceChosen != null) {
+                displayText("Il nuovo dado è:");
+                printText(cliRender.renderDice(info.diceChosen));
+            }
+            displayText(info.stringForStopToolCard);
+            displayText(info.bothYesAndNo ?
+                    "Digita \'" + CliConstants.YES_RESPONSE + "\' oppure \'" + CliConstants.NO_RESPONSE + "\'"
+                    : "Premi enter per proseguire");
+            if (info.showBackButton)
+                displayText("Digita \'" + CliConstants.ESCAPE_RESPONSE + "\' per tornare indietro)");
+
+            String response = userInput();
+
+            if (response == null) return;
+            if (response.equals(CliConstants.YES_RESPONSE)) nextAction = controller.interruptToolcard(ToolCardInteruptValues.YES);
+            if (response.equals(CliConstants.NO_RESPONSE)) nextAction = controller.interruptToolcard(ToolCardInteruptValues.NO);
+            if (response.equals("")) nextAction = controller.interruptToolcard(ToolCardInteruptValues.OK);
+            if (response.equals(CliConstants.ESCAPE_RESPONSE)) nextAction = controller.cancelToolcardAction();
+
         } while (nextAction == null);
 
         changeState(nextAction);

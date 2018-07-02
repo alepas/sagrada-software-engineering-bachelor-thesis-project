@@ -196,6 +196,23 @@ public class CliController {
         }
     }
 
+    public NextAction interruptToolcard(ToolCardInteruptValues value){
+        try {
+            return client.interuptToolCard(clientInfo.getUserToken(), value);
+        } catch (PlayerNotAuthorizedException | CannotInteruptToolCardException | CannotFindPlayerInDatabaseException | NoToolCardInUseException e){
+            view.displayText(e.getMessage());
+            return null;
+        }
+    }
+
+    public NextAction cancelToolcardAction(){
+        try {
+            return client.cancelAction(clientInfo.getUserToken());
+        } catch (CannotCancelActionException | PlayerNotAuthorizedException | CannotFindPlayerInDatabaseException e) {
+            view.displayText(e.getMessage());
+            return null;
+        }
+    }
 
 
     //---------------------------------- Request to cli model ----------------------------------

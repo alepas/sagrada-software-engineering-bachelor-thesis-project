@@ -329,9 +329,19 @@ public abstract class Game extends Observable implements Runnable {
         ids.add("1");
         ids.add("2");
         ids.add("3");
+        ids.add("4");
+        ids.add("5");
+        ids.add("6");
+        ids.add("7");
+        ids.add("8");
+        ids.add("9");
+        ids.add("10");
+        ids.add("11");
+        ids.add("12");
 
 
         ArrayList<String> toolCardsExtracted = new ArrayList<>(ids.subList(0, numOfToolCards));
+
         ArrayList<ClientToolCard> clientToolCards = new ArrayList<>();
 
         for (String id : toolCardsExtracted){
