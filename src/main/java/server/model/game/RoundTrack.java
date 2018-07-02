@@ -84,9 +84,8 @@ public class RoundTrack implements Serializable {
             int row = currentRound - 1;
             int column = 0;
 
-            while(column < GameConstants.MAX_DICES_FOR_ROUND && isThereADice(column,row)) {
+            while(column < GameConstants.MAX_DICES_FOR_ROUND && isThereADice(column,row))
                 column++;
-            };
             
             dicesNotUsed[column][row] = dice;
     }

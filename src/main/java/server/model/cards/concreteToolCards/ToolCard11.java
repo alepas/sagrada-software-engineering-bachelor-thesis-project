@@ -16,11 +16,14 @@ import shared.network.commands.notifications.ToolCardUsedNotification;
 import java.util.ArrayList;
 
 public class ToolCard11 extends ToolCard {
-    Dice chosenDice = null;
-    ArrayList<Integer> numbers;
-    Dice oldChosenDice = null;
-    Dice oldDiceExtracted = null;
+    private Dice chosenDice;
+    private ArrayList<Integer> numbers;
+    private Dice oldChosenDice;
+    private Dice oldDiceExtracted;
 
+    /**
+     * Object constructor: creates a new concrete tool card 11 setting all his parameters
+     */
     public ToolCard11() {
         this.id = ToolCardConstants.TOOLCARD11_ID;
         this.name = ToolCardConstants.TOOL11_NAME;
@@ -42,26 +45,55 @@ public class ToolCard11 extends ToolCard {
 
     }
 
+    /**
+     * @return a copy of this object
+     */
     @Override
     public ToolCard getToolCardCopy() {
         return new ToolCard11();
     }
 
-
+    /**
+     * @param player is the player that wants to use the ToolCard
+     * @return the first action that the player has to do with the ToolCard
+     * @throws CannotUseToolCardException when it is not possible to use te object
+     */
     @Override
     public MoveData setCard(PlayerInGame player) throws CannotUseToolCardException {
         return setCardDefault(player, false, false, 0, ClientDiceLocations.EXTRACTED, ClientDiceLocations.DICEBAG, NextAction.PLACE_DICE_TOOLCARD);
     }
 
-
+    /**
+     * In this ToolCard this method should be called only when the game is a single player game, the
+     * first action that a single player must to do use a ToolCard is to pick a dice of the give color
+     *
+     * @param diceId is the id of the chosen dice
+     * @return all the information related to the next action that the player will have to do and all new parameters created
+     * by the call of this method
+     * @throws CannotPickDiceException        if the chosen dice isn't available, for example it is not located where the
+     *                                        player has to pick the dice
+     * @throws CannotPerformThisMoveException if the game in a multi player game
+     */
     @Override
     public MoveData pickDice(int diceId) throws CannotPickDiceException, CannotPerformThisMoveException {
-        if ((currentStatus == 0) && (singlePlayerGame)) {
+        if ((currentStatus == 0) && (singlePlayerGame))
             return pickDiceInitializeSingleUserToolCard(diceId, NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, ClientDiceLocations.DICEBAG);
-        } else throw new CannotPerformThisMoveException(username, 2, false);
+        else throw new CannotPerformThisMoveException(username, 2, false);
     }
 
-
+    /**
+     * First of all it checks if the parameter respect all rules and if the current state is 2 or not; if no exceptions
+     * are thrown it calls the setNumber() methods which modifies the dice number.
+     *
+     * @param number define if the players wants to add one or subtract one to the chosen dice number
+     * @return all the information related to the next action that the player will have to do and all new parameters created
+     * by the call of this method
+     * @throws CannotPerformThisMoveException every time that the current state is different from 2, this means that
+     *                                        the player is trying to do an action that can't be done in that moment
+     * @throws CannotPickNumberException      if the parameter is a different number from -1 or +1 or if the chosen dice is 6
+     *                                        and the param number is +1 or if the chosen dice is 1 and the param number is -1 (those cases are forbidden
+     *                                        by sagrada's rules)
+     */
     @Override
     public MoveData pickNumber(int number) throws CannotPerformThisMoveException, CannotPickNumberException {
         if (currentStatus != 2)
@@ -127,7 +159,6 @@ public class ToolCard11 extends ToolCard {
 
     @Override
     public MoveData cancelAction(boolean all) throws CannotCancelActionException {
-        boolean canceledCard = true;
         if (!all) {
             switch (currentStatus) {
                 case 3:
@@ -242,5 +273,18 @@ public class ToolCard11 extends ToolCard {
         return new MoveData(true, null, tempExtracted, null);
     }
 
+    //----------------------------------- Used in testing -------------------------------------------------------
+
+    Dice getToolDice() {
+        return oldChosenDice;
+    }
+
+    Dice getOldDice() {
+        return oldDiceExtracted;
+    }
+
+    int getNumberSize() {
+        return numbers.size();
+    }
 
 }

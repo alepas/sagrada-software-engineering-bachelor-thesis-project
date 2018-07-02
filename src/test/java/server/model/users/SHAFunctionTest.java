@@ -15,9 +15,7 @@ class SHAFunctionTest {
 
    @Test
    void notThrowsExceptions(){
-       Assertions.assertDoesNotThrow(()->{
-           SHAFunction.getShaPwd(password,salt);
-       });
+       Assertions.assertDoesNotThrow(()-> SHAFunction.getShaPwd(password,salt));
    }
 
     @Test

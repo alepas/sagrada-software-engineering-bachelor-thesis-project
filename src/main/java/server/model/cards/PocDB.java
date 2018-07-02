@@ -21,8 +21,8 @@ public class PocDB {
 
 
     /**
-     * The public Objective card DB is composed by 10 different card which are loaded in an hashmap.
-     * The hashmap's keys are the POCs' IDs
+     * The public Objective card DB is composed by 10 different card which are loaded in an HashMap.
+     * The HashMap's keys are the POCs' IDs
      */
     private PocDB(){
         cards=new HashMap<>();

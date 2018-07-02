@@ -51,7 +51,7 @@ public class ToolCard1 extends ToolCard {
     /**
      * @param player is the player that wants to use the ToolCard
      * @return the first action that the player has to do with the ToolCard
-     * @throws CannotUseToolCardException when it is not pssible to use te object
+     * @throws CannotUseToolCardException when it is not possible to use te object
      */
     @Override
     public MoveData setCard(PlayerInGame player) throws CannotUseToolCardException {
@@ -133,7 +133,7 @@ public class ToolCard1 extends ToolCard {
     /**
      * @param value can be YES; NO; OK
      * @return always the exception
-     * @throws CannotInteruptToolCardException everytime that it is called
+     * @throws CannotInteruptToolCardException every time that it is called
      */
     @Override
     public MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException {
@@ -254,7 +254,7 @@ public class ToolCard1 extends ToolCard {
         return oldDice;
     }
 
-    int getNumeberSize() {
+    int getNumberSize() {
         return numbers.size();
     }
 }

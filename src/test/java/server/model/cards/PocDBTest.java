@@ -3,6 +3,7 @@ package server.model.cards;
 import org.junit.Before;
 import org.junit.Test;
 import server.model.cards.concretePublicObjectiveCards.PublicObjectiveCard3;
+import shared.clientInfo.ClientPoc;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -22,6 +23,7 @@ public class PocDBTest {
         when(card3.getID()).thenReturn("3");
         when(card3.getName()).thenReturn("Sfumature diverse - Riga");
         when(card3.getDescription()).thenReturn("Ottieni 5 punti per ogni riga senza sfumature ripetute");
+
     }
 
     /**
@@ -38,6 +40,7 @@ public class PocDBTest {
         assertEquals(card3.getDescription(), allPoc.getCardByID("3").getDescription());
         assertEquals(card3.getName(), allPoc.getCardByID("3").getName());
         assertNull(allPoc.getCardByID("14"));
+
     }
 
 }

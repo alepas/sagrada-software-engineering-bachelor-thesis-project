@@ -60,7 +60,7 @@ public class ToolCard3 extends ToolCard {
 
 
     /**
-     * @param number define if the players wants to add one or subtract one to the chosen dice number
+     * @param number is a number chosen by the player
      * @return all the information related to the next action that the player will have to do and all new parameters created
      * by the call of this method
      * @throws CannotPerformThisMoveException every time that this method is called because it is not
@@ -107,9 +107,9 @@ public class ToolCard3 extends ToolCard {
     }
 
     /**
-     * Goes back to the last action that has been done, it changes all elements. Everything comes back on a step
+     * Goes back to the last action that has been done, it changes all elements. Everything comes back of a step
      *
-     * @param all //todo
+     * @param all boolean
      * @return all the information related to the previous action that the player has done while using this toolcard
      * @throws CannotCancelActionException if the current status isn't correct or the boolean is false
      */

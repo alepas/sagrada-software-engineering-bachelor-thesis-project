@@ -14,10 +14,7 @@ import shared.clientInfo.ClientDice;
 import shared.clientInfo.ClientDiceLocations;
 import shared.clientInfo.Position;
 import shared.clientInfo.ToolCardInteruptValues;
-import shared.exceptions.usersAndDatabaseExceptions.CannotCancelActionException;
-import shared.exceptions.usersAndDatabaseExceptions.CannotInteruptToolCardException;
-import shared.exceptions.usersAndDatabaseExceptions.CannotPerformThisMoveException;
-import shared.exceptions.usersAndDatabaseExceptions.CannotPickDiceException;
+import shared.exceptions.usersAndDatabaseExceptions.*;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -26,11 +23,12 @@ import static org.mockito.Mockito.when;
 public class ToolCard7Test {
     private ToolCard7 toolCard7;
     private Dice chosenDice;
+    private PlayerInGame player;
 
     @Before
     public void Before() throws CannotPickDiceException {
         toolCard7 = new ToolCard7();
-        PlayerInGame player = mock(PlayerInGame.class);
+        player = mock(PlayerInGame.class);
         Game game = mock(Game.class);
 
         when(player.getGame()).thenReturn(game);
@@ -81,11 +79,12 @@ public class ToolCard7Test {
         assertEquals(toolCard7.getDescription(), copy.getDescription());
     }
 
-
-   /* @Test
+//todo
+    @Test
     public void setCardTest() throws CannotUseToolCardException {
-        toolCard2.setCard(player);
-    }*/
+        toolCard7.setCurrentToolStatus(0);
+        toolCard7.setCard(player);
+    }
 
     /**
      * @throws CannotPickDiceException in no cases because this method wants to test the other exception
@@ -108,7 +107,6 @@ public class ToolCard7Test {
         assertNull( moveData.wpc);
         assertNull(moveData.roundTrack);
         assertTrue(moveData.moveFinished);
-
     }
 
     /**
@@ -166,7 +164,4 @@ public class ToolCard7Test {
     public void interruptToolCardTest() throws CannotInteruptToolCardException {
         toolCard7.interruptToolCard(ToolCardInteruptValues.YES);
     }
-
-
-
 }

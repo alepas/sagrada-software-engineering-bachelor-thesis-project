@@ -64,9 +64,9 @@ public class ToolCard4 extends ToolCard {
      */
     @Override
     public MoveData pickDice(int diceId) throws CannotPickDiceException, CannotPerformThisMoveException {
-        if ((currentStatus == 0) && (singlePlayerGame)) {
+        if ((currentStatus == 0) && (singlePlayerGame))
             return pickDiceInitializeSingleUserToolCard(diceId, NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.WPC, ClientDiceLocations.WPC);
-        } else throw new CannotPerformThisMoveException(username, 2, false);
+        else throw new CannotPerformThisMoveException(username, 2, false);
     }
 
     /**
@@ -84,7 +84,7 @@ public class ToolCard4 extends ToolCard {
     /**
      * if none of the exception has been thrown the method removes the chosen dice from his first position, adds it to
      * the player's wpc in the new position and clear the card. this method is called twice because this ToolCard let
-     * the player move to dices in his/her schema.
+     * the player move two dices in his/her schema.
      *
      * @param diceId is the id of the chosen dice
      * @param pos    is the position where the player would like to place the chosen dice
@@ -140,6 +140,15 @@ public class ToolCard4 extends ToolCard {
     }
 
 
+    /**
+     * Goes back to the last action that has been done, it changes all elements. Everything comes back of a step.
+     * If the current status was 2 it goes back to the previous action PLACE_DICE_TOOLCARD and modifies the last action;
+     * else if the status was 1 or 0 it calls the default methods.
+     *
+     * @param all boolean
+     * @return all the information related to the previous action that the player has done while using this toolcard
+     * @throws CannotCancelActionException if the current status isn't correct or the boolean is false
+     */
     @Override
     public MoveData cancelAction(boolean all) throws CannotCancelActionException {
         if (!all) {
@@ -164,6 +173,9 @@ public class ToolCard4 extends ToolCard {
         return cancelCardFinalAction();
     }
 
+    /**
+     * Set null all attributes of this
+     */
     @Override
     protected void cleanCard() {
         defaultClean();
@@ -172,6 +184,10 @@ public class ToolCard4 extends ToolCard {
         firstDiceFinalPos = null;
     }
 
+    /**
+     * @return all the information related to the next action that the player will have to do and all new parameters
+     * created by the call of this method
+     */
     @Override
     public MoveData getNextMove() {
         switch (currentStatus) {
@@ -186,6 +202,12 @@ public class ToolCard4 extends ToolCard {
         return null;
     }
 
+
+    /**
+     * @param value can be YES; NO; OK
+     * @return always the exception
+     * @throws CannotInteruptToolCardException everytime that it is called
+     */
     @Override
     public MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException {
         throw new CannotInteruptToolCardException(username, id);

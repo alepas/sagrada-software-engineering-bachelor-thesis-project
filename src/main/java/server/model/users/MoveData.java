@@ -4,6 +4,12 @@ import shared.clientInfo.*;
 
 import java.util.ArrayList;
 
+
+/**
+ * this class is composed by 24 different constructor; the scope of this class is to create a different MoveData
+ * depending on the parameters given by the class and th method that is creating this new object.
+ * the MoveDatas are used by the tool card.
+ */
 public class MoveData {
     public NextAction nextAction=null;
     public ClientDiceLocations wherePickNewDice=null;
@@ -86,13 +92,13 @@ public class MoveData {
     }
 
     public MoveData(NextAction nextAction, ClientWpc wpc, ArrayList<ClientDice> extractedDices,
-                    ClientRoundTrack roundTrack, ClientDice diceChosen, ClientDiceLocations diceChooenLocation, ArrayList<Integer> numbersToChoose, boolean canceledToolCard){
+                    ClientRoundTrack roundTrack, ClientDice diceChosen, ClientDiceLocations diceChosenLocation, ArrayList<Integer> numbersToChoose, boolean canceledToolCard){
         this.nextAction = nextAction;
         this.wpc = wpc;
         this.extractedDices = extractedDices;
         this.roundTrack = roundTrack;
         this.diceChosen = diceChosen;
-        this.diceChosenLocation = diceChooenLocation;
+        this.diceChosenLocation = diceChosenLocation;
         this.numbersToChoose = numbersToChoose;
         this.canceledToolCard = canceledToolCard;
     }
@@ -196,9 +202,7 @@ public class MoveData {
         this.moveFinished=moveFinished;
     }
 
-    public MoveData(NextAction nextAction){
-        this.nextAction=nextAction;
-    }
+    public MoveData(NextAction nextAction){ this.nextAction=nextAction; }
 
     public MoveData(NextAction nextAction, ClientDiceLocations wherePickNewDice){
         this.nextAction=nextAction;
@@ -225,8 +229,7 @@ public class MoveData {
         this.roundTrack = roundTrack;
         this.diceChosen = diceChosen;
         this.diceChosenLocation = diceChosenLocation;
-        this.numbersToChoose = numbersToChoose;
-     this.nextAction=nextAction;
+        this.nextAction=nextAction;
     }
 
     public MoveData(NextAction nextAction, ClientDiceLocations wherePickNewDice, ClientDiceLocations wherePutNewDice) {

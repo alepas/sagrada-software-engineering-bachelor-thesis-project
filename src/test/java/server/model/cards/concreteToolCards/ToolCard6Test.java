@@ -25,9 +25,7 @@ import static org.mockito.Mockito.when;
 
 public class ToolCard6Test {
 
-
     private ToolCard6 toolCard6;
-    private Game game;
     private Dice chosenDice;
     private PlayerInGame player;
     private Position position;
@@ -37,7 +35,7 @@ public class ToolCard6Test {
     public void Before() throws CannotPickDiceException {
         toolCard6 = new ToolCard6();
         player = mock(PlayerInGame.class);
-        game = mock(Game.class);
+        Game game = mock(Game.class);
 
         when(player.getGame()).thenReturn(game);
         chosenDice = mock(Dice.class);
@@ -63,6 +61,13 @@ public class ToolCard6Test {
 
         ClientDice clientDice = mock(ClientDice.class);
         when(chosenDice.getClientDice()).thenReturn(clientDice);
+
+
+        RoundTrack roundTrack = mock(RoundTrack.class);
+        ClientRoundTrack clientRoundTrack = mock(ClientRoundTrack.class);
+        when(roundTrack.getClientRoundTrack()).thenReturn(clientRoundTrack);
+        when(game.getRoundTrack()).thenReturn(roundTrack);
+        toolCard6.setCardRoundTrack(roundTrack);
     }
 
     /**
@@ -251,7 +256,7 @@ public class ToolCard6Test {
      * @throws CannotPickDiceException isn't thrown in this test
      */
     @Test
-    public void placeDiceStatusOneTest() throws CannotPerformThisMoveException, CannotPickPositionException,
+    public void placeDiceTest() throws CannotPerformThisMoveException, CannotPickPositionException,
             CannotPickDiceException {
         toolCard6.setCurrentToolStatus(1);
         pickDice();
@@ -262,34 +267,18 @@ public class ToolCard6Test {
         when(position1.getRow()).thenReturn(0);
         when(player.getWPC().addDiceWithAllRestrictions(chosenDice, position1)).thenReturn(true);
 
-        RoundTrack roundTrack = mock(RoundTrack.class);
-        ClientRoundTrack clientRoundTrack = mock(ClientRoundTrack.class);
-        when(roundTrack.getClientRoundTrack()).thenReturn(clientRoundTrack);
-        when(game.getRoundTrack()).thenReturn(roundTrack);
-
         MoveData moveData = toolCard6.placeDice(chosenDice.getId(), position1);
 
         assertTrue(moveData.moveFinished);
         assertNull(moveData.diceChosen);
 
         assertNull(toolCard6.getNextMove());
-
+        assertNull(toolCard6.getOldDice());
+        assertNull(toolCard6.getToolDice());
 
         //Tests if the cancelLastOperation()  goes to the old status ina correct way and sends a correct MoveData
         ClientWpc clientWpc = mock(ClientWpc.class);
         when(wpc.getClientWpc()).thenReturn(clientWpc);
-
-
-
-        /*moveData = toolCard6.cancelAction(false);
-        assertEquals(1, toolCard6.getCurrentStatus());
-        assertEquals(NextAction.PLACE_DICE_TOOLCARD, moveData.nextAction);
-        assertEquals(ClientDiceLocations.WPC, moveData.wherePickNewDice);
-        assertEquals(ClientDiceLocations.WPC, moveData.wherePutNewDice);
-        assertNull(moveData.extractedDices);
-        assertNull(moveData.roundTrack);
-        assertNull(moveData.diceChosen);
-        assertNull(moveData.diceChosenLocation);*/
 
     }
 
@@ -347,11 +336,6 @@ public class ToolCard6Test {
         ClientWpc clientWpc = mock(ClientWpc.class);
         when(wpc.getClientWpc()).thenReturn(clientWpc);
 
-        RoundTrack roundTrack = mock(RoundTrack.class);
-        ClientRoundTrack clientRoundTrack = mock(ClientRoundTrack.class);
-        when(roundTrack.getClientRoundTrack()).thenReturn(clientRoundTrack);
-        when(game.getRoundTrack()).thenReturn(roundTrack);
-
         MoveData moveData = toolCard6.cancelAction(true);
         assertTrue(moveData.moveFinished);
         assertTrue(moveData.canceledToolCard);
@@ -369,15 +353,45 @@ public class ToolCard6Test {
         ClientWpc clientWpc = mock(ClientWpc.class);
         when(wpc.getClientWpc()).thenReturn(clientWpc);
 
-        RoundTrack roundTrack = mock(RoundTrack.class);
-        ClientRoundTrack clientRoundTrack = mock(ClientRoundTrack.class);
-        when(roundTrack.getClientRoundTrack()).thenReturn(clientRoundTrack);
-        when(game.getRoundTrack()).thenReturn(roundTrack);
-
         toolCard6.cancelAction(false);
         assertEquals(0, toolCard6.getCurrentStatus());
     }
 
+    /**
+     * @throws CannotCancelActionException because it is not possible to delete actions while using this tool card
+     */
+    @Test(expected = CannotCancelActionException.class)
+    public void cancelLAstOperationStatusTwoTest() throws CannotCancelActionException {
+        setSchema();
+        toolCard6.setCurrentToolStatus(2);
+        toolCard6.cancelAction(false);
+    }
+
+    /**
+     * @throws CannotCancelActionException because it is not possible to delete actions while using this tool card
+     */
+    @Test
+    public void cancelLAstOperationStatusTwoAddDiceTest() throws CannotCancelActionException {
+        setSchema();
+        when(wpc.autoAddDice(chosenDice)).thenReturn(true);
+        toolCard6.setCurrentToolStatus(2);
+        toolCard6.cancelAction(true);
+        assertEquals(0, toolCard6.getCurrentStatus());
+    }
+
+    /**
+     * Tests if it is possible to cancel in a correct way the action when status is 30
+     *
+     * @throws CannotCancelActionException in any case in this test
+     */
+    @Test
+    public void cancelLAstOperationStatusThirtyTest() throws CannotCancelActionException {
+        setSchema();
+        toolCard6.setCurrentToolStatus(30);
+        toolCard6.cancelAction(true);
+
+        assertEquals(0, toolCard6.getCurrentStatus());
+    }
 
 
     /**

@@ -362,7 +362,7 @@ public class ToolCard1Test {
         */
         assertNull(toolCard1.getToolDice());
         assertNull(toolCard1.getOldDice());
-        assertEquals(0, toolCard1.getNumeberSize());
+        assertEquals(0, toolCard1.getNumberSize());
 
         moveData = toolCard1.getNextMove();
         assertNull(moveData);

@@ -15,7 +15,9 @@ import java.util.ArrayList;
 
 public class ToolCard7 extends ToolCard {
 
-
+    /**
+     * Object constructor: creates a new concrete tool card 7 by setting all its parameters
+     */
     public ToolCard7() {
         this.id = ToolCardConstants.TOOLCARD7_ID;
         this.name = ToolCardConstants.TOOL7_NAME;
@@ -28,7 +30,9 @@ public class ToolCard7 extends ToolCard {
         defaultClean();
     }
 
-
+    /**
+     * @return a copy of this object
+     */
     @Override
     public ToolCard getToolCardCopy() {
         return new ToolCard7();
@@ -55,7 +59,17 @@ public class ToolCard7 extends ToolCard {
         }
     }
 
-
+    /**
+     * If the game is a single player game is calls the method that initialize the use of a tool card by a single player;
+     * if the game is a multi player game it changes all dices of the extracted dices arrayList
+     *
+     * @param diceId is the id of the chosen dice
+     * @return all the information related to the next action that the player will have to do and all new parameters created
+     *         by the call of this method
+     * @throws CannotPickDiceException if the chosen dice isn't available, for example it is not located where the
+     *         player has to pick the dice
+     * @throws CannotPerformThisMoveException if the game in a multi player game
+     */
     @Override
     public MoveData pickDice(int diceId) throws CannotPickDiceException, CannotPerformThisMoveException {
         if ((currentStatus == 0) && (singlePlayerGame)) {
@@ -71,21 +85,41 @@ public class ToolCard7 extends ToolCard {
 
         } else throw new CannotPerformThisMoveException(username, 2, false);
 
-
     }
 
 
+    /**
+     * @param number is a chosen number
+     * @return all the information related to the next action that the player will have to do and all new parameters
+     * created by the call of this method
+     * @throws CannotPerformThisMoveException every time that this method is called because it is not possible to pick
+     * a number while this card is used
+     */
     @Override
     public MoveData pickNumber(int number) throws CannotPerformThisMoveException {
         throw new CannotPerformThisMoveException(username, 2, false);
     }
 
+    /**
+     * @param diceId is the id of the chosen dice
+     * @param pos    is the position where the player would like to place the chosen dice
+     * @return all the information related to the next action that the player will have to do and all new parameters created
+     * by the call of this method
+     * @throws CannotPerformThisMoveException every time that this method is called in this tool card
+     */
     @Override
     public MoveData placeDice(int diceId, Position pos) throws CannotPerformThisMoveException {
         throw new CannotPerformThisMoveException(username, 2, false);
     }
 
 
+    /**
+     * If the status is 0 it calls the default methods else it throws the exception.
+     *
+     * @param all boolean
+     * @return all the information related to the previous action that the player has done while using this toolcard
+     * @throws CannotCancelActionException if the current status isn't correct or the boolean is false
+     */
     @Override
     public MoveData cancelAction(boolean all) throws CannotCancelActionException {
         if (currentStatus == 0)
@@ -94,15 +128,28 @@ public class ToolCard7 extends ToolCard {
     }
 
 
+    /**
+     * Calls the default cleaner
+     */
     @Override
     protected void cleanCard() { defaultClean(); }
 
+    /**
+     * @return all the information related to the next action that the player will have to do and all new parameters
+     * created by the call of this method
+     */
     @Override
     public MoveData getNextMove() {
         if(currentStatus == 0) return defaultNextMoveStatusZero();
         return null;
     }
 
+
+    /**
+     * @param value can be YES; NO; OK
+     * @return always the exception
+     * @throws CannotInteruptToolCardException every time that it is called
+     */
     @Override
     public MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException {
         throw new CannotInteruptToolCardException(username, id);

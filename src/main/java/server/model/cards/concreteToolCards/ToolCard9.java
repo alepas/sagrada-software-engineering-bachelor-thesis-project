@@ -15,6 +15,9 @@ import java.util.ArrayList;
 
 public class ToolCard9 extends ToolCard {
 
+    /**
+     * Object constructor: creates a new concrete tool card 9 by setting all his parameters
+     */
     public ToolCard9() {
         this.id = ToolCardConstants.TOOLCARD9_ID;
         this.name = ToolCardConstants.TOOL9_NAME;
@@ -27,7 +30,9 @@ public class ToolCard9 extends ToolCard {
         defaultClean();
     }
 
-
+    /**
+     * @return a copy of this object
+     */
     @Override
     public ToolCard getToolCardCopy() {
         return new ToolCard9();
@@ -38,7 +43,17 @@ public class ToolCard9 extends ToolCard {
         return setCardDefault(player, false, false, 0, ClientDiceLocations.EXTRACTED, ClientDiceLocations.WPC, NextAction.PLACE_DICE_TOOLCARD);
     }
 
-
+    /**
+     * In this ToolCard this method should be called only when the game is a single player game, the
+     *      * first action that a single player must to do use a ToolCard is to pick a dice of the give color
+     *
+     * @param diceId is the id of the chosen dice
+     * @return all the information related to the next action that the player will have to do and all new parameters created
+     * by the call of this method
+     * @throws CannotPickDiceException        if the chosen dice isn't available, for example it is not located where the
+     *                                        player has to pick the dice
+     * @throws CannotPerformThisMoveException if the game in a multi player game
+     */
     @Override
     public MoveData pickDice(int diceId) throws CannotPickDiceException, CannotPerformThisMoveException {
         if ((currentStatus == 0) && (singlePlayerGame)) {
@@ -46,12 +61,31 @@ public class ToolCard9 extends ToolCard {
         } else throw new CannotPerformThisMoveException(username, 2, false);
     }
 
-
+    /**
+     * @param number is a number chosen by the player
+     * @return all the information related to the next action that the player will have to do and all new parameters created
+     * by the call of this method
+     * @throws CannotPerformThisMoveException every time that this method is called because it is not
+     *                                        possible to pick a number while this card is used
+     */
     @Override
     public MoveData pickNumber(int number) throws CannotPerformThisMoveException {
         throw new CannotPerformThisMoveException(username, 2, false);
     }
 
+    /**
+     * if none of the exception has been thrown the method removes the chosen dice from his first position, adds it to
+     * the player's wpc and clear the card. The placement checks color and number restrictions, the dice must be placed
+     * in a cell without dices in the adjacent cells.
+     *
+     * @param diceId is the id of the chosen dice
+     * @param pos    is the position where the player would like to place the chosen dice
+     * @return all the information related to the next action that the player will have to do and all new parameters created
+     * by the call of this method
+     * @throws CannotPerformThisMoveException if the status is different from 1 or if the chosen position is null
+     * @throws CannotPickPositionException    if it is not possible to add the chosen dice to the chosen position
+     * @throws CannotPickDiceException        if it is not possible to pick the chosen dice
+     */
     @Override
     public MoveData placeDice(int diceId, Position pos) throws CannotPerformThisMoveException, CannotPickPositionException, CannotPickDiceException {
         if (currentStatus != 1)
@@ -74,7 +108,13 @@ public class ToolCard9 extends ToolCard {
         return new MoveData(true, tempWpc, tempDices, null);
     }
 
-
+    /**
+     * goes back to the last action that has been done, it changes all elements. Everything comes back of a step
+     *
+     * @param all boolean
+     * @return all the information related to the previous action that the player has done while using this toolcard
+     * @throws CannotCancelActionException if the current status isn't correct or the boolean is false
+     */
     @Override
     public MoveData cancelAction(boolean all) throws CannotCancelActionException {
         if (!all) {
@@ -89,13 +129,16 @@ public class ToolCard9 extends ToolCard {
         return cancelCardFinalAction();
     }
 
-
+    /**
+     * Calls the default cleaner
+     */
     @Override
-    protected void cleanCard() {
-        defaultClean();
+    protected void cleanCard() { defaultClean(); }
 
-    }
-
+    /**
+     * @return all the information related to the next action that the player will have to do and all new parameters
+     * created by the call of this method
+     */
     @Override
     public MoveData getNextMove() {
         switch (currentStatus) {
@@ -103,12 +146,15 @@ public class ToolCard9 extends ToolCard {
                 return defaultNextMoveStatusZero();
             case 1:
                 return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, ClientDiceLocations.WPC, null, tempClientExtractedDices, null, null, null);
-
         }
         return null;
     }
 
-
+    /**
+     * @param value can be YES; NO; OK
+     * @return always the exception
+     * @throws CannotInteruptToolCardException every time that it is called
+     */
     @Override
     public MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException {
         throw new CannotInteruptToolCardException(username, id);

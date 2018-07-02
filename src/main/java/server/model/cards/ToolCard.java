@@ -267,6 +267,10 @@ public abstract class ToolCard implements Cloneable {
 
     public void setCardWpc (Wpc wpc){cardWpc = wpc;}
 
+    public void setCardRoundTrack(RoundTrack roundTrack){cardRoundTrack = roundTrack;}
+
     public Wpc getCardWpc(){ return cardWpc;}
+
+    public void setCardExtractedDices(ArrayList<Dice> extractedDices){ cardExtractedDices = extractedDices;}
 
 }

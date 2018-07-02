@@ -10,15 +10,19 @@ public class ToolCardDB {
     private static ToolCardDB instance;
     private HashMap<String, ToolCard> toolCards;
 
+    /**
+     * @return an instance of this class
+     */
     public static ToolCardDB getInstance(){
-        if (instance==null) {
+        if (instance==null)
             instance = new ToolCardDB();
-        }
         return instance;
     }
 
 
-
+    /**
+     * constructor of the DB: adds to the hash map all tool cards
+     */
     private ToolCardDB(){
         toolCards = new HashMap<>();
         toolCards.put( ToolCardConstants.TOOLCARD1_ID,new ToolCard1());
@@ -35,18 +39,22 @@ public class ToolCardDB {
         toolCards.put( ToolCardConstants.TOOLCARD12_ID,new ToolCard12());
     }
 
+    /**
+     * The tool card DB is composed by 12 different card which are loaded in an HashMap.
+     * The HashMap's keys are the tool cards' IDs
+     */
     public ArrayList<String> getCardsIDs() {
-        ArrayList<String> ids = new ArrayList<>();
-        ids.addAll(toolCards.keySet());
-        return ids;
+        return new ArrayList<>(toolCards.keySet());
     }
 
+    /**
+     * @param id is the id of the chosen card
+     * @return the object associated to that id
+     */
     public ToolCard getCardByID(String id){
         ToolCard temp=toolCards.get(id);
         if (temp==null)
             return null;
         return temp.getToolCardCopy();
     }
-
-
 }
