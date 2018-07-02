@@ -1,6 +1,7 @@
 {
   "settings": {
-    "language": "ita"
+    "language": "ita",
+    "userdb_path": "./store.db"
   },
   "game": {
     "CHOOSE_WPC_WAITING_TIME": 60000,
@@ -32,10 +33,41 @@
     "SOLO_PLAYER_DICES": 4
   },
   "poc": {
+    "POC1_ID": "1",
+    "POC2_ID": "2",
+    "POC3_ID": "3",
+    "POC4_ID": "4",
+    "POC5_ID": "5",
+    "POC6_ID": "6",
+    "POC7_ID": "7",
+    "POC8_ID": "8",
+    "POC9_ID": "9",
+    "POC10_ID": "10",
 
+    "POC1_SCORE": 6,
+    "POC2_SCORE": 5,
+    "POC3_SCORE": 5,
+    "POC4_SCORE": 4,
+    "POC5_SCORE": 2,
+    "POC6_SCORE": 2,
+    "POC7_SCORE": 2,
+    "POC8_SCORE": 5,
+    "POC9_SCORE": 1,
+    "POC10_SCORE": 4
   },
   "toolcard": {
-
+    "TOOLCARD1_ID": "1",
+    "TOOLCARD2_ID": "2",
+    "TOOLCARD3_ID": "3",
+    "TOOLCARD4_ID": "4",
+    "TOOLCARD5_ID": "5",
+    "TOOLCARD6_ID": "6",
+    "TOOLCARD7_ID": "7",
+    "TOOLCARD8_ID": "8",
+    "TOOLCARD9_ID": "9",
+    "TOOLCARD10_ID": "10",
+    "TOOLCARD11_ID": "11",
+    "TOOLCARD12_ID": "12"
   },
   "wpc": {
     "ROWS_NUMBER": 4,

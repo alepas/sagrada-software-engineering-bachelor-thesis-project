@@ -2,6 +2,7 @@ package server.model.configLoader;
 
 import org.json.simple.JSONObject;
 import static server.constants.ToolCardConstants.*;
+import static server.constants.POCConstants.*;
 
 public class LanguageLoader {
 
@@ -31,5 +32,56 @@ public class LanguageLoader {
         TOOL11_DESCRIPTION = (String) jsonLanguage.get("TOOL11_DESCRIPTION");
         TOOL12_NAME = (String) jsonLanguage.get("TOOL12_NAME");
         TOOL12_DESCRIPTION = (String) jsonLanguage.get("TOOL12_DESCRIPTION");
+        
+        //POC
+        String part1; String part2;
+        
+        POC1_NAME = (String) jsonLanguage.get("POC1_NAME");
+        part1 = (String) jsonLanguage.get("POC1_DESCRIPTION_P1");
+        part2 = (String) jsonLanguage.get("POC1_DESCRIPTION_P2");
+        POC1_DESCRIPTION = part1 + POC1_SCORE + part2;
+
+        POC2_NAME = (String) jsonLanguage.get("POC2_NAME");
+        part1 = (String) jsonLanguage.get("POC2_DESCRIPTION_P1");
+        part2 = (String) jsonLanguage.get("POC2_DESCRIPTION_P2");
+        POC2_DESCRIPTION = part1 + POC2_SCORE + part2;
+
+        POC3_NAME = (String) jsonLanguage.get("POC3_NAME");
+        part1 = (String) jsonLanguage.get("POC3_DESCRIPTION_P1");
+        part2 = (String) jsonLanguage.get("POC3_DESCRIPTION_P2");
+        POC3_DESCRIPTION = part1 + POC3_SCORE + part2;
+
+        POC4_NAME = (String) jsonLanguage.get("POC4_NAME");
+        part1 = (String) jsonLanguage.get("POC4_DESCRIPTION_P1");
+        part2 = (String) jsonLanguage.get("POC4_DESCRIPTION_P2");
+        POC4_DESCRIPTION = part1 + POC4_SCORE + part2;
+
+        POC5_NAME = (String) jsonLanguage.get("POC5_NAME");
+        part1 = (String) jsonLanguage.get("POC5_DESCRIPTION_P1");
+        part2 = (String) jsonLanguage.get("POC5_DESCRIPTION_P2");
+        POC5_DESCRIPTION = part1 + POC5_SCORE + part2;
+
+        POC6_NAME = (String) jsonLanguage.get("POC6_NAME");
+        part1 = (String) jsonLanguage.get("POC6_DESCRIPTION_P1");
+        part2 = (String) jsonLanguage.get("POC6_DESCRIPTION_P2");
+        POC6_DESCRIPTION = part1 + POC6_SCORE + part2;
+
+        POC7_NAME = (String) jsonLanguage.get("POC7_NAME");
+        part1 = (String) jsonLanguage.get("POC7_DESCRIPTION_P1");
+        part2 = (String) jsonLanguage.get("POC7_DESCRIPTION_P2");
+        POC7_DESCRIPTION = part1 + POC7_SCORE + part2;
+
+        POC8_NAME = (String) jsonLanguage.get("POC8_NAME");
+        part1 = (String) jsonLanguage.get("POC8_DESCRIPTION_P1");
+        part2 = (String) jsonLanguage.get("POC8_DESCRIPTION_P2");
+        POC8_DESCRIPTION = part1 + POC8_SCORE + part2;
+
+        POC9_NAME = (String) jsonLanguage.get("POC9_NAME");
+        POC9_DESCRIPTION = (String) jsonLanguage.get("POC9_DESCRIPTION");
+
+        POC10_NAME = (String) jsonLanguage.get("POC10_NAME");
+        part1 = (String) jsonLanguage.get("POC10_DESCRIPTION_P1");
+        part2 = (String) jsonLanguage.get("POC10_DESCRIPTION_P2");
+        POC10_DESCRIPTION = part1 + POC10_SCORE + part2;
     }
 }
