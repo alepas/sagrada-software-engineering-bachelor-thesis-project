@@ -19,11 +19,17 @@ public class ConfigLoader {
             JSONObject jsonServerObject = (JSONObject) parser.parse(new FileReader("src/main/resources/server/model/configLoader/serverConfig.json"));
             JSONObject jsonSharedObject = (JSONObject) parser.parse(new FileReader("src/main/resources/shared/config/sharedConfig.json"));
 
+            JSONObject jsonSettings = (JSONObject) jsonServerObject.get("settings");
+            String language = (String) jsonSettings.get("language");
+            JSONObject jsonLanguage = (JSONObject) parser.parse(new FileReader("src/main/resources/server/model/configLoader/language/" + language + ".json"));
+
+
             JSONObject jsonGame = (JSONObject) jsonServerObject.get("game");
             JSONObject jsonDiceBag = (JSONObject) jsonServerObject.get("dicebag");
             JSONObject jsonWpc = (JSONObject) jsonServerObject.get("wpc");
             JSONObject jsonNetwork = (JSONObject) jsonSharedObject.get("network");
 
+            LanguageLoader.loadConfig(jsonLanguage);
             GameConfigLoader.loadConfig(jsonGame);
             DicebagConfigLoader.loadConfig(jsonDiceBag);
             WpcConfigLoader.loadConfig(jsonWpc);
