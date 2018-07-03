@@ -106,7 +106,6 @@ public class SignInController {
      * @param event is the event that generated the login
      */
     private void chooseGameScene(ActionEvent event) {
-        //Platform.runLater(()-> {
             int numPlayers = clientInfo.getGameNumPlayers();
             switch (numPlayers) {
                 case 1:
@@ -122,7 +121,6 @@ public class SignInController {
                     break;
 
             }
-        //});
     }
 
 

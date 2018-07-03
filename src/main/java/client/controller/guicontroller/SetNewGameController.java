@@ -1,5 +1,6 @@
 package client.controller.guicontroller;
 
+import client.constants.GuiConstants;
 import client.network.ClientInfo;
 import client.network.NetworkClient;
 import javafx.animation.Animation;
@@ -33,6 +34,7 @@ import shared.network.commands.notifications.*;
 import java.io.IOException;
 import java.util.*;
 
+import static client.constants.GuiConstants.*;
 import static java.lang.String.valueOf;
 
 public class SetNewGameController implements Observer, NotificationHandler {
@@ -216,7 +218,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
             else if (fourPlayersBox.isSelected()) findGame(event, 4);
             else {
                 Platform.runLater(()->{
-                    errorLabel.setText("Seleziona un numero");
+                    errorLabel.setText(SELECT_NUMBER_ERROR);
                     errorLabel.setVisible(true);
                 });
             }
@@ -285,11 +287,11 @@ public class SetNewGameController implements Observer, NotificationHandler {
 
             if (gameID != null) {
                 startGameLabel.setVisible(false);
-                lab.setText("Entrato nella partita: " + gameID);
+                lab.setText(ENTRANCE_IN_GAME + gameID);
                 lab.setLayoutX(100);
                 lab.setLayoutY(300);
-                lab1.setText("Giocatori presenti: " + clientInfo.getGameActualPlayers() +
-                        " di " + clientInfo.getGameNumPlayers() + " necessari.");
+                lab1.setText( PLAYERS_IN_GAME + clientInfo.getGameActualPlayers() +
+                        PREPOSITION + clientInfo.getGameNumPlayers() + NECESSARY );
                 lab1.setLayoutX(100);
                 lab1.setLayoutY(340);
 
@@ -348,7 +350,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
      */
     private void diceAnimation(ImageView image, TranslateTransition transition) {
         Platform.runLater(()->{
-            image.getStyleClass().add("violet5");
+            image.getStyleClass().add(ANIMATION_DICE);
             image.setFitHeight(30);
             image.setFitWidth(30);
             selectionArea.getChildren().add(image);
@@ -468,7 +470,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
             thirdWPC.setVisible(true);
             fourthWPC.setVisible(true);
             for (ClientColor color : colors) {
-                String style = "prOC".concat(String.valueOf(color).toLowerCase());
+                String style = PRIVATE_OBJ_IDENTIFIER_CSS.concat(String.valueOf(color).toLowerCase());
                 privateObjArea.setId(style);
             }
         });
@@ -489,10 +491,10 @@ public class SetNewGameController implements Observer, NotificationHandler {
             int clock = time;
             public void run() {
                 if (clock > 0) {
-                    Platform.runLater(() -> clockLabel.setText("00:" + clock));
+                    Platform.runLater(() -> clockLabel.setText(MINUTES_TIMER + clock));
                     clock--;
                 } else {
-                    Platform.runLater(() -> clockLabel.setText("00:00"));
+                    Platform.runLater(() -> clockLabel.setText(END_TIMER));
                     timer.cancel();
                 }
             }
@@ -531,10 +533,10 @@ public class SetNewGameController implements Observer, NotificationHandler {
     private void fillNumber(AnchorPane cell, int number) {
         switch (number) {
             case 0:
-                cell.getStyleClass().add("white");
+                cell.getStyleClass().add(DEFAULT_CELL_COLOR);
                 break;
             default:
-                String style = "num" + valueOf(number);
+                String style = NUMBER_IDENTIFIER_CSS.concat(valueOf(number));
                 cell.getStyleClass().add(style);
                 break;
         }
@@ -548,7 +550,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
     private void fillColor(AnchorPane cell, ClientColor color) {
         if (color != null)
             cell.getStyleClass().add(color.toString().toLowerCase());
-        else cell.getStyleClass().add("white");
+        else cell.getStyleClass().add(DEFAULT_CELL_COLOR);
     }
 
 
@@ -682,7 +684,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
     @Override
     public void handle(PlayersChangedNotification notification) {
         Platform.runLater(() -> {
-            lab2.setText(notification.username + " é entrato in partita!");
+            lab2.setText(notification.username + ENTRANCE_NEW_PLAYER);
             lab2.setLayoutX(100);
             lab2.setLayoutY(360);
         });
@@ -708,9 +710,9 @@ public class SetNewGameController implements Observer, NotificationHandler {
         String name = notification.wpc.getName();
         String user = notification.username;
         if(user.equals(clientInfo.getUsername()))
-            Platform.runLater(()-> wpcInfoLabel.setText("Hai scelto lo schema "+ name));
+            Platform.runLater(()-> wpcInfoLabel.setText(YOUR_SCHEMA_CHOICE + name));
         else
-            Platform.runLater(()-> wpcInfoLabel.setText(user + " ha scelto lo schema " + name));
+            Platform.runLater(()-> wpcInfoLabel.setText(user + OTHERS_SCHEMA_CHOICE  + name));
         allWpcsPicked = clientInfo.allPlayersChooseWpc();
         synchronized (cardWaiter){cardWaiter.notify();}
     }
@@ -772,14 +774,14 @@ public class SetNewGameController implements Observer, NotificationHandler {
     @Override
     public void handle(PlayerDisconnectedNotification playerDisconnectedNotification) {
         String user = playerDisconnectedNotification.username;
-        if (!gameStarted) Platform.runLater(() -> wpcInfoLabel.setText(user + " é uscito dalla partita!"));
-        else Platform.runLater(() -> wpcInfoLabel.setText(user + " si è disconnesso!"));
+        if (!gameStarted) Platform.runLater(() -> wpcInfoLabel.setText(user + EXIT_PLAYER));
+        else Platform.runLater(() -> wpcInfoLabel.setText(user + DISCONNECTION_OF_PLAYER));
     }
 
     @Override
     public void handle(PlayerReconnectedNotification playerReconnectedNotification) {
         String user = playerReconnectedNotification.username;
-        Platform.runLater(() -> wpcInfoLabel.setText(user + " si è riconnesso!"));
+        Platform.runLater(() -> wpcInfoLabel.setText(user + RECONNECTION_OF_PLAYER));
 
     }
 

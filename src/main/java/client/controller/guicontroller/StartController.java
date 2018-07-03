@@ -17,6 +17,9 @@ import shared.constants.NetworkConstants;
 import java.io.IOException;
 import java.net.ConnectException;
 
+import static client.constants.GuiConstants.IMPOSSIBLE_RMI_CONNECTION;
+import static client.constants.GuiConstants.IMPOSSIBLE_SOCKET_CONNECTION;
+
 
 public class StartController {
 
@@ -42,7 +45,7 @@ public class StartController {
                 NetworkClient.getNewRmiInstance();
                 changeButton();
             } catch (Exception e) {
-                errorLabel.setText("Impossibile stabilire connessione RMI con il Server.");
+                errorLabel.setText(IMPOSSIBLE_RMI_CONNECTION);
             }
         });
 
@@ -52,7 +55,7 @@ public class StartController {
                 startSocketClient();
                 changeButton();
             } catch (ConnectException e) {
-                errorLabel.setText("Impossibile stabilire connessione Socket con il Server.");
+                errorLabel.setText(IMPOSSIBLE_SOCKET_CONNECTION );
             } catch (IOException e) {
                 e.printStackTrace();
             }
