@@ -14,7 +14,7 @@ import server.model.wpc.Wpc;
 import shared.clientInfo.ClientDice;
 import shared.clientInfo.ClientEndTurnData;
 import shared.clientInfo.ClientWpc;
-import shared.constants.GameConstants;
+import server.constants.GameConstants;
 import shared.exceptions.gameExceptions.*;
 import shared.exceptions.usersAndDatabaseExceptions.CannotAddPlayerInDatabaseException;
 import shared.exceptions.usersAndDatabaseExceptions.CannotFindPlayerInDatabaseException;
@@ -267,7 +267,7 @@ public class SinglePlayerGame extends Game {
         }
 
         players[turnPlayer].setActive();
-        changeAndNotifyObservers(new NextTurnNotification(currentTurn, players[turnPlayer].getUser(),endTurnData));
+        changeAndNotifyObservers(new NextTurnNotification(currentTurn, players[turnPlayer].getUser(), GameConstants.TIME_TO_PLAY_TURN_MULTIPLAYER, endTurnData));
         startTurnTimer();
     }
 

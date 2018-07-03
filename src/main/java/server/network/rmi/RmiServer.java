@@ -172,19 +172,4 @@ public class RmiServer implements RemoteServer {
         return controller.getUserStat(userToken);
     }
 
-//    @Override
-//    public Response findAlreadyStartedGame(String userToken, RemoteObserver observer) throws CannotFindGameForUserInDatabaseException {
-//        Response response = controller.findAlreadyStartedGame(userToken, this, true); //ci vuole l'observer?
-//
-//        String username = null;
-//        try {
-//            username = userdb.getUsernameByToken(userToken);
-//        } catch (CannotFindUserInDBException e) {/*TODO: */}
-//
-//        observerByUser.put(username, observer);
-//
-//        return response;
-//    }
-
-
 }

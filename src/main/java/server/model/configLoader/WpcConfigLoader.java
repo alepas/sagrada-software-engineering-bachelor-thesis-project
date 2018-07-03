@@ -1,7 +1,7 @@
 package server.model.configLoader;
 
 import org.json.simple.JSONObject;
-import static shared.constants.WpcConstants.*;
+import static server.constants.WpcConstants.*;
 
 public class WpcConfigLoader {
 

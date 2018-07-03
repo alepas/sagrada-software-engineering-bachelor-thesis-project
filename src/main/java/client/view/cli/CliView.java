@@ -556,7 +556,7 @@ public class CliView implements Observer, NotificationHandler {
                         }
                     }
                     listenToResponseAndPerformAction(possibleActions);
-                } while (!(stateChanged || state.equals(Status.RECONNECT)));
+                } while (!(stateChanged || state.equals(Status.RECONNECT) || state.equals(Status.RETURN_TO_MAIN_MENU)));
             });
             playTurn.start();
 

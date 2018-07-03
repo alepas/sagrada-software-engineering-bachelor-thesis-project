@@ -4,7 +4,7 @@ import server.constants.POCConstants;
 import server.model.cards.PublicObjectiveCard;
 import server.model.dicebag.Dice;
 import server.model.wpc.Wpc;
-import shared.constants.WpcConstants;
+import server.constants.WpcConstants;
 
 import java.util.ArrayList;
 

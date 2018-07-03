@@ -11,7 +11,7 @@ import server.model.users.PlayerInGame;
 import server.model.wpc.Wpc;
 import server.model.wpc.WpcDB;
 import shared.clientInfo.*;
-import shared.constants.GameConstants;
+import server.constants.GameConstants;
 import shared.exceptions.gameExceptions.*;
 import shared.network.commands.notifications.*;
 
@@ -281,7 +281,7 @@ public abstract class Game extends Observable implements Runnable {
             clientWpcByUser.put(player.getUser(), new ArrayList<>(userClientWpcs));
         }
 
-        changeAndNotifyObservers(new WpcsExtractedNotification(clientWpcByUser));
+        changeAndNotifyObservers(new WpcsExtractedNotification(clientWpcByUser, GameConstants.CHOOSE_WPC_WAITING_TIME));
         waitForWpcResponse();
     }
 
