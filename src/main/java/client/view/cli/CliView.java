@@ -262,7 +262,7 @@ public class CliView implements Observer, NotificationHandler {
             if (login) displayText(CliConstants.LOGIN_PHASE);
             else displayText(CliConstants.CREATE_USER_PHASE);
 
-            displayText(CliConstants.INSERT_USERNAME);
+            displayText(INSERT_USERNAME + PRESENT_RETURN_BACK);
             String username = userInput();
             if (username == null) return;
 
@@ -375,7 +375,7 @@ public class CliView implements Observer, NotificationHandler {
         String response;
         int numPlayers;
 
-        displayText(SELECT_NUM_PLAYERS);
+        displayText(SELECT_NUM_PLAYERS + PRESENT_RETURN_BACK);
         response = userInput();
         if (response == null) return;
 

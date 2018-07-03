@@ -5,6 +5,8 @@ public class CliRenderConstants {
     public static int diceDistance = 5;
     public static int diceLenght = 7;
 
+    public static String FAVOURS = "    Favours: ";
+
     //Colors
     // Reset
     public static String RESET = "\033[0m";  // Text Reset

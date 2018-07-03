@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import static client.constants.CliRenderConstants.*;
 
+
 class CliRender {
     private int wpcRows = 0;
     private int wpcCols = 0;
@@ -96,7 +97,7 @@ class CliRender {
         for(String str : stringDice){
             diceRendered.append(str + "\n");
         }
-        diceRendered.append("ID: " + dice.getDiceID() + "\n");
+        diceRendered.append(CliConstants.ID + dice.getDiceID() + "\n");
 
         return diceRendered.toString();
     }
@@ -113,7 +114,7 @@ class CliRender {
             for(int j = 0; j < temp.length; j++){
                 stringDices[i][j] = temp[j];
             }
-            stringDices[i][cellHeight] = "ID: " + dices.get(i).getDiceID();
+            stringDices[i][cellHeight] = CliConstants.ID + dices.get(i).getDiceID();
         }
 
 
@@ -151,7 +152,7 @@ class CliRender {
         StringBuilder wpcRendered = new StringBuilder();
         String[] stringWpc = convertWpcToString(wpc);
 
-        if (withID) wpcRendered.append("ID:" + wpc.getWpcID() + "\tFavours: " + wpc.getFavours() + "\n");
+        if (withID) wpcRendered.append(CliConstants.ID + wpc.getWpcID() + FAVOURS + wpc.getFavours() + "\n");
         for (String row : stringWpc){
             wpcRendered.append(row + "\n");
         }
@@ -171,7 +172,7 @@ class CliRender {
 
         for(int i = 0; i < wpcs.length; i++){
             stringWpcs[i] = convertWpcToString(wpcs[i]);
-            title = "ID: " + wpcs[i].getWpcID() + "    Favours: " + wpcs[i].getFavours();
+            title = CliConstants.ID + wpcs[i].getWpcID() + FAVOURS + wpcs[i].getFavours();
             titleSpacing = calculateSpace(distance, title, wpcLenght+3);
             wpcsRendered.append(title + titleSpacing);
         }
@@ -209,7 +210,7 @@ class CliRender {
         StringBuilder str;
         int i = 0;
 
-        stringWpc[i++] = "";
+        stringWpc[i++] = CliConstants.VOID_STRING;
         stringWpc[i++] = WPC_COLUMNS_NUMBERS;
         stringWpc[i++] = wpcLine;
 
