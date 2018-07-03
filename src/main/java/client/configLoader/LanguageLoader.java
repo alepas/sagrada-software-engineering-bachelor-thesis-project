@@ -1,13 +1,16 @@
 package client.configLoader;
 
 import client.constants.CliConstants;
+import client.constants.CliRenderConstants;
+import client.constants.GuiConstants;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 
 import java.util.ArrayList;
 
 import static client.constants.CliConstants.*;
+import static client.constants.CliRenderConstants.*;
+import static client.constants.GuiConstants.*;
 
 public class LanguageLoader {
 
@@ -45,8 +48,8 @@ public class LanguageLoader {
         TECHNOLOGY_NOT_SUPPORTED_P1 = (String) jsonLanguage.get("TECHNOLOGY_NOT_SUPPORTED_P1");
         TECHNOLOGY_NOT_SUPPORTED_P2 = (String) jsonLanguage.get("TECHNOLOGY_NOT_SUPPORTED_P2");
         ENTER = (String) jsonLanguage.get("ENTER");
-        PRESENT_RETURN_BACK = ENTER + ESCAPE_RESPONSE + (String) jsonLanguage.get("PRESENT_RETURN_BACK");
-        PRESENT_QUIT = ENTER + QUIT_RESPONSE + (String) jsonLanguage.get("PRESENT_QUIT");
+        PRESENT_RETURN_BACK = ENTER + ESCAPE_RESPONSE + jsonLanguage.get("PRESENT_RETURN_BACK");
+        PRESENT_QUIT = ENTER + QUIT_RESPONSE + jsonLanguage.get("PRESENT_QUIT");
 
         p1 = (String) jsonLanguage.get("INSERT_YES_OR_NO_P1");
         p2 = (String) jsonLanguage.get("INSERT_YES_OR_NO_P2");
@@ -153,7 +156,7 @@ public class LanguageLoader {
         OF = (String) jsonLanguage.get("OF");
         NEEDED = (String) jsonLanguage.get("NEEDED");
         TURN = (String) jsonLanguage.get("TURN");
-        ROUND = (String) jsonLanguage.get("ROUND");
+        CliConstants.ROUND = (String) jsonLanguage.get("ROUND");
         ACTIVE_PLAYER = (String) jsonLanguage.get("ACTIVE_PLAYER");
         PLAYER_PLACED_DICE = (String) jsonLanguage.get("PLAYER_PLACED_DICE");
         IN_POSITION = (String) jsonLanguage.get("IN_POSITION");
@@ -176,5 +179,71 @@ public class LanguageLoader {
         PLAYER_SKIPPED_TURN_DUE_TO_TOOLCARD = (String) jsonLanguage.get("PLAYER_SKIPPED_TURN_DUE_TO_TOOLCARD");
         GAME_ENDED = (String) jsonLanguage.get("GAME_ENDED");
         FINAL_TABLE = (String) jsonLanguage.get("FINAL_TABLE");
+
+        CliRenderConstants.FAVOURS = (String) jsonLanguage.get("FAVOURS");
+        RESET = "\033" + jsonLanguage.get("RESET");
+        BLACK = "\033" + jsonLanguage.get("BLACK");
+        BLACK_BRIGHT = "\033" + jsonLanguage.get("BLACK_BRIGHT");
+        RED = "\033" + jsonLanguage.get("RED");
+        GREEN = "\033" + jsonLanguage.get("GREEN");
+        YELLOW = "\033" + jsonLanguage.get("YELLOW");
+        BLUE = "\033" + jsonLanguage.get("BLUE");
+        PURPLE = "\033" + jsonLanguage.get("PURPLE");
+        RED_BACKGROUND = "\033" + jsonLanguage.get("RED_BACKGROUND");
+        GREEN_BACKGROUND = "\033" + jsonLanguage.get("GREEN_BACKGROUND");
+        YELLOW_BACKGROUND = "\033" + jsonLanguage.get("YELLOW_BACKGROUND");
+        BLUE_BACKGROUND = "\033" + jsonLanguage.get("BLUE_BACKGROUND");
+        PURPLE_BACKGROUND = "\033" + jsonLanguage.get("PURPLE_BACKGROUND");
+
+        IMPOSSIBLE_RMI_CONNECTION = (String) jsonLanguage.get("IMPOSSIBLE_RMI_CONNECTION");
+        IMPOSSIBLE_SOCKET_CONNECTION = (String) jsonLanguage.get("IMPOSSIBLE_SOCKET_CONNECTION");
+        SELECT_NUMBER_ERROR = (String) jsonLanguage.get("SELECT_NUMBER_ERROR");
+        ENTRANCE_IN_GAME = (String) jsonLanguage.get("ENTRANCE_IN_GAME");
+        PLAYERS_IN_GAME = (String) jsonLanguage.get("PLAYERS_IN_GAME");
+        PREPOSITION = (String) jsonLanguage.get("PREPOSITION");
+        NECESSARY = (String) jsonLanguage.get("NECESSARY");
+        ENTRANCE_NEW_PLAYER = (String) jsonLanguage.get("ENTRANCE_NEW_PLAYER");
+        EXIT_PLAYER = (String) jsonLanguage.get("EXIT_PLAYER");
+        DISCONNECTION_OF_PLAYER = (String) jsonLanguage.get("DISCONNECTION_OF_PLAYER");
+        RECONNECTION_OF_PLAYER = (String) jsonLanguage.get("RECONNECTION_OF_PLAYER");
+        ANIMATION_DICE = (String) jsonLanguage.get("ANIMATION_DICE");
+        PRIVATE_OBJ_IDENTIFIER_CSS = (String) jsonLanguage.get("PRIVATE_OBJ_IDENTIFIER_CSS");
+        TOOL_IDENTIFIER_CSS = (String) jsonLanguage.get("TOOL_IDENTIFIER_CSS");
+        POC_IDENTIFIER_CSS = (String) jsonLanguage.get("POC_IDENTIFIER_CSS");
+        DEFAULT_CELL_COLOR = (String) jsonLanguage.get("DEFAULT_CELL_COLOR");
+        NUMBER_IDENTIFIER_CSS = (String) jsonLanguage.get("NUMBER_IDENTIFIER_CSS");
+        CARD_STYLE = (String) jsonLanguage.get("CARD_STYLE");
+        MINUTES_TIMER = (String) jsonLanguage.get("MINUTES_TIMER");
+        MINUTES_SECONDS_TIMER = (String) jsonLanguage.get("MINUTES_SECONDS_TIMER");
+        END_TIMER = (String) jsonLanguage.get("END_TIMER");
+        YOUR_SCHEMA_CHOICE = (String) jsonLanguage.get("YOUR_SCHEMA_CHOICE");
+        OTHERS_SCHEMA_CHOICE = (String) jsonLanguage.get("OTHERS_SCHEMA_CHOICE");
+        USING_TOOLCARD = (String) jsonLanguage.get("USING_TOOLCARD");
+        USED_TOOLCARD = (String) jsonLanguage.get("USED_TOOLCARD");
+        GuiConstants.FAVOURS = (String) jsonLanguage.get("GUI_FAVOURS");
+        GuiConstants.ROUND = (String) jsonLanguage.get("GUI_ROUND");
+        WAIT_TURN = (String) jsonLanguage.get("WAIT_TURN");
+        YOUR_TURN = (String) jsonLanguage.get("YOUR_TURN");
+        TURN_OF = (String) jsonLanguage.get("TURN_OF");
+        SKIP_TURN = (String) jsonLanguage.get("SKIP_TURN");
+        USE_TOOL_OR_END_TURN = (String) jsonLanguage.get("USE_TOOL_OR_END_TURN");
+        PLACE_DICE_OR_END_TURN = (String) jsonLanguage.get("PLACE_DICE_OR_END_TURN");
+        ONLY_END_TURN = (String) jsonLanguage.get("ONLY_END_TURN");
+        PLACE_DICE_FROM_WPC_TO_WPC = (String) jsonLanguage.get("PLACE_DICE_FROM_WPC_TO_WPC");
+        PLACE_DICE_FROM_EXTRACTED_TO_DICEBAG = (String) jsonLanguage.get("PLACE_DICE_FROM_EXTRACTED_TO_DICEBAG");
+        PLACE_DICE_FROM_EXTRACTED_TO_WPC = (String) jsonLanguage.get("PLACE_DICE_FROM_EXTRACTED_TO_WPC");
+        PICK_DICE_FROM_WPC = (String) jsonLanguage.get("PICK_DICE_FROM_WPC");
+        PICK_DICE_FROM_EXTRACTED = (String) jsonLanguage.get("PICK_DICE_FROM_EXTRACTED");
+        PICK_DICE_FROM_ROUNDTRACK = (String) jsonLanguage.get("PICK_DICE_FROM_ROUNDTRACK");
+        ACTIVE_TOOLCARD_SINGLE_PLAYER = (String) jsonLanguage.get("ACTIVE_TOOLCARD_SINGLE_PLAYER");
+        ADD_SUBTRACT_ONE = (String) jsonLanguage.get("ADD_SUBTRACT_ONE");
+        CANCEL_TOOLCARD = (String) jsonLanguage.get("CANCEL_TOOLCARD");
+        TOOLCARD_BLOCKED = (String) jsonLanguage.get("TOOLCARD_BLOCKED");
+        YES_VALUE = (String) jsonLanguage.get("YES_VALUE");
+        NO_VALUE = (String) jsonLanguage.get("NO_VALUE");
+        OK_VALUE = (String) jsonLanguage.get("OK_VALUE");
+        BACK_VALUE = (String) jsonLanguage.get("BACK_VALUE");
+        GAME_LOST = (String) jsonLanguage.get("GAME_LOST");
+        GAME_WON = (String) jsonLanguage.get("GAME_WON");
     }
 }

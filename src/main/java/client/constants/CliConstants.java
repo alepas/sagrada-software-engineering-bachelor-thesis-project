@@ -1,7 +1,6 @@
 package client.constants;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class CliConstants {
     public static int COUNTER_START_NUMBER = 0;
