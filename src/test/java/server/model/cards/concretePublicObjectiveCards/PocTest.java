@@ -2,6 +2,7 @@ package server.model.cards.concretePublicObjectiveCards;
 
 import org.junit.Before;
 import org.junit.Test;
+import server.model.configLoader.ConfigLoader;
 import server.model.dicebag.Color;
 import server.model.dicebag.Dice;
 import server.model.wpc.Wpc;
@@ -48,6 +49,7 @@ public class PocTest {
      */
     @Before
     public void before() {
+        ConfigLoader.loadConfig();
         card1 = new PublicObjectiveCard1();
         card2 = new PublicObjectiveCard2();
         card3 = new PublicObjectiveCard3();

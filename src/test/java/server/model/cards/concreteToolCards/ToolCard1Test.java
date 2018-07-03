@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import server.constants.ToolCardConstants;
 import server.model.cards.ToolCard;
+import server.model.configLoader.ConfigLoader;
 import server.model.dicebag.Color;
 import server.model.dicebag.Dice;
 import server.model.game.Game;
@@ -32,9 +33,11 @@ public class ToolCard1Test {
     private ArrayList<Dice> extractedDices = new ArrayList<>();
     private ClientDice clientMiddleDice;
     private Position position;
+    private MoveData moveData;
 
     @Before
     public void Before() throws CannotPickDiceException {
+        ConfigLoader.loadConfig();
         toolCard1 = new ToolCard1();
 
         game = mock(Game.class);
@@ -92,6 +95,13 @@ public class ToolCard1Test {
         ClientDice clientBoundDice = mock(ClientDice.class);
         when(chosenDice1Number.getClientDice()).thenReturn(clientBoundDice);
         when(chosenDice1Number.copyDice()).thenReturn(chosenDice1Number);
+
+
+        RoundTrack roundTrack = mock(RoundTrack.class);
+        ClientRoundTrack clientRoundTrack = mock(ClientRoundTrack.class);
+        when(roundTrack.getClientRoundTrack()).thenReturn(clientRoundTrack);
+        when(game.getRoundTrack()).thenReturn(roundTrack);
+        when(game.getRoundTrack().getCopy()).thenReturn(roundTrack);
     }
 
     /**
@@ -114,6 +124,23 @@ public class ToolCard1Test {
         assertEquals(toolCard1.getID(), copy.getID());
         assertEquals(toolCard1.getName(), copy.getName());
         assertEquals(toolCard1.getDescription(), copy.getDescription());
+    }
+
+
+    /**
+     * Tests if the tool is initialized in a correct way if the game is a single player game.
+     *
+     * @throws CannotUseToolCardException not in this test
+     */
+    @Test
+    public void setCardSinglePlayerGameTest() throws CannotUseToolCardException {
+        setSchema();
+        when(game.isSinglePlayerGame()).thenReturn(true);
+
+        toolCard1.setCurrentToolPlayer(null);
+        moveData = toolCard1.setCard(player);
+        assertEquals(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD, moveData.nextAction);
+        assertEquals(ClientDiceLocations.EXTRACTED, moveData.wherePickNewDice);
     }
 
     /**
@@ -139,7 +166,7 @@ public class ToolCard1Test {
     @Test
     public void pickDiceSinglePlayerTest() throws CannotPickDiceException, CannotPerformThisMoveException {
         toolCard1.setSinglePlayerGame(true);
-        MoveData moveData = toolCard1.pickDice(chosenDiceMiddleNumber.getId());
+        moveData = toolCard1.pickDice(chosenDiceMiddleNumber.getId());
 
         assertEquals(NextAction.SELECT_DICE_TOOLCARD, moveData.nextAction);
         assertEquals(ClientDiceLocations.EXTRACTED, moveData.wherePickNewDice);
@@ -160,7 +187,7 @@ public class ToolCard1Test {
         toolCard1.setCurrentToolGame(game);
         toolCard1.setCurrentToolStatus(1);
 
-        MoveData moveData = toolCard1.pickDice(chosenDiceMiddleNumber.getId());
+        moveData = toolCard1.pickDice(chosenDiceMiddleNumber.getId());
         assertEquals(NextAction.SELECT_NUMBER_TOOLCARD, moveData.nextAction);
         assertNull(moveData.wpc);
         assertNull(moveData.roundTrack);
@@ -192,7 +219,7 @@ public class ToolCard1Test {
         toolCard1.setCurrentToolGame(game);
         toolCard1.setCurrentToolStatus(1);
 
-        MoveData moveData = toolCard1.pickDice(chosenDice1Number.getId());
+        moveData = toolCard1.pickDice(chosenDice1Number.getId());
         assertEquals(NextAction.SELECT_NUMBER_TOOLCARD, moveData.nextAction);
         assertNull(moveData.wpc);
         assertNull(moveData.roundTrack);
@@ -258,7 +285,7 @@ public class ToolCard1Test {
     public void pickNumberTest() throws CannotPickDiceException, CannotPerformThisMoveException, CannotPickNumberException {
         toolCard1.setCurrentToolStatus(1);
         toolCard1.pickDice(chosenDiceMiddleNumber.getId());
-        MoveData moveData = toolCard1.pickNumber(1);
+        moveData = toolCard1.pickNumber(1);
         assertEquals(NextAction.PLACE_DICE_TOOLCARD, moveData.nextAction);
         assertEquals(ClientDiceLocations.EXTRACTED, moveData.wherePickNewDice);
         assertEquals(ClientDiceLocations.WPC, moveData.wherePutNewDice);
@@ -354,7 +381,7 @@ public class ToolCard1Test {
         setSchema();
 
         when(toolCard1.getCardWpc().addDiceWithAllRestrictions(chosenDice1Number, position)).thenReturn(true);
-        MoveData moveData = toolCard1.placeDice(chosenDice1Number.getId(), position);
+        moveData = toolCard1.placeDice(chosenDice1Number.getId(), position);
         assertTrue(moveData.moveFinished);
 
         /*at the end of placeDice() method the clean on is called, those assertions checks if it reset parameters in
@@ -375,7 +402,7 @@ public class ToolCard1Test {
      */
     @Test
     public void nextMoveTest(){
-        MoveData moveData = toolCard1.getNextMove();
+        moveData = toolCard1.getNextMove();
         assertNull(moveData);
 
         toolCard1.setCurrentToolStatus(1);
@@ -438,7 +465,7 @@ public class ToolCard1Test {
         toolCard1.pickDice(chosenDiceMiddleNumber.getId());
         toolCard1.pickNumber(1);
 
-        MoveData moveData = toolCard1.cancelAction(false);
+        moveData = toolCard1.cancelAction(false);
 
         assertEquals(2, toolCard1.getCurrentStatus());
         assertEquals(NextAction.SELECT_NUMBER_TOOLCARD, moveData.nextAction);
@@ -455,7 +482,7 @@ public class ToolCard1Test {
     @Test
     public void cancelLastOperationStateTwoTest() throws CannotCancelActionException {
         toolCard1.setCurrentToolStatus(2);
-        MoveData moveData = toolCard1.cancelAction(false);
+        moveData = toolCard1.cancelAction(false);
 
         assertEquals(1, toolCard1.getCurrentStatus());
         assertEquals(NextAction.SELECT_DICE_TOOLCARD, moveData.nextAction);
@@ -478,7 +505,7 @@ public class ToolCard1Test {
         when(roundTrack.getClientRoundTrack()).thenReturn(clientRoundTrack);
         when(game.getRoundTrack()).thenReturn(roundTrack);
 
-        MoveData moveData = toolCard1.cancelAction(false);
+        moveData = toolCard1.cancelAction(false);
         assertEquals(0, toolCard1.getCurrentStatus());
         assertTrue(moveData.moveFinished);
         assertTrue(moveData.canceledToolCard);

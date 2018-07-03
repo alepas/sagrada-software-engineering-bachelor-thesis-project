@@ -20,6 +20,9 @@ public class ToolCard12 extends ToolCard {
     private DiceAndPosition secondDiceInitial;
     private Color chosenColor;
 
+    /**
+     * Object constructor: creates a new concrete tool card 12 by setting all his parameters
+     */
     public ToolCard12() {
         this.id = ToolCardConstants.TOOLCARD12_ID;
         this.name = ToolCardConstants.TOOL12_NAME;
@@ -35,18 +38,36 @@ public class ToolCard12 extends ToolCard {
         chosenColor = null;
     }
 
-
+    /**
+     * @return a copy of this object
+     */
     @Override
     public ToolCard getToolCardCopy() {
         return new ToolCard12();
     }
 
+    /**
+     * @param player is the player that wants to use the ToolCard
+     * @return the first action that the player has to do with the ToolCard
+     * @throws CannotUseToolCardException when it is not possible to use te object
+     */
     @Override
     public MoveData setCard(PlayerInGame player) throws CannotUseToolCardException {
         return setCardDefault(player, true, false, 0, ClientDiceLocations.WPC, ClientDiceLocations.WPC, NextAction.PLACE_DICE_TOOLCARD);
     }
 
 
+    /**
+     * In this ToolCard this method should be called only when the game is a single player game, the
+     *      * first action that a single player must to do use a ToolCard is to pick a dice of the give color
+     *
+     * @param diceId is the id of the chosen dice
+     * @return all the information related to the next action that the player will have to do and all new parameters created
+     * by the call of this method
+     * @throws CannotPickDiceException        if the chosen dice isn't available, for example it is not located where the
+     *                                        player has to pick the dice
+     * @throws CannotPerformThisMoveException if the game in a multi player game
+     */
     @Override
     public MoveData pickDice(int diceId) throws CannotPickDiceException, CannotPerformThisMoveException {
         if ((currentStatus == 0) && (singlePlayerGame)) {
@@ -54,33 +75,60 @@ public class ToolCard12 extends ToolCard {
         } else throw new CannotPerformThisMoveException(username, 2, false);
     }
 
-
+    /**
+     * @param number is a number chosen by the player
+     * @return all the information related to the next action that the player will have to do and all new parameters created
+     * by the call of this method
+     * @throws CannotPerformThisMoveException every time that this method is called because it is not
+     *                                        possible to pick a number while this card is used
+     */
     @Override
     public MoveData pickNumber(int number) throws CannotPerformThisMoveException {
         throw new CannotPerformThisMoveException(username, 2, false);
     }
 
 
+    /**
+     * checks if there's at least a dice with the same color of the chosen dice inside the roundTrack
+     *
+     * @param dice is the dice chosen by the player
+     * @return true if there's at least a dice in the roundTrack with the same color of the chosen dice, false if not
+     */
     private boolean checkColorInRoundTrack(Dice dice) {
         ArrayList<Dice> roundTrackDices = cardRoundTrack.getDicesNotUsed();
-        for (Dice tempDice : roundTrackDices) {
+        for (Dice tempDice : roundTrackDices)
             if (tempDice.getDiceColor() == dice.getDiceColor())
                 return true;
-        }
         return false;
     }
 
-
+    /**
+     * this method is composed by actions that can be done in two different status:
+     * - if the status is equal to 1 and none of the exceptions is thrown it removes the dice from its first position and
+     * places it in the new one; after those operation it sets the current status equals to 20 and sends to the player
+     * a stop message in which asks to the player if he/she wants to modify the position of a second dice.
+     *
+     * - if the status is equal to 2 it means that the player has chosen to place an other dice, if none of the
+     * exceptions is thrown it modifies the dice position and ends the use of this
+     *
+     * @param diceId is the id of the chosen dice
+     * @param pos    is the position where the player would like to place the chosen dice
+     * @return all the information related to the next action that the player will have to do and all new parameters created
+     * by the call of this method
+     * @throws CannotPerformThisMoveException if the status is different from 1 or if the chosen position is null
+     * @throws CannotPickPositionException    if it is not possible to add the chosen dice to the chosen position
+     * @throws CannotPickDiceException        if it is not possible to pick the chosen dice
+     */
     @Override
     public MoveData placeDice(int diceId, Position pos) throws CannotPerformThisMoveException, CannotPickPositionException, CannotPickDiceException {
         if (currentStatus == 1) {
             firstDiceInitial = currentPlayer.dicePresentInLocation(diceId, ClientDiceLocations.WPC);
             Dice tempDice = firstDiceInitial.getDice();
-            if (pos == null) {
+            if (pos == null)
                 throw new CannotPerformThisMoveException(username, 2, false);
-            }
             if (!checkColorInRoundTrack(tempDice))
                 throw new CannotPickDiceException(username, tempDice.getDiceNumber(), tempDice.getDiceColor(), ClientDiceLocations.WPC, 2);
+
             chosenColor = tempDice.getDiceColor();
             cardWpc.removeDice(firstDiceInitial.getPosition());
             if (!cardWpc.addDiceWithAllRestrictions(tempDice, pos)) {
@@ -97,9 +145,8 @@ public class ToolCard12 extends ToolCard {
         if (currentStatus == 2) {
             secondDiceInitial = currentPlayer.dicePresentInLocation(diceId, ClientDiceLocations.WPC);
             Dice tempDice = secondDiceInitial.getDice();
-            if (pos == null) {
+            if (pos == null)
                 throw new CannotPerformThisMoveException(username, 2, false);
-            }
             if (tempDice.getDiceColor() != chosenColor)
                 throw new CannotPickDiceException(username, tempDice.getDiceNumber(), tempDice.getDiceColor(), ClientDiceLocations.WPC, 2);
             cardWpc.removeDice(secondDiceInitial.getPosition());
@@ -115,16 +162,18 @@ public class ToolCard12 extends ToolCard {
             cleanCard();
             return new MoveData(true, tempWpc, null, null);
         } else throw new CannotPerformThisMoveException(username, 2, false);
-
-
     }
 
 
+    /**
+     * goes back to the last action that has been done, it changes all elements. Everything comes back of a step
+     *
+     * @param all boolean
+     * @return all the information related to the previous action that the player has done while using this toolcard
+     * @throws CannotCancelActionException if the current status isn't correct or the boolean is false
+     */
     @Override
     public MoveData cancelAction(boolean all) throws CannotCancelActionException {
-        MoveData temp;
-        boolean canceledCard = true;
-
         if (!all) {
             switch (currentStatus) {
                 case 2:
@@ -151,6 +200,9 @@ public class ToolCard12 extends ToolCard {
         return cancelCardFinalAction();
     }
 
+    /**
+     * Sets null all attributes of this and calls the default clean method
+     */
     @Override
     protected void cleanCard() {
         defaultClean();
@@ -159,6 +211,10 @@ public class ToolCard12 extends ToolCard {
         chosenColor = null;
     }
 
+    /**
+     * @return all the information related to the next action that the player will have to do and all new parameters
+     * created by the call of this method
+     */
     @Override
     public MoveData getNextMove() {
         switch (currentStatus) {
@@ -176,6 +232,16 @@ public class ToolCard12 extends ToolCard {
         return null;
     }
 
+    /**
+     * this method should be called only after the placement of the first dice when the current status is equal to 20.
+     * If the value is equal to YES means that the player wants to modify the position of a second dice, if it is NO
+     * the player wants to stop the tool card without modify the position of a second dice.
+     *
+     * @param value can be YES; NO; OK
+     * @return all the information related to the next action that the player will have to do and all new parameters
+     * created by the call of this method
+     * @throws CannotInteruptToolCardException if the current status is different from 20
+     */
     @Override
     public MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException {
         if (currentStatus != 20)
@@ -193,4 +259,10 @@ public class ToolCard12 extends ToolCard {
         return new MoveData(true, null, null, null);
 
     }
+
+    //--------------------------------------Methods for Tests-----------------------------------------------------------
+
+    DiceAndPosition getFirstDiceInitial(){return  firstDiceInitial;}
+
+    DiceAndPosition getSecondDiceInitial(){return secondDiceInitial;}
 }

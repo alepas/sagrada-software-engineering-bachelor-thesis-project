@@ -83,7 +83,7 @@ public class ToolCard11 extends ToolCard {
 
     /**
      * First of all it checks if the parameter respect all rules and if the current state is 2 or not; if no exceptions
-     * are thrown it calls the setNumber() methods which modifies the dice number.
+     * are thrown it calls the setNumber() methods which modifies the dice number with the number chosen by the player.
      *
      * @param number define if the players wants to add one or subtract one to the chosen dice number
      * @return all the information related to the next action that the player will have to do and all new parameters created

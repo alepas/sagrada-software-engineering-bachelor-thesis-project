@@ -45,6 +45,11 @@ public class ToolCard6 extends ToolCard {
         return new ToolCard6();
     }
 
+    /**
+     * @param player is the player that wants to use the ToolCard
+     * @return the first action that the player has to do with the ToolCard
+     * @throws CannotUseToolCardException when it is not possible to use te object
+     */
     @Override
     public MoveData setCard(PlayerInGame player) throws CannotUseToolCardException {
         return setCardDefault(player, false, false, 0, ClientDiceLocations.EXTRACTED, null, NextAction.SELECT_DICE_TOOLCARD);

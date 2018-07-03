@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import server.constants.ToolCardConstants;
 import server.model.cards.ToolCard;
+import server.model.configLoader.ConfigLoader;
 import server.model.dicebag.Color;
 import server.model.dicebag.Dice;
 import server.model.game.Game;
@@ -27,6 +28,8 @@ public class ToolCard7Test {
 
     @Before
     public void Before() throws CannotPickDiceException {
+
+        ConfigLoader.loadConfig();
         toolCard7 = new ToolCard7();
         player = mock(PlayerInGame.class);
         Game game = mock(Game.class);

@@ -17,16 +17,30 @@ public abstract class NetworkClient implements ResponseHandler {
     protected final ClientInfo clientInfo = ClientInfo.getInstance();
     protected Observer observer = ClientInfo.getInstance();
 
+    /**
+     * @param host is the server address
+     * @param port is the server socket door
+     * @return the instance to this
+     */
     public static SocketClient getNewSocketInstance(String host, int port){
         instance = new SocketClient(host, port);
         return (SocketClient) instance;
     }
 
+    /**
+     * @return the instance of this
+     * @throws NotBoundException if an attempt is made to lookup or unbind in the registry a name that has
+     *          no associated binding.
+     * @throws RemoteException if it not posible to create an rmi connection
+     */
     public static RmiClient getNewRmiInstance() throws NotBoundException, RemoteException {
         instance = new RmiClient();
         return (RmiClient) instance;
     }
 
+    /**
+     * @return this instance
+     */
     public static NetworkClient getInstance(){
         return instance;
     }
@@ -55,7 +69,6 @@ public abstract class NetworkClient implements ResponseHandler {
 
     public abstract NextAction pickNumberForToolCard(String userToken, int number) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPickNumberException, CannotPerformThisMoveException;
 
-    //TODO
     public abstract NextAction interuptToolCard(String userToken, ToolCardInteruptValues value) throws  CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotInteruptToolCardException, NoToolCardInUseException;
 
 
@@ -75,12 +88,12 @@ public abstract class NetworkClient implements ResponseHandler {
 
 
 
-    //TODO
+
     public abstract NextAction cancelAction (String userToken) throws CannotCancelActionException, PlayerNotAuthorizedException, CannotFindPlayerInDatabaseException;
 
     public abstract NextAction placeDice(String userToken, int id, Position position) throws  CannotFindPlayerInDatabaseException, CannotPickPositionException, CannotPickDiceException, PlayerNotAuthorizedException, CannotPerformThisMoveException;
 
-    //TODO
+
     public abstract NextAction getNextMove(String userToken) throws  CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException ;
 
 

@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import server.constants.ToolCardConstants;
 import server.model.cards.ToolCard;
+import server.model.configLoader.ConfigLoader;
 import server.model.dicebag.Color;
 import server.model.dicebag.Dice;
 import server.model.game.Game;
@@ -33,6 +34,7 @@ public class ToolCard4Test {
 
     @Before
     public void Before() throws CannotPickDiceException {
+        ConfigLoader.loadConfig();
         toolCard4 = new ToolCard4();
         player = mock(PlayerInGame.class);
         game = mock(Game.class);
@@ -62,6 +64,12 @@ public class ToolCard4Test {
         ClientDice clientDice = mock(ClientDice.class);
         when(chosenDice.getClientDice()).thenReturn(clientDice);
 
+        RoundTrack roundTrack = mock(RoundTrack.class);
+        ClientRoundTrack clientRoundTrack = mock(ClientRoundTrack.class);
+        when(roundTrack.getClientRoundTrack()).thenReturn(clientRoundTrack);
+        when(game.getRoundTrack()).thenReturn(roundTrack);
+        when(game.getRoundTrack().getCopy()).thenReturn(roundTrack);
+
     }
 
     /**
@@ -84,6 +92,22 @@ public class ToolCard4Test {
         assertEquals(toolCard4.getID(), copy.getID());
         assertEquals(toolCard4.getName(), copy.getName());
         assertEquals(toolCard4.getDescription(), copy.getDescription());
+    }
+
+    /**
+     * Tests if the tool is initialized in a correct way if the game is a single player game.
+     *
+     * @throws CannotUseToolCardException not in this test
+     */
+    @Test
+    public void setCardSinglePlayerGameTest() throws CannotUseToolCardException {
+        setSchema();
+        when(game.isSinglePlayerGame()).thenReturn(true);
+        when(player.getWPC().getNumOfDices()).thenReturn(2);
+        toolCard4.setCurrentToolPlayer(null);
+        MoveData moveData = toolCard4.setCard(player);
+        assertEquals(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD, moveData.nextAction);
+        assertEquals(ClientDiceLocations.EXTRACTED, moveData.wherePickNewDice);
     }
 
     /**

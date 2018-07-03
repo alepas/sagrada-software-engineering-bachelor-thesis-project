@@ -5,7 +5,11 @@ import org.junit.Before;
 import org.junit.Test;
 import shared.clientInfo.ClientColor;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static server.model.dicebag.Color.getClientColor;
+import static server.model.dicebag.Color.getColorFromClientColor;
 
 public class ColorTest {
     private Color color;
@@ -33,19 +37,74 @@ public class ColorTest {
         String red = "red";
         String noColor = "null";
 
-        Assert.assertEquals(Color.VIOLET, Color.parseColor(violet));
-        Assert.assertEquals(Color.BLUE, Color.parseColor(blue));
-        Assert.assertEquals(Color.GREEN, Color.parseColor(green));
-        Assert.assertEquals(Color.YELLOW, Color.parseColor(yellow));
-        Assert.assertEquals(Color.RED, Color.parseColor(red));
-        Assert.assertNull(Color.parseColor(noColor));
+        assertEquals(Color.VIOLET, Color.parseColor(violet));
+        assertEquals(Color.BLUE, Color.parseColor(blue));
+        assertEquals(Color.GREEN, Color.parseColor(green));
+        assertEquals(Color.YELLOW, Color.parseColor(yellow));
+        assertEquals(Color.RED, Color.parseColor(red));
+        assertNull(Color.parseColor(noColor));
     }
 
 
-
+    /**
+     * tests if the clientColor() method works in a correct way
+     */
+    @Test
     public void getClientColorTest(){
-        ClientColor clientColor = getClientColor(color);
+        Color violet = Color.VIOLET;
+        Color blue = Color.BLUE;
+        Color green = Color.GREEN;
+        Color red = Color.RED;
+        Color yellow = Color.YELLOW;
+
+        ClientColor clientColor;
+
+        clientColor = getClientColor(violet);
+        assertEquals(violet.toString(), clientColor.toString() );
+
+        clientColor = getClientColor(blue);
+        assertEquals(blue.toString(), clientColor.toString());
+
+        clientColor = getClientColor(green);
+        assertEquals(green.toString(), clientColor.toString());
+
+        clientColor = getClientColor(red);
+        assertEquals(red.toString(), clientColor.toString());
+
+        clientColor = getClientColor(yellow);
+        assertEquals(yellow.toString(), clientColor.toString());
+
+        assertNull(getClientColor(null));
     }
 
+    /**
+     * tests if the clientColor() method works in a correct way
+     */
+    @Test
+    public void getColorFromClientColorTest(){
+        ClientColor violet = ClientColor.VIOLET;
+        ClientColor blue = ClientColor.BLUE;
+        ClientColor green = ClientColor.GREEN;
+        ClientColor red = ClientColor.RED;
+        ClientColor yellow = ClientColor.YELLOW;
 
+        Color color;
+
+        color = getColorFromClientColor(violet);
+        assertEquals(violet.toString(), color.toString() );
+
+        color = getColorFromClientColor(blue);
+        assertEquals(blue.toString(), color.toString());
+
+        color = getColorFromClientColor(green);
+        assertEquals(green.toString(), color.toString());
+
+        color = getColorFromClientColor(red);
+        assertEquals(red.toString(), color.toString());
+
+        color = getColorFromClientColor(yellow);
+        assertEquals(yellow.toString(), color.toString());
+
+        assertNull(getColorFromClientColor(null));
+    }
 }

@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import server.constants.ToolCardConstants;
 import server.model.cards.ToolCard;
+import server.model.configLoader.ConfigLoader;
 import server.model.dicebag.Color;
 import server.model.dicebag.Dice;
 import server.model.game.Game;
@@ -29,9 +30,12 @@ public class ToolCard2Test {
     private PlayerInGame player;
     private Position position;
     private Wpc wpc;
+    private RoundTrack roundTrack;
+    private MoveData moveData;
 
     @Before
     public void Before() throws CannotPickDiceException {
+        ConfigLoader.loadConfig();
         toolCard2 = new ToolCard2();
         player = mock(PlayerInGame.class);
         game = mock(Game.class);
@@ -60,6 +64,11 @@ public class ToolCard2Test {
         ClientDice clientDice = mock(ClientDice.class);
         when(chosenDice.getClientDice()).thenReturn(clientDice);
 
+        roundTrack = mock(RoundTrack.class);
+        ClientRoundTrack clientRoundTrack = mock(ClientRoundTrack.class);
+        when(roundTrack.getClientRoundTrack()).thenReturn(clientRoundTrack);
+        when(game.getRoundTrack()).thenReturn(roundTrack);
+        when(game.getRoundTrack().getCopy()).thenReturn(roundTrack);
     }
 
     /**
@@ -84,11 +93,21 @@ public class ToolCard2Test {
         assertEquals(toolCard2.getDescription(), copy.getDescription());
     }
 
-
-   /* @Test
-    public void setCardTest() throws CannotUseToolCardException {
-        toolCard2.setCard(player);
-    }*/
+    /**
+     * Tests if the tool is initialized in a correct way if the game is a single player game.
+     *
+     * @throws CannotUseToolCardException not in this test
+     */
+    @Test
+    public void setCardSinglePlayerGameTest() throws CannotUseToolCardException {
+        setSchema();
+        when(game.isSinglePlayerGame()).thenReturn(true);
+        when(player.getWPC().getNumOfDices()).thenReturn(2);
+        toolCard2.setCurrentToolPlayer(null);
+        moveData = toolCard2.setCard(player);
+        assertEquals(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD, moveData.nextAction);
+        assertEquals(ClientDiceLocations.EXTRACTED, moveData.wherePickNewDice);
+    }
 
     /**
      * @throws CannotPickDiceException in no cases because this method wants to test the other exception
@@ -107,7 +126,7 @@ public class ToolCard2Test {
     @Test
     public void pickDiceTest() throws CannotPickDiceException, CannotPerformThisMoveException {
         toolCard2.setSinglePlayerGame(true);
-        MoveData moveData = toolCard2.pickDice(chosenDice.getId());
+        moveData = toolCard2.pickDice(chosenDice.getId());
         assertEquals(NextAction.PLACE_DICE_TOOLCARD, moveData.nextAction);
         assertEquals(ClientDiceLocations.WPC, moveData.wherePickNewDice);
         assertEquals(ClientDiceLocations.WPC, moveData.wherePutNewDice);
@@ -171,7 +190,7 @@ public class ToolCard2Test {
         when(position1.getColumn()).thenReturn(0);
         when(position1.getRow()).thenReturn(0);
         when(player.getWPC().addDicePersonalizedRestrictions(chosenDice, position1, false, true, true, true, false)).thenReturn(true);
-        MoveData moveData = toolCard2.placeDice(chosenDice.getId(), position1);
+        moveData = toolCard2.placeDice(chosenDice.getId(), position1);
 
         assertTrue(moveData.moveFinished);
         assertNotNull(moveData.wpc);
@@ -199,7 +218,7 @@ public class ToolCard2Test {
         when(position1.getColumn()).thenReturn(1);
         when(position1.getRow()).thenReturn(0);
         when(player.getWPC().addDicePersonalizedRestrictions(chosenDice, position1, false, true, true, true, false)).thenReturn(true);
-        MoveData moveData = toolCard2.placeDice(chosenDice.getId(), position1);
+        moveData = toolCard2.placeDice(chosenDice.getId(), position1);
 
         assertTrue(moveData.moveFinished);
         assertNotNull( moveData.wpc);
@@ -215,7 +234,7 @@ public class ToolCard2Test {
      */
     @Test
     public void nextMoveTest(){
-        MoveData moveData = toolCard2.getNextMove();
+        moveData = toolCard2.getNextMove();
         assertNull(moveData);
 
         toolCard2.setCurrentToolStatus(1);
@@ -263,12 +282,9 @@ public class ToolCard2Test {
         ClientWpc clientWpc = mock(ClientWpc.class);
         when(wpc.getClientWpc()).thenReturn(clientWpc);
 
-        RoundTrack roundTrack = mock(RoundTrack.class);
-        ClientRoundTrack clientRoundTrack = mock(ClientRoundTrack.class);
-        when(roundTrack.getClientRoundTrack()).thenReturn(clientRoundTrack);
         when(game.getRoundTrack()).thenReturn(roundTrack);
 
-        MoveData moveData = toolCard2.cancelAction(true);
+        moveData = toolCard2.cancelAction(true);
         assertTrue(moveData.moveFinished);
         assertTrue(moveData.canceledToolCard);
     }
@@ -285,12 +301,7 @@ public class ToolCard2Test {
         ClientWpc clientWpc = mock(ClientWpc.class);
         when(wpc.getClientWpc()).thenReturn(clientWpc);
 
-        RoundTrack roundTrack = mock(RoundTrack.class);
-        ClientRoundTrack clientRoundTrack = mock(ClientRoundTrack.class);
-        when(roundTrack.getClientRoundTrack()).thenReturn(clientRoundTrack);
-        when(game.getRoundTrack()).thenReturn(roundTrack);
-
-        MoveData moveData = toolCard2.cancelAction(false);
+        moveData = toolCard2.cancelAction(false);
         assertEquals(0, toolCard2.getCurrentStatus());
         assertTrue(moveData.moveFinished);
         assertTrue(moveData.canceledToolCard);

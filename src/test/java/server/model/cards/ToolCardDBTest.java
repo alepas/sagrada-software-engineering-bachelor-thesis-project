@@ -2,8 +2,8 @@ package server.model.cards;
 
 import org.junit.Before;
 import org.junit.Test;
-import server.model.cards.concretePublicObjectiveCards.PublicObjectiveCard3;
 import server.model.cards.concreteToolCards.ToolCard3;
+import server.model.configLoader.ConfigLoader;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -18,6 +18,8 @@ public class ToolCardDBTest {
      */
     @Before
     public void Before(){
+
+        ConfigLoader.loadConfig();
         allToolCard = ToolCardDB.getInstance();
         toolCard3 = mock(ToolCard3.class);
         when(toolCard3.getID()).thenReturn("3");
@@ -32,7 +34,7 @@ public class ToolCardDBTest {
     @Test
     public void getCardsTest(){
 
-        assertNotNull(allToolCard.getInstance());
+        assertNotNull(ToolCardDB.getInstance());
         assertEquals(12, allToolCard.getCardsIDs().size());
         for(int i = 0; i < 12 ; i++) assertTrue(Integer.parseInt(allToolCard.getCardsIDs().get(i)) <= 12 );
 

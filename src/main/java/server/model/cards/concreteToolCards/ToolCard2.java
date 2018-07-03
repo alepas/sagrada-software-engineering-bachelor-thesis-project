@@ -37,7 +37,11 @@ public class ToolCard2 extends ToolCard {
         return new ToolCard2();
     }
 
-
+    /**
+     * @param player is the player that wants to use the ToolCard
+     * @return the first action that the player has to do with the ToolCard
+     * @throws CannotUseToolCardException when it is not possible to use te object
+     */
     @Override
     public MoveData setCard(PlayerInGame player) throws CannotUseToolCardException {
         return setCardDefault(player, true, false, 0, ClientDiceLocations.WPC, ClientDiceLocations.WPC, NextAction.PLACE_DICE_TOOLCARD);
@@ -46,7 +50,7 @@ public class ToolCard2 extends ToolCard {
 
     /**
      * In this ToolCard this method should be called only when the game is a single player game, the
-     *      * first action that a single player must to do use a ToolCard is to pick a dice of the give color
+     * first action that a single player must to do use a ToolCard is to pick a dice of the give color
      *
      * @param diceId is the id of the chosen dice
      * @return all the information related to the next action that the player will have to do and all new parameters created

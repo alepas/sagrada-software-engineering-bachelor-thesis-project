@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import server.constants.ToolCardConstants;
 import server.model.cards.ToolCard;
+import server.model.configLoader.ConfigLoader;
 import server.model.dicebag.Color;
 import server.model.dicebag.Dice;
 import server.model.game.Game;
@@ -33,6 +34,8 @@ public class ToolCard10Test {
 
     @Before
     public void Before() throws CannotPickDiceException {
+
+        ConfigLoader.loadConfig();
         toolCard10 = new ToolCard10();
         player = mock(PlayerInGame.class);
         Game game = mock(Game.class);
@@ -68,6 +71,7 @@ public class ToolCard10Test {
         when(roundTrack.getClientRoundTrack()).thenReturn(clientRoundTrack);
         when(game.getRoundTrack()).thenReturn(roundTrack);
         toolCard10.setCardRoundTrack(roundTrack);
+
     }
 
     /**
@@ -92,6 +96,21 @@ public class ToolCard10Test {
         assertEquals(toolCard10.getID(), copy.getID());
         assertEquals(toolCard10.getName(), copy.getName());
         assertEquals(toolCard10.getDescription(), copy.getDescription());
+    }
+
+    /**
+     * Tests if the tool is initialized in a correct way if the game is a multi player game.
+     *
+     * @throws CannotUseToolCardException not in this test
+     */
+    @Test
+    public void setCardMultiPlayerGameTest() throws CannotUseToolCardException {
+        setSchema();
+        when(player.getWPC().getNumOfDices()).thenReturn(2);
+        toolCard10.setCurrentToolPlayer(null);
+        MoveData moveData = toolCard10.setCard(player);
+        assertEquals(NextAction.SELECT_DICE_TOOLCARD, moveData.nextAction);
+        assertEquals(ClientDiceLocations.EXTRACTED, moveData.wherePickNewDice);
     }
 
     /**
@@ -342,35 +361,18 @@ public class ToolCard10Test {
      * @throws CannotCancelActionException because it is not possible to delete actions while using this tool card
      */
     @Test
-    public void cancelLAstOperationStatusTwoTest() throws CannotCancelActionException {
+    public void cancelLAstOperationStatusTwoTest() throws CannotCancelActionException, CannotPickDiceException, CannotPerformThisMoveException {
         setSchema();
         ArrayList<Dice> dice = new ArrayList<>();
-        Dice dice0 = mock(Dice.class);
-        Dice dice1 = mock(Dice.class);
-        Dice dice2 = mock(Dice.class);
-        Dice dice3 = mock(Dice.class);
-        Dice dice4 = mock(Dice.class);
 
-        ClientDice clientDice0 = mock(ClientDice.class);
-        ClientDice clientDice1 = mock(ClientDice.class);
-        ClientDice clientDice2 = mock(ClientDice.class);
-        ClientDice clientDice3 = mock(ClientDice.class);
         ClientDice clientDice4 = mock(ClientDice.class);
-
-        when(dice0.getClientDice()).thenReturn(clientDice0);
-        when(dice1.getClientDice()).thenReturn(clientDice1);
-        when(dice2.getClientDice()).thenReturn(clientDice2);
-        when(dice3.getClientDice()).thenReturn(clientDice3);
-        when(dice4.getClientDice()).thenReturn(clientDice4);
-
-        dice.add(dice0);
-        dice.add(dice1);
-        dice.add(dice2);
-        dice.add(dice3);
-        dice.add(dice4);
-
+        when(chosenDice.getClientDice()).thenReturn(clientDice4);
+        dice.add(chosenDice);
+        when(chosenDice.getClientDice()).thenReturn(clientDice4);
         toolCard10.setCardExtractedDices(dice);
-        toolCard10.setCurrentToolStatus(2);
+        toolCard10.setCurrentToolStatus(1);
+        toolCard10.pickDice(chosenDice.getId());
+
         toolCard10.cancelAction(false);
     }
 
