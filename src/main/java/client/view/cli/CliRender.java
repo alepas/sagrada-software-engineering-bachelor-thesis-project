@@ -7,79 +7,14 @@ import shared.constants.WpcConstants;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import static client.constants.CliRenderConstants.*;
 
-public class CliRender {
-    private final int cellHeight = 3;
-    private final int diceDistance = 5;
-    private final int diceLenght = 7;
-    private final int wpcHeight = (cellHeight+1)*WpcConstants.ROWS_NUMBER + 3;
-    private final int wpcLenght = (diceLenght+1)*WpcConstants.COLS_NUMBER+1;
-    private final int wpcDistance = CliConstants.WpcSpacing;
-    private final int strNum = CliConstants.COUNTER_START_NUMBER;
-
-    //Colors
-    // Reset
-    private final String RESET = "\033[0m";  // Text Reset
-
-    // Regular Colors
-    private final String BLACK = "\033[0;30m";   // BLACK
-    private final String RED = "\033[0;31m";     // RED
-    private final String GREEN = "\033[0;32m";   // GREEN
-    private final String YELLOW = "\033[0;33m";  // YELLOW
-    private final String BLUE = "\033[0;34m";    // BLUE
-    private final String PURPLE = "\033[0;35m";  // PURPLE
-    private final String CYAN = "\033[0;36m";    // CYAN
-    private final String WHITE = "\033[0;37m";   // WHITE
-
-    // Bold
-    private final String BLACK_BOLD = "\033[1;30m";  // BLACK
-    private final String RED_BOLD = "\033[1;31m";    // RED
-    private final String GREEN_BOLD = "\033[1;32m";  // GREEN
-    private final String YELLOW_BOLD = "\033[1;33m"; // YELLOW
-    private final String BLUE_BOLD = "\033[1;34m";   // BLUE
-    private final String PURPLE_BOLD = "\033[1;35m"; // PURPLE
-    private final String CYAN_BOLD = "\033[1;36m";   // CYAN
-    private final String WHITE_BOLD = "\033[1;37m";  // WHITE
-
-    // Background
-    private final String BLACK_BACKGROUND = "\033[40m";  // BLACK
-    private final String RED_BACKGROUND = "\033[41m";    // RED
-    private final String GREEN_BACKGROUND = "\033[42m";  // GREEN
-    private final String YELLOW_BACKGROUND = "\033[43m"; // YELLOW
-    private final String BLUE_BACKGROUND = "\033[44m";   // BLUE
-    private final String PURPLE_BACKGROUND = "\033[45m"; // PURPLE
-    private final String CYAN_BACKGROUND = "\033[46m";   // CYAN
-    private final String WHITE_BACKGROUND = "\033[47m";  // WHITE
-
-    // High Intensity
-    private final String BLACK_BRIGHT = "\033[0;90m";  // BLACK
-    private final String RED_BRIGHT = "\033[0;91m";    // RED
-    private final String GREEN_BRIGHT = "\033[0;92m";  // GREEN
-    private final String YELLOW_BRIGHT = "\033[0;93m"; // YELLOW
-    private final String BLUE_BRIGHT = "\033[0;94m";   // BLUE
-    private final String PURPLE_BRIGHT = "\033[0;95m"; // PURPLE
-    private final String CYAN_BRIGHT = "\033[0;96m";   // CYAN
-    private final String WHITE_BRIGHT = "\033[0;97m";  // WHITE
-
-    // Bold High Intensity
-    private final String BLACK_BOLD_BRIGHT = "\033[1;90m"; // BLACK
-    private final String RED_BOLD_BRIGHT = "\033[1;91m";   // RED
-    private final String GREEN_BOLD_BRIGHT = "\033[1;92m"; // GREEN
-    private final String YELLOW_BOLD_BRIGHT = "\033[1;93m";// YELLOW
-    private final String BLUE_BOLD_BRIGHT = "\033[1;94m";  // BLUE
-    private final String PURPLE_BOLD_BRIGHT = "\033[1;95m";// PURPLE
-    private final String CYAN_BOLD_BRIGHT = "\033[1;96m";  // CYAN
-    private final String WHITE_BOLD_BRIGHT = "\033[1;97m"; // WHITE
-
-    // High Intensity backgrounds
-    private final String BLACK_BACKGROUND_BRIGHT = "\033[0;100m";// BLACK
-    private final String RED_BACKGROUND_BRIGHT = "\033[0;101m";// RED
-    private final String GREEN_BACKGROUND_BRIGHT = "\033[0;102m";// GREEN
-    private final String YELLOW_BACKGROUND_BRIGHT = "\033[0;103m";// YELLOW
-    private final String BLUE_BACKGROUND_BRIGHT = "\033[0;104m";// BLUE
-    private final String PURPLE_BACKGROUND_BRIGHT = "\033[0;105m"; // PURPLE
-    private final String CYAN_BACKGROUND_BRIGHT = "\033[0;106m";  // CYAN
-    private final String WHITE_BACKGROUND_BRIGHT = "\033[0;107m";   // WHITE
+class CliRender {
+    //TODO: Eliminare WpcConstants
+    private int wpcHeight = (cellHeight+1)*WpcConstants.ROWS_NUMBER + 3;
+    private int wpcLenght = (diceLenght+1)*WpcConstants.COLS_NUMBER+1;
+    private int wpcDistance = CliConstants.WpcSpacing;
+    private int strNum = CliConstants.COUNTER_START_NUMBER;
 
     private final String WPC_BORDER_COLOR = BLACK;
     private final String NULL_COLOR_CELL = BLACK_BRIGHT;
@@ -147,9 +82,6 @@ public class CliRender {
     private final String[] cellColorRestricted =   {"///////",
                                                     "///////",
                                                     "///////"};
-//    private final String[] cellColorRestricted =   {"       ",
-//                                                    "       ",
-//                                                    "       "};
 
     private final String[][] dices = {emptyDice, dice1, dice2, dice3, dice4, dice5, dice6};
     private final String[][] dicesWithNumber = {emptyDice, diceWithNumber1, diceWithNumber2, diceWithNumber3, diceWithNumber4, diceWithNumber5, diceWithNumber6};
@@ -349,13 +281,13 @@ public class CliRender {
                     else return GREEN_BACKGROUND + BLACK;
                 case RED:
                     if (num == 0) return RED;
-                    else return RED_BACKGROUND_BRIGHT + BLACK;
+                    else return RED_BACKGROUND + BLACK;
                 case YELLOW:
                     if (num == 0) return YELLOW;
-                    else return YELLOW_BACKGROUND_BRIGHT + BLACK;
+                    else return YELLOW_BACKGROUND + BLACK;
                 case BLUE:
                     if (num == 0) return BLUE;
-                    else return BLUE_BACKGROUND_BRIGHT + BLACK;
+                    else return BLUE_BACKGROUND + BLACK;
                 case VIOLET:
                     if (num == 0) return PURPLE;
                     else return PURPLE_BACKGROUND + BLACK;
