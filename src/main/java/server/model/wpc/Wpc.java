@@ -6,12 +6,12 @@ import shared.clientInfo.ClientCell;
 import shared.clientInfo.ClientDice;
 import shared.clientInfo.ClientWpc;
 import shared.clientInfo.Position;
-import shared.constants.WpcConstants;
+import server.constants.WpcConstants;
 
 import java.util.ArrayList;
 
-import static shared.constants.WpcConstants.COLS_NUMBER;
-import static shared.constants.WpcConstants.ROWS_NUMBER;
+import static server.constants.WpcConstants.COLS_NUMBER;
+import static server.constants.WpcConstants.ROWS_NUMBER;
 
 
 public class Wpc {

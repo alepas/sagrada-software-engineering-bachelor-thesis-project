@@ -9,7 +9,7 @@ import server.model.configLoader.ConfigLoader;
 import server.model.dicebag.Color;
 import server.model.users.DatabaseUsers;
 import server.model.users.PlayerInGame;
-import shared.constants.GameConstants;
+import server.constants.GameConstants;
 import shared.exceptions.gameExceptions.InvalidMultiplayerGamePlayersException;
 import shared.exceptions.gameExceptions.MaxPlayersExceededException;
 import shared.exceptions.gameExceptions.UserAlreadyInThisGameException;

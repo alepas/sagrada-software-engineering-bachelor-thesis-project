@@ -1,4 +1,4 @@
-package shared.constants;
+package server.constants;
 /**
  * This class contains all constants related to the abstract class Game and both single player game and multi-player game
  */

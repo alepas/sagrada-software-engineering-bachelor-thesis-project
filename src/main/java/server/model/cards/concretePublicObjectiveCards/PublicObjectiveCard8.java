@@ -3,7 +3,7 @@ package server.model.cards.concretePublicObjectiveCards;
 import server.constants.POCConstants;
 import server.model.cards.PublicObjectiveCard;
 import server.model.wpc.Wpc;
-import shared.constants.WpcConstants;
+import server.constants.WpcConstants;
 
 public class PublicObjectiveCard8  extends PublicObjectiveCard {
 

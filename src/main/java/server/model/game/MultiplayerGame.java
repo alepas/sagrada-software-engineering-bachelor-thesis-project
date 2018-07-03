@@ -15,7 +15,7 @@ import server.model.wpc.Wpc;
 import shared.clientInfo.ClientDice;
 import shared.clientInfo.ClientEndTurnData;
 import shared.clientInfo.ClientWpc;
-import shared.constants.GameConstants;
+import server.constants.GameConstants;
 import shared.exceptions.gameExceptions.*;
 import shared.exceptions.usersAndDatabaseExceptions.CannotAddPlayerInDatabaseException;
 import shared.exceptions.usersAndDatabaseExceptions.CannotFindPlayerInDatabaseException;
@@ -24,9 +24,9 @@ import shared.network.commands.notifications.*;
 
 import java.util.*;
 
-import static shared.constants.GameConstants.DEFAULT_SCORE_MULTIPLAYER_GAME;
-import static shared.constants.GameConstants.DEFAULT_SCORE_MULTIPLAYER_GAME_LEFT;
-import static shared.constants.GameConstants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME;
+import static server.constants.GameConstants.DEFAULT_SCORE_MULTIPLAYER_GAME;
+import static server.constants.GameConstants.DEFAULT_SCORE_MULTIPLAYER_GAME_LEFT;
+import static server.constants.GameConstants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME;
 
 public class MultiplayerGame extends Game {
     private int roundPlayer;
@@ -47,7 +47,7 @@ public class MultiplayerGame extends Game {
         super(numPlayers);
 
         if (numPlayers < GameConstants.MULTIPLAYER_MIN_NUM_PLAYERS || numPlayers > GameConstants.MAX_NUM_PLAYERS)
-            throw new InvalidMultiplayerGamePlayersException(numPlayers);
+            throw new InvalidMultiplayerGamePlayersException(numPlayers, GameConstants.MULTIPLAYER_MIN_NUM_PLAYERS, GameConstants.MAX_NUM_PLAYERS);
 
         numOfPrivateObjectivesForPlayer = GameConstants.NUM_PRIVATE_OBJ_FOR_PLAYER_IN_MULTIPLAYER_GAME;
         numOfToolCards = GameConstants.NUM_TOOL_CARDS_IN_MULTIPLAYER_GAME;
@@ -161,7 +161,6 @@ public class MultiplayerGame extends Game {
         }
 
         calculateScore();
-        saveScore();
         endGame();
     }
 
@@ -353,7 +352,7 @@ public class MultiplayerGame extends Game {
         }
 
         players[turnPlayer].setActive();
-        changeAndNotifyObservers(new NextTurnNotification(currentTurn, players[turnPlayer].getUser(), endTurnData));
+        changeAndNotifyObservers(new NextTurnNotification(currentTurn, players[turnPlayer].getUser(), GameConstants.TIME_TO_PLAY_TURN_MULTIPLAYER, endTurnData));
         startTurnTimer();
     }
 

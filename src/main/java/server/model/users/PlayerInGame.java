@@ -11,7 +11,7 @@ import server.model.wpc.DiceAndPosition;
 import server.model.wpc.Wpc;
 import server.model.wpc.WpcDB;
 import shared.clientInfo.*;
-import shared.constants.GameConstants;
+import server.constants.GameConstants;
 import shared.exceptions.gameExceptions.UserNotInThisGameException;
 import shared.exceptions.usersAndDatabaseExceptions.*;
 import shared.network.commands.notifications.DicePlacedNotification;
@@ -76,22 +76,6 @@ public class PlayerInGame {
 
     public int getTurnForRound() {
         return turnForRound;
-    }
-
-    public int getWonGames() throws CannotFindUserInDBException {
-        return db.getWonGamesFromUsername(username);
-    }
-
-    public int getLostGames() throws CannotFindUserInDBException {
-        return db.getLostGamesFromUsername(username);
-    }
-
-    public int getAbandonedGames() throws CannotFindUserInDBException {
-        return db.getAbandonedGamesFromUsername(username);
-    }
-
-    public int getRanking() throws CannotFindUserInDBException {
-        return db.getRankingFromUsername(username);
     }
 
 
