@@ -78,22 +78,6 @@ public class PlayerInGame {
         return turnForRound;
     }
 
-    public int getWonGames() throws CannotFindUserInDBException {
-        return db.getWonGamesFromUsername(username);
-    }
-
-    public int getLostGames() throws CannotFindUserInDBException {
-        return db.getLostGamesFromUsername(username);
-    }
-
-    public int getAbandonedGames() throws CannotFindUserInDBException {
-        return db.getAbandonedGamesFromUsername(username);
-    }
-
-    public int getRanking() throws CannotFindUserInDBException {
-        return db.getRankingFromUsername(username);
-    }
-
 
     public void addPointsToRanking(int pointsToAdd) throws CannotUpdateStatsForUserException {
         db.addPointsRankingFromUsername(username, pointsToAdd);

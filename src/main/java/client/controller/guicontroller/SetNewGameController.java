@@ -233,7 +233,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
         fourPlayersBox.setOnMouseClicked(event -> errorLabel.setVisible(false));
 
         personalAreaButton.setOnAction(event -> changeSceneHandle(event,
-                "/client/client/view/gui/fxml/fxml/PersonalAreaScene.fxml"));
+                "/client/view/gui/fxml/PersonalAreaScene.fxml"));
 
         firstWPC.setOnMouseClicked(event -> pickWpc(event, wpc0ID));
 

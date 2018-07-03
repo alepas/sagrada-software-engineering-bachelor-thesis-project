@@ -158,7 +158,6 @@ public class MultiplayerGame extends Game {
         }
 
         calculateScore();
-        saveScore();
         endGame();
     }
 

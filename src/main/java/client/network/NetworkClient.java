@@ -209,7 +209,7 @@ public abstract class NetworkClient implements ResponseHandler {
 
     @Override
     public void handle(GetUserStatResponse response) {
-        if (response.exception != null){
+        if (response.exception == null){
             clientInfo.setUser(response.user);
         }
     }
