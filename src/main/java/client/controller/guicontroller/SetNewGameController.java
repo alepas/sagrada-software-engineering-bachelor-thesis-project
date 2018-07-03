@@ -472,6 +472,8 @@ public class SetNewGameController implements Observer, NotificationHandler {
             for (ClientColor color : colors) {
                 String style = PRIVATE_OBJ_IDENTIFIER_CSS.concat(String.valueOf(color).toLowerCase());
                 privateObjArea.setId(style);
+                privateObjArea.getStyleClass().add("card-style");
+
             }
         });
         startClockAnimation();
