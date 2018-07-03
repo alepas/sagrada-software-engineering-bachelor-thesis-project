@@ -136,165 +136,166 @@
 .card-style {
     -fx-background-repeat:no-repeat;
     -fx-background-position: center;
+    -fx-background-size: contain;
 }
 
 
 #prOCviolet{
     -fx-background-image: url("cards/public/pub16.jpg");
-    -fx-background-size: cover;
+    
 }
 
 
 #prOCblue{
     -fx-background-image: url("cards/public/pub15.jpg");
-    -fx-background-size: cover;
+    
 }
 
 #prOCyellow{
     -fx-background-image: url("cards/public/pub13.jpg");
-    -fx-background-size: cover;
+    
 }
 
 
 #prOCgreen{
     -fx-background-image: url("cards/public/pub14.jpg");
-    -fx-background-size: cover;
+    
 }
 
 #prOCred{
      -fx-background-image: url("cards/public/pub12.jpg");
-     -fx-background-size: cover;
+     
 }
 
 #poc1{
     -fx-background-image: url("cards/public/pub1.jpg");
-    -fx-background-size: cover;
+    
 }
 
 
 #poc2{
     -fx-background-image: url("cards/public/pub2.jpg");
-    -fx-background-size: cover;
+    
 }
 
 
 #poc3{
     -fx-background-image: url("cards/public/pub3.jpg");
-    -fx-background-size: cover;
+    
 }
 
 
 #poc4{
     -fx-background-image: url("cards/public/pub4.jpg");
-    -fx-background-size: cover;
+    
 }
 
 
 #poc5{
     -fx-background-image: url("cards/public/pub5.jpg");
-    -fx-background-size: cover;
+    
 }
 
 
 #poc6{
     -fx-background-image: url("cards/public/pub6.jpg");
-    -fx-background-size: cover;
+    
 }
 
 
 #poc7{
     -fx-background-image: url("cards/public/pub7.jpg");
-    -fx-background-size: cover;
+    
 }
 
 
 #poc8{
     -fx-background-image: url("cards/public/pub8.jpg");
-    -fx-background-size: cover;
+    
 }
 
 
 #poc9{
     -fx-background-image: url("cards/public/pub9.jpg");
-    -fx-background-size: cover;
+    
 }
 
 
 #poc10{
     -fx-background-image: url("cards/public/pub10.jpg");
-    -fx-background-size: cover;
+    
 }
 
 
 #tool1{
     -fx-background-image: url("cards/util/util1.jpg");
-    -fx-background-size: cover;
+    
 }
 
 
 #tool2{
     -fx-background-image: url("cards/util/util2.jpg");
-    -fx-background-size: cover;
+    
 }
 
 
 #tool3{
     -fx-background-image: url("cards/util/util3.jpg");
-    -fx-background-size: cover;
+    
 }
 
 
 #tool4{
     -fx-background-image: url("cards/util/util4.jpg");
-    -fx-background-size: cover;
+    
 }
 
 
 #tool5{
     -fx-background-image: url("cards/util/util5.jpg");
-    -fx-background-size: cover;
+    
 }
 
 
 #tool6{
     -fx-background-image: url("cards/util/util6.jpg");
-    -fx-background-size: cover;
+    
 }
 
 
 #tool7{
     -fx-background-image: url("cards/util/util7.jpg");
-    -fx-background-size: cover;
+    
 }
 
 
 #tool8{
     -fx-background-image: url("cards/util/util8.jpg");
-    -fx-background-size: cover;
+    
 }
 
 
 #tool9{
     -fx-background-image: url("cards/util/util9.jpg");
-    -fx-background-size: cover;
+    
 }
 
 
 #tool10{
     -fx-background-image: url("cards/util/util10.jpg");
-    -fx-background-size: cover;
+    
 }
 
 
 #tool11{
     -fx-background-image: url("cards/util/util11.jpg");
-    -fx-background-size: cover;
+    
 }
 
 
 #tool12{
     -fx-background-image: url("cards/util/util12.jpg");
-    -fx-background-size: cover;
+    
 }
 
 

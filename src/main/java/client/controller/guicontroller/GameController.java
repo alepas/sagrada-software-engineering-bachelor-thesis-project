@@ -568,6 +568,8 @@ public class GameController implements Observer, NotificationHandler {
             AnchorPane toolCard = new AnchorPane();
             toolCard.setPrefSize(400, 540);
             toolCard.setId(id);
+            toolCard.getStyleClass().add("card-style");
+
 
             zoomedCard.getChildren().add(toolCard);
             zoomCardBackButton.toFront();
@@ -696,6 +698,8 @@ public class GameController implements Observer, NotificationHandler {
         for (ClientColor color : privateObjective) {
             String style = PRIVATE_OBJ_IDENTIFIER_CSS.concat(String.valueOf(color).toLowerCase());
             privateObjPane.setId(style);
+            privateObjPane.getStyleClass().add("card-style");
+
         }
     }
 
