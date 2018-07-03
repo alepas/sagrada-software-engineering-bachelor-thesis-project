@@ -22,6 +22,7 @@ public class GameConstants {
     public static int TIME_TO_PLAY_TURN_MULTIPLAYER;
     public static int TIME_WAITING_PLAYERS_TO_ENTER_GAME;
     public static int DEFAULT_SCORE_MULTIPLAYER_GAME;
+    public static int DEFAULT_SCORE_MULTIPLAYER_GAME_LEFT = -10;
 
     //SingleplayerGame
     public static int NUM_PRIVATE_OBJ_FOR_PLAYER_IN_SINGLEPLAYER_GAME;

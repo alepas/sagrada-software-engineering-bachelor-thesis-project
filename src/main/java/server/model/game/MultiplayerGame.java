@@ -24,6 +24,8 @@ import shared.network.commands.notifications.*;
 
 import java.util.*;
 
+import static shared.constants.GameConstants.DEFAULT_SCORE_MULTIPLAYER_GAME;
+import static shared.constants.GameConstants.DEFAULT_SCORE_MULTIPLAYER_GAME_LEFT;
 import static shared.constants.GameConstants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME;
 
 public class MultiplayerGame extends Game {
@@ -33,6 +35,7 @@ public class MultiplayerGame extends Game {
     private ClientEndTurnData endTurnData;
     private WaiterThread currentThread;
     private Thread waitPlayersThread;
+    private boolean endGameForced = false;
 
     /**
      * Creates a multiplayerGame
@@ -416,20 +419,24 @@ public class MultiplayerGame extends Game {
     //Da testare
     @Override
     public void calculateScore() {
-        for (PlayerInGame player : players) {
-            Wpc wpc = player.getWPC();
-            System.out.println("favor: " + wpc.getFavours());
-            System.out.println("freeCell" + wpc.getNumFreeCells());
-            int score = privateObjScore(player) - wpc.getNumFreeCells() + wpc.getFavours();
+        if (!endGameForced) {
+            for (PlayerInGame player : players) {
+                int score;
+                if (!player.isDisconnected()) {
+                    Wpc wpc = player.getWPC();
+                    System.out.println("favor: " + wpc.getFavours());
+                    System.out.println("freeCell" + wpc.getNumFreeCells());
+                    score = privateObjScore(player) - wpc.getNumFreeCells() + wpc.getFavours();
 
-            for (PublicObjectiveCard poc : publicObjectiveCards) {
-                System.out.println(poc.getID() + " score: " + poc.calculateScore(wpc));
-                score = score + poc.calculateScore(wpc);
+                    for (PublicObjectiveCard poc : publicObjectiveCards) {
+                        System.out.println(poc.getID() + " score: " + poc.calculateScore(wpc));
+                        score = score + poc.calculateScore(wpc);
+                    }
+                } else score = GameConstants.DEFAULT_SCORE_MULTIPLAYER_GAME_LEFT;
+                scoreList.put(player.getUser(), score);
             }
-            scoreList.put(player.getUser(), score);
         }
         changeAndNotifyObservers(new ScoreNotification(scoreList));
-        saveScore();
     }
 
 
@@ -466,13 +473,17 @@ public class MultiplayerGame extends Game {
         scores.sort((Comparator<Map.Entry<?, Integer>>) (o1, o2) -> o2.getValue().compareTo(o1.getValue()));
         for (PlayerInGame player : players) {
             try {
-                if (player.getUser().equals(scores.get(0).getKey())) {
-                    player.addPointsToRanking(scoreList.get(player.getUser()) + numPlayers);
-                    player.addWonGame();
+                if (player.isDisconnected()){
+                    player.addAbandonedGame();
                 } else {
-                    player.addPointsToRanking(scoreList.get(player.getUser()));
-                    player.addLostGame();
+                    if (player.getUser().equals(scores.get(0).getKey())) {
+                        player.addPointsToRanking(numPlayers);
+                        player.addWonGame();
+                    } else {
+                        player.addLostGame();
+                    }
                 }
+                player.addPointsToRanking(scoreList.get(player.getUser()));
             } catch (CannotUpdateStatsForUserException e) {
                 e.printStackTrace();
             }
@@ -495,8 +506,14 @@ public class MultiplayerGame extends Game {
     }
 
     private void forceEndGame() {
-        //è rimasto solamente un giocatore
-        //TODO:
+        endGameForced = true;
+        for (PlayerInGame player : players){
+            if (player.isDisconnected()) scoreList.put(player.getUser(), DEFAULT_SCORE_MULTIPLAYER_GAME_LEFT);
+            else scoreList.put(player.getUser(), DEFAULT_SCORE_MULTIPLAYER_GAME);
+        }
+        while (roundTrack.getCurrentRound() < GameConstants.NUM_OF_ROUNDS) roundTrack.nextRound();
+        currentTurn = NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME * numPlayers;
+        endTurn(null);
     }
 
     //------------------------------- Metodi validi solo lato client -------------------------------

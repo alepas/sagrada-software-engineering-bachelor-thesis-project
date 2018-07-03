@@ -24,6 +24,10 @@ public class CliConstants {
 
     public static String INSTRUCTION_NOT_RECOGNIZED = ">>> Istruzione non riconosciuta. Perfavore inserisci '" + SOCKET_RESPONSES.get(0) +
             "' o '" + RMI_RESPONSES.get(0) + "'";
+    public static String INSTRUCTION_NOT_RECOGNIZED_P1 = ">>> Istruzione non riconosciuta. Perfavore inserisci '";
+    public static String INSTRUCTION_NOT_RECOGNIZED_P2 = "' o '";
+    public static String INSTRUCTION_NOT_RECOGNIZED_P3 = "'";
+
     public static String CANNOT_CONNECT_WITH_SOCKET_SERVER = ">>> Impossibile stabilire connessione Socket con il Server";
     public static String CANNOT_CONNECT_WITH_RMI_SERVER = ">>> Impossibile stabilire connessione RMI con il Server";
     public static String VOID_STRING = "";
