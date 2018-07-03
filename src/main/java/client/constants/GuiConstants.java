@@ -31,6 +31,7 @@ public class GuiConstants {
     public static final String POC_IDENTIFIER_CSS = "poc";
     public static final String DEFAULT_CELL_COLOR = "white";
     public static final String NUMBER_IDENTIFIER_CSS = "num";
+    public static final String CARD_STYLE = "card-style";
 
     //timer constants
     public static final String MINUTES_TIMER = "00:";

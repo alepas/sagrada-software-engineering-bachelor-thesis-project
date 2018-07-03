@@ -1,6 +1,5 @@
 package client.controller.guicontroller;
 
-import client.constants.GuiConstants;
 import client.network.ClientInfo;
 import client.network.NetworkClient;
 import javafx.animation.Animation;
@@ -295,7 +294,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
                 lab1.setLayoutX(100);
                 lab1.setLayoutY(340);
 
-                SettingOfGame(event);
+                settingOfGame(event);
             }
         });
     }
@@ -303,7 +302,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
     /**
      * calls the methods that wait all the elements that compose a game
      */
-    private void SettingOfGame(Event event) {
+    private void settingOfGame(Event event) {
         waitPlayers();
         waitWPC();
         playGame(event);
@@ -328,8 +327,9 @@ public class SetNewGameController implements Observer, NotificationHandler {
                     try {
                         playerWaiter.wait();
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        Thread.currentThread().interrupt();
                     }
+
                 }
             }
             Platform.runLater(()->{
@@ -378,7 +378,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
                     try {
                         wpcWaiter.wait();
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        Thread.currentThread().interrupt();
                     }
                 }
             }
@@ -533,14 +533,12 @@ public class SetNewGameController implements Observer, NotificationHandler {
      * @param number is the number restriction
      */
     private void fillNumber(AnchorPane cell, int number) {
-        switch (number) {
-            case 0:
+        if(number == 0)
                 cell.getStyleClass().add(DEFAULT_CELL_COLOR);
-                break;
-            default:
-                String style = NUMBER_IDENTIFIER_CSS.concat(valueOf(number));
-                cell.getStyleClass().add(style);
-                break;
+
+        else{
+            String style = NUMBER_IDENTIFIER_CSS.concat(valueOf(number));
+            cell.getStyleClass().add(style);
         }
     }
 
@@ -565,9 +563,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
         Platform.runLater(()-> {
             try {
                 networkClient.pickWpc(clientInfo.getUserToken(), wpcID);
-            } catch (NotYourWpcException e) {
-                wpcInfoLabel.setText(e.getMessage());
-            } catch (CannotFindPlayerInDatabaseException e) {
+            } catch (NotYourWpcException | CannotFindPlayerInDatabaseException e) {
                 wpcInfoLabel.setText(e.getMessage());
             }
             firstWPC.setDisable(true);
@@ -592,7 +588,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
                     try {
                         cardWaiter.wait();
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        Thread.currentThread().interrupt();
                     }
                 }
             }
@@ -614,7 +610,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
                     try {
                         cardWaiter.wait();
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        Thread.currentThread().interrupt();
                     }
                 }
             }
@@ -642,6 +638,8 @@ public class SetNewGameController implements Observer, NotificationHandler {
             case 4:
                 changeSceneHandle(event, "/client/view/gui/fxml/FourPlayersGameScene.fxml");
                 break;
+            default:
+                break;
         }
     }
 
@@ -658,7 +656,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
         try {
             nextNode = FXMLLoader.load(getClass().getResource(path));
         } catch (IOException e) {
-            e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
         Scene scene = new Scene(nextNode);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -690,21 +688,21 @@ public class SetNewGameController implements Observer, NotificationHandler {
             lab2.setLayoutX(100);
             lab2.setLayoutY(360);
         });
-        synchronized (playerWaiter){ playerWaiter.notify(); }
+        synchronized (playerWaiter){ playerWaiter.notifyAll(); }
     }
 
     @Override
     public void handle(WpcsExtractedNotification notification) {
         userWpcs = notification.wpcsByUser.get(clientInfo.getUsername());
         areWpcExtracted = true;
-        synchronized (wpcWaiter){ wpcWaiter.notify();}
+        synchronized (wpcWaiter){ wpcWaiter.notifyAll();}
     }
 
     @Override
     public void handle(PrivateObjExtractedNotification notification) {
         colors = notification.colorsByUser.get(clientInfo.getUsername());
         privateObjExtractd = true;
-        synchronized (cardWaiter){cardWaiter.notify();}
+        synchronized (cardWaiter){cardWaiter.notifyAll();}
     }
 
     @Override
@@ -716,60 +714,67 @@ public class SetNewGameController implements Observer, NotificationHandler {
         else
             Platform.runLater(()-> wpcInfoLabel.setText(user + OTHERS_SCHEMA_CHOICE  + name));
         allWpcsPicked = clientInfo.allPlayersChooseWpc();
-        synchronized (cardWaiter){cardWaiter.notify();}
+        synchronized (cardWaiter){cardWaiter.notifyAll();}
     }
 
     @Override
     public void handle(ToolcardsExtractedNotification notification) {
         toolExtracted = true;
-        synchronized (cardWaiter){cardWaiter.notify();}
+        synchronized (cardWaiter){cardWaiter.notifyAll();}
     }
 
     @Override
     public void handle(PocsExtractedNotification notification) {
         pocExtracted = true;
-        synchronized (cardWaiter){cardWaiter.notify();}
+        synchronized (cardWaiter){cardWaiter.notifyAll();}
     }
 
     @Override
     public void handle(NewRoundNotification notification) {
+        //because it is handled in the game controller
     }
 
     @Override
     public void handle(NextTurnNotification notification) {
+        //because it is handled in the game controller
     }
 
     @Override
     public void handle(ToolCardDiceChangedNotification notification) {
+        //because it is handled in the game controller
     }
 
     @Override
     public void handle(DicePlacedNotification notification) {
-
+        //because it is handled in the game controller
     }
 
 
     @Override
     public void handle(ToolCardUsedNotification notification) {
-
+        //because it is handled in the game controller
     }
 
     @Override
     public void handle(PlayerSkipTurnNotification notification) {
+        //because it is handled in the game controller
 
     }
 
     @Override
     public void handle(ScoreNotification notification) {
+        //because it is handled in the game controller
     }
 
     @Override
     public void handle(ToolCardDicePlacedNotification toolCardDicePlacedNotification) {
+        //because it is handled in the game controller
 
     }
 
     @Override
     public void handle(ToolCardExtractedDicesModifiedNotification toolCardExtractedDicesModifiedNotification) {
+        //because it is handled in the game controller
 
     }
 
