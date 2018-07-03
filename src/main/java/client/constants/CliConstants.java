@@ -1,5 +1,8 @@
 package client.constants;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class CliConstants {
     public static int COUNTER_START_NUMBER = 0;
 
@@ -10,11 +13,26 @@ public class CliConstants {
     public static String NO_RESPONSE = "n";
     public static String ESCAPE_RESPONSE = "back";
     public static String QUIT_RESPONSE = "quit";
-    
+
+    public static String SOCKET_OR_RMI = ">>> Vuoi usare socket o rmi?";
+    public static ArrayList<String> SOCKET_RESPONSES = new ArrayList<String>(
+            Arrays.asList("socket", "s"));
+    public static ArrayList<String> RMI_RESPONSES = new ArrayList<String>(
+            Arrays.asList("rmi", "r"));
+    public static ArrayList<String> QUIT_RESPONSES = new ArrayList<String>(
+            Arrays.asList(QUIT_RESPONSE, "q"));
+
+    public static String INSTRUCTION_NOT_RECOGNIZED = ">>> Istruzione non riconosciuta. Perfavore inserisci '" + SOCKET_RESPONSES.get(0) +
+            "' o '" + RMI_RESPONSES.get(0) + "'";
+    public static String CANNOT_CONNECT_WITH_SOCKET_SERVER = ">>> Impossibile stabilire connessione Socket con il Server";
+    public static String CANNOT_CONNECT_WITH_RMI_SERVER = ">>> Impossibile stabilire connessione RMI con il Server";
     public static String VOID_STRING = "";
 
+    public static String TECHNOLOGY_NOT_SUPPORTED_P1 = ">>> Tecnologia ";
+    public static String TECHNOLOGY_NOT_SUPPORTED_P2 = " non ancora supportata";
+
     public static String PRESENT_RETURN_BACK = " (digita '" + ESCAPE_RESPONSE + "' per annullare la mossa)";
-    public static String PRESENT_QUIT = " (digita '" + QUIT_RESPONSE + "' per uscire)";
+    public static String PRESENT_QUIT = " (Digita '" + QUIT_RESPONSE + "' per uscire)";
     public static String INSERT_YES_OR_NO = "Digita '" + YES_RESPONSE + "' oppure '" + NO_RESPONSE + "'";
 
     public static String CHOOSE_LOG_TYPE =
@@ -137,4 +155,28 @@ public class CliConstants {
     public static String PLAYER_PLACED_DICE = " ha posizionato il dado ";
     public static String IN_POSITION = " in posizione (";
     public static String PLAYER_USED_TOOLCARD = " ha usato la toolcard ";
+    public static String CHANGED_DICE = " ha cambiato il dado\n\n";
+    public static String INTO_DICE = "\nnel dado\n\n";
+    public static String POSITION = "Posizione: ";
+    public static String PLAYER_REPLACED_DICE = " ha sostituio il dado\n\n";
+    public static String PLACED_IN = "\nposizionato in: ";
+    public static String WITH_DICE = " con il dado\n\n";
+    public static String EXTRACTED_DICES_REPLACED = "I dadi estratti sono stati rilanciati, ecco i nuovi:";
+    public static String PLAYER_DISCONNECTED = " si è disconesso";
+    public static String PLAYER_RECONNECTED = " si è riconesso";
+    public static String LOST_CONNECTION = "Connessione con il server persa";
+    public static String LOGIN_FROM_ANOTHER_DEVICE = "Hai effettuato il login da un altro dispositivo";
+    public static String YOU_HAVE_BEEN_DISCONNECTED = "Sei pertanto stato disconesso dalla sessione";
+
+    public static String TIME_TO_WAIT_PLAYER_ENDED = "Tempo per attendere nuovi giocatori terminato. La partita inizierà comunque";
+    public static String POINTS = " punti";
+
+    public static String PLAYER_SKIPPED_TURN = " ha saltato il turno poichè non è attualmente connesso alla partita";
+    public static String PLAYER_SKIPPED_TURN_DUE_TO_TOOLCARD = " ha saltato il turno a causa dell'utilizzo della toolcard ";
+
+    public static String GAME_ENDED = "Partita terminata";
+    public static String FINAL_TABLE = "Classifica finale:";
+
+
+
 }

@@ -1076,7 +1076,7 @@ public class CliView implements Observer, NotificationHandler {
     public void handle(DicePlacedNotification notification) {
         printText(RETURN + cliRender.renderWpc(notification.wpc, false));
         displayText(notification.username + PLAYER_PLACED_DICE + notification.dice.getDiceID() +
-                IN_POSITION + (notification.position.getRow()+strNum) + ", " + (notification.position.getColumn()+strNum) + ")");
+                IN_POSITION + (notification.position.getRow()+strNum) + ", " + (notification.position.getColumn()+strNum) + CLOSE_PARENTHESIS);
         if (notification.newExtractedDices != null) {
             displayText(EXTRACTED_DICES);
             printText(cliRender.renderDices(notification.newExtractedDices));
@@ -1087,7 +1087,7 @@ public class CliView implements Observer, NotificationHandler {
     public void handle(ToolCardUsedNotification notification) {
         if (!notification.username.equals(controller.getUser())){
             displayText(notification.username + PLAYER_USED_TOOLCARD + notification.toolCard.getId()
-                + " (" + notification.toolCard.getName() + ")");
+                + " (" + notification.toolCard.getName() + CLOSE_PARENTHESIS);
             for(Notification not : notification.movesNotifications) not.handle(this);
         }
     }
@@ -1095,48 +1095,48 @@ public class CliView implements Observer, NotificationHandler {
     @Override
     public void handle(ToolCardDiceChangedNotification notification) {
         if (notification.oldPosition.equals(notification.newPosition)){
-            displayText(notification.username + " ha cambiato il dado\n\n" + cliRender.renderDice(notification.oldDice)
-                    + "\nnel dado\n\n" + cliRender.renderDice(notification.newDice));
-            displayText("Posizione: " + notification.oldPosition);
+            displayText(notification.username + CHANGED_DICE + cliRender.renderDice(notification.oldDice)
+                    + INTO_DICE + cliRender.renderDice(notification.newDice));
+            displayText(POSITION + notification.oldPosition);
         } else {
-            displayText(notification.username + " ha sostituio il dado\n\n" + cliRender.renderDice(notification.oldDice)
-                    + "\nposizionato in: " + notification.oldPosition + " con il dado\n\n" + cliRender.renderDice(notification.newDice)
-                    + "\nposizionato in: " + notification.newPosition);
+            displayText(notification.username + PLAYER_REPLACED_DICE + cliRender.renderDice(notification.oldDice)
+                    + PLACED_IN + notification.oldPosition + WITH_DICE + cliRender.renderDice(notification.newDice)
+                    + PLACED_IN + notification.newPosition);
         }
     }
 
     @Override
     public void handle(ToolCardDicePlacedNotification notification) {
-        displayText(notification.username + " ha posizionato il dado " + notification.dice.getDiceID() +
-                " in posizione (" + (notification.position.getRow()+strNum) + ", " + (notification.position.getColumn()+strNum) + ")");
+        displayText(notification.username + PLAYER_PLACED_DICE + notification.dice.getDiceID() +
+                IN_POSITION + (notification.position.getRow()+strNum) + ", " + (notification.position.getColumn()+strNum) + CLOSE_PARENTHESIS);
     }
 
     @Override
     public void handle(ToolCardExtractedDicesModifiedNotification notification) {
-        displayText("I dadi estratti sono stati rilanciati, ecco i nuovi:");
+        displayText(EXTRACTED_DICES_REPLACED);
         printText(cliRender.renderDices(controller.getExtractedDices()));
     }
 
     @Override
     public void handle(PlayerDisconnectedNotification notification) {
-        printText("");
-        displayText(notification.username + " si è disconesso");
+        printText(VOID_STRING);
+        displayText(notification.username + PLAYER_DISCONNECTED);
     }
 
     @Override
     public void handle(PlayerReconnectedNotification notification) {
-        printText("");
-        displayText(notification.username + " si è riconesso");
+        printText(VOID_STRING);
+        displayText(notification.username + PLAYER_RECONNECTED);
     }
 
     @Override
     public void handle(ForceDisconnectionNotification notification) {
-        printText("");
+        printText(VOID_STRING);
         if (notification.lostConnection) {
-            displayText("Connessione con il server persa");
+            displayText(LOST_CONNECTION);
         } else {
-            displayText("Hai effettuato il login da un altro dispositivo");
-            displayText("Sei pertanto stato disconesso dalla sessione");
+            displayText(LOGIN_FROM_ANOTHER_DEVICE);
+            displayText(YOU_HAVE_BEEN_DISCONNECTED);
         }
         changeState(Status.RECONNECT);
         if (currentThread != null) currentThread.interrupt();
@@ -1145,24 +1145,23 @@ public class CliView implements Observer, NotificationHandler {
 
     @Override
     public void handle(ForceStartGameNotification notification) {
-        displayText("Tempo per attendere nuovi giocatori terminato. La partita inizierà comunque");
+        displayText(TIME_TO_WAIT_PLAYER_ENDED);
     }
 
     @Override
     public void handle(PlayerSkipTurnNotification notification) {
-        printText("");
-        String disconnectedString = notification.username +
-                " ha saltato il turno poichè non è attualmente connesso alla partita";
+        printText(VOID_STRING);
+        String disconnectedString = notification.username + PLAYER_SKIPPED_TURN;
         String usedToolcardString = notification.username +
-                " ha saltato il turno a causa dell'utilizzo della toolcard " + notification.cardId;
+                PLAYER_SKIPPED_TURN_DUE_TO_TOOLCARD + notification.cardId;
         displayText(notification.disconnected ? disconnectedString : usedToolcardString);
     }
 
     @Override
     public void handle(ScoreNotification notification) {
-        printText("");
-        displayText("Partita terminata");
-        displayText("Classifica finale:");
+        printText(VOID_STRING);
+        displayText(GAME_ENDED);
+        displayText(FINAL_TABLE);
 
         ArrayList<Map.Entry<String, Integer>> scores = new ArrayList<>(notification.scoreList.entrySet());
         scores.sort((Comparator<Map.Entry<?, Integer>>) (o1, o2) -> o2.getValue().compareTo(o1.getValue()));
@@ -1170,7 +1169,7 @@ public class CliView implements Observer, NotificationHandler {
         int i = 1;
         for (Map.Entry<String, Integer> entry : scores) {
             System.out.println(i++ + ") " + entry.getKey() + ": "
-                    + entry.getValue() + " punti");
+                    + entry.getValue() + POINTS);
         }
 
         changeState(Status.RETURN_TO_MAIN_MENU);

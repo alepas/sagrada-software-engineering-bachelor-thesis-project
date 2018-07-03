@@ -5,6 +5,7 @@ import client.network.NetworkClient;
 import client.network.RmiClient;
 import client.network.SocketClient;
 import shared.constants.NetworkConstants;
+import static client.constants.CliConstants.*;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -21,13 +22,13 @@ public class LaunchCli {
         boolean quit = false;
 
         do {
-            System.out.println(">>> Vuoi usare socket o rmi? (Digita \"quit\" per uscire)");
+            System.out.println(SOCKET_OR_RMI + PRESENT_QUIT);
             answer = userInput().toLowerCase();
-            if (answer.equals("socket") || answer.equals("s")) tecnology = Tecnology.SOCKET;
-            if (answer.equals("rmi") || answer.equals("r")) tecnology = Tecnology.RMI;
-            if (answer.equals("quit") || answer.equals("q")) return;
+            if (SOCKET_RESPONSES.contains(answer)) tecnology = Tecnology.SOCKET;
+            if (RMI_RESPONSES.contains(answer)) tecnology = Tecnology.RMI;
+            if (QUIT_RESPONSES.contains(answer)) return;
             if (tecnology == null) {
-                System.out.println(">>> Istruzione non riconosciuta. Perfavore inserisci \"socket\" o \"rmi\"");
+                System.out.println();
                 continue;
             }
 
@@ -36,7 +37,7 @@ public class LaunchCli {
                     try {
                         quit = startSocketClient();
                     } catch (ConnectException e) {
-                        System.out.println(">>> Impossibile stabilire connessione Socket con il Server");
+                        System.out.println(CANNOT_CONNECT_WITH_SOCKET_SERVER);
                         tecnology = null;
                     }
                     break;
@@ -44,12 +45,12 @@ public class LaunchCli {
                     try {
                         quit = startRmiClient();
                     } catch (Exception e){
-                        System.out.println(">>> Impossibile stabilire connessione RMI con il Server");
+                        System.out.println(CANNOT_CONNECT_WITH_RMI_SERVER);
                         tecnology = null;
                     }
                     break;
                 default:
-                    System.out.println(">>> Tecnologia " + tecnology.toString() + " non ancora supportata");
+                    System.out.println(TECHNOLOGY_NOT_SUPPORTED_P1 + tecnology.toString() + TECHNOLOGY_NOT_SUPPORTED_P2);
                     tecnology = null;
                     break;
             }
@@ -80,20 +81,3 @@ public class LaunchCli {
         return scanner.nextLine();
     }
 }
-
-
-//        if (args.length == 0) {
-//            System.err.println("Provide host:port please");
-//            return;
-//        }
-//
-//        String[] tokens = args[0].split(":");
-//
-//        if (tokens.length < 2) {
-//            throw new IllegalArgumentException("Bad formatting: " + args[0]);
-//        }
-//
-//        String host = tokens[0];
-//        int port = Integer.parseInt(tokens[1]);
-
-//        Client client = new Client(host, port);
