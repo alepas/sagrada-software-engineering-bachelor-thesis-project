@@ -3,7 +3,7 @@ package server.model.cards;
 import org.junit.Before;
 import org.junit.Test;
 import server.model.cards.concretePublicObjectiveCards.PublicObjectiveCard3;
-import shared.clientInfo.ClientPoc;
+import server.model.configLoader.ConfigLoader;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -18,6 +18,7 @@ public class PocDBTest {
      */
     @Before
     public void Before(){
+        ConfigLoader.loadConfig();
         allPoc = PocDB.getInstance();
         card3 = mock(PublicObjectiveCard3.class);
         when(card3.getID()).thenReturn("3");

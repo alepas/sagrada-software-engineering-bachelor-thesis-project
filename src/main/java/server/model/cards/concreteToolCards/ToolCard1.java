@@ -209,7 +209,13 @@ public class ToolCard1 extends ToolCard {
         return null;
     }
 
-
+    /**
+     * goes back to the last action that has been done, it changes all elements. Everything comes back of a step
+     *
+     * @param all boolean
+     * @return all the information related to the previous action that the player has done while using this toolcard
+     * @throws CannotCancelActionException if the current status isn't correct or the boolean is false
+     */
     @Override
     public MoveData cancelAction(boolean all) throws CannotCancelActionException {
         if (!all) {

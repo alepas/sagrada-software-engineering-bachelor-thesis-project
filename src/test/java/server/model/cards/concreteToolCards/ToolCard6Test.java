@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import server.constants.ToolCardConstants;
 import server.model.cards.ToolCard;
+import server.model.configLoader.ConfigLoader;
 import server.model.dicebag.Color;
 import server.model.dicebag.Dice;
 import server.model.game.Game;
@@ -33,6 +34,8 @@ public class ToolCard6Test {
 
     @Before
     public void Before() throws CannotPickDiceException {
+
+        ConfigLoader.loadConfig();
         toolCard6 = new ToolCard6();
         player = mock(PlayerInGame.class);
         Game game = mock(Game.class);
@@ -92,6 +95,20 @@ public class ToolCard6Test {
         assertEquals(toolCard6.getID(), copy.getID());
         assertEquals(toolCard6.getName(), copy.getName());
         assertEquals(toolCard6.getDescription(), copy.getDescription());
+    }
+
+    /**
+     * Tests if the tool is initialized in a correct way if the game is a single player game.
+     *
+     * @throws CannotUseToolCardException not in this test
+     */
+    @Test
+    public void setCardTest() throws CannotUseToolCardException {
+        setSchema();
+        toolCard6.setCurrentToolPlayer(null);
+        MoveData moveData = toolCard6.setCard(player);
+        assertEquals(NextAction.SELECT_DICE_TOOLCARD, moveData.nextAction);
+        assertEquals(ClientDiceLocations.EXTRACTED, moveData.wherePickNewDice);
     }
 
     /**

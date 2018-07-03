@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import server.model.cards.PublicObjectiveCard;
 import server.model.cards.ToolCard;
+import server.model.configLoader.ConfigLoader;
 import server.model.dicebag.Color;
 import server.model.users.DatabaseUsers;
 import server.model.users.PlayerInGame;
@@ -33,6 +34,8 @@ public class MultiplayerGameTest {
 
     @Before
     public void before() throws Exception{
+
+        ConfigLoader.loadConfig();
         game = new MultiplayerGame(defaulNumPlayers);
 
         db = DatabaseUsers.getInstance();

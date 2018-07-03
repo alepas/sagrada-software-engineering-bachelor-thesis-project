@@ -200,7 +200,6 @@ public class SetNewGameController implements Observer, NotificationHandler {
             colors[0] = clientInfo.getPrivateObjectives()[0];
             userWpcs.addAll(clientInfo.getWpcsProposedByUsername().get(username));
             initializeWpc();
-
         }
 
         ToggleGroup group = new ToggleGroup();
@@ -605,9 +604,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
      * @param event is the event necessary to change scene
      */
     private void waitPlayGameAfterDisconnection(Event event){
-        System.out.println("bu");
         Thread playGame = new Thread(() -> {
-            System.out.println("ehi");
             while (!allWpcsPicked) {
                 synchronized (cardWaiter){
                     try {

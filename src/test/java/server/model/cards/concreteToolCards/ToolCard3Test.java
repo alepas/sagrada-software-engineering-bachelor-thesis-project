@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import server.constants.ToolCardConstants;
 import server.model.cards.ToolCard;
+import server.model.configLoader.ConfigLoader;
 import server.model.dicebag.Color;
 import server.model.dicebag.Dice;
 import server.model.game.Game;
@@ -29,9 +30,11 @@ public class ToolCard3Test {
     private PlayerInGame player;
     private Position position;
     private Wpc wpc;
+    private MoveData moveData;
 
     @Before
     public void Before() throws CannotPickDiceException {
+        ConfigLoader.loadConfig();
         toolCard3 = new ToolCard3();
         player = mock(PlayerInGame.class);
         game = mock(Game.class);
@@ -61,6 +64,12 @@ public class ToolCard3Test {
         ClientDice clientDice = mock(ClientDice.class);
         when(chosenDice.getClientDice()).thenReturn(clientDice);
 
+        RoundTrack roundTrack = mock(RoundTrack.class);
+        ClientRoundTrack clientRoundTrack = mock(ClientRoundTrack.class);
+        when(roundTrack.getClientRoundTrack()).thenReturn(clientRoundTrack);
+        when(game.getRoundTrack()).thenReturn(roundTrack);
+        when(game.getRoundTrack().getCopy()).thenReturn(roundTrack);
+
     }
 
     /**
@@ -86,6 +95,22 @@ public class ToolCard3Test {
     }
 
     /**
+     * Tests if the tool is initialized in a correct way if the game is a single player game.
+     *
+     * @throws CannotUseToolCardException not in this test
+     */
+    @Test
+    public void setCardSinglePlayerGameTest() throws CannotUseToolCardException {
+        setSchema();
+        when(game.isSinglePlayerGame()).thenReturn(true);
+        when(player.getWPC().getNumOfDices()).thenReturn(2);
+        toolCard3.setCurrentToolPlayer(null);
+        moveData = toolCard3.setCard(player);
+        assertEquals(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD, moveData.nextAction);
+        assertEquals(ClientDiceLocations.EXTRACTED, moveData.wherePickNewDice);
+    }
+
+    /**
      * @throws CannotPickDiceException in no cases because this method wants to test the other exception
      * @throws CannotPerformThisMoveException because the game is a multi player game
      */
@@ -97,7 +122,7 @@ public class ToolCard3Test {
     @Test
     public void pickDiceTest() throws CannotPickDiceException, CannotPerformThisMoveException {
         toolCard3.setSinglePlayerGame(true);
-        MoveData moveData = toolCard3.pickDice(chosenDice.getId());
+        moveData = toolCard3.pickDice(chosenDice.getId());
         assertEquals(NextAction.PLACE_DICE_TOOLCARD, moveData.nextAction);
         assertEquals(ClientDiceLocations.WPC, moveData.wherePickNewDice);
         assertEquals(ClientDiceLocations.WPC, moveData.wherePutNewDice);
@@ -161,7 +186,7 @@ public class ToolCard3Test {
         when(position1.getColumn()).thenReturn(0);
         when(position1.getRow()).thenReturn(0);
         when(player.getWPC().addDicePersonalizedRestrictions(chosenDice, position1, true, false, true, true, false)).thenReturn(true);
-        MoveData moveData = toolCard3.placeDice(chosenDice.getId(), position1);
+        moveData = toolCard3.placeDice(chosenDice.getId(), position1);
 
         assertTrue(moveData.moveFinished);
         assertNotNull(moveData.wpc);
@@ -188,7 +213,7 @@ public class ToolCard3Test {
         when(position1.getColumn()).thenReturn(1);
         when(position1.getRow()).thenReturn(0);
         when(player.getWPC().addDicePersonalizedRestrictions(chosenDice, position1, true, false, true, true, false)).thenReturn(true);
-        MoveData moveData = toolCard3.placeDice(chosenDice.getId(), position1);
+        moveData = toolCard3.placeDice(chosenDice.getId(), position1);
 
         assertTrue(moveData.moveFinished);
         assertNotNull(moveData.wpc);
@@ -204,7 +229,7 @@ public class ToolCard3Test {
      */
     @Test
     public void nextMoveTest(){
-        MoveData moveData = toolCard3.getNextMove();
+        moveData = toolCard3.getNextMove();
         assertNull(moveData);
 
         toolCard3.setCurrentToolStatus(1);
@@ -257,7 +282,7 @@ public class ToolCard3Test {
         when(roundTrack.getClientRoundTrack()).thenReturn(clientRoundTrack);
         when(game.getRoundTrack()).thenReturn(roundTrack);
 
-        MoveData moveData = toolCard3.cancelAction(true);
+        moveData = toolCard3.cancelAction(true);
         assertTrue(moveData.moveFinished);
         assertTrue(moveData.canceledToolCard);
     }
@@ -279,7 +304,7 @@ public class ToolCard3Test {
         when(roundTrack.getClientRoundTrack()).thenReturn(clientRoundTrack);
         when(game.getRoundTrack()).thenReturn(roundTrack);
 
-        MoveData moveData = toolCard3.cancelAction(false);
+        toolCard3.cancelAction(false);
         assertEquals(0, toolCard3.getCurrentStatus());
     }
 

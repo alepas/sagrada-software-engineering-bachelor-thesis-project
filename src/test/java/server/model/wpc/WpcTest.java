@@ -625,6 +625,10 @@ public class WpcTest {
         assertEquals(0, wpc2.numDicesOfColor(Color.RED));
     }
 
+    @Test
+    public void autoAddDiceTest(){
+
+    }
 
    /* @Test
     public void removeDiceTest(){

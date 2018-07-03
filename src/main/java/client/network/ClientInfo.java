@@ -8,6 +8,10 @@ import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 
+/**
+ * This class contains all possible information that are useful for setting the view.
+ * It is composed by setter and getter.
+ */
 public class ClientInfo implements Observer, NotificationHandler {
     private static ClientInfo instance;
     private ArrayList<Observer> observers = new ArrayList<>();
@@ -45,7 +49,7 @@ public class ClientInfo implements Observer, NotificationHandler {
         this.timeLeftToCompleteTask = 0;
     }
 
-    public void clean() {
+    private void clean() {
         this.userToken = null;
         this.user = null;
         exitGame();
@@ -254,7 +258,7 @@ public class ClientInfo implements Observer, NotificationHandler {
         game.setStarted(gameStarted);
     }
 
-    public void setWpcsArrived(boolean arrived){
+    void setWpcsArrived(boolean arrived){
         this.wpcsArrived = arrived;
     }
 

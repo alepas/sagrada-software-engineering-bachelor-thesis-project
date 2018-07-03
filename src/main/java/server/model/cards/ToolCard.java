@@ -84,8 +84,10 @@ public abstract class ToolCard implements Cloneable {
 
     protected void updateClientExtractedDices() {
         tempClientExtractedDices.clear();
-        for (Dice tempdice : cardExtractedDices)
-            tempClientExtractedDices.add(tempdice.getClientDice());
+        for (Dice dice : cardExtractedDices) {
+            System.out.println(dice);
+            tempClientExtractedDices.add(dice.getClientDice());
+        }
     }
 
     protected void updateClientWPC() {

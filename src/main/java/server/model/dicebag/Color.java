@@ -65,8 +65,9 @@ public enum Color implements Serializable {
                 return ClientColor.RED;
             case GREEN:
                 return ClientColor.GREEN;
+            default:
+                return null;
         }
-        return null;
     }
 
     /**
@@ -86,7 +87,8 @@ public enum Color implements Serializable {
                 return Color.RED;
             case GREEN:
                 return Color.GREEN;
+            default:
+                return null;
         }
-        return null;
     }
 }

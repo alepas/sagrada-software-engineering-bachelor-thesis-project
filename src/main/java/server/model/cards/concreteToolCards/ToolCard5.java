@@ -18,6 +18,9 @@ public class ToolCard5 extends ToolCard {
     private DiceAndPosition fromExtracted;
     private DiceAndPosition fromRoundTrack;
 
+    /**
+     * Object constructor: creates a new concrete tool card 5 setting all his parameters
+     */
     public ToolCard5() {
         this.id = ToolCardConstants.TOOLCARD5_ID;
         this.name = ToolCardConstants.TOOL5_NAME;
@@ -33,23 +36,42 @@ public class ToolCard5 extends ToolCard {
 
     }
 
-
+    /**
+     * @return a copy of this object
+     */
     @Override
     public ToolCard getToolCardCopy() {
         return new ToolCard5();
     }
 
+
+    /**
+     * @param player is the player that wants to use the ToolCard
+     * @return the first action that the player has to do with the ToolCard
+     * @throws CannotUseToolCardException when it is not possible to use te object
+     */
     @Override
     public MoveData setCard(PlayerInGame player) throws CannotUseToolCardException {
         return setCardDefault(player, false, true, 0, ClientDiceLocations.EXTRACTED, null, NextAction.SELECT_DICE_TOOLCARD);
     }
 
-
+    /**
+     * Checks if the game is a single player or multi player game: if it's a single player game it calls the related
+     * method, if it's multi and the status is one the fromExtracted dice is set if is 2 it calls all the methods that
+     * makes the swap possible.
+     *
+     * @param diceId is the ID of the dice chosen by the player
+     * @return all the information related to the next action that the player will have to do and all new parameters created
+     * by the call of this method
+     * @throws CannotPickDiceException        every time there are problems in the return of the singlePlayer
+     * @throws CannotPerformThisMoveException every time that the current state is different from 1, this means that
+     *                                        the player is trying to do an action that can't be done in that moment
+     */
     @Override
     public MoveData pickDice(int diceId) throws CannotPickDiceException, CannotPerformThisMoveException {
-        if ((currentStatus == 0) && (singlePlayerGame)) {
+        if ((currentStatus == 0) && (singlePlayerGame))
             return pickDiceInitializeSingleUserToolCard(diceId, NextAction.SELECT_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, null);
-        } else if (currentStatus == 1) {
+        else if (currentStatus == 1) {
             this.fromExtracted = currentPlayer.dicePresentInLocation(diceId, ClientDiceLocations.EXTRACTED);
             currentStatus = 2;
 
@@ -67,12 +89,30 @@ public class ToolCard5 extends ToolCard {
         } else throw new CannotPerformThisMoveException(username, 2, false);
     }
 
-
+    /**
+     * @param number is a number chosen by the player
+     * @return all the information related to the next action that the player will have to do and all new parameters created
+     * by the call of this method
+     * @throws CannotPerformThisMoveException every time that this method is called because it is not
+     *                                        possible to pick a number while this card is used
+     */
     @Override
-    public MoveData pickNumber(int number) throws CannotPerformThisMoveException, CannotPickNumberException {
+    public MoveData pickNumber(int number) throws CannotPerformThisMoveException{
         throw new CannotPerformThisMoveException(username, 2, false);
     }
 
+    /**
+     * if none of the exception has been thrown the method removes the chosen dice from the extractedDices, adds it to
+     * the player's wpc and clear the card.
+     *
+     * @param diceId is the id of the dice that could be place
+     * @param pos    is the position where the player would like to place the chosen dice
+     * @return all the information related to the next action that the player will have to do and all new parameters created
+     * by the call of this method
+     * @throws CannotPerformThisMoveException if the state isn't the correct one or the given position is null
+     * @throws CannotPickPositionException    if the chosen position doesn't respect sagrada's rules
+     * @throws CannotPickDiceException        if the id of the chosen dice is different from the dice modified by this
+     */
     @Override
     public MoveData placeDice(int diceId, Position pos) throws CannotPerformThisMoveException, CannotPickPositionException, CannotPickDiceException {
         if (currentStatus != 3)
@@ -95,7 +135,13 @@ public class ToolCard5 extends ToolCard {
         return new MoveData(true, tempWpc, tempExtracted, null);
     }
 
-
+    /**
+     * goes back to the last action that has been done, it changes all elements. Everything comes back of a step
+     *
+     * @param all boolean
+     * @return all the information related to the previous action that the player has done while using this toolcard
+     * @throws CannotCancelActionException if the current status isn't correct or the boolean is false
+     */
     @Override
     public MoveData cancelAction(boolean all) throws CannotCancelActionException {
         if (!all) {
@@ -128,7 +174,9 @@ public class ToolCard5 extends ToolCard {
 
     }
 
-
+    /**
+     * Sets object's parameters to null and creates a new array
+     */
     @Override
     protected void cleanCard() {
         defaultClean();
@@ -136,6 +184,10 @@ public class ToolCard5 extends ToolCard {
         fromRoundTrack = null;
     }
 
+    /**
+     * @return all the information related to the next action that the player will have to do and all new parameters
+     * created by the call of this method
+     */
     @Override
     public MoveData getNextMove() {
         switch (currentStatus) {
@@ -152,6 +204,11 @@ public class ToolCard5 extends ToolCard {
         return null;
     }
 
+    /**
+     * @param value can be YES; NO; OK
+     * @return always the exception
+     * @throws CannotInteruptToolCardException every time that it is called
+     */
     @Override
     public MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException {
         throw new CannotInteruptToolCardException(username, id);

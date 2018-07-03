@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import server.constants.ToolCardConstants;
 import server.model.cards.ToolCard;
+import server.model.configLoader.ConfigLoader;
 import server.model.dicebag.Color;
 import server.model.dicebag.Dice;
 import server.model.game.Game;
@@ -32,9 +33,11 @@ public class ToolCard5Test {
     private PlayerInGame player;
     private Position position;
     private Wpc wpc;
+    private RoundTrack roundTrack;
 
     @Before
     public void Before() throws CannotPickDiceException {
+        ConfigLoader.loadConfig();
         toolCard5 = new ToolCard5();
         player = mock(PlayerInGame.class);
         game = mock(Game.class);
@@ -49,7 +52,10 @@ public class ToolCard5Test {
         DiceAndPosition diceAndPosition1 = mock(DiceAndPosition.class);
         when(diceAndPosition1.getDice()). thenReturn(chosenDice);
         when(diceAndPosition1.getPosition()).thenReturn(null);
+
         when(player.dicePresentInLocation(chosenDice.getId(), ClientDiceLocations.WPC)).thenReturn(diceAndPosition1);
+        when(player.dicePresentInLocation(chosenDice.getId(), ClientDiceLocations.EXTRACTED)).thenReturn(diceAndPosition1);
+        when(player.dicePresentInLocation(chosenDice.getId(), ClientDiceLocations.ROUNDTRACK)).thenReturn(diceAndPosition1);
 
         toolCard5.setCurrentToolGame(game);
         toolCard5.setCurrentToolPlayer(player);
@@ -62,6 +68,13 @@ public class ToolCard5Test {
 
         ClientDice clientDice = mock(ClientDice.class);
         when(chosenDice.getClientDice()).thenReturn(clientDice);
+
+        roundTrack = mock(RoundTrack.class);
+        ClientRoundTrack clientRoundTrack = mock(ClientRoundTrack.class);
+        when(roundTrack.getClientRoundTrack()).thenReturn(clientRoundTrack);
+        when(game.getRoundTrack()).thenReturn(roundTrack);
+        when(game.getRoundTrack().getCopy()).thenReturn(roundTrack);
+        when(player.getUpdatedRoundTrack()).thenReturn(roundTrack);
 
     }
 
@@ -88,6 +101,22 @@ public class ToolCard5Test {
     }
 
     /**
+     * Tests if the tool is initialized in a correct way if the game is a single player game.
+     *
+     * @throws CannotUseToolCardException not in this test
+     */
+    @Test
+    public void setCardTest() throws CannotUseToolCardException {
+        setSchema();
+        when(game.isSinglePlayerGame()).thenReturn(true);
+        when(player.getUpdatedRoundTrack().getNumberOfDices()).thenReturn(2);
+        toolCard5.setCurrentToolPlayer(null);
+        MoveData moveData = toolCard5.setCard(player);
+        assertEquals(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD, moveData.nextAction);
+        assertEquals(ClientDiceLocations.EXTRACTED, moveData.wherePickNewDice);
+    }
+
+    /**
      * @throws CannotPickDiceException in no cases because this method wants to test the other exception
      * @throws CannotPerformThisMoveException because the game is a multi player game
      */
@@ -97,24 +126,46 @@ public class ToolCard5Test {
     }
 
     /**
-     * Checks if the pickDice() method works in a correct way.
+     * Checks if the pickDice() method works in a correct way if the game is a single player
      * @throws CannotPickDiceException not in this test
      * @throws CannotPerformThisMoveException not in this test
      */
     @Test
-    public void pickDiceTest() throws CannotPickDiceException, CannotPerformThisMoveException {
+    public void pickDiceSinglePlayerTest() throws CannotPickDiceException, CannotPerformThisMoveException {
         toolCard5.setSinglePlayerGame(true);
         MoveData moveData = toolCard5.pickDice(chosenDice.getId());
-        assertEquals(NextAction.PLACE_DICE_TOOLCARD, moveData.nextAction);
-        assertEquals(ClientDiceLocations.WPC, moveData.wherePickNewDice);
-        assertEquals(ClientDiceLocations.WPC, moveData.wherePutNewDice);
+        assertEquals(NextAction.SELECT_DICE_TOOLCARD, moveData.nextAction);
+        assertEquals(ClientDiceLocations.EXTRACTED, moveData.wherePickNewDice);
+        assertNull(moveData.wherePutNewDice);
+    }
+
+    /**
+     * Checks if the pickDice() method works in a correct way when the status is one and a dice has been chosen from the
+     * extracted.
+     *
+     * @throws CannotPickDiceException not in this test
+     * @throws CannotPerformThisMoveException not in this test
+     */
+    @Test
+    public void pickDiceStatusOneTest() throws CannotPickDiceException, CannotPerformThisMoveException {
+        toolCard5.setCurrentToolStatus(1);
+        MoveData moveData = toolCard5.pickDice(chosenDice.getId());
+        assertEquals(NextAction.SELECT_DICE_TOOLCARD, moveData.nextAction);
+        assertEquals(ClientDiceLocations.ROUNDTRACK, moveData.wherePickNewDice);
+        assertNull(moveData.wherePutNewDice);
+
+        toolCard5.setCurrentToolStatus(2);
+        toolCard5.setCardRoundTrack(roundTrack);
+        when(roundTrack.swapDice(chosenDice, position)).thenReturn(chosenDice);
+//        moveData = toolCard5.pickDice(chosenDice.getId());
+
     }
 
     /**
      * @throws CannotPerformThisMoveException every time that this method is called
      */
     @Test ( expected = CannotPerformThisMoveException.class)
-    public void pickNumberTest() throws CannotPerformThisMoveException, CannotPickNumberException {
+    public void pickNumberTest() throws CannotPerformThisMoveException{
         toolCard5.pickNumber(5);
     }
 
@@ -141,127 +192,7 @@ public class ToolCard5Test {
         toolCard5.placeDice(chosenDice.getId(), null);
     }
 
-    /**
-     * @throws CannotPickDiceException in any case because this method wants to test the other exception
-     * @throws CannotPickPositionException because it is not possible to place the chosen dice in the chosen position
-     * @throws CannotPerformThisMoveException in any case because this method wants to test the other exception
-     */
-    @Test (expected = CannotPickPositionException.class )
-    public void placeDiceIllegalPositionInWpcStatusOneTest() throws CannotPerformThisMoveException, CannotPickPositionException, CannotPickDiceException {
-        toolCard5.setCurrentToolStatus(1);
-        setSchema();
-        toolCard5.placeDice(chosenDice.getId(), position);
-    }
 
-    /**
-     * Tests if the placeDice() method works in a correct way in a cell with no color restrictions
-     *
-     * @throws CannotPerformThisMoveException isn't thrown in this test
-     * @throws CannotPickPositionException isn't thrown in this test
-     * @throws CannotPickDiceException isn't thrown in this test
-     */
-    @Test
-    public void placeDiceStatusOneTest() throws CannotPerformThisMoveException, CannotPickPositionException,
-            CannotPickDiceException, CannotCancelActionException {
-        toolCard5.setCurrentToolStatus(1);
-        setSchema();
-
-        Position position1 = mock(Position.class);
-        when(position1.getColumn()).thenReturn(0);
-        when(position1.getRow()).thenReturn(0);
-        when(player.getWPC().addDiceWithAllRestrictions(chosenDice, position1)).thenReturn(true);
-
-        MoveData moveData = toolCard5.placeDice(chosenDice.getId(), position1);
-
-        assertEquals(NextAction.PLACE_DICE_TOOLCARD, moveData.nextAction);
-
-        assertEquals(ClientDiceLocations.WPC, moveData.wherePickNewDice);
-        assertEquals(ClientDiceLocations.WPC, moveData.wherePutNewDice);
-        assertNull(moveData.extractedDices);
-        assertNull(moveData.roundTrack);
-        assertNull(moveData.diceChosen);
-        assertNull(moveData.diceChosenLocation);
-
-        toolCard5.getNextMove();
-        assertEquals(NextAction.PLACE_DICE_TOOLCARD, moveData.nextAction);
-
-        assertEquals(ClientDiceLocations.WPC, moveData.wherePickNewDice);
-        assertEquals(ClientDiceLocations.WPC, moveData.wherePutNewDice);
-        assertNull(moveData.extractedDices);
-        assertNull(moveData.roundTrack);
-        assertNull(moveData.diceChosen);
-        assertNull(moveData.diceChosenLocation);
-
-        //Tests if the cancelLastOperation()  goes to the old status ina correct way and sends a correct MoveData
-        ClientWpc clientWpc = mock(ClientWpc.class);
-        when(wpc.getClientWpc()).thenReturn(clientWpc);
-
-        RoundTrack roundTrack = mock(RoundTrack.class);
-        ClientRoundTrack clientRoundTrack = mock(ClientRoundTrack.class);
-        when(roundTrack.getClientRoundTrack()).thenReturn(clientRoundTrack);
-        when(game.getRoundTrack()).thenReturn(roundTrack);
-
-        moveData = toolCard5.cancelAction(false);
-        assertEquals(1, toolCard5.getCurrentStatus());
-        assertEquals(NextAction.PLACE_DICE_TOOLCARD, moveData.nextAction);
-        assertEquals(ClientDiceLocations.WPC, moveData.wherePickNewDice);
-        assertEquals(ClientDiceLocations.WPC, moveData.wherePutNewDice);
-        assertNull(moveData.extractedDices);
-        assertNull(moveData.roundTrack);
-        assertNull(moveData.diceChosen);
-        assertNull(moveData.diceChosenLocation);
-
-    }
-
-    /**
-     * @throws CannotPickDiceException in any case because this method wants to test the other exception
-     * @throws CannotPickPositionException in any case because this method wants to test the other exception
-     * @throws CannotPerformThisMoveException because the position is null
-     */
-    @Test (expected = CannotPerformThisMoveException.class)
-    public void placeDiceNullPositionStatusTwoTest () throws CannotPerformThisMoveException,
-            CannotPickPositionException, CannotPickDiceException {
-        toolCard5.setCurrentToolStatus(2);
-        toolCard5.placeDice(chosenDice.getId(), null);
-    }
-
-    /**
-     * @throws CannotPickDiceException in any case because this method wants to test the other exception
-     * @throws CannotPickPositionException because it is not possible to place the chosen dice in the chosen position
-     * @throws CannotPerformThisMoveException in any case because this method wants to test the other exception
-     */
-    @Test (expected = CannotPickPositionException.class )
-    public void placeDiceIllegalPositionInWpcStatusTwoTest() throws CannotPerformThisMoveException, CannotPickPositionException, CannotPickDiceException {
-        toolCard5.setCurrentToolStatus(2);
-        setSchema();
-        toolCard5.placeDice(chosenDice.getId(), position);
-    }
-
-
-    /**
-     * Tests if the placeDice() method works in a correct way in a cell with no color restrictions
-     *
-     * @throws CannotPerformThisMoveException isn't thrown in this test
-     * @throws CannotPickPositionException isn't thrown in this test
-     * @throws CannotPickDiceException isn't thrown in this test
-     */
-    @Test
-    public void placeDiceStatusTwoTest() throws CannotPerformThisMoveException, CannotPickPositionException,
-            CannotPickDiceException {
-        toolCard5.setCurrentToolStatus(2);
-        setSchema();
-
-        Position position1 = mock(Position.class);
-        when(position1.getColumn()).thenReturn(0);
-        when(position1.getRow()).thenReturn(0);
-        when(player.getWPC().addDiceWithAllRestrictions(chosenDice, position1)).thenReturn(true);
-
-        MoveData moveData = toolCard5.placeDice(chosenDice.getId(), position1);
-
-        assertTrue(moveData.moveFinished);
-        assertNull(moveData.roundTrack);
-        assertNull(moveData.extractedDices);
-    }
 
 
     /**
@@ -292,7 +223,7 @@ public class ToolCard5Test {
      */
     @Test (expected = CannotCancelActionException.class)
     public void cancelLastOperationIllegalStatusTest() throws CannotCancelActionException {
-        toolCard5.setCurrentToolStatus(3);
+        toolCard5.setCurrentToolStatus(5);
         toolCard5.cancelAction(false);
     }
 

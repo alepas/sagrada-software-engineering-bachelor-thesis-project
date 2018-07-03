@@ -2,6 +2,7 @@ package server.model.game;
 
 import org.junit.Before;
 import org.junit.Test;
+import server.model.configLoader.ConfigLoader;
 import server.model.dicebag.Dice;
 import shared.clientInfo.Position;
 
@@ -18,6 +19,7 @@ public class RoundTrackTest {
 
     @Before
     public void Before() {
+        ConfigLoader.loadConfig();
         roundTrack = new RoundTrack();
         dice1 = mock(Dice.class);
         dice2 = mock(Dice.class);

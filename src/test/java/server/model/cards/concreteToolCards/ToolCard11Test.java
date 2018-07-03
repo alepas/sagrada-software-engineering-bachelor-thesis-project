@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import server.constants.ToolCardConstants;
 import server.model.cards.ToolCard;
+import server.model.configLoader.ConfigLoader;
 import server.model.dicebag.Color;
 import server.model.dicebag.Dice;
 import server.model.game.Game;
@@ -36,6 +37,8 @@ public class ToolCard11Test {
 
     @Before
     public void Before() throws CannotPickDiceException {
+
+        ConfigLoader.loadConfig();
         toolCard11 = new ToolCard11();
 
         game = mock(Game.class);
@@ -93,6 +96,12 @@ public class ToolCard11Test {
         ClientDice clientBoundDice = mock(ClientDice.class);
         when(chosenDice1Number.getClientDice()).thenReturn(clientBoundDice);
         when(chosenDice1Number.copyDice()).thenReturn(chosenDice1Number);
+
+        RoundTrack roundTrack = mock(RoundTrack.class);
+        ClientRoundTrack clientRoundTrack = mock(ClientRoundTrack.class);
+        when(roundTrack.getClientRoundTrack()).thenReturn(clientRoundTrack);
+        when(game.getRoundTrack()).thenReturn(roundTrack);
+        when(game.getRoundTrack().getCopy()).thenReturn(roundTrack);
     }
 
     /**
@@ -116,6 +125,21 @@ public class ToolCard11Test {
         assertEquals(toolCard11.getID(), copy.getID());
         assertEquals(toolCard11.getName(), copy.getName());
         assertEquals(toolCard11.getDescription(), copy.getDescription());
+    }
+
+    /**
+     * Tests if the tool is initialized in a correct way if the game is a multi player game.
+     *
+     * @throws CannotUseToolCardException not in this test
+     */
+    @Test
+    public void setCardMultiPlayerGameTest() throws CannotUseToolCardException {
+        setSchema();
+        when(player.getWPC().getNumOfDices()).thenReturn(2);
+        toolCard11.setCurrentToolPlayer(null);
+        MoveData moveData = toolCard11.setCard(player);
+        assertEquals(NextAction.PLACE_DICE_TOOLCARD, moveData.nextAction);
+        assertEquals(ClientDiceLocations.EXTRACTED, moveData.wherePickNewDice);
     }
 
     /**
@@ -186,11 +210,10 @@ public class ToolCard11Test {
      *
      * @throws CannotPickNumberException  should never be thrown in this test
      * @throws CannotPerformThisMoveException should never be thrown in this test
-     * @throws CannotPickDiceException should never be thrown in this test
      */
     @Test
-    public void pickNumberTest() throws CannotPickDiceException, CannotPerformThisMoveException, CannotPickNumberException {
-        toolCard11.setCurrentToolStatus(1);
+    public void pickNumberTest() throws CannotPerformThisMoveException, CannotPickNumberException, CannotPickDiceException, CannotPickPositionException {
+        toolCard11.setCurrentToolStatus(2);
         MoveData moveData = toolCard11.pickNumber(1);
         assertEquals(NextAction.PLACE_DICE_TOOLCARD, moveData.nextAction);
         assertEquals(ClientDiceLocations.EXTRACTED, moveData.wherePickNewDice);
