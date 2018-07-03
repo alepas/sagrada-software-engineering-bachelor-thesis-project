@@ -710,6 +710,7 @@ public class GameController implements Observer, NotificationHandler {
                 AnchorPane POC = new AnchorPane();
                 String style = POC_IDENTIFIER_CSS.concat(String.valueOf(id));
                 POC.setId(style);
+                POC.getStyleClass().add("card-style");
                 pocGrid.add(POC, 0, finalPoc);
             });
         }
@@ -728,6 +729,8 @@ public class GameController implements Observer, NotificationHandler {
                 String style = TOOL_IDENTIFIER_CSS.concat(number);
 
                 toolCard.setId(style);
+                toolCard.getStyleClass().add("card-style");
+
                 toolCardGrid.add(toolCard, 0, finalTool);
             });
         }

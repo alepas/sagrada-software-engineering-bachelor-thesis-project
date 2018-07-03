@@ -113,6 +113,7 @@ public class ToolCard8 extends ToolCard {
                 throw new CannotPickPositionException(username, pos);
             cardExtractedDices.remove(tempDice);
             this.used = true;
+            currentPlayer.setTurnToSkip(currentPlayer.getTurnForRound()+1);
             updateAndCopyToGameData(true, true, false);
             movesNotifications.add(new ToolCardDicePlacedNotification(username, tempDice.getClientDice(), pos));
             currentGame.changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, tempClientExtractedDices, null, currentPlayer.getFavours()));
@@ -140,7 +141,7 @@ public class ToolCard8 extends ToolCard {
         if ((currentStatus == 0) && (singlePlayerGame)) {
             Dice tempDice = currentPlayer.dicePresentInLocation(diceId, ClientDiceLocations.EXTRACTED).getDice();
             if (tempDice.getDiceColor() != colorForDiceSingleUser)
-                throw new CannotPickDiceException(username, tempDice.getDiceNumber(), tempDice.getDiceColor(), ClientDiceLocations.EXTRACTED, 1);
+                throw new CannotPickDiceException(username, tempDice.getDiceNumber(), Color.getClientColor(tempDice.getDiceColor()), ClientDiceLocations.EXTRACTED, 1);
             this.diceForSingleUser = tempDice;
             cardExtractedDices.remove(this.diceForSingleUser);
             updateClientExtractedDices();

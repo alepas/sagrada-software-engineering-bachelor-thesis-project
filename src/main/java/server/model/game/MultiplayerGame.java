@@ -24,9 +24,12 @@ import shared.network.commands.notifications.*;
 
 import java.util.*;
 
+import static shared.constants.GameConstants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME;
+
 public class MultiplayerGame extends Game {
     private int turnPlayer;
     private int roundPlayer;
+    private int turnForRound;
     private HashMap<String, Integer> scoreList = new HashMap<>();
     private ClientEndTurnData endTurnData;
     private WaiterThread currentThread;
@@ -34,8 +37,9 @@ public class MultiplayerGame extends Game {
 
     /**
      * Creates a multiplayerGame
+     *
      * @param numPlayers is the number of players what will take part to the game
-     * @throws InvalidMultiplayerGamePlayersException  when the num of player isn't in the range
+     * @throws InvalidMultiplayerGamePlayersException when the num of player isn't in the range
      */
     public MultiplayerGame(int numPlayers) throws InvalidMultiplayerGamePlayersException {
         super(numPlayers);
@@ -49,23 +53,28 @@ public class MultiplayerGame extends Game {
     }
 
 
-
     //----------------------------- Metodi validi per entrambi i lati -----------------------------
 
-    public int getTurnPlayer() { return turnPlayer; }
+    public int getTurnPlayer() {
+        return turnPlayer;
+    }
 
-    public int getRoundPlayer() { return roundPlayer; }
+    public int getRoundPlayer() {
+        return roundPlayer;
+    }
 
-    public int getCurrentTaskTimeLeft(){ return currentThread.getTimeLeft(); }
+    public int getCurrentTaskTimeLeft() {
+        return currentThread.getTimeLeft();
+    }
 
     /**
      * if possible creates a new Player in game and adds it to the array of players
      *
      * @param user is the username of the player that would like to enter in the game
      * @return true if, after adding the new player, the game is full, false if there's still space
-     * @throws MaxPlayersExceededException the game is full and it is not possible to add a new player
+     * @throws MaxPlayersExceededException    the game is full and it is not possible to add a new player
      * @throws UserAlreadyInThisGameException the player was already inside the game
-     * @throws CannotCreatePlayerException if there were problems in creating the playerIn game related to the user
+     * @throws CannotCreatePlayerException    if there were problems in creating the playerIn game related to the user
      */
     @Override
     public synchronized boolean addPlayer(String user) throws MaxPlayersExceededException, UserAlreadyInThisGameException, CannotCreatePlayerException {
@@ -116,7 +125,7 @@ public class MultiplayerGame extends Game {
             if (numActualPlayers() == 1) ((WaitPlayersThread) currentThread).setPause(true);
         } else {
             int numConnected = 0;
-            for(PlayerInGame player : players) if (!player.isDisconnected()) numConnected++;
+            for (PlayerInGame player : players) if (!player.isDisconnected()) numConnected++;
             if (numConnected == 1) forceEndGame();
         }
     }
@@ -143,9 +152,9 @@ public class MultiplayerGame extends Game {
 
         System.out.println("La partità è iniziata");
         initializeGame();
-        allWpcsChosen=true;
+        allWpcsChosen = true;
 
-        while (roundTrack.getCurrentRound() < GameConstants.NUM_OF_ROUNDS){
+        while (roundTrack.getCurrentRound() < GameConstants.NUM_OF_ROUNDS) {
             nextRound();
         }
 
@@ -157,10 +166,11 @@ public class MultiplayerGame extends Game {
     private void forceStarGame() {
         System.out.println("Forzo l'inizio del game");
 
-        for (PlayerInGame player : players){
+        for (PlayerInGame player : players) {
             if (player != null && player.isDisconnected()) {
-                try {removePlayer(player.getUser());}
-                catch (UserNotInThisGameException e) { /*Go home game you're drunk*/}
+                try {
+                    removePlayer(player.getUser());
+                } catch (UserNotInThisGameException e) { /*Go home game you're drunk*/}
             }
         }
 
@@ -176,16 +186,16 @@ public class MultiplayerGame extends Game {
     /**
      * @param time is the ammount of time that the thread sleeps
      */
-    private void waitPlayers(int time){
+    private void waitPlayers(int time) {
         try {
             Thread.sleep(time);
-        } catch (InterruptedException e){
+        } catch (InterruptedException e) {
             //TODO: La partita è stata sospesa forzatamente
         }
     }
 
     //Restituisce true se il thread è stato creato
-    public boolean restartWaitPlayersTimer(){
+    public boolean restartWaitPlayersTimer() {
         if (currentThread == null) {
             currentThread = new WaitPlayersThread(GameConstants.TIME_WAITING_PLAYERS_TO_ENTER_GAME, this);
             waitPlayersThread = new Thread(currentThread);
@@ -209,14 +219,14 @@ public class MultiplayerGame extends Game {
         shufflePlayers();
 
         turnPlayer = 0;
-        roundPlayer = players.length-1;
+        roundPlayer = players.length - 1;
         currentTurn = 1;
     }
 
     /**
      * shuffle the players array, the new disposition in the array will be the turn sequence.
      */
-    private void shufflePlayers(){
+    private void shufflePlayers() {
         ArrayList<PlayerInGame> playersList = new ArrayList<>(Arrays.asList(players));
         Collections.shuffle(playersList);
         players = (PlayerInGame[]) playersList.toArray(players);
@@ -227,7 +237,7 @@ public class MultiplayerGame extends Game {
      * will be chosen by the server between the 4 given to each player by calling the next method.
      */
     @Override
-    public void waitForWpcResponse(){
+    public void waitForWpcResponse() {
         currentThread = new ChooseWpcThread(players, GameConstants.CHOOSE_WPC_WAITING_TIME + GameConstants.TASK_DELAY);
         Thread waitForWpcs = new Thread(currentThread);
 
@@ -241,7 +251,7 @@ public class MultiplayerGame extends Game {
                 selectRandomWpc(wpcsByUser);
                 System.out.println("Ho estratto casualmente le wpc dei giocatori rimanenti");
             }
-        } catch (InterruptedException e){
+        } catch (InterruptedException e) {
 
         }
     }
@@ -257,8 +267,8 @@ public class MultiplayerGame extends Game {
      * @param wpcsByUser is the HashMap which contains for the player username (keys) and the arrayLists with the schemas'
      *                   ids
      */
-    private void selectRandomWpc(HashMap<String,ArrayList<String>> wpcsByUser) {
-        for (PlayerInGame player : players){
+    private void selectRandomWpc(HashMap<String, ArrayList<String>> wpcsByUser) {
+        for (PlayerInGame player : players) {
             if (player.getWPC() == null) {
                 try {
                     Random r = new Random();
@@ -279,7 +289,7 @@ public class MultiplayerGame extends Game {
     public void nextRound() {
         ClientWpc oldClientWpc = null;
         String oldUser = null;
-        if (endTurnData != null){
+        if (endTurnData != null) {
             oldClientWpc = endTurnData.wpcOldUser;
             oldUser = endTurnData.oldUser;
         }
@@ -287,7 +297,7 @@ public class MultiplayerGame extends Game {
         for (Dice dice : extractedDices) roundTrack.addDice(dice);
         roundTrack.nextRound();
 
-        for (PlayerInGame player: players)
+        for (PlayerInGame player : players)
             player.clearPlayerRound();
 
         extractedDices = diceBag.extractDices(numPlayers);
@@ -300,7 +310,7 @@ public class MultiplayerGame extends Game {
         else roundPlayer = 0;
         turnPlayer = roundPlayer;
 
-        while (currentTurn < GameConstants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME*numPlayers){
+        while (currentTurn < NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME * numPlayers) {
             nextTurn();
         }
     }
@@ -308,6 +318,7 @@ public class MultiplayerGame extends Game {
 
     /**
      * Sets the player which is ending his/her turn to !active()
+     *
      * @param endTurnData are related to what happened in the last turn
      */
     @Override
@@ -323,7 +334,7 @@ public class MultiplayerGame extends Game {
      * the players it is necessary to check if he/she should skip the turn: if yes the method nextPlayer() will be called
      * again and a playerSkipNotification will be thrown.
      */
-    void nextTurn(){
+    void nextTurn() {
         turnPlayer = nextPlayer();
         currentTurn++;
 
@@ -332,7 +343,7 @@ public class MultiplayerGame extends Game {
             String toolcardUsedID = (player.getCardUsedBlockingTurn() != null) ? player.getCardUsedBlockingTurn().getID() : null;
             changeAndNotifyObservers(new PlayerSkipTurnNotification(player.getUser(), toolcardUsedID, player.isDisconnected()));
 
-            if (currentTurn < GameConstants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME*numPlayers) {
+            if (currentTurn < NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME * numPlayers) {
                 turnPlayer = nextPlayer();
                 currentTurn++;
 
@@ -340,17 +351,17 @@ public class MultiplayerGame extends Game {
         }
 
         players[turnPlayer].setActive();
-        changeAndNotifyObservers(new NextTurnNotification(currentTurn, players[turnPlayer].getUser(),endTurnData));
+        changeAndNotifyObservers(new NextTurnNotification(currentTurn, players[turnPlayer].getUser(), endTurnData));
         startTurnTimer();
     }
 
     /**
      * @return true if the player must skip the turn, false if not
      */
-    boolean shouldSkipTurn(){
+    boolean shouldSkipTurn() {
         PlayerInGame player = players[turnPlayer];
         return player.isDisconnected() ||
-                (player.getCardUsedBlockingTurn() != null && player.getTurnForRound() == 2);
+                (player.getCardUsedBlockingTurn() != null && player.getTurnToSkip() == player.getTurnForRound());
     }
 
     /**
@@ -381,26 +392,29 @@ public class MultiplayerGame extends Game {
     /**
      * @return the //todo
      */
-    int nextPlayer(){
-        if (currentTurn % numPlayers == 0) {
-            players[turnPlayer].setTurnInRound(2);
+    int nextPlayer() {
+        if (currentTurn == 0) {
+            turnForRound = 1;
+            players[turnPlayer].setTurnInRound(turnForRound);
             return turnPlayer;
-        } else if ((currentTurn / numPlayers) % 2 == 0){
-            if (turnPlayer != numPlayers-1){
-                players[turnPlayer+1].setTurnInRound(1);
-                return turnPlayer+1;
-            } else {
-                players[0].setTurnInRound(1);
-                return 0;
-            }
+        } else if (currentTurn  % numPlayers == 0) {
+            turnForRound++;
+            players[turnPlayer].setTurnInRound(turnForRound);
+            return turnPlayer;
+        } else if (turnForRound % 2 != 0) {
+            int playerTemp;
+            if (turnPlayer == numPlayers - 1)
+                playerTemp = 0;
+            else playerTemp = turnPlayer + 1;
+            players[playerTemp].setTurnInRound(turnForRound);
+            return playerTemp;
         } else {
-            if (turnPlayer != 0){
-                players[turnPlayer-1].setTurnInRound(2);
-                return turnPlayer-1;
-            } else {
-                players[numPlayers-1].setTurnInRound(2);
-                return numPlayers-1;
-            }
+            int playerTemp;
+            if (turnPlayer == 0)
+                playerTemp = numPlayers - 1;
+            else playerTemp = turnPlayer - 1;
+            players[playerTemp].setTurnInRound(turnForRound);
+            return playerTemp;
         }
     }
 
@@ -412,13 +426,13 @@ public class MultiplayerGame extends Game {
     //Da testare
     @Override
     public void calculateScore() {
-        for(PlayerInGame player: players){
+        for (PlayerInGame player : players) {
             Wpc wpc = player.getWPC();
-            System.out.println("favor: "+ wpc.getFavours());
+            System.out.println("favor: " + wpc.getFavours());
             System.out.println("freeCell" + wpc.getNumFreeCells());
-            int score = privateObjScore(player)  - wpc.getNumFreeCells() + wpc.getFavours();
+            int score = privateObjScore(player) - wpc.getNumFreeCells() + wpc.getFavours();
 
-            for(PublicObjectiveCard poc: publicObjectiveCards) {
+            for (PublicObjectiveCard poc : publicObjectiveCards) {
                 System.out.println(poc.getID() + " score: " + poc.calculateScore(wpc));
                 score = score + poc.calculateScore(wpc);
             }
@@ -436,14 +450,14 @@ public class MultiplayerGame extends Game {
      * @param player is the player of which the game is calculating the score
      * @return the score made with the private objective
      */
-    private int privateObjScore(PlayerInGame player){
+    private int privateObjScore(PlayerInGame player) {
         Color[] playerColors = player.getPrivateObjs();
         ArrayList<Dice> dices = player.getWPC().getWpcDices();
 
         int score = 0;
 
-        for(Dice dice : dices){
-            for (Color color : playerColors){
+        for (Dice dice : dices) {
+            for (Color color : playerColors) {
                 if (dice.getDiceColor() == color) score += dice.getDiceNumber();
             }
         }
@@ -460,13 +474,12 @@ public class MultiplayerGame extends Game {
     public void saveScore() {
         ArrayList<Map.Entry<String, Integer>> scores = new ArrayList<>(scoreList.entrySet());
         scores.sort((Comparator<Map.Entry<?, Integer>>) (o1, o2) -> o2.getValue().compareTo(o1.getValue()));
-        for(PlayerInGame player: players){
+        for (PlayerInGame player : players) {
             try {
-                if(player.getUser().equals(scores.get(0).getKey())) {
+                if (player.getUser().equals(scores.get(0).getKey())) {
                     player.addPointsToRanking(scoreList.get(player.getUser()) + numPlayers);
                     player.addWonGame();
-                }
-                else {
+                } else {
                     player.addPointsToRanking(scoreList.get(player.getUser()));
                     player.addLostGame();
                 }
@@ -504,7 +517,7 @@ public class MultiplayerGame extends Game {
 
     //------------------------------- Metodi validi solo lato client -------------------------------
 
-    public void setTurnPlayer(int turnPlayer){
+    public void setTurnPlayer(int turnPlayer) {
         this.turnPlayer = turnPlayer;
     }
 

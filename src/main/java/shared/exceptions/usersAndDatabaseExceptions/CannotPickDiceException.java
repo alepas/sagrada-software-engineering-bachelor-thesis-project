@@ -1,17 +1,18 @@
 package shared.exceptions.usersAndDatabaseExceptions;
 
 import server.model.dicebag.Color;
+import shared.clientInfo.ClientColor;
 import shared.clientInfo.ClientDiceLocations;
 
 public class CannotPickDiceException extends Exception{
     private int diceNum;
     private int diceId;
-    private Color diceColor;
+    private ClientColor diceColor;
     private String user;
     private ClientDiceLocations where;
     private int cause;
 
-    public CannotPickDiceException(String user, int num, Color color, ClientDiceLocations where, int cause) {
+    public CannotPickDiceException(String user, int num, ClientColor color, ClientDiceLocations where, int cause) {
         this.diceNum=num;
         this.diceColor=color;
         this.user = user;
@@ -31,13 +32,16 @@ public class CannotPickDiceException extends Exception{
         if (cause==0)
             return "Can't choose the dice "+diceId+" because it isn't available in the "+where.name()+" set of dices";
         if (cause==1)
-            return "Can't choose the dice "+diceColor+": "+diceNum+" because it does not match the color required by the tool card";
+            return "Can't choose the dice "+diceColor.name()+": "+diceNum+" because it does not match the color required by the tool card";
         if (cause==2)
-            return "Can't choose the dice "+diceColor+": "+diceNum+" because it does not match the restrictions of the tool card";
+            return "Can't choose the dice "+diceColor.name()+": "+diceNum+" because it does not match the restrictions of the tool card";
         if (cause==3)
-            return "Can't choose the dice "+diceColor+": "+diceNum+" because you have to use the dice modified by toolCard";
+            return "Can't choose the dice "+diceColor.name()+": "+diceNum+" because you have to use the dice modified by toolCard";
         if (cause==4)
-            return "Can't choose the dice "+diceColor+": "+diceNum+" because you have to use another dice not modified by toolCard";
+            return "Can't choose the dice "+diceColor.name()+": "+diceNum+" because you have to use another dice not modified by toolCard";
+        if (cause==5)
+            return "Can't choose the dice "+diceColor.name()+": "+diceNum+" because you have to use another dice not already used in this toolCard action";
+
 
 
 

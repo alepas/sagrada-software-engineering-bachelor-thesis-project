@@ -124,7 +124,7 @@ public abstract class ToolCard implements Cloneable {
     protected MoveData pickDiceInitializeSingleUserToolCard(int diceId, NextAction nextAction, ClientDiceLocations initial, ClientDiceLocations finish) throws CannotPickDiceException {
         Dice tempDice = currentPlayer.dicePresentInLocation(diceId, ClientDiceLocations.EXTRACTED).getDice();
         if (tempDice.getDiceColor() != colorForDiceSingleUser)
-            throw new CannotPickDiceException(username, tempDice.getDiceNumber(), tempDice.getDiceColor(), ClientDiceLocations.EXTRACTED, 1);
+            throw new CannotPickDiceException(username, tempDice.getDiceNumber(), Color.getClientColor(tempDice.getDiceColor()), ClientDiceLocations.EXTRACTED, 1);
         this.currentStatus = 1;
         this.diceForSingleUser = tempDice;
         cardExtractedDices.remove(this.diceForSingleUser);

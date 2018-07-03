@@ -126,6 +126,8 @@ public class ToolCard4 extends ToolCard {
             if (pos == null) {
                 throw new CannotPerformThisMoveException(username, 2, false);
             }
+            if (secondDiceInitial.getDice().getId()==(firstDiceInitial.getDice().getId()))
+                throw new CannotPickDiceException(username,secondDiceInitial.getDice().getDiceNumber(),Color.getClientColor(secondDiceInitial.getDice().getDiceColor()),ClientDiceLocations.WPC,5);
             cardWpc.removeDice(secondDiceInitial.getPosition());
             if (!cardWpc.addDiceWithAllRestrictions(tempDice, pos)) {
                 cardWpc.addDicePersonalizedRestrictions(tempDice, secondDiceInitial.getPosition(), false, false, false, false, false);

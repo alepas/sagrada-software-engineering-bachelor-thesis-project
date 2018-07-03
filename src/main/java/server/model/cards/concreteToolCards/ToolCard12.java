@@ -127,8 +127,7 @@ public class ToolCard12 extends ToolCard {
             if (pos == null)
                 throw new CannotPerformThisMoveException(username, 2, false);
             if (!checkColorInRoundTrack(tempDice))
-                throw new CannotPickDiceException(username, tempDice.getDiceNumber(), tempDice.getDiceColor(), ClientDiceLocations.WPC, 2);
-
+                throw new CannotPickDiceException(username, tempDice.getDiceNumber(), Color.getClientColor(tempDice.getDiceColor()), ClientDiceLocations.WPC, 2);
             chosenColor = tempDice.getDiceColor();
             cardWpc.removeDice(firstDiceInitial.getPosition());
             if (!cardWpc.addDiceWithAllRestrictions(tempDice, pos)) {
@@ -148,7 +147,7 @@ public class ToolCard12 extends ToolCard {
             if (pos == null)
                 throw new CannotPerformThisMoveException(username, 2, false);
             if (tempDice.getDiceColor() != chosenColor)
-                throw new CannotPickDiceException(username, tempDice.getDiceNumber(), tempDice.getDiceColor(), ClientDiceLocations.WPC, 2);
+                throw new CannotPickDiceException(username, tempDice.getDiceNumber(), Color.getClientColor(tempDice.getDiceColor()), ClientDiceLocations.WPC, 2);
             cardWpc.removeDice(secondDiceInitial.getPosition());
             if (!cardWpc.addDiceWithAllRestrictions(tempDice, pos)) {
                 cardWpc.addDicePersonalizedRestrictions(tempDice, secondDiceInitial.getPosition(), false, false, false, false, false);

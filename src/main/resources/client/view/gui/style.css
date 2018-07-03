@@ -133,6 +133,11 @@
    -fx-word-wrap: normal;
 }
 
+.card-style {
+    -fx-background-repeat:no-repeat;
+    -fx-background-position: center;
+}
+
 
 #prOCviolet{
     -fx-background-image: url("cards/public/pub16.jpg");

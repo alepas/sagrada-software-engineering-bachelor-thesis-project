@@ -1,6 +1,7 @@
 package shared.configLoader;
 
 import org.json.simple.JSONObject;
+
 import static shared.constants.NetworkConstants.*;
 
 public class NetworkConfigLoader {

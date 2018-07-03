@@ -37,7 +37,7 @@ public class PlayerInGame {
     private ToolCard cardUsedBlockingTurn;
     private boolean disconnected = false;
     private ClientEndTurnData endTurnData;
-
+    private Integer turnToSkip;
 
     public PlayerInGame(String user, Game game) throws CannotAddPlayerInDatabaseException {
         this.game = game;
@@ -441,8 +441,8 @@ public class PlayerInGame {
     }
 
     public void clearPlayerRound() {
-        turnForRound = 0;
         cardUsedBlockingTurn = null;
+        turnToSkip=null;
         clearPlayerTurn();
     }
 
@@ -507,5 +507,14 @@ public class PlayerInGame {
 
     public boolean isDisconnected() {
         return disconnected;
+    }
+
+
+    public Integer getTurnToSkip() {
+        return turnToSkip;
+    }
+
+    public void setTurnToSkip(Integer turnToSkip) {
+        this.turnToSkip = turnToSkip;
     }
 }
