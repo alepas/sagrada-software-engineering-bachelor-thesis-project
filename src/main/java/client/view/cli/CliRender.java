@@ -2,7 +2,6 @@ package client.view.cli;
 
 import client.constants.CliConstants;
 import shared.clientInfo.*;
-import shared.constants.WpcConstants;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,9 +9,10 @@ import java.util.HashMap;
 import static client.constants.CliRenderConstants.*;
 
 class CliRender {
-    //TODO: Eliminare WpcConstants
-    private int wpcHeight = (cellHeight+1)*WpcConstants.ROWS_NUMBER + 3;
-    private int wpcLenght = (diceLenght+1)*WpcConstants.COLS_NUMBER+1;
+    private int wpcRows = 0;
+    private int wpcCols = 0;
+    private int wpcHeight = 0;
+    private int wpcLenght = 0;
     private int wpcDistance = CliConstants.WpcSpacing;
     private int strNum = CliConstants.COUNTER_START_NUMBER;
 
@@ -130,8 +130,24 @@ class CliRender {
         return diceRendered.toString();
     }
 
+    private void getWpcDimension(ClientWpc wpc) {
+        if (wpcHeight == 0) {
+            int rows = 0;
+            int cols = 0;
+            for (ClientCell cell : wpc.getSchema()) {
+                if (cell.getCellPosition().getRow() + 1 > rows) rows = cell.getCellPosition().getRow() + 1;
+                if (cell.getCellPosition().getColumn() + 1 > cols) cols = cell.getCellPosition().getColumn() + 1;
+            }
+            wpcRows = rows;
+            wpcCols = cols;
+            wpcHeight = (cellHeight + 1) * rows + 3;
+            wpcLenght = (diceLenght + 1) * cols + 1;
+        }
+    }
+
     //Restiusce la stringa che rappresenta la wpc su cli
     public String renderWpc(ClientWpc wpc, boolean withID){
+        getWpcDimension(wpc);
         StringBuilder wpcRendered = new StringBuilder();
         String[] stringWpc = convertWpcToString(wpc);
 
@@ -145,6 +161,7 @@ class CliRender {
 
     //Restituisce la stringa che rappresenta le wpc passate su cli, distanziate di distance carattateri
     public String renderWpcs(ClientWpc[] wpcs, int distance){
+        getWpcDimension(wpcs[0]);
         StringBuilder wpcsRendered = new StringBuilder();
         String[][] stringWpcs = new String[wpcs.length][];
 
@@ -198,7 +215,7 @@ class CliRender {
 
         ArrayList<ClientCell> allCells = wpc.getSchema();
 
-        for(int row = 0; row < WpcConstants.ROWS_NUMBER; row++){
+        for(int row = 0; row < wpcRows; row++){
             ClientCell[] rowCells = getRowCells(allCells, row);
             String[][] stringsCells = convertCellsToString(rowCells);
 
@@ -228,10 +245,9 @@ class CliRender {
             if (pos.getRow() == row) rowCellsByCol.put(pos.getColumn(), cell);
         }
 
-        int colNumber = WpcConstants.COLS_NUMBER;
-        ClientCell[] rowCells = new ClientCell[colNumber];
+        ClientCell[] rowCells = new ClientCell[wpcCols];
 
-        for(int i = 0; i < colNumber; i++){
+        for(int i = 0; i < wpcCols; i++){
             rowCells[i] = rowCellsByCol.get(i);
         }
 
@@ -240,10 +256,8 @@ class CliRender {
 
     //Converte le celle passate in stringhe
     private String[][] convertCellsToString(ClientCell[] rowCells) {
-        int colNumber = WpcConstants.COLS_NUMBER;
-
-        String[][] cell = new String[colNumber][];
-        for(int i = 0; i < colNumber; i++){
+        String[][] cell = new String[wpcCols][];
+        for(int i = 0; i < wpcCols; i++){
             cell[i] = convertCellToString(rowCells[i]);
         }
         return cell;

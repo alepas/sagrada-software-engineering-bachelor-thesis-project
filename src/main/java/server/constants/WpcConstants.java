@@ -1,4 +1,4 @@
-package shared.constants;
+package server.constants;
 
 /**
  * This class contains all constants related to the class wpc

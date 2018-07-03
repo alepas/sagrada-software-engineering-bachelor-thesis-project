@@ -3,7 +3,7 @@ package server.model.gamesdb;
 import server.model.game.Game;
 import server.model.game.MultiplayerGame;
 import server.model.game.SinglePlayerGame;
-import shared.constants.GameConstants;
+import server.constants.GameConstants;
 import shared.exceptions.databaseGameExceptions.GameNotInAvailableListException;
 import shared.exceptions.gameExceptions.*;
 
