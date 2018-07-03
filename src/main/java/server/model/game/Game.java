@@ -32,6 +32,8 @@ public abstract class Game extends Observable implements Runnable {
     protected int currentTurn;
     PlayerInGame[] players;
     boolean started;
+    protected int turnPlayer;
+
 
     int numOfPrivateObjectivesForPlayer;
     int numOfToolCards;
@@ -357,6 +359,17 @@ public abstract class Game extends Observable implements Runnable {
         changeAndNotifyObservers(new PocsExtractedNotification(clientPocs));
     }
 
+
+    /**
+     * @return true if the player must skip the turn, false if not
+     */
+    boolean shouldSkipTurn() {
+        PlayerInGame player = players[turnPlayer];
+        return player.isDisconnected() ||
+                (player.getCardUsedBlockingTurn() != null && player.getTurnToSkip() == player.getTurnForRound());
+    }
+
+
     /**
      * @return the object diceBag
      */
@@ -371,7 +384,11 @@ public abstract class Game extends Observable implements Runnable {
         this.turnFinished = turnFinished;
     }
 
-    public abstract boolean isSinglePlayerGame();
+    public boolean isSinglePlayerGame(){
+        if (numPlayers==1)
+            return true;
+        else return false;
+    };
 
     public void updateRoundTrack(RoundTrack roundTrack){
         this.roundTrack=roundTrack;

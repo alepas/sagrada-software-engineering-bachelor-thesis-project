@@ -24,7 +24,6 @@ import shared.network.commands.notifications.*;
 import java.util.*;
 
 public class SinglePlayerGame extends Game {
-    private int turnPlayer;
     private HashMap<String, Integer> scoreList = new HashMap<>();
     private ClientEndTurnData endTurnData;
     private WaiterThread currentThread;
@@ -252,9 +251,8 @@ public class SinglePlayerGame extends Game {
      * again and a playerSkipNotification will be thrown.
      */
     private void nextTurn(){
-        currentTurn++;
         turnPlayer = nextPlayer();
-
+        currentTurn++;
 
         while (shouldSkipTurn()) {
             PlayerInGame player = players[turnPlayer];
@@ -271,15 +269,6 @@ public class SinglePlayerGame extends Game {
         players[turnPlayer].setActive();
         changeAndNotifyObservers(new NextTurnNotification(currentTurn, players[turnPlayer].getUser(),endTurnData));
         startTurnTimer();
-    }
-
-    /**
-     * @return true if the player must skip the turn, false if not
-     */
-    private boolean shouldSkipTurn(){
-        PlayerInGame player = players[turnPlayer];
-        return player.isDisconnected() ||
-                (player.getCardUsedBlockingTurn() != null && player.getTurnForRound() == 2);
     }
 
     /**
@@ -311,14 +300,8 @@ public class SinglePlayerGame extends Game {
      * @return the //todo
      */
     private int nextPlayer(){
-        if (currentTurn == 2) {
-            players[turnPlayer].setTurnInRound(2);
+            players[turnPlayer].setTurnInRound(currentTurn+1);
             return turnPlayer;
-        } else if (currentTurn == 1){
-            players[turnPlayer].setTurnInRound(1);
-            return turnPlayer;
-            }
-            return 0;
     }
 
     /**
@@ -406,11 +389,6 @@ public class SinglePlayerGame extends Game {
                 e.printStackTrace();
             }
         }
-    }
-
-    @Override
-    public boolean isSinglePlayerGame() {
-        return true;
     }
 
 

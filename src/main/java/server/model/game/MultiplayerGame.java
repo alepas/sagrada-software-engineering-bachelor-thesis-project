@@ -27,7 +27,6 @@ import java.util.*;
 import static shared.constants.GameConstants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME;
 
 public class MultiplayerGame extends Game {
-    private int turnPlayer;
     private int roundPlayer;
     private int turnForRound;
     private HashMap<String, Integer> scoreList = new HashMap<>();
@@ -356,15 +355,6 @@ public class MultiplayerGame extends Game {
     }
 
     /**
-     * @return true if the player must skip the turn, false if not
-     */
-    boolean shouldSkipTurn() {
-        PlayerInGame player = players[turnPlayer];
-        return player.isDisconnected() ||
-                (player.getCardUsedBlockingTurn() != null && player.getTurnToSkip() == player.getTurnForRound());
-    }
-
-    /**
      * At the biginning of a new turn the timer starts. if the player doesn't end the turn before the time ends  it will
      * be force to end.
      */
@@ -508,12 +498,6 @@ public class MultiplayerGame extends Game {
         //è rimasto solamente un giocatore
         //TODO:
     }
-
-    @Override
-    public boolean isSinglePlayerGame() {
-        return false;
-    }
-
 
     //------------------------------- Metodi validi solo lato client -------------------------------
 
