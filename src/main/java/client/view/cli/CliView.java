@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
+import static client.constants.CliConstants.*;
+
 public class CliView implements Observer, NotificationHandler {
     private BufferedReader fromKeyBoard;
     private final CliRender cliRender;
@@ -123,8 +125,8 @@ public class CliView implements Observer, NotificationHandler {
         controller.exitGame();
         deleteTask();
         if (turnThread != null) turnThread.stop();
-        printText("");
-        displayText("Premi invio per tornare al menù principale");
+        printText(VOID_STRING);
+        displayText(PRESS_ENTER_TO_MENU);
         while (userInput() == null);
         changeState(Status.MAIN_MENU_PHASE);
     }
@@ -237,19 +239,19 @@ public class CliView implements Observer, NotificationHandler {
             String answer = userInput();
 
             if (answer == null) return;
-            if (answer.equals("quit")) {
+            if (answer.equals(QUIT_RESPONSE)) {
                 changeState(Status.QUIT_SAGRADA);
                 return;
             };
-            if (answer.equals(CliConstants.YES_RESPONSE)) {
+            if (answer.equals(YES_RESPONSE)) {
                 changeState(Status.LOGIN);
                 return;
             };
-            if (answer.equals(CliConstants.NO_RESPONSE)){
+            if (answer.equals(NO_RESPONSE)){
                 changeState(Status.CREATE_ACCOUNT);
                 return;
             }
-            displayText("Scrivi 'quit', '" + CliConstants.YES_RESPONSE + "' oppure '" + CliConstants.NO_RESPONSE + "'");
+            displayText(LOG_PHASE_INVALID_INPUT_ERROR_MESSAGE);
         }
     }
 
@@ -286,7 +288,7 @@ public class CliView implements Observer, NotificationHandler {
 
     private void resumeGame(NextAction nextAction) {
         ClientGame game = controller.getGame();
-        displayText("Riconnesso alla partita: " + game.getId());
+        displayText(RECONNECTED_TO_GAME + game.getId());
 
         startNewTask(controller.getTimeToCompleteTask());
 
@@ -310,8 +312,8 @@ public class CliView implements Observer, NotificationHandler {
                 case MENU_ONLY_PLACE_DICE:
                 case MENU_ONLY_TOOLCARD:
                 case MENU_ONLY_ENDTURN:
-
                     break;
+
                 case PLACE_DICE_TOOLCARD:
                 case SELECT_DICE_TOOLCARD:
                 case INTERRUPT_TOOLCARD:
@@ -321,12 +323,12 @@ public class CliView implements Observer, NotificationHandler {
                     showStartTurnInfo();
                     ToolCardClientNextActionInfo info = controller.getToolcardNextActionInfo();
                     if (info.diceChosen != null) {
-                        displayText("Stavi posizionando il dado: ");
+                        displayText(WERE_PLACING_DICE_STRING);
                         printText(cliRender.renderDice(info.diceChosen));
                     }
-                    if (info.wherePickNewDice != null) displayText("Il dado provine da: " + info.wherePickNewDice);
+                    if (info.wherePickNewDice != null) displayText(DICE_COME_FROM + info.wherePickNewDice);
                     if (info.wherePutNewDice != null)
-                        displayText("Il dado deve essere posizionato: " + info.wherePutNewDice);
+                        displayText(DICE_SHOULD_BE_PUT + info.wherePutNewDice);
                     break;
             }
 
@@ -336,7 +338,7 @@ public class CliView implements Observer, NotificationHandler {
     }
 
     private void mainMenuPhase() {
-        displayText(CliConstants.PRESENT_MAIN_MENU);
+        displayText(PRESENT_MAIN_MENU);
         String response = userInput();
         if (response == null) return;
 
@@ -358,13 +360,13 @@ public class CliView implements Observer, NotificationHandler {
     private void showStat() {
         ClientUser user = controller.getUserStat();
 
-        printText("");
-        displayText("Username: " + user.getUsername());
-        displayText("Partite vinte: " + user.getWonGames());
-        displayText("Partite perse: " + user.getLostGames());
-        displayText("Partite abbandonate: " + user.getAbandonedGames());
-        displayText("Ranking: " + user.getRanking());
-        printText("");
+        printText(VOID_STRING);
+        displayText(USERNAME + user.getUsername());
+        displayText(WON_GAMES + user.getWonGames());
+        displayText(LOST_GAMES + user.getLostGames());
+        displayText(ABANDONED_GAMES + user.getAbandonedGames());
+        displayText(RANKING + user.getRanking());
+        printText(VOID_STRING);
 
         changeState(Status.MAIN_MENU_PHASE);
     }
@@ -373,11 +375,11 @@ public class CliView implements Observer, NotificationHandler {
         String response;
         int numPlayers;
 
-        displayText("Seleziona numero giocatori: (digita 'back' per tornare indietro)");
+        displayText(SELECT_NUM_PLAYERS);
         response = userInput();
         if (response == null) return;
 
-        if (response.equals(CliConstants.ESCAPE_RESPONSE)){
+        if (response.equals(ESCAPE_RESPONSE)){
             changeState(Status.MAIN_MENU_PHASE);
             return;
         }
@@ -386,24 +388,24 @@ public class CliView implements Observer, NotificationHandler {
             numPlayers = Integer.parseInt(response);
             int i = controller.findGame(numPlayers);
             if (i < 0){
-                displayText("Impossibile trovare partita. Riprovare più tardi");
+                displayText(IMPOSSIBLE_TO_FIND_GAME);
                 changeState(Status.MAIN_MENU_PHASE);
             } else {
                 changeState(Status.START_GAME_PHASE);
             }
         } catch (NumberFormatException e){
-            displayText("Perfavore inserire un numero intero");
+            displayText(INSERT_INT_NUMBER);
         }
     }
 
     private void startGamePhase() {
-        waitFor("In attesa di altri giocatori...", ObjectToWaitFor.PLAYERS);
-        waitFor("Attendo che la partita inizi...", ObjectToWaitFor.GAME);
-        waitFor("Attendo i private objectives...", ObjectToWaitFor.PRIVATE_OBJS);
-        waitFor("Attendo le wpc...", ObjectToWaitFor.WPCS);
+        waitFor(WAITING_PLAYERS, ObjectToWaitFor.PLAYERS);
+        waitFor(WAITING_GAME, ObjectToWaitFor.GAME);
+        waitFor(WAITING_PRIVATE_OBJECTIVE, ObjectToWaitFor.PRIVATE_OBJS);
+        waitFor(WAITING_WPCS, ObjectToWaitFor.WPCS);
         chooseWpcPhase();
-        waitFor("In attesa delle toolcard...", ObjectToWaitFor.TOOLCARDS);
-        waitFor("In attesa degli obbiettivi pubblici...", ObjectToWaitFor.POC);
+        waitFor(WAITING_TOOLCARD, ObjectToWaitFor.TOOLCARDS);
+        waitFor(WAITING_POCS, ObjectToWaitFor.POC);
         if (state.equals(Status.START_GAME_PHASE)) changeState(Status.UNKNOWN);;
     }
 
@@ -421,7 +423,7 @@ public class CliView implements Observer, NotificationHandler {
                 if (!obj.isArrived(controller)) waiter.wait(800);
                 if (!obj.isArrived(controller)) displayText(message);
                 while (!obj.isArrived(controller))  waiter.wait();
-            } catch (InterruptedException e) {
+            } catch (InterruptedException | NullPointerException e) {
                 //TODO:
 //                e.printStackTrace();
             }
@@ -437,26 +439,26 @@ public class CliView implements Observer, NotificationHandler {
     private void chooseWpcPhase() {
         Thread requestWpcThread = new Thread(() -> {
             do {
-                displayText("Seleziona la wpc che vuoi utilizzare");
-                String wpcID = userInput();     //Restituisce null se viene interrotto
+                displayText(SELECT_WPC);
+                String wpcID = userInput();
                 isInterruptable = false;
                 if (wpcID != null) controller.pickWpc(wpcID);
                 isInterruptable = true;
             } while (controller.getMyWpc() == null);
-            if (!controller.allPlayersChooseWpc()) displayText("Attendo che gli altri giocatori selezionino la wpc");
+            if (!controller.allPlayersChooseWpc()) displayText(WAITING_PLAYERS_TO_SELECT_WPC);
         });
         requestWpcThread.start();
 
         synchronized (timerWaiter){
             try {
                 int lastTimeLeft = task.timeLeft();
-                int[] steps = {0, 5, 15, 30, 50};
+                int[] steps = WPC_WAITING_STEPS;
                 Integer timeLeft;
 
                 while (!controller.allPlayersChooseWpc()) {
                     if ((timeLeft = hasPassedStep(steps, lastTimeLeft)) != null) {
-                        if (timeLeft == 0) displayText("Tempo scaduto");
-                        else displayText("Rimangono " + timeLeft + " secondi per scegliere le wpc");
+                        if (timeLeft == 0) displayText(TIMES_UP);
+                        else displayText(TIME_LEFT_TO_CHOOSE_WPC_P1 + timeLeft + TIME_LEFT_TO_CHOOSE_WPC_P2);
 
                         lastTimeLeft = timeLeft;
                     }
@@ -481,30 +483,31 @@ public class CliView implements Observer, NotificationHandler {
     }
 
     private void waitForTurn() {
-        waitFor("In attesa del mio turno...", ObjectToWaitFor.TURN);
+        waitFor(WAITING_TURN, ObjectToWaitFor.TURN);
     }
 
     private void showStartTurnInfo(){
-        displayText("Questa è la tua wpc");
-        displayText("Favours rimasti: " + controller.getUserFavour() + "\n"
+        displayText(PRESENT_WPC);
+        displayText(FAVOURS_LEFT + controller.getUserFavour() + RETURN
                 + cliRender.renderWpc(controller.getMyWpc(), false));
 
-        displayText("Dadi estratti:");
-        printText("\n" + cliRender.renderDices(controller.getExtractedDices()) + "\n");
+        displayText(EXTRACTED_DICES);
+        printText(RETURN + cliRender.renderDices(controller.getExtractedDices()) + RETURN);
     }
 
     private enum MenuAction{GET_PRIVATE_OBJ, GET_POCS, GET_TOOLS, SEE_ROUND_TRACK, SEE_ALL_WPCS,
         PLACE_DICE, USE_TOOLCARD, END_TURN;}
 
     private int showStandardActions(){
-        displayText("1) Visualizza Obiettivo Privato");
-        displayText("2) Visualizza Obiettivi Pubblici");
-        displayText("3) Visualizza Carte Utensile");
-        displayText("4) Visualizza RoundTrack");
-        displayText("5) Visualizza tutte le wpc");
-        printText("");
+        int i = 1;
+        displayText(i++ + SHOW_PRIVATE_OBJECTIVE);
+        displayText(i++ + SHOW_POCS);
+        displayText(i++ + SHOW_TOOLCARDS);
+        displayText(i++ + SHOW_ROUNDTRACK);
+        displayText(i + SHOW_ALL_WPCS);
+        printText(VOID_STRING);
 
-        return 5;
+        return i;
     }
 
     private MenuAction[] getActionsForState() {
@@ -537,22 +540,20 @@ public class CliView implements Observer, NotificationHandler {
 
             Thread playTurn = new Thread(() -> {
                 do{
-                    displayText("Cosa vuoi fare?");
+                    displayText(ASK_WHAT_TO_DO);
                     int i = showStandardActions();
                     while (i < possibleActions.length) {
                         if (possibleActions[i].equals(MenuAction.PLACE_DICE)){
-                            displayText(++i + ") Posiziona dado");
+                            displayText(++i + PLACE_DICE);
                             continue;
                         }
                         if (possibleActions[i].equals(MenuAction.USE_TOOLCARD)){
-                            displayText(++i + ") Usa toolcard (Favours rimasti: " + controller.getUserFavour() + ")");
+                            displayText(++i + USE_TOOLCARD + controller.getUserFavour() + CLOSE_PARENTHESIS);
                             continue;
                         }
                         if (possibleActions[i].equals(MenuAction.END_TURN)){
-                            displayText(++i + ") Passa turno");
-                            continue;
+                            displayText(++i + END_TURN);
                         }
-                        printText("Show menu error");
                     }
                     listenToResponseAndPerformAction(possibleActions);
                 } while (!(stateChanged || state.equals(Status.RECONNECT)));
@@ -581,10 +582,10 @@ public class CliView implements Observer, NotificationHandler {
                 if (action >= 0 && action < possibleActions.length) {
                     return performMenuAction(possibleActions[action]);
                 } else {
-                    displayText("Comando non riconosciuto");
+                    displayText(COMMAND_NOT_RECOGNIZED);
                 }
             } catch (NumberFormatException e) {
-                displayText("Perfavore inserire il numero dell'azione che si vuole eseguire");
+                displayText(INSERT_ACTION_NUMBER);
             }
         }
         return false;
@@ -592,11 +593,10 @@ public class CliView implements Observer, NotificationHandler {
 
     //Restituisce true se l'azione è stata compiuta
     private boolean performMenuAction(MenuAction action){
-        //TODO: fare in modo che restituisca false quando qualcosa non è andato a buon fine
         switch (action){
             case GET_PRIVATE_OBJ:
                 showPrivateObjectives();
-                printText("");
+                printText(VOID_STRING);
                 return true;
 
             case GET_POCS:
@@ -624,7 +624,7 @@ public class CliView implements Observer, NotificationHandler {
                 return useToolcard();
 
             case END_TURN:
-                printText("\n");
+                printText(RETURN);
                 if (controller.passTurn()) {
                     changeState(Status.UNKNOWN);
                     return true;
@@ -632,7 +632,7 @@ public class CliView implements Observer, NotificationHandler {
                 return false;
 
             default:
-                displayText("Passata azione non standard");
+                displayText(NO_STANDARD_ACTION_PASSED);
                 return false;
         }
     }
@@ -641,8 +641,8 @@ public class CliView implements Observer, NotificationHandler {
         ClientColor[] colors = controller.getPrivateObjectives();
         StringBuilder str = new StringBuilder();
 
-        if (colors.length > 1) str.append("I tuoi private objective sono: ");
-        else str.append("Il tuo private objective è: ");
+        if (colors.length > 1) str.append(PRESENT_PRIVATE_OBJS);
+        else str.append(PRESENT_PRIVATE_OBJ);
 
         for (ClientColor color : colors){
             str.append(color).append("\t");
@@ -653,32 +653,32 @@ public class CliView implements Observer, NotificationHandler {
 
     private void showPocs() {
         ArrayList<ClientPoc> cards = controller.getPOC();
-        printText("\n");
-        displayText("Gli obbiettivi pubblici della partita sono:\n");
+        printText(RETURN);
+        displayText(PRESENT_POCS);
 
         for (ClientPoc card : cards) {
-            printText("ID: " + card.getId());
-            printText("Nome: " + card.getName());
-            printText("Descrizione: " + card.getDescription() + "\n");
+            printText(ID + card.getId());
+            printText(NAME + card.getName());
+            printText(DESCRIPTION + card.getDescription() + RETURN);
         }
-        printText("\n");
+        printText(RETURN);
     }
 
     private void showToolcards() {
         ArrayList<ClientToolCard> cards = controller.getToolcards();
-        printText("\n");
-        displayText("Le toolcards della partita sono:\n");
+        printText(RETURN);
+        displayText(PRESENT_TOOLCARDS);
 
         for (ClientToolCard card : cards) {
-            printText("ID: " + card.getId());
-            printText("Nome: " + card.getName());
-            printText("Descrizione: " + card.getDescription() + "\n");
+            printText(ID + card.getId());
+            printText(NAME + card.getName());
+            printText(DESCRIPTION + card.getDescription() + "\n");
         }
-        printText("\n");
+        printText(RETURN);
     }
 
     private void printWpcs(ArrayList<ClientWpc> userWpcs){
-        displayText("Le tue wpc sono:\n\n");
+        displayText(PRESENT_WPCS);
 
         ClientWpc[] wpcs = new ClientWpc[2];
         int num;
@@ -699,17 +699,17 @@ public class CliView implements Observer, NotificationHandler {
 
         do {
             try {
-                displayText("Inserisci l'ID del dado da posizionare (digita 'back' per annullare la mossa)");
+                displayText(INSERT_DICE_ID_TO_PLACE + PRESENT_RETURN_BACK);
                 if ((response = userInput()) == null) return false;
                 if (response.equals(CliConstants.ESCAPE_RESPONSE)) return false;
                 int id = Integer.parseInt(response);
 
-                displayText("Inserisci la riga in cui posizionarlo (digita 'back' per annullare la mossa)");
+                displayText(INSERT_ROW_TO_PLACE_DICE + PRESENT_RETURN_BACK);
                 if ((response = userInput()) == null) return false;
                 if (response.equals(CliConstants.ESCAPE_RESPONSE)) return false;
                 int row = Integer.parseInt(response)-strNum;
 
-                displayText("Inserisci la colonna in cui posizionarlo (digita 'back' per annullare la mossa)");
+                displayText(INSERT_COL_TO_PLACE_DICE + PRESENT_RETURN_BACK);
                 if ((response = userInput()) == null) return false;
                 if (response.equals(CliConstants.ESCAPE_RESPONSE)) return false;
                 int col = Integer.parseInt(response)-strNum;
@@ -718,7 +718,7 @@ public class CliView implements Observer, NotificationHandler {
 
                 nextAction = controller.placeDice(id, pos);
             } catch (NumberFormatException e){
-                displayText("Inserire un numero intero");
+                displayText(INSERT_INT_NUMBER);
                 nextAction = null;
             }
         } while (nextAction == null);
@@ -735,8 +735,7 @@ public class CliView implements Observer, NotificationHandler {
 
         do {
             showToolcards();
-            displayText("Seleziona l'ID della toolcard da utilizzare. (Digita \'" + CliConstants.ESCAPE_RESPONSE +
-            "\' per tornare indietro)");
+            displayText(SELECT_TOOLCARD_ID + PRESENT_RETURN_BACK);
             String response = userInput();
             if (response == null) return false;
             if (response.equals(CliConstants.ESCAPE_RESPONSE)) return false;
@@ -769,7 +768,7 @@ public class CliView implements Observer, NotificationHandler {
             case ROUNDTRACK:
                 return pickDiceFromDices(controller.getRoundtrackDices());
             default:
-                displayText("Non so come fare una pick dalla posizione passata");
+                displayText(CANT_DO_PICK_FROM_THIS_POSITION);
                 displayText(location.toString());
                 return -1;
         }
@@ -782,17 +781,17 @@ public class CliView implements Observer, NotificationHandler {
 
         do {
             try {
-                displayText("Seleziona dalla wpc il dado da utilizzare");
+                displayText(SELECT_DICE_FROM_WPC);
 
                 printText(cliRender.renderWpc(wpc, false));
 
-                displayText("Inserisci la riga del dado. (Digita \'" + CliConstants.ESCAPE_RESPONSE + "\' per tornare indietro)");
+                displayText(INSERT_DICE_ROW + PRESENT_RETURN_BACK);
                 if ((response = userInput()) == null) return -1;
                 checkToolBack(response);
                 if (stateChanged) return -1;
                 int row = Integer.parseInt(response)-strNum;
 
-                displayText("Indica la colonna del dado. (Digita \'" + CliConstants.ESCAPE_RESPONSE + "\' per tornare indietro)");
+                displayText(INSERT_DICE_COL + PRESENT_RETURN_BACK);
                 if ((response = userInput()) == null) return -1;
                 checkToolBack(response);
                 if (stateChanged) return -1;
@@ -801,10 +800,10 @@ public class CliView implements Observer, NotificationHandler {
                 Position pos = new Position(row, col);
 
                 id = getDiceIdFromWpc(wpc, pos);
-                if (id == -1)displayText("Non è presente alcun dado nella posizione inserita o la posizione non esiste");
+                if (id == -1)displayText(DICE_NOT_FOUND);
 
             } catch (NumberFormatException e) {
-                displayText("Inserire un numero intero");
+                displayText(INSERT_INT_NUMBER);
             }
         } while (id == -1);
 
@@ -831,15 +830,14 @@ public class CliView implements Observer, NotificationHandler {
             try {
                 printText(cliRender.renderDices(dices));
 
-                displayText("Inserisci l'ID del dado da utilizzare. Digita \'" + CliConstants.ESCAPE_RESPONSE +
-                    "\' per tornare indietro)");
+                displayText(INSERT_DICE_ID_TO_USE + PRESENT_RETURN_BACK);
                 if ((response = userInput()) == null) return -1;
                 checkToolBack(response);
                 if (stateChanged) return -1;
                 id = Integer.parseInt(response);
 
             } catch (NumberFormatException e) {
-                displayText("Inserire un numero intero");
+                displayText(INSERT_INT_NUMBER);
             }
         } while (id == -1);
 
@@ -854,14 +852,14 @@ public class CliView implements Observer, NotificationHandler {
             try {
                 printText(cliRender.renderWpc(wpc, false));
 
-                displayText("Indica la riga in cui posizionare il dado. (Digita \'" + CliConstants.ESCAPE_RESPONSE + "\' per tornare indietro)");
+                displayText(INSERT_ROW_TO_PLACE_DICE + PRESENT_RETURN_BACK);
                 if ((response = userInput()) == null) return null;
                 checkToolBack(response);
                 if (stateChanged) return null;
 
                 int row = Integer.parseInt(response)-strNum;
 
-                displayText("Indica la colonna in cui posizionare il dado. (Digita \'" + CliConstants.ESCAPE_RESPONSE + "\' per tornare indietro)");
+                displayText(INSERT_COL_TO_PLACE_DICE + PRESENT_RETURN_BACK);
                 if ((response = userInput()) == null) return null;
                 checkToolBack(response);
                 if (stateChanged) return null;
@@ -871,11 +869,11 @@ public class CliView implements Observer, NotificationHandler {
 
                 int id = getDiceIdFromWpc(wpc, pos);
                 if (id == -1) return pos;
-                else displayText("É gia presente un dado nella posizione (" + pos.getRow()
-                    + ", " + pos.getColumn() + ")");
+                else displayText(DICE_ALREADY_PRESENT + pos.getRow()
+                    + ", " + pos.getColumn() + CLOSE_PARENTHESIS);
 
             } catch (NumberFormatException e) {
-                displayText("Inserire un numero intero");
+                displayText(INSERT_INT_NUMBER);
             }
         } while (true);
     }
@@ -899,7 +897,7 @@ public class CliView implements Observer, NotificationHandler {
                 if (stateChanged) return;
             }
             else {
-                displayText("Stai per posizionare il dado");
+                displayText(GOING_TO_PLACE_DICE);
                 printText(cliRender.renderDice(info.diceChosen));
                 id = info.diceChosen.getDiceID();
             }
@@ -910,7 +908,7 @@ public class CliView implements Observer, NotificationHandler {
                 if (stateChanged) return;
             }
             if (info.wherePutNewDice.equals(ClientDiceLocations.DICEBAG))
-                displayText("Stai posizionando il dado nel sacchetto");
+                displayText(GOING_TO_PLACE_DICE_INTO_DICEBAG);
 
             nextAction = controller.placeDiceForToolCard(id, pos);
         } while (nextAction == null);
@@ -930,7 +928,7 @@ public class CliView implements Observer, NotificationHandler {
 
         do {
             displayText(str.toString());
-            displayText("Scegli il nuovo numero tra quelli mostrati sopra. (Digita \'" + CliConstants.ESCAPE_RESPONSE + "\' per tornare indietro)");
+            displayText(INCREMENT_DECREMENT_DICE + PRESENT_RETURN_BACK);
 
             try {
                 if ((response = userInput()) == null) return;
@@ -938,13 +936,13 @@ public class CliView implements Observer, NotificationHandler {
                 if (stateChanged) return;
                 int num = Integer.parseInt(response);
                 if (!info.numbersToChoose.contains(num)) {
-                    displayText("Inserire un numero tra quelli presenti");
+                    displayText(INSERT_NUMBER_FROM_PRESENTED);
                     continue;
                 }
 
                 nextAction = controller.pickNumberForToolcard(num);
             } catch (NumberFormatException e) {
-                displayText("Inserire un numero intero");
+                displayText(INSERT_INT_NUMBER);
             }
         } while (nextAction == null);
 
@@ -957,22 +955,21 @@ public class CliView implements Observer, NotificationHandler {
 
         do {
             if (info.diceChosen != null) {
-                displayText("Il nuovo dado è:");
+                displayText(PRESENT_NEW_DICE);
                 printText(cliRender.renderDice(info.diceChosen));
             }
             displayText(info.stringForStopToolCard);
             displayText(info.bothYesAndNo ?
-                    "Digita \'" + CliConstants.YES_RESPONSE + "\' oppure \'" + CliConstants.NO_RESPONSE + "\'"
-                    : "Premi enter per proseguire");
+                    INSERT_YES_OR_NO : PRESS_ENTER_TO_CONTINUE);
             if (info.showBackButton)
-                displayText("Digita \'" + CliConstants.ESCAPE_RESPONSE + "\' per tornare indietro)");
+                displayText(PRESENT_RETURN_BACK);
 
             String response = userInput();
 
             if (response == null) return;
             if (response.equals(CliConstants.YES_RESPONSE)) nextAction = controller.interruptToolcard(ToolCardInteruptValues.YES);
             if (response.equals(CliConstants.NO_RESPONSE)) nextAction = controller.interruptToolcard(ToolCardInteruptValues.NO);
-            if (response.equals("")) nextAction = controller.interruptToolcard(ToolCardInteruptValues.OK);
+            if (response.equals(VOID_STRING)) nextAction = controller.interruptToolcard(ToolCardInteruptValues.OK);
             if (response.equals(CliConstants.ESCAPE_RESPONSE)) nextAction = controller.cancelToolcardAction();
 
         } while (nextAction == null);
@@ -997,19 +994,19 @@ public class CliView implements Observer, NotificationHandler {
 
     @Override
     public void handle(GameStartedNotification notification) {
-        displayText("Partita iniziata");
+        displayText(GAME_STARTED);
         stopWaiting();
     }
 
     @Override
     public void handle(PlayersChangedNotification notification) {
         if (notification.joined){
-            displayText(notification.username + " è entrato in partita.");
+            displayText(notification.username + PLAYER_ENTER_GAME);
         } else {
-            displayText(notification.username + " è uscito dalla partita.");
+            displayText(notification.username + PLAYER_EXIT_GAME);
         }
-        displayText("Giocatori presenti: " + notification.actualPlayers + " di " +
-                notification.numPlayers + " necessari.");
+        displayText(IN_GAME_PLAYERS + notification.actualPlayers + OF +
+                notification.numPlayers + NEEDED);
     }
 
     @Override
@@ -1030,9 +1027,9 @@ public class CliView implements Observer, NotificationHandler {
 
     @Override
     public void handle(UserPickedWpcNotification notification) {
-        displayText(notification.username + " ha scelto la wpc: " + notification.wpc.getWpcID());
+        displayText(notification.username + PLAYER_CHOSE_WPC + notification.wpc.getWpcID());
         if (controller.allPlayersChooseWpc()){
-            displayText("Tutti i giocatori hanno scelto la wpc");
+            displayText(ALL_PLAYERS_CHOOSE_WPC);
             stopWaiting();
         }
     }
@@ -1056,13 +1053,13 @@ public class CliView implements Observer, NotificationHandler {
 
     @Override
     public void handle(NextTurnNotification notification) {
-        printText("");
-        displayText("Turno: " + notification.turnNumber + "\tRound: "
-                + controller.getCurrentRound() + "\tGiocatore attivo: " + notification.activeUser);
+        printText(VOID_STRING);
+        displayText(TURN + notification.turnNumber + ROUND
+                + controller.getCurrentRound() + ACTIVE_PLAYER + notification.activeUser);
 
         if(!controller.isActive()) {
-            displayText("Dadi presenti: ");
-            printText("\n" + cliRender.renderDices(controller.getExtractedDices()));
+            displayText(EXTRACTED_DICES);
+            printText(RETURN + cliRender.renderDices(controller.getExtractedDices()));
         }
 
         startNewTask(notification.timeToCompleteTask);
@@ -1077,11 +1074,11 @@ public class CliView implements Observer, NotificationHandler {
 
     @Override
     public void handle(DicePlacedNotification notification) {
-        printText("\n" + cliRender.renderWpc(notification.wpc, false));
-        displayText(notification.username + " ha posizionato il dado " + notification.dice.getDiceID() +
-                " in posizione (" + (notification.position.getRow()+strNum) + ", " + (notification.position.getColumn()+strNum) + ")");
+        printText(RETURN + cliRender.renderWpc(notification.wpc, false));
+        displayText(notification.username + PLAYER_PLACED_DICE + notification.dice.getDiceID() +
+                IN_POSITION + (notification.position.getRow()+strNum) + ", " + (notification.position.getColumn()+strNum) + ")");
         if (notification.newExtractedDices != null) {
-            displayText("I dadi nella riserva sono: \n");
+            displayText(EXTRACTED_DICES);
             printText(cliRender.renderDices(notification.newExtractedDices));
         }
     }
@@ -1089,7 +1086,7 @@ public class CliView implements Observer, NotificationHandler {
     @Override
     public void handle(ToolCardUsedNotification notification) {
         if (!notification.username.equals(controller.getUser())){
-            displayText(notification.username + " ha usato la toolcard " + notification.toolCard.getId()
+            displayText(notification.username + PLAYER_USED_TOOLCARD + notification.toolCard.getId()
                 + " (" + notification.toolCard.getName() + ")");
             for(Notification not : notification.movesNotifications) not.handle(this);
         }

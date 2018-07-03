@@ -2,12 +2,11 @@ package client.configLoader;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import shared.configLoader.FileLoader;
 import shared.configLoader.NetworkConfigLoader;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 
 public class ClientConfigLoader {
 
@@ -15,13 +14,24 @@ public class ClientConfigLoader {
         FileLoader.createDir("clientconfig");
         JSONParser parser = new JSONParser();
         try {
-//            JSONObject jsonServerObject = (JSONObject) parser.parse(new FileReader("src/main/resources/config/server/serverConfig.json"));
+            FileLoader.setFile("./clientconfig","/client/configLoader/clientConfig.json");
             FileLoader.setFile("./clientconfig","/shared/config/sharedConfig.json");
 
+            JSONObject jsonClientObject = (JSONObject) parser.parse(new FileReader("./clientconfig/clientConfig.json"));
             JSONObject jsonSharedObject = (JSONObject) parser.parse(new FileReader("./clientconfig/sharedConfig.json"));
+
+            String language = (String) jsonClientObject.get("language");
+            JSONObject jsonLanguage;
+            try {
+                jsonLanguage = (JSONObject) parser.parse(new FileReader("src/main/resources/client/configLoader/language/" + language + ".json"));
+            }catch (FileNotFoundException e){
+                System.out.println("Language not found. Revert back to Italian");
+                jsonLanguage = (JSONObject) parser.parse(new FileReader("src/main/resources/client/configLoader/language/ita.json"));
+            }
 
             JSONObject jsonNetwork = (JSONObject) jsonSharedObject.get("network");
 
+            LanguageLoader.loadConfig(jsonLanguage);
             NetworkConfigLoader.loadConfig(jsonNetwork);
 
         } catch (Exception e) {
