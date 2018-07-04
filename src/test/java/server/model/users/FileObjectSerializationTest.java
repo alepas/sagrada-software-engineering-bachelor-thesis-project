@@ -12,7 +12,7 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 
 
-public class LoadingFromFileTest{
+public class FileObjectSerializationTest {
     static private int number=764653;
     static private HashMap<String, Integer> map=new HashMap<String, Integer>();
     private final String PATH="src/test/resources/databasetest/test.db";
@@ -27,7 +27,7 @@ public class LoadingFromFileTest{
     @Test
     void LoadWrongFile(){
         Assertions.assertThrows(DatabaseFileErrorException.class, () -> {
-                    LoadingFromFile.fromFile("it/polimi/ingsw/model/userdb/testnottrue.db");
+                    FileObjectSerialization.fromFile("it/polimi/ingsw/model/userdb/testnottrue.db");
 
                 }
         );
@@ -38,7 +38,7 @@ public class LoadingFromFileTest{
     @Test
      void saveFile(){
         Assertions.assertDoesNotThrow(()->{
-            LoadingFromFile.toFile(map,PATH);
+            FileObjectSerialization.toFile(map,PATH);
             File f = new File(PATH);
             Assertions.assertTrue(f.isFile());
         });
@@ -47,7 +47,7 @@ public class LoadingFromFileTest{
     @Test
     void loadFileNoExceptions(){
             Assertions.assertDoesNotThrow(()->{
-            LoadingFromFile.fromFile(PATH);
+            FileObjectSerialization.fromFile(PATH);
         });
     }
 
@@ -55,7 +55,7 @@ public class LoadingFromFileTest{
     void LoadRightFile() throws FileNotFoundException {
         HashMap<String, Integer> tempmap=null;
         try {
-            tempmap=(HashMap<String, Integer>) LoadingFromFile.fromFile(PATH);
+            tempmap=(HashMap<String, Integer>) FileObjectSerialization.fromFile(PATH);
         } catch (DatabaseFileErrorException e) {
             e.printStackTrace();
         }

@@ -36,10 +36,9 @@ public class PlayerInGame {
     private boolean allowPlaceDiceAfterCard;
     private ToolCard cardUsedBlockingTurn;
     private boolean disconnected = false;
-    private ClientEndTurnData endTurnData;
     private Integer turnToSkip;
 
-    public PlayerInGame(String user, Game game) throws CannotAddPlayerInDatabaseException {
+    public PlayerInGame(String user, Game game) {
         this.game = game;
         db = DatabaseUsers.getInstance();
         username = user;

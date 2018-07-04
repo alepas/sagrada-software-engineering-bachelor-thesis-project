@@ -14,7 +14,7 @@ import server.model.wpc.Wpc;
 import server.network.ClientHandler;
 import shared.clientInfo.*;
 import shared.exceptions.gameExceptions.CannotCreatePlayerException;
-import shared.exceptions.gameExceptions.InvalidNumOfPlayersException;
+import shared.exceptions.gameExceptions.InvalidGameParametersException;
 import shared.exceptions.gameExceptions.NotYourWpcException;
 import shared.exceptions.gameExceptions.UserNotInThisGameException;
 import shared.exceptions.usersAndDatabaseExceptions.*;
@@ -71,8 +71,8 @@ public class ServerController {
         return new LoginResponse(username, userToken, null);
     }
 
-    public Response findGame(String userToken, int numPlayers, int levelOfDifficulty, Observer observer) throws InvalidNumOfPlayersException, CannotFindUserInDBException, CannotCreatePlayerException {
-        Game game = databaseUsers.findNewGame(userToken, numPlayers, levelOfDifficulty, observer);
+    public Response findGame(String userToken, int numPlayers, int levelOfDifficulty, Observer observer) throws InvalidGameParametersException, CannotFindUserInDBException, CannotCreatePlayerException {
+        Game game = databaseUsers.findNewGame(userToken, numPlayers, levelOfDifficulty);
         game.addObserver(observer);
         return new FindGameResponse(game.getID(), game.numActualPlayers(), game.getNumPlayers(), null);
     }
@@ -211,7 +211,7 @@ public class ServerController {
     }
 
     public void removeSessionFromDatabase(String userToken) {
-        databaseUsers.removeClient(userToken);
+        databaseUsers.removeSession(userToken);
     }
 
     public void removeClient(String username, ClientHandler handler) {

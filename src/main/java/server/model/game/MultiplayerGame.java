@@ -76,21 +76,18 @@ public class MultiplayerGame extends Game {
      * @return true if, after adding the new player, the game is full, false if there's still space
      * @throws MaxPlayersExceededException    the game is full and it is not possible to add a new player
      * @throws UserAlreadyInThisGameException the player was already inside the game
-     * @throws CannotCreatePlayerException    if there were problems in creating the playerIn game related to the user
      */
     @Override
-    public synchronized boolean addPlayer(String user) throws MaxPlayersExceededException, UserAlreadyInThisGameException, CannotCreatePlayerException {
+    public synchronized boolean addPlayer(String user) throws MaxPlayersExceededException, UserAlreadyInThisGameException {
 
         if (this.isFull()) throw new MaxPlayersExceededException(user, this);
 
         if (playerIndex(user) >= 0) throw new UserAlreadyInThisGameException(user, this);
 
         PlayerInGame player;
-        try {
+
             player = new PlayerInGame(user, this);
-        } catch (CannotAddPlayerInDatabaseException e) {
-            throw new CannotCreatePlayerException(user);
-        }
+
         players[nextFree()] = player;
 
         changeAndNotifyObservers(new PlayersChangedNotification(user, true, numActualPlayers(), numPlayers));
@@ -105,7 +102,6 @@ public class MultiplayerGame extends Game {
      * @throws UserNotInThisGameException if the player is not in this game
      */
     public synchronized void removePlayer(String user) throws UserNotInThisGameException {
-        try {
             int index = playerIndex(user);
             if (index < 0) throw new UserNotInThisGameException(user, this);
 
@@ -114,10 +110,6 @@ public class MultiplayerGame extends Game {
             removeArrayIndex(players, index);
 
             changeAndNotifyObservers(new PlayersChangedNotification(user, false, numActualPlayers(), numPlayers));
-        } catch (CannotFindPlayerInDatabaseException e) {
-            //TODO:
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -490,20 +482,6 @@ public class MultiplayerGame extends Game {
         }
     }
 
-    /**
-     * Removes all player in game from the database
-     */
-    @Override
-    public void endGame() {
-        DatabaseGames.getInstance().removeGame(this);
-        for (PlayerInGame player : players) {
-            try {
-                DatabaseUsers.getInstance().removePlayerInGameFromDB(player);
-            } catch (CannotFindPlayerInDatabaseException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     private void forceEndGame() {
         endGameForced = true;

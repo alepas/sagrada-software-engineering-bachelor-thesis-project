@@ -4,7 +4,7 @@ import server.controller.ServerController;
 import shared.clientInfo.Position;
 import shared.clientInfo.ToolCardInteruptValues;
 import shared.exceptions.gameExceptions.CannotCreatePlayerException;
-import shared.exceptions.gameExceptions.InvalidNumOfPlayersException;
+import shared.exceptions.gameExceptions.InvalidGameParametersException;
 import shared.exceptions.gameExceptions.NotYourWpcException;
 import shared.exceptions.gameExceptions.UserNotInThisGameException;
 import shared.exceptions.usersAndDatabaseExceptions.*;
@@ -83,7 +83,7 @@ public class RmiServer implements RemoteServer {
     }
 
     @Override
-    public Response findGame(String userToken, int numPlayers, int level) throws CannotFindUserInDBException, InvalidNumOfPlayersException, CannotCreatePlayerException {
+    public Response findGame(String userToken, int numPlayers, int level) throws CannotFindUserInDBException, InvalidGameParametersException, CannotCreatePlayerException {
         return controller.findGame(userToken, numPlayers, level, clientByToken.get(userToken));
     }
 

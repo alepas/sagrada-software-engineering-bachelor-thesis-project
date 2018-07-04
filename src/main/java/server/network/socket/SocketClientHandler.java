@@ -3,7 +3,7 @@ package server.network.socket;
 import server.controller.ServerController;
 import server.network.ClientHandler;
 import shared.exceptions.gameExceptions.CannotCreatePlayerException;
-import shared.exceptions.gameExceptions.InvalidNumOfPlayersException;
+import shared.exceptions.gameExceptions.InvalidGameParametersException;
 import shared.exceptions.gameExceptions.NotYourWpcException;
 import shared.exceptions.gameExceptions.UserNotInThisGameException;
 import shared.exceptions.usersAndDatabaseExceptions.*;
@@ -151,7 +151,7 @@ public class SocketClientHandler extends ClientHandler implements Runnable, Obse
     public Response handle(FindGameRequest request) {
         try {
             return controller.findGame(request.token, request.numPlayers, request.levelOfDifficulty, this);
-        } catch (InvalidNumOfPlayersException|CannotFindUserInDBException |CannotCreatePlayerException e){
+        } catch (InvalidGameParametersException |CannotFindUserInDBException |CannotCreatePlayerException e){
             return new FindGameResponse(e);
         }
     }

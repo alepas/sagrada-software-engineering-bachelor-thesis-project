@@ -5,7 +5,7 @@ import shared.clientInfo.Position;
 import shared.clientInfo.ToolCardInteruptValues;
 import shared.constants.NetworkConstants;
 import shared.exceptions.gameExceptions.CannotCreatePlayerException;
-import shared.exceptions.gameExceptions.InvalidNumOfPlayersException;
+import shared.exceptions.gameExceptions.InvalidGameParametersException;
 import shared.exceptions.gameExceptions.NotYourWpcException;
 import shared.exceptions.gameExceptions.UserNotInThisGameException;
 import shared.exceptions.usersAndDatabaseExceptions.*;
@@ -75,7 +75,7 @@ public class RmiClient extends NetworkClient {
     }
 
     @Override
-    public void findGame(String token, int numPlayers, int level) throws CannotFindUserInDBException, InvalidNumOfPlayersException, CannotCreatePlayerException {
+    public void findGame(String token, int numPlayers, int level) throws CannotFindUserInDBException, InvalidGameParametersException, CannotCreatePlayerException {
         try {
             (remoteServer.findGame(token, numPlayers, level)).handle(this);
         } catch (RemoteException e){
