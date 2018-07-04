@@ -27,8 +27,6 @@ public class SignUpController {
 
     @FXML private Button backButton;
 
-    @FXML private Button disconnectButton;
-
     @FXML private Button signUpButton;
 
     @FXML private TextField signUpUsername;
@@ -66,7 +64,7 @@ public class SignUpController {
         try {
             nextNode = FXMLLoader.load(getClass().getResource(path));
         } catch (IOException e) {
-            e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
         Scene scene2 = new Scene(nextNode);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();

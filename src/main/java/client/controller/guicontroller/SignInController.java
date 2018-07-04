@@ -93,7 +93,7 @@ public class SignInController {
                     signInPassword.clear();
                 });
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Thread.currentThread().interrupt();
             }
 
         });
@@ -119,7 +119,8 @@ public class SignInController {
                 case 4:
                     changeSceneHandle(event, "/client/view/gui/fxml/FourPlayersGameScene.fxml");
                     break;
-
+                default:
+                    break;
             }
     }
 
@@ -135,7 +136,7 @@ public class SignInController {
         try {
             nextNode = FXMLLoader.load(getClass().getResource(path));
         } catch (IOException e) {
-            e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
         Scene scene = new Scene(nextNode);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
