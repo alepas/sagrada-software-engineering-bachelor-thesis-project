@@ -1,9 +1,9 @@
 package server.model.cards.concretePublicObjectiveCards;
 
 import server.constants.POCConstants;
+import server.constants.WpcConstants;
 import server.model.cards.PublicObjectiveCard;
 import server.model.wpc.Wpc;
-import server.constants.WpcConstants;
 
 public class PublicObjectiveCard8  extends PublicObjectiveCard {
 

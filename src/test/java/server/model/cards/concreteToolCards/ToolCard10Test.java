@@ -20,7 +20,6 @@ import shared.exceptions.usersAndDatabaseExceptions.*;
 import java.util.ArrayList;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

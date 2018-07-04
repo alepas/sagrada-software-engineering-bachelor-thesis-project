@@ -9,31 +9,75 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 
 public class ClientConfigLoader {
+    private static final JSONParser parser = new JSONParser();
+    public static final JSONObject jsonClientObject = getClientObject();
+    public static final JSONObject jsonSharedObject = getSharedObject();
+    private static final String language = (String) jsonClientObject.get("language");
+    public static final JSONObject jsonClientLanguage = getClientLanguageObject();
+    public static final JSONObject jsonSharedLanguage = getSharedLanguageObject();
 
-    public static void loadConfig(){
+    private static JSONObject getClientObject() {
         FileLoader.createDir("clientconfig");
-        JSONParser parser = new JSONParser();
         try {
             FileLoader.setFile("./clientconfig","/client/configLoader/clientConfig.json");
+            FileReader reader = new FileReader("./clientconfig/clientConfig.json");
+            return (JSONObject) parser.parse(reader);
+        } catch (Exception e) {
+            return new JSONObject();
+        }
+    }
+
+    private static JSONObject getSharedObject() {
+        FileLoader.createDir("clientconfig");
+        try {
             FileLoader.setFile("./clientconfig","/shared/config/sharedConfig.json");
+            FileReader reader = new FileReader("./clientconfig/sharedConfig.json");
+            return (JSONObject) parser.parse(reader);
+        } catch (Exception e) {
+            return new JSONObject();
+        }
+    }
 
-            JSONObject jsonClientObject = (JSONObject) parser.parse(new FileReader("./clientconfig/clientConfig.json"));
-            JSONObject jsonSharedObject = (JSONObject) parser.parse(new FileReader("./clientconfig/sharedConfig.json"));
-
-            String language = (String) jsonClientObject.get("language");
-            JSONObject jsonClientLanguage; JSONObject jsonSharedLanguage;
+    private static JSONObject getClientLanguageObject() {
+        FileReader reader = null;
+        try {
             try {
-                jsonClientLanguage = (JSONObject) parser.parse(new FileReader("src/main/resources/client/configLoader/language/" + language + ".json"));
-                jsonSharedLanguage = (JSONObject) parser.parse(new FileReader("src/main/resources/shared/config/language/" + language + ".json"));
-            }catch (FileNotFoundException e){
-                System.out.println("Language not found. Revert back to Italian");
-                jsonClientLanguage = (JSONObject) parser.parse(new FileReader("src/main/resources/client/configLoader/language/ita.json"));
-                jsonSharedLanguage = (JSONObject) parser.parse(new FileReader("src/main/resources/shared/config/language/ita.json"));
+                FileLoader.createDir("clientconfig/languages");
+                FileLoader.setFile("./clientconfig/languages","/client/configLoader/language/" + language + ".json");
+                reader = new FileReader("./clientconfig/languages/" + language + ".json");
+            } catch (FileNotFoundException e) {
+                FileLoader.createDir("clientconfig/languages");
+                FileLoader.setFile("./clientconfig/languages","/client/configLoader/language/ita.json");
+                reader = new FileReader("./clientconfig/languages/ita.json");
             }
+            return (JSONObject) parser.parse(reader);
+        } catch (Exception e){
+            return new JSONObject();
+        }
+    }
 
+    private static JSONObject getSharedLanguageObject() {
+        FileReader reader = null;
+        try {
+            try {
+                FileLoader.createDir("clientconfig/languages/shared");
+                FileLoader.setFile("./clientconfig/languages/shared","/shared/config/language/" + language + ".json");
+                reader = new FileReader("./clientconfig/languages/shared/" + language + ".json");
+            } catch (FileNotFoundException e) {
+                FileLoader.createDir("clientconfig/languages/shared");
+                FileLoader.setFile("./clientconfig/languages/shared","/shared/config/language/ita.json");
+                reader = new FileReader("./clientconfig/languages/shared/ita.json");
+            }
+            return (JSONObject) parser.parse(reader);
+        } catch (Exception e){
+            return new JSONObject();
+        }
+    }
+
+    public static void loadConfig(){
+        try {
             JSONObject jsonNetwork = (JSONObject) jsonSharedObject.get("network");
 
-            LanguageLoader.loadConfig(jsonClientLanguage);
             shared.configLoader.LanguageLoader.loadConfig(jsonSharedLanguage);
             NetworkConfigLoader.loadConfig(jsonNetwork);
 

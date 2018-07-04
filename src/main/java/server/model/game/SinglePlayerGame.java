@@ -1,26 +1,28 @@
 package server.model.game;
 
+import server.constants.GameConstants;
 import server.model.cards.PublicObjectiveCard;
 import server.model.cards.ToolCard;
 import server.model.dicebag.Color;
 import server.model.dicebag.Dice;
 import server.model.game.thread.ChooseWpcThread;
 import server.model.game.thread.WaiterThread;
-import server.model.gamesdb.DatabaseGames;
-import server.model.users.DatabaseUsers;
 import server.model.users.PlayerInGame;
 import server.model.wpc.Wpc;
 import shared.clientInfo.ClientDice;
 import shared.clientInfo.ClientEndTurnData;
 import shared.clientInfo.ClientWpc;
-import server.constants.GameConstants;
 import shared.exceptions.gameExceptions.*;
-import shared.exceptions.usersAndDatabaseExceptions.CannotAddPlayerInDatabaseException;
-import shared.exceptions.usersAndDatabaseExceptions.CannotFindPlayerInDatabaseException;
 import shared.exceptions.usersAndDatabaseExceptions.CannotUpdateStatsForUserException;
 import shared.network.commands.notifications.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+
+import static server.constants.GameConstants.CHOOSE_WPC_WAITING_TIME;
+import static server.constants.GameConstants.TASK_DELAY;
 
 public class SinglePlayerGame extends Game {
     private HashMap<String, Integer> scoreList = new HashMap<>();
@@ -121,13 +123,13 @@ public class SinglePlayerGame extends Game {
      */
     @Override
     public void waitForWpcResponse(){
-        currentThread = new ChooseWpcThread(players, GameConstants.CHOOSE_WPC_WAITING_TIME + GameConstants.TASK_DELAY);
+        currentThread = new ChooseWpcThread(players, CHOOSE_WPC_WAITING_TIME + TASK_DELAY);
         Thread waitForWpcs = new Thread(currentThread);
 
         try {
             System.out.println("Sto aspettando che il giocatore scelga la wpc");
             waitForWpcs.start();
-            waitForWpcs.join(GameConstants.CHOOSE_WPC_WAITING_TIME + GameConstants.TASK_DELAY);
+            waitForWpcs.join((long) CHOOSE_WPC_WAITING_TIME + TASK_DELAY);
             System.out.println("Ho smesso di aspettare che il giocatore scelga la wpc");
             if (waitForWpcs.isAlive()) {
                 waitForWpcs.interrupt();
@@ -135,7 +137,7 @@ public class SinglePlayerGame extends Game {
                 System.out.println("Ho estratto casualmente le wpc dei giocatori rimanenti");
             }
         } catch (InterruptedException e){
-            /*Do nothing*/
+            Thread.currentThread().interrupt();
         }
     }
 

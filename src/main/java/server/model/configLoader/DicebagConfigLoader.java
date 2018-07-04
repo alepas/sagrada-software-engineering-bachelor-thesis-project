@@ -1,7 +1,9 @@
 package server.model.configLoader;
 
 import org.json.simple.JSONObject;
-import static server.constants.DiceBagCostants.*;
+
+import static server.constants.DiceBagCostants.INITIAL_DICE_NUMBER;
+import static server.constants.DiceBagCostants.SOLO_PLAYER_DICES;
 
 public class DicebagConfigLoader {
 

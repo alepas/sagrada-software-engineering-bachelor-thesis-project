@@ -1,8 +1,5 @@
 package shared.exceptions.loadConfig;
 
-import static shared.constants.ExceptionConstants.DATABASE_FILE_ERROR_0;
-import static shared.constants.ExceptionConstants.DATABASE_FILE_ERROR_1;
-
 public class ConfigFileErrorException extends Exception{
     private int cause;
 

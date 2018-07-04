@@ -698,7 +698,7 @@ public class CliView implements Observer, NotificationHandler {
             num = i%2;
             wpcs[num] = userWpcs.get(i);
             if ( (i == userWpcs.size()-1) && (num == 0) ) printText(cliRender.renderWpc(wpcs[num], true));
-            if (num == 1) printText(cliRender.renderWpcs(wpcs, CliConstants.WpcSpacing));;
+            if (num == 1) printText(cliRender.renderWpcs(wpcs, CliConstants.WPC_SPACING));;
         }
     }
 

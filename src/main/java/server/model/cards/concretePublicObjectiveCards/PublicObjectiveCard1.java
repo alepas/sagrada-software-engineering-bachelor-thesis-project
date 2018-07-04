@@ -1,11 +1,11 @@
 package server.model.cards.concretePublicObjectiveCards;
 
 import server.constants.POCConstants;
+import server.constants.WpcConstants;
 import server.model.cards.PublicObjectiveCard;
 import server.model.dicebag.Color;
 import server.model.dicebag.Dice;
 import server.model.wpc.Wpc;
-import server.constants.WpcConstants;
 
 import java.util.ArrayList;
 

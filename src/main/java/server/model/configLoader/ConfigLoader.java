@@ -2,7 +2,6 @@ package server.model.configLoader;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import server.constants.UserDBConstants;
 import server.model.cards.PocDB;
 import server.model.cards.ToolCardDB;
@@ -12,7 +11,6 @@ import shared.configLoader.NetworkConfigLoader;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 
 public class ConfigLoader {
 

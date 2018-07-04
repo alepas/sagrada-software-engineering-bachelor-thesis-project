@@ -15,7 +15,10 @@ import shared.clientInfo.ClientDice;
 import shared.clientInfo.ClientDiceLocations;
 import shared.clientInfo.Position;
 import shared.clientInfo.ToolCardInteruptValues;
-import shared.exceptions.usersAndDatabaseExceptions.*;
+import shared.exceptions.usersAndDatabaseExceptions.CannotCancelActionException;
+import shared.exceptions.usersAndDatabaseExceptions.CannotInteruptToolCardException;
+import shared.exceptions.usersAndDatabaseExceptions.CannotPerformThisMoveException;
+import shared.exceptions.usersAndDatabaseExceptions.CannotPickDiceException;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -84,11 +87,11 @@ public class ToolCard7Test {
     }
 
 //todo
-    @Test
-    public void setCardTest() throws CannotUseToolCardException {
-        toolCard7.setCurrentToolStatus(0);
-        toolCard7.setCard(player);
-    }
+//    @Test
+//    public void setCardTest() throws CannotUseToolCardException {
+//        toolCard7.setCurrentToolStatus(0);
+//        toolCard7.setCard(player);
+//    }
 
     /**
      * @throws CannotPickDiceException in no cases because this method wants to test the other exception

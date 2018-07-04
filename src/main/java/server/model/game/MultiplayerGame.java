@@ -1,5 +1,6 @@
 package server.model.game;
 
+import server.constants.GameConstants;
 import server.model.cards.PublicObjectiveCard;
 import server.model.cards.ToolCard;
 import server.model.dicebag.Color;
@@ -8,26 +9,22 @@ import server.model.game.thread.ChooseWpcThread;
 import server.model.game.thread.WaitForEndTurnThread;
 import server.model.game.thread.WaitPlayersThread;
 import server.model.game.thread.WaiterThread;
-import server.model.gamesdb.DatabaseGames;
 import server.model.users.DatabaseUsers;
 import server.model.users.PlayerInGame;
 import server.model.wpc.Wpc;
 import shared.clientInfo.ClientDice;
 import shared.clientInfo.ClientEndTurnData;
 import shared.clientInfo.ClientWpc;
-import server.constants.GameConstants;
-import shared.exceptions.gameExceptions.*;
-import shared.exceptions.usersAndDatabaseExceptions.CannotAddPlayerInDatabaseException;
-import shared.exceptions.usersAndDatabaseExceptions.CannotFindPlayerInDatabaseException;
+import shared.exceptions.gameExceptions.InvalidMultiplayerGamePlayersException;
+import shared.exceptions.gameExceptions.MaxPlayersExceededException;
+import shared.exceptions.gameExceptions.UserAlreadyInThisGameException;
+import shared.exceptions.gameExceptions.UserNotInThisGameException;
 import shared.exceptions.usersAndDatabaseExceptions.CannotUpdateStatsForUserException;
 import shared.network.commands.notifications.*;
-import static server.constants.GameConstants.*;
 
 import java.util.*;
 
-import static server.constants.GameConstants.DEFAULT_SCORE_MULTIPLAYER_GAME;
-import static server.constants.GameConstants.DEFAULT_SCORE_MULTIPLAYER_GAME_LEFT;
-import static server.constants.GameConstants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME;
+import static server.constants.GameConstants.*;
 
 public class MultiplayerGame extends Game {
     int roundPlayer;
@@ -216,7 +213,7 @@ public class MultiplayerGame extends Game {
         try {
             System.out.println("Sto aspettando che i giocatori scelgano le wpc");
             waitForWpcs.start();
-            waitForWpcs.join(CHOOSE_WPC_WAITING_TIME + TASK_DELAY);
+            waitForWpcs.join((long) CHOOSE_WPC_WAITING_TIME + TASK_DELAY);
             System.out.println("Ho smesso di aspettare che i giocatori scelgano le wpc");
             if (waitForWpcs.isAlive()) {
                 waitForWpcs.interrupt();
@@ -318,7 +315,7 @@ public class MultiplayerGame extends Game {
 
         try {
             waitForEndTurn.start();
-            waitForEndTurn.join(GameConstants.TIME_TO_PLAY_TURN_MULTIPLAYER + GameConstants.TASK_DELAY);
+            waitForEndTurn.join((long) TIME_TO_PLAY_TURN_MULTIPLAYER + TASK_DELAY);
             if (waitForEndTurn.isAlive()) {
 
                 waitForEndTurn.interrupt();

@@ -5,11 +5,12 @@ import client.network.NetworkClient;
 import client.network.RmiClient;
 import client.network.SocketClient;
 import shared.constants.NetworkConstants;
-import static client.constants.CliConstants.*;
 
 import java.io.IOException;
 import java.net.ConnectException;
 import java.util.Scanner;
+
+import static client.constants.CliConstants.*;
 
 public class LaunchCli {
     private static Scanner scanner = new Scanner(System.in);

@@ -6,6 +6,7 @@ import shared.clientInfo.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+
 import static client.constants.CliRenderConstants.*;
 
 
@@ -14,7 +15,7 @@ class CliRender {
     private int wpcCols = 0;
     private int wpcHeight = 0;
     private int wpcLenght = 0;
-    private int wpcDistance = CliConstants.WpcSpacing;
+    private int wpcDistance = CliConstants.WPC_SPACING;
     private int strNum = CliConstants.COUNTER_START_NUMBER;
 
     private final String WPC_BORDER_COLOR = BLACK;
@@ -104,9 +105,9 @@ class CliRender {
 
     public String renderDices(ArrayList<ClientDice> dices){
         StringBuilder diceRendered = new StringBuilder();
-        String[][] stringDices = new String[dices.size()][cellHeight+1];
+        String[][] stringDices = new String[dices.size()][CELL_HEIGHT +1];
 
-        String diceSpacing = calculateSpace(diceDistance, null, diceLenght);
+        String diceSpacing = calculateSpace(DICE_DISTANCE, null, DICE_LENGHT);
         String titleSpacing;
 
         for(int i = 0; i < dices.size(); i++){
@@ -114,15 +115,15 @@ class CliRender {
             for(int j = 0; j < temp.length; j++){
                 stringDices[i][j] = temp[j];
             }
-            stringDices[i][cellHeight] = CliConstants.ID + dices.get(i).getDiceID();
+            stringDices[i][CELL_HEIGHT] = CliConstants.ID + dices.get(i).getDiceID();
         }
 
 
-        for(int diceRow = 0; diceRow < cellHeight+1; diceRow++){
+        for(int diceRow = 0; diceRow < CELL_HEIGHT +1; diceRow++){
             for(int dice = 0; dice < dices.size(); dice++){
-                if (diceRow != cellHeight) diceRendered.append(stringDices[dice][diceRow] + diceSpacing);
+                if (diceRow != CELL_HEIGHT) diceRendered.append(stringDices[dice][diceRow] + diceSpacing);
                 else {
-                    diceRendered.append(stringDices[dice][diceRow] + calculateSpace(diceDistance, stringDices[dice][diceRow], diceLenght));
+                    diceRendered.append(stringDices[dice][diceRow] + calculateSpace(DICE_DISTANCE, stringDices[dice][diceRow], DICE_LENGHT));
                 }
             }
             diceRendered.append("\n");
@@ -141,8 +142,8 @@ class CliRender {
             }
             wpcRows = rows;
             wpcCols = cols;
-            wpcHeight = (cellHeight + 1) * rows + 3;
-            wpcLenght = (diceLenght + 1) * cols + 1;
+            wpcHeight = (CELL_HEIGHT + 1) * rows + 3;
+            wpcLenght = (DICE_LENGHT + 1) * cols + 1;
         }
     }
 
@@ -220,7 +221,7 @@ class CliRender {
             ClientCell[] rowCells = getRowCells(allCells, row);
             String[][] stringsCells = convertCellsToString(rowCells);
 
-            for(int cellRow = 0; cellRow < cellHeight; cellRow++){
+            for(int cellRow = 0; cellRow < CELL_HEIGHT; cellRow++){
                 str = new StringBuilder();
                 str.append(cellRow == 1 ? (row+strNum) + "  " : "   ");
                 for(String[] cell : stringsCells){
@@ -318,9 +319,9 @@ class CliRender {
 
         if (!color.equals(NULL_COLOR_CELL)) {
             if (num == 0) diceRows = Arrays.copyOf(cellColorRestricted, cellColorRestricted.length);
-            else diceRows = Arrays.copyOf(dicesWithNumber[num], cellHeight);
+            else diceRows = Arrays.copyOf(dicesWithNumber[num], CELL_HEIGHT);
         }
-        else diceRows = Arrays.copyOf(dices[num], cellHeight);
+        else diceRows = Arrays.copyOf(dices[num], CELL_HEIGHT);
         
         for(int row = 0; row < diceRows.length; row++){
             diceRows[row] = color + diceRows[row] + RESET;
