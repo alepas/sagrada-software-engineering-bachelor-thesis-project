@@ -134,8 +134,10 @@ public class ToolCard2 extends ToolCard {
                     return cancelStatusOne();
                 case 0:
                     return cancelStatusZero();
+                default:
+                    throw new CannotCancelActionException(username, id, 1);
             }
-            throw new CannotCancelActionException(username, id, 1);
+
         }
         return cancelCardFinalAction();
     }
@@ -160,8 +162,10 @@ public class ToolCard2 extends ToolCard {
             case 1:
                 return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.WPC,
                         ClientDiceLocations.WPC, null, tempClientExtractedDices, null, null, null);
+            default:
+                return null;
         }
-        return null;
+
     }
 
 

@@ -126,7 +126,6 @@ public class ToolCard11 extends ToolCard {
                 throw new CannotPerformThisMoveException(username, 2, false);
             }
             currentStatus = 20;
-
             currentGame.getDiceBag().reInsertDice(oldDiceExtracted);
             int indexDice = cardExtractedDices.indexOf(oldDiceExtracted);
             chosenDice = currentGame.getDiceBag().pickDice();
@@ -184,27 +183,47 @@ public class ToolCard11 extends ToolCard {
                     return cancelStatusOne();
                 case 0:
                     return cancelStatusZero();
+                default:
+                    throw new CannotCancelActionException(username, id, 1);
             }
-            throw new CannotCancelActionException(username, id, 1);
-
         }
         switch (currentStatus) {
             case 3:
                 currentStatus = 30;
+                try {
+                    return interruptToolCard(ToolCardInteruptValues.OK);
+                } catch (CannotInteruptToolCardException e) {
+                    //impossible
+                    throw new CannotCancelActionException(username, id, 1);
+                }
             case 30:
                 try {
                     return interruptToolCard(ToolCardInteruptValues.OK);
                 } catch (CannotInteruptToolCardException e) {
                     //impossible
+                    throw new CannotCancelActionException(username, id, 1);
                 }
             case 2:
                 currentStatus = 20;
+                try {
+                    return interruptToolCard(ToolCardInteruptValues.NO);
+                } catch (CannotInteruptToolCardException e) {
+                    //impossible
+                    throw new CannotCancelActionException(username, id, 1);
+                }
             case 20:
                 try {
                     return interruptToolCard(ToolCardInteruptValues.NO);
                 } catch (CannotInteruptToolCardException e) {
                     //impossible
+                    throw new CannotCancelActionException(username, id, 1);
                 }
+            case 0:
+            case 1:
+                break;
+            default:
+                throw new CannotCancelActionException(username, id, 1);
+
         }
         return cancelCardFinalAction();
 
@@ -238,8 +257,10 @@ public class ToolCard11 extends ToolCard {
                 return new MoveData(NextAction.INTERRUPT_TOOLCARD, text2, false, true);
             case 3:
                 return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, ClientDiceLocations.WPC, null, tempClientExtractedDices, null, chosenDice.getClientDice(), ClientDiceLocations.EXTRACTED);
+            default:
+                return null;
+
         }
-        return null;
     }
 
     @Override

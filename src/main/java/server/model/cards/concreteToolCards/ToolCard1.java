@@ -204,9 +204,9 @@ public class ToolCard1 extends ToolCard {
             case 3:
                 return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, ClientDiceLocations.WPC,
                         null, tempClientExtractedDices, null, dice.getClientDice(), ClientDiceLocations.EXTRACTED);
-
+            default:
+                return null;
         }
-        return null;
     }
 
     /**
@@ -243,8 +243,10 @@ public class ToolCard1 extends ToolCard {
                     return cancelStatusOne();
                 case 0:
                     return cancelStatusZero();
+
+                default: throw new CannotCancelActionException(username, id, 1);
+
             }
-            throw new CannotCancelActionException(username, id, 1);
         }
 
         return cancelCardFinalAction();

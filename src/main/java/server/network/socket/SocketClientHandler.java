@@ -299,7 +299,7 @@ public class SocketClientHandler extends ClientHandler implements Runnable, Obse
     public Response handle(NextMoveRequest nextMoveRequest) {
         try {
             return controller.getNextMove(nextMoveRequest.userToken);
-        } catch (CannotFindPlayerInDatabaseException | PlayerNotAuthorizedException e) {
+        } catch (CannotFindPlayerInDatabaseException e) {
             return new NextMoveResponse(e);
         }
     }

@@ -204,13 +204,20 @@ public class ToolCard8Test {
         when(wpc.addDiceWithAllRestrictions(chosenDice, position)).thenReturn(true);
         moveData = toolCard8.placeDice(chosenDice.getId(), position);
 
-        assertEquals(2, toolCard8.getCurrentStatus());
+        /*assertEquals(2, toolCard8.getCurrentStatus());
         assertEquals(NextAction.PLACE_DICE_TOOLCARD, moveData.nextAction);
         assertEquals(ClientDiceLocations.EXTRACTED, moveData.wherePickNewDice);
-        assertEquals(ClientDiceLocations.WPC, moveData.wherePutNewDice);
+        assertEquals(ClientDiceLocations.WPC, moveData.wherePutNewDice);*/
 
-        assertNotNull(moveData.wpc);
+        assertEquals(30, toolCard8.getCurrentStatus());
+        assertEquals(NextAction.INTERRUPT_TOOLCARD, moveData.nextAction);
+        assertEquals(false, moveData.bothYesAndNo);
+        assertEquals(false, moveData.showBackButton);
+
+
+        assertNotNull(moveData.messageForStop);
         assertNotNull(moveData.extractedDices);
+        assertNotNull(moveData.wpc);
 
         assertNull(moveData.roundTrack);
         assertNull(moveData.diceChosen);

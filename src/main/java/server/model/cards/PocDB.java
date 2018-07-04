@@ -6,6 +6,7 @@ import server.model.cards.concretePublicObjectiveCards.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class PocDB {
     private static PocDB instance;
@@ -42,7 +43,7 @@ public class PocDB {
     /**
      * @return an arrayList formed by all the ids
      */
-    public ArrayList<String> getCardsIDs() { return new ArrayList<>(cards.keySet()); }
+    public List<String> getCardsIDs() { return new ArrayList<>(cards.keySet()); }
 
 
     /**

@@ -28,9 +28,12 @@ public class ToolCard4Test {
     private ToolCard4 toolCard4;
     private Game game;
     private Dice chosenDice;
+    private Dice diceTwo;
     private PlayerInGame player;
     private Position position;
     private Wpc wpc;
+    DiceAndPosition diceAndPosition1;
+    DiceAndPosition diceAndPosition2;
 
     @Before
     public void Before() throws CannotPickDiceException {
@@ -45,11 +48,22 @@ public class ToolCard4Test {
         when(chosenDice.getDiceColor()).thenReturn(Color.YELLOW);
         when(chosenDice.getDiceNumber()).thenReturn(4);
 
+        diceTwo = mock(Dice.class);
+        when(diceTwo.getId()).thenReturn(2);
+        when(diceTwo.getDiceColor()).thenReturn(Color.RED);
+        when(diceTwo.getDiceNumber()).thenReturn(5);
+
         //mock the DiceAndPosition to do not have integration problems with the playerInGame class
-        DiceAndPosition diceAndPosition1 = mock(DiceAndPosition.class);
+        diceAndPosition1 = mock(DiceAndPosition.class);
         when(diceAndPosition1.getDice()). thenReturn(chosenDice);
         when(diceAndPosition1.getPosition()).thenReturn(null);
+
+        diceAndPosition2 = mock(DiceAndPosition.class);
+        when(diceAndPosition2.getDice()). thenReturn(diceTwo);
+        when(diceAndPosition2.getPosition()).thenReturn(null);
+
         when(player.dicePresentInLocation(chosenDice.getId(), ClientDiceLocations.WPC)).thenReturn(diceAndPosition1);
+        when(player.dicePresentInLocation(diceTwo.getId(), ClientDiceLocations.WPC)).thenReturn(diceAndPosition2);
         when(player.dicePresentInLocation(chosenDice.getId(), ClientDiceLocations.EXTRACTED)).thenReturn(diceAndPosition1);
 
         toolCard4.setCurrentToolGame(game);
@@ -166,6 +180,7 @@ public class ToolCard4Test {
      */
     @Test (expected = CannotPickPositionException.class )
     public void placeDiceIllegalPositionInWpcStatusOneTest() throws CannotPerformThisMoveException, CannotPickPositionException, CannotPickDiceException {
+        toolCard4.setFirstDiceInitial(diceAndPosition1);
         toolCard4.setCurrentToolStatus(1);
         setSchema();
         toolCard4.placeDice(chosenDice.getId(), position);
@@ -250,9 +265,10 @@ public class ToolCard4Test {
      */
     @Test (expected = CannotPickPositionException.class )
     public void placeDiceIllegalPositionInWpcStatusTwoTest() throws CannotPerformThisMoveException, CannotPickPositionException, CannotPickDiceException {
+        toolCard4.setFirstDiceInitial(diceAndPosition1);
         toolCard4.setCurrentToolStatus(2);
         setSchema();
-        toolCard4.placeDice(chosenDice.getId(), position);
+        toolCard4.placeDice(diceTwo.getId(), position);
     }
 
 
@@ -266,15 +282,16 @@ public class ToolCard4Test {
     @Test
     public void placeDiceStatusTwoTest() throws CannotPerformThisMoveException, CannotPickPositionException,
             CannotPickDiceException {
+        toolCard4.setFirstDiceInitial(diceAndPosition1);
         toolCard4.setCurrentToolStatus(2);
         setSchema();
 
-        Position position1 = mock(Position.class);
-        when(position1.getColumn()).thenReturn(0);
-        when(position1.getRow()).thenReturn(0);
-        when(player.getWPC().addDiceWithAllRestrictions(chosenDice, position1)).thenReturn(true);
+        Position position2 = mock(Position.class);
+        when(position2.getColumn()).thenReturn(0);
+        when(position2.getRow()).thenReturn(1);
+        when(player.getWPC().addDiceWithAllRestrictions(diceTwo, position2)).thenReturn(true);
 
-        MoveData moveData = toolCard4.placeDice(chosenDice.getId(), position1);
+        MoveData moveData = toolCard4.placeDice(diceTwo.getId(), position2);
 
         assertTrue(moveData.moveFinished);
         assertNull(moveData.roundTrack);

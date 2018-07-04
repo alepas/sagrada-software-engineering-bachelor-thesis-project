@@ -61,9 +61,9 @@ public class ToolCard4 extends ToolCard {
      *
      * @param diceId is the id of the chosen dice
      * @return all the information related to the next action that the player will have to do and all new parameters created
-     *         by the call of this method
-     * @throws CannotPickDiceException if the chosen dice isn't available, for example it is not located where the
-     *                                 player has to pick the dice
+     * by the call of this method
+     * @throws CannotPickDiceException        if the chosen dice isn't available, for example it is not located where the
+     *                                        player has to pick the dice
      * @throws CannotPerformThisMoveException if the game in a multi player game
      */
     @Override
@@ -78,7 +78,7 @@ public class ToolCard4 extends ToolCard {
      * @return all the information related to the next action that the player will have to do and all new parameters
      * created by the call of this method
      * @throws CannotPerformThisMoveException every time that this method is called because it is not possible to pick
-     * a number while this card is used
+     *                                        a number while this card is used
      */
     @Override
     public MoveData pickNumber(int number) throws CannotPerformThisMoveException {
@@ -126,8 +126,8 @@ public class ToolCard4 extends ToolCard {
             if (pos == null) {
                 throw new CannotPerformThisMoveException(username, 2, false);
             }
-            if (secondDiceInitial.getDice().getId()==(firstDiceInitial.getDice().getId()))
-                throw new CannotPickDiceException(username,secondDiceInitial.getDice().getDiceNumber(),Color.getClientColor(secondDiceInitial.getDice().getDiceColor()),ClientDiceLocations.WPC,5);
+            if (secondDiceInitial.getDice().getId() == (firstDiceInitial.getDice().getId()))
+                throw new CannotPickDiceException(username, secondDiceInitial.getDice().getDiceNumber(), Color.getClientColor(secondDiceInitial.getDice().getDiceColor()), ClientDiceLocations.WPC, 5);
             cardWpc.removeDice(secondDiceInitial.getPosition());
             if (!cardWpc.addDiceWithAllRestrictions(tempDice, pos)) {
                 cardWpc.addDicePersonalizedRestrictions(tempDice, secondDiceInitial.getPosition(), false, false, false, false, false);
@@ -173,8 +173,10 @@ public class ToolCard4 extends ToolCard {
                     return cancelStatusOne();
                 case 0:
                     return cancelStatusZero();
+                default:
+                    throw new CannotCancelActionException(username, id, 1);
             }
-            throw new CannotCancelActionException(username, id, 1);
+
         }
         return cancelCardFinalAction();
     }
@@ -203,9 +205,9 @@ public class ToolCard4 extends ToolCard {
                 return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.WPC, ClientDiceLocations.WPC, null, tempClientExtractedDices, null, null, null);
             case 2:
                 return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.WPC, ClientDiceLocations.WPC, tempClientWpc, tempClientExtractedDices, null, null, null);
-
+            default:
+                return null;
         }
-        return null;
     }
 
 
@@ -219,4 +221,10 @@ public class ToolCard4 extends ToolCard {
         throw new CannotInteruptToolCardException(username, id);
     }
 
+    //-----------tests methods
+
+
+    void setFirstDiceInitial(DiceAndPosition firstDiceInitial) {
+        this.firstDiceInitial = firstDiceInitial;
+    }
 }

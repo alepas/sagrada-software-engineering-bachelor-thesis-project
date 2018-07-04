@@ -64,9 +64,9 @@ public class ToolCard6 extends ToolCard {
      * @param diceId is the ID of the dice chosen by the player
      * @return all the information related to the next action that the player will have to do and all new parameters created
      * by the call of this method
-     * @throws CannotPickDiceException every time there are problems in the return of the singlePlayer
+     * @throws CannotPickDiceException        every time there are problems in the return of the singlePlayer
      * @throws CannotPerformThisMoveException every time that the current state is different from 1, this means that
-     *          the player is trying to do an action that can't be done in that moment
+     *                                        the player is trying to do an action that can't be done in that moment
      */
     @Override
     public MoveData pickDice(int diceId) throws CannotPickDiceException, CannotPerformThisMoveException {
@@ -85,7 +85,7 @@ public class ToolCard6 extends ToolCard {
             else {
                 this.currentStatus = 30;
                 String text = "Il dado non può essere posizionato sulla Window Pattern Card. È stato riposizionato nei dadi estratti.";
-                return new MoveData(NextAction.INTERRUPT_TOOLCARD, text, false, false,null, tempClientExtractedDices, null,this.dice.getClientDice(), ClientDiceLocations.EXTRACTED,null,false);
+                return new MoveData(NextAction.INTERRUPT_TOOLCARD, text, false, false, null, tempClientExtractedDices, null, this.dice.getClientDice(), ClientDiceLocations.EXTRACTED, null, false);
             }
         } else throw new CannotPerformThisMoveException(username, 2, false);
 
@@ -155,19 +155,24 @@ public class ToolCard6 extends ToolCard {
                 if (!all) break;
                 if (cardWpc.autoAddDice(this.dice))
                     cardExtractedDices.remove(this.dice);
+                currentStatus = 1;
+                canceledCard = false;
+                break;
             case 30:
                 if (!all) break;
                 currentStatus = 1;
                 canceledCard = false;
+                break;
             case 1:
                 if (!all) return cancelStatusOne();
+                break;
             case 0:
                 if (!all)
                     return cancelStatusZero();
+                break;
+            default:
+                throw new CannotCancelActionException(username, id, 1);
         }
-        if (!all)
-            throw new CannotCancelActionException(username, id, 1);
-
         if (currentStatus == 1 && singlePlayerGame)
             cardExtractedDices.add(diceForSingleUser);
         updateAndCopyToGameData(true, true, true);
@@ -205,10 +210,10 @@ public class ToolCard6 extends ToolCard {
                 return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, ClientDiceLocations.WPC, null, tempClientExtractedDices, null, this.dice.getClientDice(), ClientDiceLocations.EXTRACTED);
             case 30:
                 String text = "Il dado non può essere posizionato sulla Window Pattern Card. È stato riposizionato nei dadi estratti.";
-                return new MoveData(NextAction.INTERRUPT_TOOLCARD, text, false, false,null, tempClientExtractedDices, null,this.dice.getClientDice(), ClientDiceLocations.EXTRACTED,null,false);
-
+                return new MoveData(NextAction.INTERRUPT_TOOLCARD, text, false, false, null, tempClientExtractedDices, null, this.dice.getClientDice(), ClientDiceLocations.EXTRACTED, null, false);
+            default:
+                return null;
         }
-        return null;
     }
 
     /**
@@ -235,7 +240,11 @@ public class ToolCard6 extends ToolCard {
 
     //--------------------------------------Methods for Tests-----------------------------------------------------------
 
-    Dice getOldDice(){return  oldDice;}
+    Dice getOldDice() {
+        return oldDice;
+    }
 
-    Dice getToolDice(){return dice;}
+    Dice getToolDice() {
+        return dice;
+    }
 }

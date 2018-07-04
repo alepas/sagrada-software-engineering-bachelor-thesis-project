@@ -12,6 +12,7 @@ import shared.exceptions.usersAndDatabaseExceptions.*;
 import shared.network.commands.notifications.Notification;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class ToolCard implements Cloneable {
     protected String id;
@@ -122,7 +123,7 @@ public abstract class ToolCard implements Cloneable {
      * @return the client tool card
      */
     public ClientToolCard getClientToolcard() {
-        return new ClientToolCard(id, name, description, used);
+        return new ClientToolCard(id, name, description, Color.getClientColor(colorForDiceSingleUser), used);
     }
 
     /**
@@ -248,22 +249,14 @@ public abstract class ToolCard implements Cloneable {
         if ((currentPlayer != null) || (currentStatus != 0)) {
             throw new CannotUseToolCardException(id, 9);
         }
-        if (cardOnlyInFirstMove)
-            if (player.isPlacedDiceInTurn())
-                throw new CannotUseToolCardException(id, 2);
-        if (dicesOnWpc)
-            if (player.getWPC().getNumOfDices() == 0)
-                throw new CannotUseToolCardException(id, 5);
-        if (dicesOnRoundTrack)
-            if (player.getUpdatedRoundTrack().getNumberOfDices() == 0)
-                throw new CannotUseToolCardException(id, 6);
-        if (turn !=0){
-            if (player.getTurnForRound() != turn){
-                if (turn==1){
-                    throw new CannotUseToolCardException(id, 7);
-                }
-                else throw new CannotUseToolCardException(id, 8);
-            }
+        if (cardOnlyInFirstMove && player.isPlacedDiceInTurn()) throw new CannotUseToolCardException(id, 2);
+        if (dicesOnWpc && player.getWPC().getNumOfDices() == 0) throw new CannotUseToolCardException(id, 5);
+        if (dicesOnRoundTrack && player.getUpdatedRoundTrack().getNumberOfDices() == 0)
+            throw new CannotUseToolCardException(id, 6);
+        if (turn != 0 && player.getTurnForRound() != turn) {
+            if (turn == 1) {
+                throw new CannotUseToolCardException(id, 7);
+            } else throw new CannotUseToolCardException(id, 8);
         }
         this.currentPlayer = player;
         this.currentGame = player.getGame();
@@ -299,7 +292,7 @@ public abstract class ToolCard implements Cloneable {
     }
 
     /**
-     * @return
+     * @return the MoveData to chose the dice to activate the toolcard if the game is a single player one
      */
     protected MoveData defaultNextMoveStatusZero(){
         if (singlePlayerGame)
@@ -307,7 +300,7 @@ public abstract class ToolCard implements Cloneable {
         else return null;
     }
 
-    protected void copyExtractedDicesToCard(){
+    private void copyExtractedDicesToCard(){
         cardExtractedDices.clear();
         cardExtractedDices.addAll(currentGame.getExtractedDices());
     }
@@ -378,6 +371,6 @@ public abstract class ToolCard implements Cloneable {
 
     public Wpc getCardWpc(){ return cardWpc;}
 
-    public void setCardExtractedDices(ArrayList<Dice> extractedDices){ cardExtractedDices = extractedDices;}
+    public void setCardExtractedDices(List<Dice> extractedDices){ cardExtractedDices = new ArrayList<>(extractedDices);}
 
 }

@@ -50,7 +50,7 @@ public class ToolCard9 extends ToolCard {
 
     /**
      * In this ToolCard this method should be called only when the game is a single player game, the
-     *      * first action that a single player must to do use a ToolCard is to pick a dice of the give color
+     * * first action that a single player must to do use a ToolCard is to pick a dice of the give color
      *
      * @param diceId is the id of the chosen dice
      * @return all the information related to the next action that the player will have to do and all new parameters created
@@ -128,8 +128,9 @@ public class ToolCard9 extends ToolCard {
                     return cancelStatusOne();
                 case 0:
                     return cancelStatusZero();
+                default:
+                    throw new CannotCancelActionException(username, id, 1);
             }
-            throw new CannotCancelActionException(username, id, 1);
         }
         return cancelCardFinalAction();
     }
@@ -138,7 +139,9 @@ public class ToolCard9 extends ToolCard {
      * Calls the default cleaner
      */
     @Override
-    protected void cleanCard() { defaultClean(); }
+    protected void cleanCard() {
+        defaultClean();
+    }
 
     /**
      * @return all the information related to the next action that the player will have to do and all new parameters
@@ -151,8 +154,9 @@ public class ToolCard9 extends ToolCard {
                 return defaultNextMoveStatusZero();
             case 1:
                 return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, ClientDiceLocations.WPC, null, tempClientExtractedDices, null, null, null);
+            default:
+                return null;
         }
-        return null;
     }
 
     /**

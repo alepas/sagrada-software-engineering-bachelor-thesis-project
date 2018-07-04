@@ -97,7 +97,7 @@ public class ToolCard5 extends ToolCard {
      *                                        possible to pick a number while this card is used
      */
     @Override
-    public MoveData pickNumber(int number) throws CannotPerformThisMoveException{
+    public MoveData pickNumber(int number) throws CannotPerformThisMoveException {
         throw new CannotPerformThisMoveException(username, 2, false);
     }
 
@@ -167,8 +167,10 @@ public class ToolCard5 extends ToolCard {
                     return cancelStatusOne();
                 case 0:
                     return cancelStatusZero();
+                default:
+                    throw new CannotCancelActionException(username, id, 1);
+
             }
-            throw new CannotCancelActionException(username, id, 1);
         }
         return cancelCardFinalAction();
 
@@ -199,9 +201,9 @@ public class ToolCard5 extends ToolCard {
                 return new MoveData(NextAction.SELECT_DICE_TOOLCARD, ClientDiceLocations.ROUNDTRACK, null, null, tempClientExtractedDices, null, fromExtracted.getDice().getClientDice(), ClientDiceLocations.EXTRACTED);
             case 3:
                 return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, ClientDiceLocations.WPC, null, tempClientExtractedDices, tempClientRoundTrack, fromRoundTrack.getDice().getClientDice(), ClientDiceLocations.EXTRACTED);
-
+            default:
+                return null;
         }
-        return null;
     }
 
     /**

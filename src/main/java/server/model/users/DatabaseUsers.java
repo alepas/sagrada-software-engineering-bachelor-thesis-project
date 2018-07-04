@@ -68,6 +68,9 @@ public class DatabaseUsers {
     private DatabaseUsers(String path) {
         pathFile = path;
 
+        if (path==null)
+            pathFile=UserDBConstants.getPathDbFile();
+
         tokenByUsername = new HashMap<>();
 
         usersByToken = new HashMap<>();
@@ -97,7 +100,7 @@ public class DatabaseUsers {
         } catch (DatabaseFileErrorException e) {
             if (e.getErrorId() == 1) {
                 new File(pathFile);
-                usersByUsername = new HashMap<String, User>();
+                usersByUsername = new HashMap<>();
             }
         }
     }
@@ -114,7 +117,6 @@ public class DatabaseUsers {
         if (attemp < 3) {
             try {
                 FileObjectSerialization.toFile(usersByUsername, pathFile);
-                return;
             } catch (DatabaseFileErrorException e) {
                 updateFileDB(++attemp);
             }
@@ -255,7 +257,7 @@ public class DatabaseUsers {
      * @return the username of the user if it is found in the database
      * @throws CannotFindUserInDBException if it is impossible to get the user form the given token or the token is null
      */
-    synchronized String getUsernameByToken(String token) throws CannotFindUserInDBException {
+    private synchronized String getUsernameByToken(String token) throws CannotFindUserInDBException {
         if (token == null) throw new CannotFindUserInDBException("");
 
         User user = usersByToken.get(token);
@@ -366,7 +368,7 @@ public class DatabaseUsers {
         play = playerByUsername.get(username);
         if (play == null)
             throw new CannotFindPlayerInDatabaseException();
-        play.setDisconnected(false);
+        play.reConnect();
         playerInGameByToken.put(token, play);
         return play;
     }
@@ -391,8 +393,7 @@ public class DatabaseUsers {
         if (player != null) {
             throw new CannotCreatePlayerException(player.getUser());
         }
-        Game game = databaseGames.findGameForUser(username, numPlayers, levelOfDifficulty);
-        return game;
+        return databaseGames.findGameForUser(username, numPlayers, levelOfDifficulty);
     }
 
 

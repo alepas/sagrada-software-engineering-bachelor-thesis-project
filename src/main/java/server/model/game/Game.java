@@ -144,11 +144,11 @@ public abstract class Game extends Observable implements Runnable {
         return started;
     }
 
-    public ArrayList<ToolCard> getToolCards() {
+    public List<ToolCard> getToolCards() {
         return toolCards;
     }
 
-    public ArrayList<PublicObjectiveCard> getPublicObjectiveCards() {
+    public List<PublicObjectiveCard> getPublicObjectiveCards() {
         return publicObjectiveCards;
     }
 
@@ -156,7 +156,7 @@ public abstract class Game extends Observable implements Runnable {
 
     public int getNumPlayers() { return numPlayers; }
 
-    public ArrayList<Dice> getExtractedDices() { return extractedDices; }
+    public List<Dice> getExtractedDices() { return extractedDices; }
 
     public PlayerInGame[] getPlayers() { return players; }
 
@@ -167,7 +167,7 @@ public abstract class Game extends Observable implements Runnable {
     /**
      * @return true if the game has all players
      */
-    public boolean isFull(){ return !(players[players.length-1] == null); }
+    public boolean isFull(){ return (players[players.length-1] != null); }
 
     int getCurrentTurn() {
         return currentTurn;
@@ -283,8 +283,8 @@ public abstract class Game extends Observable implements Runnable {
             ArrayList<String> wpcIDs = wpcsByUser.get(player.getUser());
             ArrayList<ClientWpc> userClientWpcs = new ArrayList<>();
 
-            for(String id : wpcIDs){
-                userClientWpcs.add(wpcDB.getClientWpcByID(id));
+            for(String tempId : wpcIDs){
+                userClientWpcs.add(wpcDB.getClientWpcByID(tempId));
             }
 
             clientWpcByUser.put(player.getUser(), new ArrayList<>(userClientWpcs));
@@ -303,16 +303,16 @@ public abstract class Game extends Observable implements Runnable {
     private HashMap<String, ArrayList<String>> extractRandomWpcsForUser(){
         ArrayList<String> ids = wpcDB.getWpcIDs();
         Collections.shuffle(ids);
-        HashMap<String, ArrayList<String>> wpcsByUser = new HashMap<>();
+        HashMap<String, ArrayList<String>> tempWpcsByUser = new HashMap<>();
 
         int numOfWpcs = GameConstants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER;
 
         for(int i = 0; i < players.length; i++){
-            wpcsByUser.put(players[i].getUser(), new ArrayList<>(
+            tempWpcsByUser.put(players[i].getUser(), new ArrayList<>(
                     ids.subList(numOfWpcs * i, numOfWpcs * (i + 1))));
         }
 
-        return wpcsByUser;
+        return tempWpcsByUser;
     }
 
     /**
@@ -334,7 +334,7 @@ public abstract class Game extends Observable implements Runnable {
      * Chooses in a random way 3 ToolCard from the 12 available in the ToolCard data base
      */
     void extractToolCards() {
-        ArrayList<String> ids = toolcardDB.getCardsIDs();
+        ArrayList<String> ids = new ArrayList<>(toolcardDB.getCardsIDs());
         Collections.shuffle(ids);
         ids.clear();
         ids.add("1");
@@ -346,8 +346,8 @@ public abstract class Game extends Observable implements Runnable {
 
         ArrayList<ClientToolCard> clientToolCards = new ArrayList<>();
 
-        for (String id : toolCardsExtracted){
-            ToolCard card = toolcardDB.getCardByID(id);
+        for (String cardId : toolCardsExtracted){
+            ToolCard card = toolcardDB.getCardByID(cardId);
             toolCards.add(card);
             clientToolCards.add(card.getClientToolcard());
         }
@@ -359,13 +359,13 @@ public abstract class Game extends Observable implements Runnable {
      *Chooses in a random way 3 Public Objective Cards from the 12 available in the Private Objective Cards data base
      */
     void extractPublicObjectives(){
-        ArrayList<String> ids = pocDB.getCardsIDs();
+        ArrayList<String> ids = new ArrayList<>(pocDB.getCardsIDs());
         Collections.shuffle(ids);
         ArrayList<String> publicCardsExtracted = new ArrayList<>(ids.subList(0, numOfPublicObjectiveCards));
         ArrayList<ClientPoc> clientPocs = new ArrayList<>();
 
-        for (String id : publicCardsExtracted){
-            PublicObjectiveCard card = pocDB.getCardByID(id);
+        for (String cardId : publicCardsExtracted){
+            PublicObjectiveCard card = pocDB.getCardByID(cardId);
             publicObjectiveCards.add(card);
             clientPocs.add(card.getClientPoc());
         }
@@ -393,7 +393,7 @@ public abstract class Game extends Observable implements Runnable {
     /**
      * Removes all player in game from the database
      */
-    public void endGame() {
+    void endGame() {
         DatabaseGames.getInstance().removeGame(this);
         for (PlayerInGame player : players) {
             DatabaseUsers.getInstance().removePlayerInGameFromDB(player);
@@ -413,8 +413,8 @@ public abstract class Game extends Observable implements Runnable {
         this.roundTrack=roundTrack;
     }
 
-    public void updateExtractedDices(ArrayList<Dice> extractedDices){
-        this.extractedDices=extractedDices;
+    public void updateExtractedDices(List<Dice> extractedDices){
+        this.extractedDices=new ArrayList<>(extractedDices);
     }
 
 

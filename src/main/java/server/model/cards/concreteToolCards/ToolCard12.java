@@ -59,7 +59,7 @@ public class ToolCard12 extends ToolCard {
 
     /**
      * In this ToolCard this method should be called only when the game is a single player game, the
-     *      * first action that a single player must to do use a ToolCard is to pick a dice of the give color
+     * * first action that a single player must to do use a ToolCard is to pick a dice of the give color
      *
      * @param diceId is the id of the chosen dice
      * @return all the information related to the next action that the player will have to do and all new parameters created
@@ -107,7 +107,7 @@ public class ToolCard12 extends ToolCard {
      * - if the status is equal to 1 and none of the exceptions is thrown it removes the dice from its first position and
      * places it in the new one; after those operation it sets the current status equals to 20 and sends to the player
      * a stop message in which asks to the player if he/she wants to modify the position of a second dice.
-     *
+     * <p>
      * - if the status is equal to 2 it means that the player has chosen to place an other dice, if none of the
      * exceptions is thrown it modifies the dice position and ends the use of this
      *
@@ -182,19 +182,27 @@ public class ToolCard12 extends ToolCard {
                     return cancelStatusOne();
                 case 0:
                     return cancelStatusZero();
+                default:
+                    throw new CannotCancelActionException(username, id, 1);
             }
-            throw new CannotCancelActionException(username, id, 1);
 
         }
         switch (currentStatus) {
             case 2:
                 currentStatus = 20;
+                try {
+                    return interruptToolCard(ToolCardInteruptValues.NO);
+                } catch (CannotInteruptToolCardException e) {
+                    //impossible
+                }
+                break;
             case 20:
                 try {
                     return interruptToolCard(ToolCardInteruptValues.NO);
                 } catch (CannotInteruptToolCardException e) {
                     //impossible
                 }
+            default: //do nothing
         }
         return cancelCardFinalAction();
     }
@@ -227,8 +235,10 @@ public class ToolCard12 extends ToolCard {
             case 20:
                 String text = "Vuoi spostare un altro dado dello stesso colore del dado appena spostato?";
                 return new MoveData(NextAction.INTERRUPT_TOOLCARD, text, true, false, tempClientWpc, null, null, null, null, null, false);
+            default:
+                return null;
+
         }
-        return null;
     }
 
     /**
@@ -261,7 +271,11 @@ public class ToolCard12 extends ToolCard {
 
     //--------------------------------------Methods for Tests-----------------------------------------------------------
 
-    DiceAndPosition getFirstDiceInitial(){return  firstDiceInitial;}
+    DiceAndPosition getFirstDiceInitial() {
+        return firstDiceInitial;
+    }
 
-    DiceAndPosition getSecondDiceInitial(){return secondDiceInitial;}
+    DiceAndPosition getSecondDiceInitial() {
+        return secondDiceInitial;
+    }
 }

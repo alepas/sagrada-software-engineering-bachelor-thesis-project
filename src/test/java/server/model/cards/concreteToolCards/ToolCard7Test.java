@@ -49,6 +49,7 @@ public class ToolCard7Test {
         toolCard7.setCurrentToolGame(game);
         toolCard7.setCurrentToolPlayer(player);
         when(player.getUser()).thenReturn("Username");
+        when (player.getTurnForRound()).thenReturn(2);
         toolCard7.setToolUser(player.getUser());
 
         Position position = mock(Position.class);

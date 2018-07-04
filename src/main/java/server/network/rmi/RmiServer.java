@@ -93,7 +93,7 @@ public class RmiServer implements RemoteServer {
     }
 
     @Override
-    public Response passTurn(String userToken) throws RemoteException, CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotPerformThisMoveException {
+    public Response passTurn(String userToken) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotPerformThisMoveException {
         return controller.passTurn(userToken);
     }
 
@@ -108,7 +108,7 @@ public class RmiServer implements RemoteServer {
     }
 
     @Override
-    public Response placeDiceForToolCard(String userToken, int diceId, Position position) throws RemoteException, CannotFindPlayerInDatabaseException, CannotPickPositionException, CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException {
+    public Response placeDiceForToolCard(String userToken, int diceId, Position position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException {
         return controller.placeDiceForToolCard(userToken, diceId, position);
     }
 
@@ -163,7 +163,7 @@ public class RmiServer implements RemoteServer {
     }
 
     @Override
-    public Response getNextMove(String userToken) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException {
+    public Response getNextMove(String userToken) throws CannotFindPlayerInDatabaseException {
         return controller.getNextMove(userToken);
     }
 

@@ -89,7 +89,7 @@ public class ToolCard8 extends ToolCard {
             if (!cardWpc.addDiceWithAllRestrictions(tempDice, pos))
                 throw new CannotPickPositionException(username, pos);
 
-            diceAndPosition= new DiceAndPosition(tempDice,pos);
+            diceAndPosition = new DiceAndPosition(tempDice, pos);
             cardExtractedDices.remove(tempDice);
             updateClientWPC();
             updateClientExtractedDices();
@@ -101,7 +101,7 @@ public class ToolCard8 extends ToolCard {
                 this.currentStatus = 30;
                 String text = "Nessun dado tra quelli estratti può essere posizionato sulla Window Pattern Card.\n" +
                         "Il primo piazzamento è considerato valido. L'utilizzo della toolCard è stato annullato.";
-                return new MoveData(NextAction.INTERRUPT_TOOLCARD, text, false, false, null, tempClientExtractedDices,null,null,null,null,false);
+                return new MoveData(NextAction.INTERRUPT_TOOLCARD, text, false, false, tempClientWpc, tempClientExtractedDices, null, null, null, null, false);
             }
 
         } else if ((currentStatus == 2) || (currentStatus == 10)) {
@@ -113,7 +113,7 @@ public class ToolCard8 extends ToolCard {
                 throw new CannotPickPositionException(username, pos);
             cardExtractedDices.remove(tempDice);
             this.used = true;
-            currentPlayer.setTurnToSkip(currentPlayer.getTurnForRound()+1);
+            currentPlayer.setTurnToSkip(currentPlayer.getTurnForRound() + 1);
             updateAndCopyToGameData(true, true, false);
             movesNotifications.add(new ToolCardDicePlacedNotification(username, tempDice.getClientDice(), pos));
             currentGame.changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, tempClientExtractedDices, null, currentPlayer.getFavours()));
@@ -180,8 +180,10 @@ public class ToolCard8 extends ToolCard {
                     return cancelStatusOne();
                 case 0:
                     return cancelStatusZero();
+                default:
+                    throw new CannotCancelActionException(username, id, 1);
+
             }
-            throw new CannotCancelActionException(username, id, 1);
         }
 
         switch (currentStatus) {
@@ -191,14 +193,22 @@ public class ToolCard8 extends ToolCard {
                 return cancelCardFinalAction();
             case 2:
                 currentStatus = 30;
+                try {
+                    return interruptToolCard(ToolCardInteruptValues.OK);
+                } catch (CannotInteruptToolCardException e) {
+                    //impossible
+                    throw new CannotCancelActionException(username, id, 0);
+                }
             case 30:
                 try {
                     return interruptToolCard(ToolCardInteruptValues.OK);
                 } catch (CannotInteruptToolCardException e) {
                     //impossible
+                    throw new CannotCancelActionException(username, id, 0);
                 }
+            default:
+                throw new CannotCancelActionException(username, id, 0);
         }
-        throw new CannotCancelActionException(username, id, 0);
     }
 
     /**
@@ -207,7 +217,7 @@ public class ToolCard8 extends ToolCard {
     @Override
     protected void cleanCard() {
         defaultClean();
-        diceAndPosition=null;
+        diceAndPosition = null;
     }
 
     /**
@@ -228,10 +238,11 @@ public class ToolCard8 extends ToolCard {
             case 30:
                 String text = "Nessun dado tra quelli estratti può essere posizionato sulla Window Pattern Card.\n" +
                         "Il primo piazzamento è considerato valido. L'utilizzo della toolCard è stato annullato.";
-                return new MoveData(NextAction.INTERRUPT_TOOLCARD, text, false, false, null, tempClientExtractedDices,null,null,null,null,false);
+                return new MoveData(NextAction.INTERRUPT_TOOLCARD, text, false, false, null, tempClientExtractedDices, null, null, null, null, false);
+            default:
+                return null;
 
         }
-        return null;
     }
 
 
@@ -239,13 +250,11 @@ public class ToolCard8 extends ToolCard {
      * @return true if it is possible to place the dice, false if not
      */
     private boolean verifyExtractedDicesPlaceable() {
-        boolean condition = true;
-        boolean tempcondition;
         for (Dice dice : cardExtractedDices) {
-            tempcondition = cardWpc.isDicePlaceable(dice);
-            condition = condition || tempcondition;
+            if (cardWpc.isDicePlaceable(dice))
+                return true;
         }
-        return condition;
+        return false;
     }
 
     /**

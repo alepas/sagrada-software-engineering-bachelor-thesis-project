@@ -5,6 +5,7 @@ import server.model.cards.concreteToolCards.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class ToolCardDB {
     private static ToolCardDB instance;
@@ -43,7 +44,7 @@ public class ToolCardDB {
      * The tool card DB is composed by 12 different card which are loaded in an HashMap.
      * The HashMap's keys are the tool cards' IDs
      */
-    public ArrayList<String> getCardsIDs() {
+    public List<String> getCardsIDs() {
         return new ArrayList<>(toolCards.keySet());
     }
 

@@ -61,9 +61,9 @@ public class ToolCard10 extends ToolCard {
      * @param diceId is the ID of the dice chosen by the player
      * @return all the information related to the next action that the player will have to do and all new parameters created
      * by the call of this method
-     * @throws CannotPickDiceException every time there are problems in the return of the singlePlayer
+     * @throws CannotPickDiceException        every time there are problems in the return of the singlePlayer
      * @throws CannotPerformThisMoveException every time that the current state is different from 1, this means that
-     *          the player is trying to do an action that can't be done in that moment
+     *                                        the player is trying to do an action that can't be done in that moment
      */
     @Override
     public MoveData pickDice(int diceId) throws CannotPickDiceException, CannotPerformThisMoveException {
@@ -89,7 +89,7 @@ public class ToolCard10 extends ToolCard {
      *                                        possible to pick a number while this card is used
      */
     @Override
-    public MoveData pickNumber(int number) throws CannotPerformThisMoveException{
+    public MoveData pickNumber(int number) throws CannotPerformThisMoveException {
         throw new CannotPerformThisMoveException(username, 2, false);
     }
 
@@ -146,16 +146,16 @@ public class ToolCard10 extends ToolCard {
                     this.oldDice = null;
                     this.currentStatus = 1;
                     movesNotifications.remove(movesNotifications.size() - 1);
-                    if (!all)
-                        return new MoveData(NextAction.SELECT_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, null, null, tempClientExtractedDices, null, null, null);
+                    return new MoveData(NextAction.SELECT_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, null, null, tempClientExtractedDices, null, null, null);
                 }
 
                 case 1:
                     return cancelStatusOne();
                 case 0:
                     return cancelStatusZero();
+                default:
+                    throw new CannotCancelActionException(username, id, 1);
             }
-            throw new CannotCancelActionException(username, id, 1);
         }
         return cancelCardFinalAction();
     }
@@ -183,9 +183,9 @@ public class ToolCard10 extends ToolCard {
                 return new MoveData(NextAction.SELECT_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, null, null, tempClientExtractedDices, null, null, null);
             case 2:
                 return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.EXTRACTED, ClientDiceLocations.WPC, null, tempClientExtractedDices, null, dice.getClientDice(), ClientDiceLocations.EXTRACTED);
-
+            default:
+                return null;
         }
-        return null;
     }
 
     /**
@@ -203,7 +203,11 @@ public class ToolCard10 extends ToolCard {
 
     //--------------------------------------Methods for Tests-----------------------------------------------------------
 
-    Dice getOldDice(){return  oldDice;}
+    Dice getOldDice() {
+        return oldDice;
+    }
 
-    Dice getToolDice(){return dice;}
+    Dice getToolDice() {
+        return dice;
+    }
 }

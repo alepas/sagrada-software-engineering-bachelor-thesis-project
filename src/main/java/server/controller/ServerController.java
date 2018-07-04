@@ -143,7 +143,7 @@ public class ServerController {
 
     public Response getUpdatedExtractedDices(String userToken) throws CannotFindPlayerInDatabaseException {
         PlayerInGame player = databaseUsers.getPlayerInGameFromToken(userToken);
-        ArrayList<Dice> dices = player.getUpdatedExtractedDices();
+        ArrayList<Dice> dices = new ArrayList<>(player.getUpdatedExtractedDices());
         ArrayList<ClientDice> clientDices = new ArrayList<>();
         for (Dice dice : dices) {
             clientDices.add(dice.getClientDice());
@@ -153,7 +153,7 @@ public class ServerController {
 
     public Response getUpdatedPOCs(String userToken) throws CannotFindPlayerInDatabaseException {
         PlayerInGame player = databaseUsers.getPlayerInGameFromToken(userToken);
-        ArrayList<PublicObjectiveCard> pocs = player.getUpdatedPOCs();
+        ArrayList<PublicObjectiveCard> pocs = new ArrayList<>(player.getUpdatedPOCs());
         ArrayList<ClientPoc> clientPocs = new ArrayList<>();
         for (PublicObjectiveCard poc : pocs) {
             clientPocs.add(poc.getClientPoc());
@@ -169,7 +169,7 @@ public class ServerController {
 
     public Response getUpdatedToolCards(String userToken) throws CannotFindPlayerInDatabaseException {
         PlayerInGame player = databaseUsers.getPlayerInGameFromToken(userToken);
-        ArrayList<ToolCard> toolCards = player.getUpdatedToolCards();
+        ArrayList<ToolCard> toolCards = new ArrayList<>(player.getUpdatedToolCards());
         ArrayList<ClientToolCard> clientToolCards = new ArrayList<>();
         for (ToolCard card : toolCards) {
             clientToolCards.add(card.getClientToolcard());
@@ -205,7 +205,7 @@ public class ServerController {
     }
 
 
-    public Response getNextMove(String userToken) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException {
+    public Response getNextMove(String userToken) throws CannotFindPlayerInDatabaseException {
         PlayerInGame currentPlayer = databaseUsers.getPlayerInGameFromToken(userToken);
         return convertMoveDataToNextMoveResponse(currentPlayer.getNextMove());
     }
@@ -216,7 +216,7 @@ public class ServerController {
 
     public void removeClient(String username, ClientHandler handler) {
         ClientHandler temp = clientByUser.get(username);
-        if (temp.getToken() == handler.getToken())
+        if (temp.getToken().equals(handler.getToken()))
             clientByUser.remove(username);
     }
 

@@ -18,6 +18,7 @@ import shared.network.commands.notifications.DicePlacedNotification;
 import shared.network.commands.notifications.PlayerDisconnectedNotification;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class PlayerInGame {
@@ -99,8 +100,8 @@ public class PlayerInGame {
 
     }
 
-    public void setDisconnected(boolean disconnected) {
-        this.disconnected = disconnected;
+    void reConnect() {
+        this.disconnected = false;
     }
 
     public Wpc getWPC() {
@@ -338,7 +339,7 @@ public class PlayerInGame {
         throw new UserNotInThisGameException(username, this.game);
     }
 
-    public ArrayList<Dice> getUpdatedExtractedDices() {
+    public List<Dice> getUpdatedExtractedDices() {
         return game.getExtractedDices();
     }
 
@@ -346,11 +347,11 @@ public class PlayerInGame {
         return game.getRoundTrack();
     }
 
-    public ArrayList<ToolCard> getUpdatedToolCards() {
+    public List<ToolCard> getUpdatedToolCards() {
         return game.getToolCards();
     }
 
-    public ArrayList<PublicObjectiveCard> getUpdatedPOCs() {
+    public List<PublicObjectiveCard> getUpdatedPOCs() {
         return game.getPublicObjectiveCards();
     }
 
