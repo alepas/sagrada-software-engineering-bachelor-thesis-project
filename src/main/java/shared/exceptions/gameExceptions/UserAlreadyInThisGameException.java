@@ -1,6 +1,7 @@
 package shared.exceptions.gameExceptions;
 
 import server.model.game.Game;
+import shared.constants.ExceptionConstants;
 
 public class UserAlreadyInThisGameException extends Exception {
     private final String username;
@@ -13,6 +14,6 @@ public class UserAlreadyInThisGameException extends Exception {
 
     @Override
     public String getMessage() {
-        return username + " already joined this game: " + game.getID();
+        return username + ExceptionConstants.USER_ALREADY_IN_GAME + game.getID();
     }
 }

@@ -1,6 +1,7 @@
 package shared.exceptions.gameExceptions;
 
 import server.model.game.Game;
+import shared.constants.ExceptionConstants;
 
 public class MaxPlayersExceededException extends Exception {
     private final String username;
@@ -13,7 +14,7 @@ public class MaxPlayersExceededException extends Exception {
 
     @Override
     public String getMessage() {
-        return "Cannot add " + username + " to game: " + game.getID() + ". "
-                + "This game has already reached the maximum number of players: " + game.getPlayers();
+        return ExceptionConstants.MAX_PLAYER_EXCEEDED_P1 + username + ExceptionConstants.MAX_PLAYER_EXCEEDED_P2
+                + game.getID() + ExceptionConstants.MAX_PLAYER_EXCEEDED_P3 + game.getPlayers().length;
     }
 }

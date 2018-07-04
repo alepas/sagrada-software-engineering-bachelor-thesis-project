@@ -1,5 +1,7 @@
 package shared.exceptions.usersAndDatabaseExceptions;
 
+import static shared.constants.ExceptionConstants.*;
+
 public class CannotUseToolCardException extends Exception{
     private int cause;
     private String cardID;
@@ -11,31 +13,24 @@ public class CannotUseToolCardException extends Exception{
     @Override
     public String getMessage() {
         if (cause==0)
-        return "Impossibile scegliere la Tool Card " + cardID+" perchè non è disponibile nella partita corrente.";
+        return CANNOT_PICK_TOOLCARD + cardID + CANNOT_USE_TOOLCARD_0;
         else if (cause==1)
-            return "Impossibile scegliere la Tool Card " + cardID+" perchè il giocatore non ha abbastanza favours.";
+            return CANNOT_PICK_TOOLCARD + cardID + CANNOT_USE_TOOLCARD_1;
         else if (cause==2)
-            return "Impossibile scegliere la Tool Card "+ cardID +" perchè va utilizzata prima di posizionare un dado";
+            return CANNOT_PICK_TOOLCARD + cardID + CANNOT_USE_TOOLCARD_2;
         else if (cause==3)
-            return "Impossibile utilizzare la Tool Card "+ cardID +" perchè il dado selezionato non è del colore corretto";
-        else if (cause==4)
-            return "Impossibile scegliere la Tool Card "+ cardID +" perchè hai già utilizzato una Tool Card in questo turno.";
-        else if (cause==5)
-            return "Impossibile utilizzare la Tool Card "+ cardID +" perchè non ci sono dadi a sufficienza sulla Window Pattern Card.";
+            return CANNOT_USE_TOOLCARD + cardID + CANNOT_USE_TOOLCARD_3;
+        else if (cause==4 || cause==5)
+            return CANNOT_PICK_TOOLCARD + cardID + CANNOT_USE_TOOLCARD_45;
         else if (cause==6)
-            return "Impossibile utilizzare la Tool Card "+ cardID +" perchè non ci sono dadi a sufficienza sul RoundTrack.";
+            return CANNOT_USE_TOOLCARD + cardID + CANNOT_USE_TOOLCARD_6;
         else if (cause==7)
-            return "Impossibile utilizzare la Tool Card "+ cardID +"nel secondo turno del round.";
+            return CANNOT_USE_TOOLCARD + cardID + CANNOT_USE_TOOLCARD_7;
         else if (cause==8)
-            return "Impossibile utilizzare la Tool Card "+ cardID +"nel primo turno del round.";
+            return CANNOT_USE_TOOLCARD + cardID + CANNOT_USE_TOOLCARD_8;
         else if (cause ==9)
-            return "Impossibile utilizzare la Tool Card "+ cardID+".";
-
-
-
-
-
-        else return "C'è stato un problema interno nell'utilizzo della Tool Card "+cardID+".";
+            return CANNOT_USE_TOOLCARD + cardID + ".";
+        else return CANNOT_USE_TOOLCARD_DEF + cardID + ".";
     }
 
 

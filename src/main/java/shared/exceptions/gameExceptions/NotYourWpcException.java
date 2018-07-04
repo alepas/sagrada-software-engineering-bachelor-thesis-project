@@ -1,5 +1,7 @@
 package shared.exceptions.gameExceptions;
 
+import shared.constants.ExceptionConstants;
+
 public class NotYourWpcException extends Exception {
     public final String id;
 
@@ -9,7 +11,7 @@ public class NotYourWpcException extends Exception {
 
     @Override
     public String getMessage() {
-        return "Non puoi selezionare questa wpc (id: " + id
-                + ") perchè non ti è stata assegnata";
+        return ExceptionConstants.NOT_YOUR_WPC_P1 + id
+                + ExceptionConstants.NOT_YOUR_WPC_P2;
     }
 }

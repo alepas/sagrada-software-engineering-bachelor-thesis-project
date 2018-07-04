@@ -1,5 +1,7 @@
 package shared.exceptions.usersAndDatabaseExceptions;
 
+import shared.constants.ExceptionConstants;
+
 public class CannotFindUserInDBException extends Exception{
     private String user;
 
@@ -8,7 +10,7 @@ public class CannotFindUserInDBException extends Exception{
     }
     @Override
     public String getMessage() {
-       return "Impossibile trovare l'utente "+user+" nel database.";
+       return ExceptionConstants.CANNOT_FIND_USER_IN_DB_P1 + user + ExceptionConstants.CANNOT_FIND_USER_IN_DB_P2;
     }
 
 

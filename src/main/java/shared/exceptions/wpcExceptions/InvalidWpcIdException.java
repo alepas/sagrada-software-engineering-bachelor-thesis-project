@@ -1,5 +1,7 @@
 package shared.exceptions.wpcExceptions;
 
+import static shared.constants.ExceptionConstants.INVALID_WPC_ID;
+
 public class InvalidWpcIdException extends Exception {
     public final String id;
 
@@ -9,6 +11,6 @@ public class InvalidWpcIdException extends Exception {
 
     @Override
     public String getMessage() {
-        return "Non esiste una Wpc con questo id:" + id;
+        return INVALID_WPC_ID + id;
     }
 }

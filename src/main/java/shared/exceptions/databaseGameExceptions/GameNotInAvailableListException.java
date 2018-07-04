@@ -1,6 +1,7 @@
 package shared.exceptions.databaseGameExceptions;
 
 import server.model.game.Game;
+import shared.constants.ExceptionConstants;
 
 public class GameNotInAvailableListException  extends Exception {
     private final Game game;
@@ -11,6 +12,6 @@ public class GameNotInAvailableListException  extends Exception {
 
     @Override
     public String getMessage() {
-        return "Game non found in available list: " + game.getID();
+        return ExceptionConstants.GAME_NOT_IN_AVAILABLE_LIST + game.getID();
     }
 }

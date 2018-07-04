@@ -1,14 +1,18 @@
 package shared.exceptions.usersAndDatabaseExceptions;
 
+import static shared.constants.ExceptionConstants.PLAYER_NOT_AUTHORIZED_P1;
+import static shared.constants.ExceptionConstants.PLAYER_NOT_AUTHORIZED_P2;
+
 public class PlayerNotAuthorizedException extends Exception{
     private String user;
 
     public PlayerNotAuthorizedException(String username ){
         user=username;
     }
+
     @Override
     public String getMessage() {
-       return "Il giocatore "+user+" non può eseguire azioni in questo momento.\r\nÈ il turno di un altro giocatore.";
+       return PLAYER_NOT_AUTHORIZED_P1 + user + PLAYER_NOT_AUTHORIZED_P2;
     }
 
 

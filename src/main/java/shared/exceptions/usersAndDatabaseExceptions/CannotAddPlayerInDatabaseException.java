@@ -1,18 +1,15 @@
 package shared.exceptions.usersAndDatabaseExceptions;
 
+import shared.constants.ExceptionConstants;
+
 public class CannotAddPlayerInDatabaseException extends Exception{
 
+    public CannotAddPlayerInDatabaseException() { }
 
-    public CannotAddPlayerInDatabaseException() {
-
-    }
     @Override
     public String getMessage() {
 
-
-        return "Impossibile inserire il player corrente nella partita a causa di un errore interno.";
+        return ExceptionConstants.CANNOT_ADD_PLAYER_IN_DB;
     }
-
-
 
 }

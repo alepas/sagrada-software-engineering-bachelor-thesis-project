@@ -1,5 +1,7 @@
 package shared.exceptions.gameExceptions;
 
+import shared.constants.ExceptionConstants;
+
 public class InvalidMultiplayerGamePlayersException extends Exception {
     private final int numPlayers;
     private final int min_players;
@@ -13,8 +15,9 @@ public class InvalidMultiplayerGamePlayersException extends Exception {
 
     @Override
     public String getMessage() {
-        return "Impossibile creare un multiplayer game con questo numero di giocatori: " + numPlayers +
-                "\n Una partita multiplayer può essere giocata da " + min_players +
-                " a " + max_players + " giocatori.";
+        return ExceptionConstants.INVALID_MULTIPLAYER_GAME_PLAYERS_P1 + numPlayers +
+                ExceptionConstants.INVALID_MULTIPLAYER_GAME_PLAYERS_P2 + min_players +
+                ExceptionConstants.INVALID_MULTIPLAYER_GAME_PLAYERS_P3 + max_players +
+                ExceptionConstants.INVALID_MULTIPLAYER_GAME_PLAYERS_P4;
     }
 }

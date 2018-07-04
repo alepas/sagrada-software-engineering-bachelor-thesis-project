@@ -1,5 +1,7 @@
 package shared.exceptions.gameExceptions;
 
+import shared.constants.ExceptionConstants;
+
 public class CannotCreatePlayerException extends Exception {
     private final String username;
 
@@ -9,6 +11,6 @@ public class CannotCreatePlayerException extends Exception {
 
     @Override
     public String getMessage() {
-        return "Impossibile creare l'oggetto PlayerInGame per l'utente: " + username;
+        return ExceptionConstants.CANNOT_CREATE_PLAYER + username;
     }
 }

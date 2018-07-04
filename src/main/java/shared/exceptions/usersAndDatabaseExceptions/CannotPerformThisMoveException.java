@@ -1,5 +1,9 @@
 package shared.exceptions.usersAndDatabaseExceptions;
 
+import shared.constants.ExceptionConstants;
+
+import static shared.constants.ExceptionConstants.*;
+
 public class CannotPerformThisMoveException extends Exception{
     private int cause;
     private String user;
@@ -16,22 +20,22 @@ public class CannotPerformThisMoveException extends Exception{
     public String getMessage() {
         String nameOfMove;
         if (endTurn)
-            nameOfMove="terminare il turno corrente";
-        else nameOfMove="eseguire la mossa";
+            nameOfMove = ExceptionConstants.CANNOT_PERFORM_THIS_MOVE_NAME_1;
+        else nameOfMove = ExceptionConstants.CANNOT_PERFORM_THIS_MOVE_NAME_2;
 
         if (cause==0)
-            return "Impossibile "+nameOfMove+" per il giocatore "+user+".\r\nC'è una mossa che deve essere terminata: posizionare un dado. Completala o cancella la mossa per terminare il turno.";
+            return CANNOT_PERFORM_THIS_MOVE_IMPOSSIBLE + nameOfMove + CANNOT_PERFORM_THIS_MOVE_FOR_PLAYER + user + CANNOT_PERFORM_THIS_MOVE_0;
 
         else if (cause==1)
-            return "Impossibile "+nameOfMove+" per il giocatore "+user+"\n" +
-                    "C'è una mossa che deve essere terminata: stai utilizzando una toolcard. Completala o cancella la ToolCard per terminare il turno.";
+            return CANNOT_PERFORM_THIS_MOVE_IMPOSSIBLE + nameOfMove + CANNOT_PERFORM_THIS_MOVE_FOR_PLAYER + user + "\n" +
+                    CANNOT_PERFORM_THIS_MOVE_1;
         else if (cause==2)
-            return "Impossibile eseguire questa mossa perchè non è disponibile in questo momento.\r\nSegui i prossimi passi visualizzati a schermo";
+            return CANNOT_PERFORM_THIS_MOVE_2;
 
         else if (cause==3)
-            return "Impossibile eseguire questa mossa perchè è già stata eseguita nel turno corrente.\r\nSegui i prossimi passi visualizzati a schermo";
+            return CANNOT_PERFORM_THIS_MOVE_3;
 
-        return "Impossibile "+nameOfMove+" per il giocatore "+user+".";
+        return CANNOT_PERFORM_THIS_MOVE_IMPOSSIBLE + nameOfMove + CANNOT_PERFORM_THIS_MOVE_FOR_PLAYER + user + ".";
     }
 
 

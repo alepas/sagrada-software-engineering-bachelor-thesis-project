@@ -1,5 +1,7 @@
 package shared.exceptions.gameExceptions;
 
+import shared.constants.ExceptionConstants;
+
 public class InvalidNumOfPlayersException extends Exception {
     private final int numPlayers;
 
@@ -9,6 +11,6 @@ public class InvalidNumOfPlayersException extends Exception {
 
     @Override
     public String getMessage() {
-        return "Cannot find a game with this amount of players: " + numPlayers;
+        return ExceptionConstants.INVALID_NUM_OF_PLAYERS + numPlayers;
     }
 }

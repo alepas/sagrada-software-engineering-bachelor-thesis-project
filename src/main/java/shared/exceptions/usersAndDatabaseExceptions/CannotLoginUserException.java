@@ -1,5 +1,7 @@
 package shared.exceptions.usersAndDatabaseExceptions;
 
+import shared.constants.ExceptionConstants;
+
 public class CannotLoginUserException extends Exception{
     private int cause;
     private String user;
@@ -11,16 +13,16 @@ public class CannotLoginUserException extends Exception{
     @Override
     public String getMessage() {
         if (cause==0)
-            return "Impossibile eseguire l'accesso per l'utente " + user + " a causa di un problema interno";
+            return ExceptionConstants.CANNOT_LOGIN_USER_03_P1 + user + ExceptionConstants.CANNOT_LOGIN_USER_0_P2;
 
         else if (cause==1)
-            return "La password per l'utente " + user + " è sbagliata. \r\nProva nuovamente.";
+            return ExceptionConstants.CANNOT_LOGIN_USER_1_P1 + user + ExceptionConstants.CANNOT_LOGIN_USER_1_P2;
         else if (cause==2)
-            return "L'utente " + user + " non esiste.";
+            return ExceptionConstants.CANNOT_LOGIN_USER_2_P1 + user + ExceptionConstants.CANNOT_LOGIN_USER_2_P2;
         if (cause==3)
-            return "Impossibile eseguire l'accesso per l'utente " + user+ ".\r\nC'è stato un problema nel chiudere la connessione precedente.";
+            return ExceptionConstants.CANNOT_LOGIN_USER_03_P1 + user+ ExceptionConstants.CANNOT_LOGIN_USER_3_P2;
 
-        else return "C'è stato un problema interno nel processo di login.";
+        else return ExceptionConstants.CANNOT_LOGIN_USER_4;
     }
 
     public int getErrorId() {

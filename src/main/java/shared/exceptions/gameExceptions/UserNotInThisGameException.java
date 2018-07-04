@@ -1,5 +1,6 @@
 package shared.exceptions.gameExceptions;
 import server.model.game.Game;
+import shared.constants.ExceptionConstants;
 
 public class UserNotInThisGameException extends Exception {
     private final String username;
@@ -12,6 +13,6 @@ public class UserNotInThisGameException extends Exception {
 
     @Override
     public String getMessage() {
-        return username + " not in game: " + game.getID();
+        return username + ExceptionConstants.USER_NOT_IN_GAME + game.getID();
     }
 }
