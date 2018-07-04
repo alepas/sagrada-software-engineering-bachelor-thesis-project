@@ -207,6 +207,7 @@ class DatabaseUsersTest {
                 db1.registerUser("suseppe", "prese");
             }
 
+/*
 
             @Test
             void getWonGamesFromUsernameTest() throws CannotFindUserInDBException {
@@ -260,6 +261,7 @@ class DatabaseUsersTest {
                 Assertions.assertEquals(old+12, db1.getRankingFromUsername("ilario"));
             }
 
+*/
 
         }
     }

@@ -25,7 +25,7 @@
                 <RowConstraints prefHeight="30.0"/>
                 <RowConstraints prefHeight="30.0"/>
                 <RowConstraints prefHeight="30.0"/>
-                <RowConstraints minHeight="10.0" prefHeight="30.0"/>
+                <RowConstraints prefHeight="30.0"/>
                 <RowConstraints prefHeight="30.0"/>
                 <RowConstraints prefHeight="30.0"/>
                 <RowConstraints prefHeight="30.0"/>
@@ -50,6 +50,6 @@
         </GridPane>
 
         <Button fx:id="newGameButton" layoutX="203.0" layoutY="462.0" styleClass="Button" text="New game"/>
-
+        <Label fx:id="personalAreaErrorLabel" styleClass="Label" wrapText="true" layoutX="107.0" layoutY="461.0"/>
     </AnchorPane>
 </AnchorPane>

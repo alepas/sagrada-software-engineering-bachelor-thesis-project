@@ -2,7 +2,7 @@ package client.network;
 
 import shared.clientInfo.*;
 import shared.exceptions.gameExceptions.CannotCreatePlayerException;
-import shared.exceptions.gameExceptions.InvalidNumOfPlayersException;
+import shared.exceptions.gameExceptions.InvalidGameParametersException;
 import shared.exceptions.gameExceptions.NotYourWpcException;
 import shared.exceptions.gameExceptions.UserNotInThisGameException;
 import shared.exceptions.usersAndDatabaseExceptions.*;
@@ -51,7 +51,7 @@ public abstract class NetworkClient implements ResponseHandler {
 
     public abstract void login(String username, String password) throws CannotLoginUserException;
 
-    public abstract void findGame(String token, int numPlayers, int level) throws InvalidNumOfPlayersException, CannotFindUserInDBException, CannotCreatePlayerException;
+    public abstract void findGame(String token, int numPlayers, int level) throws InvalidGameParametersException, CannotFindUserInDBException, CannotCreatePlayerException;
 
     public abstract void pickWpc(String userToken, String wpcID) throws CannotFindPlayerInDatabaseException, NotYourWpcException;
 

@@ -57,7 +57,7 @@ public class StartController {
             } catch (ConnectException e) {
                 errorLabel.setText(IMPOSSIBLE_SOCKET_CONNECTION );
             } catch (IOException e) {
-                e.printStackTrace();
+                Thread.currentThread().interrupt();
             }
 
         });
@@ -103,7 +103,7 @@ public class StartController {
         try {
             nextNode = FXMLLoader.load(getClass().getResource(path));
         } catch (IOException e) {
-            e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
         Scene scene = new Scene(nextNode);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();

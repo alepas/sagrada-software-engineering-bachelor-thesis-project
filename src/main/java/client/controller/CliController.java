@@ -5,7 +5,7 @@ import client.network.NetworkClient;
 import client.view.cli.CliView;
 import shared.clientInfo.*;
 import shared.exceptions.gameExceptions.CannotCreatePlayerException;
-import shared.exceptions.gameExceptions.InvalidNumOfPlayersException;
+import shared.exceptions.gameExceptions.InvalidGameParametersException;
 import shared.exceptions.gameExceptions.NotYourWpcException;
 import shared.exceptions.usersAndDatabaseExceptions.*;
 
@@ -67,7 +67,7 @@ public class CliController {
         // 1  se ha trovato una partita e sono presenti tutti i giocatori
         try {
             client.findGame(clientInfo.getUserToken(), numPlayers,0);
-        } catch (InvalidNumOfPlayersException e) {
+        } catch (InvalidGameParametersException e) {
             view.displayText(e.getMessage());
         } catch (CannotFindUserInDBException e) {
             //TODO

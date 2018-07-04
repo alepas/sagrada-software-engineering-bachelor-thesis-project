@@ -37,59 +37,132 @@ public abstract class ToolCard implements Cloneable {
     protected ClientRoundTrack tempClientRoundTrack;
 
 
+    /**
+     * @return the copy of the tool card
+     */
     public abstract ToolCard getToolCardCopy();
 
+
+    /**
+     * @return the status of the used tool card
+     */
     public int getCurrentStatus() {
         return currentStatus;
     }
 
+    /**
+     * @return the id of the used tool card
+     */
     public String getID() {
         return id;
     }
 
+    /**
+     * @return the tool card name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * @return the tool card description
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * @return true if the tool card as been already used, false if not
+     */
     public Boolean hasBeenUsed() {
         return used;
     }
 
+    /**
+     * @param player is the player in game that would like to use a tool card
+     * @return the first action with all parameters that will tell the player what to do
+     * @throws CannotUseToolCardException if the player can't use the tool card
+     */
     public abstract MoveData setCard(PlayerInGame player) throws CannotUseToolCardException;
 
+    /**
+     * this method is abstract because it depends and varies from tool card to tool card.
+     *
+     * @param diceId is the id of the chosen dice
+     * @param pos is the position where the player would like to add the chosen dice
+     * @return the next action with all parameters related to the next status
+     * @throws CannotPickDiceException  if the dice can't be taken
+     * @throws CannotPickPositionException id pos = null
+     * @throws CannotPerformThisMoveException if it is not possible to place the dice in the chosen position
+     */
     public abstract MoveData placeDice(int diceId, Position pos) throws CannotPickDiceException, CannotPickPositionException, CannotPerformThisMoveException;
 
+    /**
+     * this method is abstract because it depends and varies from tool card to tool card.
+     *
+     * @param diceId is the id of the chosen dice
+     * @return the next action with all parameters related to the next status
+     * @throws CannotPickDiceException if the dice can't be taken
+     * @throws CannotPerformThisMoveException if it is not possible to place the dice in the chosen position
+     */
     public abstract MoveData pickDice(int diceId) throws CannotPickDiceException, CannotPerformThisMoveException;
 
+    /**
+     * this method is abstract because it depends and varies from tool card to tool card: it is used in two tool card.
+     *
+     * @param number is the number chosen by the player
+     * @return the next action with all parameters related to the next status
+     * @throws CannotPickNumberException if the chosen number is out of bound
+     * @throws CannotPerformThisMoveException if it is not possible to place the dice in the chosen position
+     */
     public abstract MoveData pickNumber(int number) throws CannotPickNumberException, CannotPerformThisMoveException;
 
 
+    /**
+     * @return the client tool card
+     */
     public ClientToolCard getClientToolcard() {
         return new ClientToolCard(id, name, description, used);
     }
 
+    /**
+     * @param value can be YES, OK, NO
+     * @return the next action with all parameters related to the next status
+     * @throws CannotInteruptToolCardException if the status isn't correct and for that reason it is not possible to
+     * interrupt the tool card
+     */
     public abstract MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException;
 
+    /**
+     * @param all boolean
+     * @return the next action with all parameters related to the next status
+     * @throws CannotCancelActionException if it is not possible to cancel the action because of the wrong status
+     */
     public abstract MoveData cancelAction(boolean all) throws CannotCancelActionException;
 
 
+    /**
+     * delete all changes done in the tool card during the usage
+     */
     protected abstract void cleanCard();
 
+    /**
+     * @return the next action with all parameters related to the next status
+     */
     public abstract MoveData getNextMove();
 
 
+    /**
+     * modifies the client dices array
+     */
     protected void updateClientExtractedDices() {
         tempClientExtractedDices.clear();
-        for (Dice dice : cardExtractedDices) {
-            System.out.println(dice);
-            tempClientExtractedDices.add(dice.getClientDice());
-        }
+        for (Dice dice : cardExtractedDices) tempClientExtractedDices.add(dice.getClientDice());
     }
 
+    /**
+     * modifies the client schema by taking the copy done dureing the usage of the toolcard
+     */
     protected void updateClientWPC() {
         tempClientWpc = cardWpc.getClientWpc();
     }
@@ -98,6 +171,14 @@ public abstract class ToolCard implements Cloneable {
         tempClientRoundTrack = cardRoundTrack.getClientRoundTrack();
     }
 
+    /**
+     * This method is called if the status is equal to one and the player wants to cancel the action that has just
+     * done. if the game is a multi player game the only thing that  must be done is to end the card and clean it by calling
+     * the clean method; if the game is a single player game the dice picked to activate the toolcard is added to the
+     * extracted dices and creates a new MoveData with as nextAction the possibility to select a dice to use the tool card.
+     *
+     * @return the previous action with all parameters related to the next status
+     */
     protected MoveData cancelStatusOne() {
         if (!singlePlayerGame) {
             cleanCard();
@@ -111,6 +192,13 @@ public abstract class ToolCard implements Cloneable {
     }
 
 
+    /**
+     * cleans the card and return the end of toolcard.
+     *
+     * @return the moveData that ends the tool card
+     * @throws CannotCancelActionException if the game is a multi player game, thats because the status 0 is related only
+     * to the single player came
+     */
     protected MoveData cancelStatusZero() throws CannotCancelActionException {
         if (singlePlayerGame) {
             cleanCard();
@@ -120,7 +208,18 @@ public abstract class ToolCard implements Cloneable {
     }
 
 
-
+    /**
+     * checks if the dice color is equal to the color request by the tool card to be activated: if this is true it
+     * removes the dice from the extracted and goes to the next action and status.
+     *
+     * @param diceId is the id of the chosen dice
+     * @param nextAction is the action that the player has to do
+     * @param initial is the initial location where the player has to pick the dice
+     * @param finish is the final position where the player has to place the dice
+     * @return the next action with all parameters related to the next status
+     * @throws CannotPickDiceException if the color of the chosen dice isn't the color that must have the dice to active
+     * the tool card
+     */
     protected MoveData pickDiceInitializeSingleUserToolCard(int diceId, NextAction nextAction, ClientDiceLocations initial, ClientDiceLocations finish) throws CannotPickDiceException {
         Dice tempDice = currentPlayer.dicePresentInLocation(diceId, ClientDiceLocations.EXTRACTED).getDice();
         if (tempDice.getDiceColor() != colorForDiceSingleUser)
@@ -180,6 +279,9 @@ public abstract class ToolCard implements Cloneable {
         updateClientExtractedDices();
     }
 
+    /**
+     * sets null everything
+     */
     protected void defaultClean() {
         this.diceForSingleUser = null;
         this.currentPlayer = null;
@@ -196,6 +298,9 @@ public abstract class ToolCard implements Cloneable {
         this.cardWpc =null;
     }
 
+    /**
+     * @return
+     */
     protected MoveData defaultNextMoveStatusZero(){
         if (singlePlayerGame)
             return new MoveData(NextAction.SELECT_DICE_TO_ACTIVATE_TOOLCARD, ClientDiceLocations.EXTRACTED, tempClientExtractedDices);
@@ -207,23 +312,23 @@ public abstract class ToolCard implements Cloneable {
         cardExtractedDices.addAll(currentGame.getExtractedDices());
     }
 
-    protected void copyExtractedDicesToGame(){
+    private void copyExtractedDicesToGame(){
         currentGame.updateExtractedDices(cardExtractedDices);
     }
 
-    protected void copyWpcToCard(){
+    private void copyWpcToCard(){
         cardWpc=currentPlayer.getWPC().copyWpc();
     }
 
-    protected void copyWpcToGame(){
+    private void copyWpcToGame(){
        currentPlayer.updateWpc(cardWpc);
     }
 
-    protected void copyRoundTrackToCard(){
+    private void copyRoundTrackToCard(){
         cardRoundTrack=currentGame.getRoundTrack().getCopy();
     }
 
-    protected void copyRoundTrackToGame(){
+    private void copyRoundTrackToGame(){
         currentGame.updateRoundTrack(cardRoundTrack);
     }
 

@@ -24,7 +24,7 @@ import shared.clientInfo.ClientCell;
 import shared.clientInfo.ClientColor;
 import shared.clientInfo.ClientWpc;
 import shared.exceptions.gameExceptions.CannotCreatePlayerException;
-import shared.exceptions.gameExceptions.InvalidNumOfPlayersException;
+import shared.exceptions.gameExceptions.InvalidGameParametersException;
 import shared.exceptions.gameExceptions.NotYourWpcException;
 import shared.exceptions.usersAndDatabaseExceptions.CannotFindPlayerInDatabaseException;
 import shared.exceptions.usersAndDatabaseExceptions.CannotFindUserInDBException;
@@ -275,7 +275,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
         Platform.runLater(() -> {
             try {
                 networkClient.findGame(clientInfo.getUserToken(), numPlayers, 0);
-            } catch (CannotFindUserInDBException | InvalidNumOfPlayersException | CannotCreatePlayerException e) {
+            } catch (CannotFindUserInDBException | InvalidGameParametersException | CannotCreatePlayerException e) {
                 errorLabel.setText(e.getMessage());
                 errorLabel.setVisible(true);
                 createGameButton.setDisable(false);
