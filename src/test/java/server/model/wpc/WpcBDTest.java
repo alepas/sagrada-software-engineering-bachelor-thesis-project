@@ -14,7 +14,6 @@ public class WpcBDTest {
     @Before
     public void Before(){
         allWpc0 = WpcDB.getInstance();
-        allWpc1 = WpcDB.getInstance("src/main/resources/wpc/wpc_schema");
     }
 
     /**

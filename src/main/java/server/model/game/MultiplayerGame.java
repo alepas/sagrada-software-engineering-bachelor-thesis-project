@@ -55,16 +55,6 @@ public class MultiplayerGame extends Game {
     }
 
 
-    //----------------------------- Metodi validi per entrambi i lati -----------------------------
-
-    public int getTurnPlayer() {
-        return turnPlayer;
-    }
-
-    public int getRoundPlayer() {
-        return roundPlayer;
-    }
-
     public int getCurrentTaskTimeLeft() {
         return currentThread.getTimeLeft();
     }
@@ -76,21 +66,18 @@ public class MultiplayerGame extends Game {
      * @return true if, after adding the new player, the game is full, false if there's still space
      * @throws MaxPlayersExceededException    the game is full and it is not possible to add a new player
      * @throws UserAlreadyInThisGameException the player was already inside the game
-     * @throws CannotCreatePlayerException    if there were problems in creating the playerIn game related to the user
      */
     @Override
-    public synchronized boolean addPlayer(String user) throws MaxPlayersExceededException, UserAlreadyInThisGameException, CannotCreatePlayerException {
+    public synchronized boolean addPlayer(String user) throws MaxPlayersExceededException, UserAlreadyInThisGameException {
 
         if (this.isFull()) throw new MaxPlayersExceededException(user, this);
 
         if (playerIndex(user) >= 0) throw new UserAlreadyInThisGameException(user, this);
 
         PlayerInGame player;
-        try {
+
             player = new PlayerInGame(user, this);
-        } catch (CannotAddPlayerInDatabaseException e) {
-            throw new CannotCreatePlayerException(user);
-        }
+
         players[nextFree()] = player;
 
         changeAndNotifyObservers(new PlayersChangedNotification(user, true, numActualPlayers(), numPlayers));
@@ -104,8 +91,8 @@ public class MultiplayerGame extends Game {
      * @param user is the String related to the player in game that will be removed
      * @throws UserNotInThisGameException if the player is not in this game
      */
+
     public synchronized void removePlayer(String user) throws UserNotInThisGameException {
-        try {
             int index = playerIndex(user);
             if (index < 0) throw new UserNotInThisGameException(user, this);
 
@@ -114,10 +101,6 @@ public class MultiplayerGame extends Game {
             removeArrayIndex(players, index);
 
             changeAndNotifyObservers(new PlayersChangedNotification(user, false, numActualPlayers(), numPlayers));
-        } catch (CannotFindPlayerInDatabaseException e) {
-            //TODO:
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -145,11 +128,11 @@ public class MultiplayerGame extends Game {
             e.printStackTrace();
         }
 
-        waitPlayers(3000);//Aspetta 3 secondi che i giocatori si connettano tutti
-                                /* Quando l'ultimo giocatore si connette il thread della partita viene avviato immediatamente,
-                                   ma l'ultimo giocatore, di fatto, non è ancora in partita: lo è solo il suo playerInGame lato
-                                   server. Occorre aspettare che l'ultimo utente riceva la partita in cui è entrato e che si metta
-                                   in ascolto di eventuali cambiamenti. Ecco il perchè di questa attesa*/
+        waitPlayers();      //Aspetta 3 secondi che i giocatori si connettano tutti
+                            /* Quando l'ultimo giocatore si connette il thread della partita viene avviato immediatamente,
+                               ma l'ultimo giocatore, di fatto, non è ancora in partita: lo è solo il suo playerInGame lato
+                               server. Occorre aspettare che l'ultimo utente riceva la partita in cui è entrato e che si metta
+                               in ascolto di eventuali cambiamenti. Ecco il perchè di questa attesa*/
         changeAndNotifyObservers(new GameStartedNotification());
 
         System.out.println("La partità è iniziata");
@@ -183,17 +166,6 @@ public class MultiplayerGame extends Game {
         numPlayers = players.length;
         changeAndNotifyObservers(new ForceStartGameNotification(this.getClientGame()));
         started = true;
-    }
-
-    /**
-     * @param time is the ammount of time that the thread sleeps
-     */
-    private void waitPlayers(int time) {
-        try {
-            Thread.sleep(time);
-        } catch (InterruptedException e) {
-            //TODO: La partita è stata sospesa forzatamente
-        }
     }
 
     //Restituisce true se il thread è stato creato
@@ -231,7 +203,7 @@ public class MultiplayerGame extends Game {
     private void shufflePlayers() {
         ArrayList<PlayerInGame> playersList = new ArrayList<>(Arrays.asList(players));
         Collections.shuffle(playersList);
-        players = (PlayerInGame[]) playersList.toArray(players);
+        players = playersList.toArray(players);
     }
 
     /**
@@ -254,33 +226,12 @@ public class MultiplayerGame extends Game {
                 System.out.println("Ho estratto casualmente le wpc dei giocatori rimanenti");
             }
         } catch (InterruptedException e) {
-
+            /*Do nothing: game deleted*/
         }
     }
 
     @Override
-    public void removeToolCardIfSingleGame(ToolCard card) {
-        return;
-    }
-
-    /**
-     * Chooses for each player one of the four schemas in a random way and sets it in the player in game object
-     *
-     * @param wpcsByUser is the HashMap which contains for the player username (keys) and the arrayLists with the schemas'
-     *                   ids
-     */
-    private void selectRandomWpc(HashMap<String, ArrayList<String>> wpcsByUser) {
-        for (PlayerInGame player : players) {
-            if (player.getWPC() == null) {
-                try {
-                    Random r = new Random();
-                    setPlayerWpc(player, wpcsByUser.get(player.getUser()).get(r.nextInt(GameConstants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER)));
-                } catch (NotYourWpcException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
+    public void removeToolCardIfSingleGame(ToolCard card) { }
 
     /**
      * when all players have done their turns this method is called. It puts all left dices in the round Track,
@@ -336,7 +287,7 @@ public class MultiplayerGame extends Game {
      * the players it is necessary to check if he/she should skip the turn: if yes the method nextPlayer() will be called
      * again and a playerSkipNotification will be thrown.
      */
-    void nextTurn() {
+    private void nextTurn() {
         turnPlayer = nextPlayer();
         currentTurn++;
 
@@ -371,11 +322,10 @@ public class MultiplayerGame extends Game {
             waitForEndTurn.start();
             waitForEndTurn.join(GameConstants.TIME_TO_PLAY_TURN_MULTIPLAYER + GameConstants.TASK_DELAY);
             if (waitForEndTurn.isAlive()) {
-                System.out.println("Tempo per il turno scaduto");
+
                 waitForEndTurn.interrupt();
                 players[turnPlayer].forceEndTurn();
             }
-            System.out.println("OK");
         } catch (InterruptedException e) {
             //TODO: partita interrotta?
             e.printStackTrace();/*Do nothing*/
@@ -490,20 +440,6 @@ public class MultiplayerGame extends Game {
         }
     }
 
-    /**
-     * Removes all player in game from the database
-     */
-    @Override
-    public void endGame() {
-        DatabaseGames.getInstance().removeGame(this);
-        for (PlayerInGame player : players) {
-            try {
-                DatabaseUsers.getInstance().removePlayerInGameFromDB(player);
-            } catch (CannotFindPlayerInDatabaseException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     private void forceEndGame() {
         endGameForced = true;
@@ -518,11 +454,11 @@ public class MultiplayerGame extends Game {
 
     //------------------------------- Metodi validi solo lato client -------------------------------
 
-    public void setTurnPlayer(int turnPlayer) {
+    void setTurnPlayer(int turnPlayer) {
         this.turnPlayer = turnPlayer;
     }
 
-    public void setCurrentTurn(int currentTurn) {
+    void setCurrentTurn(int currentTurn) {
         this.currentTurn = currentTurn;
     }
 

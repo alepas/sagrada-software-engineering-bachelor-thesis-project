@@ -66,7 +66,7 @@ public class ConfigLoader {
             e.printStackTrace();
         }
 
-        WpcDB.getInstance();
+        WpcDB.getInstance().loadData();
         ToolCardDB.getInstance();
         PocDB.getInstance();
     }

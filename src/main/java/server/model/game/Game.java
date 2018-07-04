@@ -7,6 +7,8 @@ import server.model.cards.ToolCardDB;
 import server.model.dicebag.Color;
 import server.model.dicebag.Dice;
 import server.model.dicebag.DiceBag;
+import server.model.gamesdb.DatabaseGames;
+import server.model.users.DatabaseUsers;
 import server.model.users.PlayerInGame;
 import server.model.wpc.Wpc;
 import server.model.wpc.WpcDB;
@@ -18,30 +20,30 @@ import shared.network.commands.notifications.*;
 import java.util.*;
 
 public abstract class Game extends Observable implements Runnable {
-    protected ArrayList<ToolCard> toolCards;
-    protected ArrayList<PublicObjectiveCard> publicObjectiveCards;
+    ArrayList<ToolCard> toolCards;
+    ArrayList<PublicObjectiveCard> publicObjectiveCards;
     private String id;
-    protected ArrayList<Dice> extractedDices;
-    protected DiceBag diceBag;
-    protected boolean turnFinished;
-    protected boolean allWpcsChosen;
+    ArrayList<Dice> extractedDices;
+    DiceBag diceBag;
+    boolean turnFinished;
+    boolean allWpcsChosen;
 
 
     RoundTrack roundTrack;
     int numPlayers;
-    protected int currentTurn;
+    int currentTurn;
     PlayerInGame[] players;
     boolean started;
-    protected int turnPlayer;
+    int turnPlayer;
 
 
     int numOfPrivateObjectivesForPlayer;
     int numOfToolCards;
     int numOfPublicObjectiveCards;
 
-    WpcDB wpcDB = WpcDB.getInstance();
-    ToolCardDB toolcardDB = ToolCardDB.getInstance();
-    PocDB pocDB = PocDB.getInstance();
+    private WpcDB wpcDB = WpcDB.getInstance();
+    private ToolCardDB toolcardDB = ToolCardDB.getInstance();
+    private PocDB pocDB = PocDB.getInstance();
 
     HashMap<String, ArrayList<String>> wpcsByUser = new HashMap<>();
 
@@ -121,16 +123,24 @@ public abstract class Game extends Observable implements Runnable {
     //----------------------------------------------------------------------------------
 
 
+    //TODO: Rifare javadoc?
+    /**
+     * Wait 3 seconds for player to connect
+     */
+    void waitPlayers() {
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            //TODO: La partita è stata sospesa forzatamente
+        }
+    }
+
     public void setNumPlayers(int numPlayers) {
         this.numPlayers = numPlayers;
     }
 
     public boolean isStarted() {
         return started;
-    }
-
-    public void setStarted(boolean started) {
-        this.started = started;
     }
 
     public ArrayList<ToolCard> getToolCards() {
@@ -153,14 +163,12 @@ public abstract class Game extends Observable implements Runnable {
         return roundTrack;
     }
 
-    public HashMap<String, ArrayList<String>> getWpcsByUser() { return wpcsByUser; }
-
     /**
      * @return true if the game has all players
      */
     public boolean isFull(){ return !(players[players.length-1] == null); }
 
-    public int getCurrentTurn() {
+    int getCurrentTurn() {
         return currentTurn;
     }
 
@@ -327,6 +335,11 @@ public abstract class Game extends Observable implements Runnable {
     void extractToolCards() {
         ArrayList<String> ids = toolcardDB.getCardsIDs();
         Collections.shuffle(ids);
+        ids.clear();
+        ids.add("1");
+        ids.add("2");
+        ids.add("3");
+
 
         ArrayList<String> toolCardsExtracted = new ArrayList<>(ids.subList(0, numOfToolCards));
 
@@ -376,19 +389,24 @@ public abstract class Game extends Observable implements Runnable {
     public DiceBag getDiceBag() { return diceBag; }
 
 
+    /**
+     * Removes all player in game from the database
+     */
+    public void endGame() {
+        DatabaseGames.getInstance().removeGame(this);
+        for (PlayerInGame player : players) {
+            DatabaseUsers.getInstance().removePlayerInGameFromDB(player);
+        }
+    }
+
+
     public boolean isTurnFinished() {
         return turnFinished;
     }
 
-    public void setTurnFinished(boolean turnFinished) {
-        this.turnFinished = turnFinished;
-    }
-
     public boolean isSinglePlayerGame(){
-        if (numPlayers==1)
-            return true;
-        else return false;
-    };
+        return numPlayers == 1;
+    }
 
     public void updateRoundTrack(RoundTrack roundTrack){
         this.roundTrack=roundTrack;
@@ -399,13 +417,29 @@ public abstract class Game extends Observable implements Runnable {
     }
 
 
-
+    /**
+     * Chooses for each player one of the four schemas in a random way and sets it in the player in game object
+     *
+     * @param wpcsByUser is the HashMap which contains for the player username (keys) and the arrayLists with the schemas'
+     *                   ids
+     */
+    void selectRandomWpc(HashMap<String, ArrayList<String>> wpcsByUser) {
+        for (PlayerInGame player : players) {
+            if (player.getWPC() == null) {
+                try {
+                    Random r = new Random();
+                    setPlayerWpc(player, wpcsByUser.get(player.getUser()).get(r.nextInt(GameConstants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER)));
+                } catch (NotYourWpcException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
 
     //--------------------------------------- Abstract Methods --------------------------------------
 
     abstract void initializeGame();
-    abstract void endGame();
     abstract void nextRound();
     public abstract void endTurn(ClientEndTurnData endTurnData);
     abstract void calculateScore();

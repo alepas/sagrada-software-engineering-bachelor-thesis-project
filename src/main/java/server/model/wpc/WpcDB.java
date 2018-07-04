@@ -19,21 +19,23 @@ public class WpcDB {
     private HashMap<String, Wpc> map;
 
     public static WpcDB getInstance(){
-        if (instance == null) instance = new WpcDB("wpc_schema");
+        if (instance == null) instance = new WpcDB();
         return instance;
 
     }
 
-    public static WpcDB getInstance(String pathOfWpcFile){
-        if (instance == null) instance = new WpcDB(pathOfWpcFile);
-        return instance;
-    }
-
+    //TODO: Rifare javadoc
     /**
      * Reads the XML file and for each node saves the attributes. At the end it creates wpc objects
      * @param pathFile is the path where is the XML file
      */
-    private WpcDB(String pathFile){
+    private WpcDB(){}
+
+    public void loadData(){
+        loadData("wpc_schema");
+    }
+
+    public void loadData(String pathFile){
         map = new HashMap<>();
 
         NodeList wpcList;

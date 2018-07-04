@@ -5,7 +5,6 @@ import server.model.cards.ToolCard;
 import server.model.dicebag.Color;
 import server.model.dicebag.Dice;
 import server.model.game.thread.ChooseWpcThread;
-import server.model.game.thread.WaitForEndTurnThread;
 import server.model.game.thread.WaiterThread;
 import server.model.gamesdb.DatabaseGames;
 import server.model.users.DatabaseUsers;
@@ -27,17 +26,20 @@ public class SinglePlayerGame extends Game {
     private HashMap<String, Integer> scoreList = new HashMap<>();
     private ClientEndTurnData endTurnData;
     private WaiterThread currentThread;
+    private int level;
 
     /**
      * Creates a singlePlayerGame
      * @param numPlayers is the number of players what will take part to the game
      * @throws InvalidSinglePlayerGamePlayersException  when the num of player isn't in the range
+     * //todo
      */
-    public SinglePlayerGame(int numPlayers) throws InvalidSinglePlayerGamePlayersException {
+    public SinglePlayerGame(int numPlayers, int level) throws InvalidGameParametersException {
         super(numPlayers);
-
+        if (level<1||level>5)
+            throw new InvalidGameParametersException(level,false);
         if (numPlayers !=1)
-            throw new InvalidSinglePlayerGamePlayersException(numPlayers);
+            throw new InvalidGameParametersException(numPlayers,true);
 
         numOfPrivateObjectivesForPlayer = GameConstants.NUM_PRIVATE_OBJ_FOR_PLAYER_IN_SINGLEPLAYER_GAME;
         //numOfToolCards = GameConstants.MAX_NUM_OF_TOOL_CARDS_IN_SINGLEPLAYER_GAME;
@@ -46,15 +48,6 @@ public class SinglePlayerGame extends Game {
     }
 
 
-
-    //----------------------------- Metodi validi per entrambi i lati -----------------------------
-
-    public int getTurnPlayer() { return turnPlayer; }
-
-    public int getCurrentTaskTimeLeft(){
-        return currentThread.getTimeLeft();
-    }
-
     /**
      * if possible creates a new Player in game and adds it to the array of players
      *
@@ -62,21 +55,16 @@ public class SinglePlayerGame extends Game {
      * @return true if, after adding the new player, the game is full, false if there's still space
      * @throws MaxPlayersExceededException the game is full and it is not possible to add a new player
      * @throws UserAlreadyInThisGameException the player was already inside the game
-     * @throws CannotCreatePlayerException if there were problems in creating the playerIn game related to the user
      */
     @Override
-    public synchronized boolean addPlayer(String user) throws MaxPlayersExceededException, UserAlreadyInThisGameException, CannotCreatePlayerException {
+    public synchronized boolean addPlayer(String user) throws MaxPlayersExceededException, UserAlreadyInThisGameException {
 
         if (this.isFull()) throw new MaxPlayersExceededException(user, this);
 
         if (playerIndex(user) >= 0) throw new UserAlreadyInThisGameException(user, this);
 
         PlayerInGame player;
-        try {
             player = new PlayerInGame(user, this);
-        } catch (CannotAddPlayerInDatabaseException e) {
-            throw new CannotCreatePlayerException(user);
-        }
         players[nextFree()] = player;
 
         changeAndNotifyObservers(new PlayersChangedNotification(user, true, numActualPlayers(), numPlayers));
@@ -86,21 +74,7 @@ public class SinglePlayerGame extends Game {
 
     @Override
     public void disconnectPlayer(String user) throws UserNotInThisGameException {
-
-    }
-
-    /**
-     * removes a player from the players' array
-     *
-     * @param user is the String related to the player in game that will be removed
-     * @throws UserNotInThisGameException if the player is not in this game
-     */
-    public synchronized void removePlayer(String user) throws UserNotInThisGameException {
-        int index = playerIndex(user);
-        if (index < 0) throw new UserNotInThisGameException(user, this);
-        removeArrayIndex(players, index);
-
-        changeAndNotifyObservers(new PlayersChangedNotification(user, false, numActualPlayers(), numPlayers));
+        //TODO:
     }
 
 
@@ -111,11 +85,7 @@ public class SinglePlayerGame extends Game {
     @Override
     public void run() {
         //Codice che regola il funzionamento della partita
-        waitPlayers(3000);//Aspetta 3 secondi che i giocatori si connettano tutti
-            /* Quando l'ultimo giocatore si connette il thread della partita viene avviato immediatamente,
-               ma l'ultimo giocatore, di fatto, non è ancora in partita: lo è solo il suo playerInGame lato
-               server. Occorre aspettare che l'ultimo utente riceva la partita in cui è entrato e che si metta
-               in ascolto di eventuali cambiamenti. Ecco il perchè di questa attesa*/
+        waitPlayers();
         changeAndNotifyObservers(new GameStartedNotification());
 
         System.out.println("La partità è iniziata");
@@ -127,17 +97,6 @@ public class SinglePlayerGame extends Game {
         }
 
         calculateScore();
-    }
-
-    /**
-     * @param time is the ammount of time that the thread sleeps
-     */
-    private void waitPlayers(int time){
-        try {
-            Thread.sleep(time);
-        } catch (InterruptedException e){
-            //TODO: La partita è stata sospesa forzatamente
-        }
     }
 
     /**
@@ -176,32 +135,13 @@ public class SinglePlayerGame extends Game {
                 System.out.println("Ho estratto casualmente le wpc dei giocatori rimanenti");
             }
         } catch (InterruptedException e){
-
+            /*Do nothing*/
         }
     }
 
     @Override
     public void removeToolCardIfSingleGame(ToolCard card) {
         toolCards.remove(card);
-    }
-
-    /**
-     * Chooses for each player one of the four schemas in a random way and sets it in the player in game object
-     *
-     * @param wpcsByUser is the HashMap which contains for the player username (keys) and the arrayLists with the schemas'
-     *                   ids
-     */
-    private void selectRandomWpc(HashMap<String,ArrayList<String>> wpcsByUser) {
-        for (PlayerInGame player : players){
-            if (player.getWPC() == null) {
-                try {
-                    Random r = new Random();
-                    setPlayerWpc(player, wpcsByUser.get(player.getUser()).get(r.nextInt(GameConstants.NUM_OF_WPC_PROPOSE_TO_EACH_PLAYER)));
-                } catch (NotYourWpcException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
     }
 
     /**
@@ -268,32 +208,6 @@ public class SinglePlayerGame extends Game {
 
         players[turnPlayer].setActive();
         changeAndNotifyObservers(new NextTurnNotification(currentTurn, players[turnPlayer].getUser(), GameConstants.TIME_TO_PLAY_TURN_MULTIPLAYER, endTurnData));
-        startTurnTimer();
-    }
-
-    /**
-     * At the biginning of a new turn the timer starts. if the player doesn't end the turn before the time ends  it will
-     * be force to end.
-     */
-    private void startTurnTimer() {
-        turnFinished = false;
-
-        currentThread = new WaitForEndTurnThread(this, GameConstants.TIME_TO_PLAY_TURN_MULTIPLAYER+ GameConstants.TASK_DELAY);
-        Thread waitForEndTurn = new Thread(currentThread);
-
-        try {
-            waitForEndTurn.start();
-            waitForEndTurn.join(GameConstants.TIME_TO_PLAY_TURN_MULTIPLAYER + GameConstants.TASK_DELAY);
-            if (waitForEndTurn.isAlive()) {
-                System.out.println("Tempo per il turno scaduto");
-                waitForEndTurn.interrupt();
-                players[turnPlayer].forceEndTurn();
-            }
-            System.out.println("OK");
-        } catch (InterruptedException e) {
-            //TODO: partita interrotta?
-            e.printStackTrace();/*Do nothing*/
-        }
     }
 
     /**
@@ -374,32 +288,6 @@ public class SinglePlayerGame extends Game {
             }
         }
         endGame();
-    }
-
-    /**
-     * Removes all player in game from the database
-     */
-    @Override
-    public void endGame() {
-        DatabaseGames.getInstance().removeGame(this);
-        for (PlayerInGame player : players) {
-            try {
-                DatabaseUsers.getInstance().removePlayerInGameFromDB(player);
-            } catch (CannotFindPlayerInDatabaseException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-
-    //------------------------------- Metodi validi solo lato client -------------------------------
-
-    public void setTurnPlayer(int turnPlayer){
-        this.turnPlayer = turnPlayer;
-    }
-
-    public void setCurrentTurn(int currentTurn) {
-        this.currentTurn = currentTurn;
     }
 
 

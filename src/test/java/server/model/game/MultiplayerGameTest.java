@@ -10,12 +10,14 @@ import server.model.dicebag.Color;
 import server.model.users.DatabaseUsers;
 import server.model.users.PlayerInGame;
 import server.constants.GameConstants;
-import shared.exceptions.gameExceptions.InvalidMultiplayerGamePlayersException;
-import shared.exceptions.gameExceptions.MaxPlayersExceededException;
-import shared.exceptions.gameExceptions.UserAlreadyInThisGameException;
-import shared.exceptions.gameExceptions.UserNotInThisGameException;
+import shared.exceptions.gameExceptions.*;
+import shared.exceptions.usersAndDatabaseExceptions.CannotLoginUserException;
+import shared.exceptions.usersAndDatabaseExceptions.CannotRegisterUserException;
+
+import static server.constants.GameConstants.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -25,6 +27,7 @@ public class MultiplayerGameTest {
 
     private MultiplayerGame game;
     private String username1 = "John", username2 = "Alice", username3 = "Bob", username4 = "Eva";
+    ArrayList<String> users = new ArrayList<>(Arrays.asList(username1, username2, username3, username4));
     private int defaulNumPlayers = 3;
     private DatabaseUsers db;
     private PlayerInGame player1;
@@ -47,10 +50,15 @@ public class MultiplayerGameTest {
         player3 = mock(PlayerInGame.class);
         player4 = mock(PlayerInGame.class);
 
-/*        db.login("John", "password1");
-        db.login("Alice", "password2");
-        db.login("Bob", "password3");
-        db.login("Eva", "password4");*/
+        for(String user : users){
+            try {
+                db.registerUser(user, "");
+            } catch (CannotRegisterUserException e){
+                try {
+                    db.login(user, "");
+                } catch (CannotLoginUserException e1){/*Do nothing*/}
+            }
+        }
     }
 
     /**
@@ -64,12 +72,14 @@ public class MultiplayerGameTest {
         assertEquals(0, game.getExtractedDices().size());
         Assert.assertNotNull(game.getDiceBag());
         Assert.assertNotNull(game.getRoundTrack());
-        Assert.assertTrue(game.getNumPlayers() >= GameConstants.MIN_NUM_PLAYERS &&
-                game.getNumPlayers() <= GameConstants.MAX_NUM_PLAYERS);
+        assertEquals(defaulNumPlayers, game.numPlayers);
+        assertEquals(defaulNumPlayers, game.players.length);
+        Assert.assertTrue(game.getNumPlayers() >= MULTIPLAYER_MIN_NUM_PLAYERS &&
+                game.getNumPlayers() <= MAX_NUM_PLAYERS);
         assertEquals(0, game.nextFree());
-        assertEquals(GameConstants.NUM_PRIVATE_OBJ_FOR_PLAYER_IN_MULTIPLAYER_GAME, game.numOfPrivateObjectivesForPlayer);
-        assertEquals(GameConstants.NUM_TOOL_CARDS_IN_MULTIPLAYER_GAME, game.numOfToolCards);
-        assertEquals(GameConstants.NUM_PUBLIC_OBJ_IN_MULTIPLAYER_GAME, game.numOfPublicObjectiveCards);
+        assertEquals(NUM_PRIVATE_OBJ_FOR_PLAYER_IN_MULTIPLAYER_GAME, game.numOfPrivateObjectivesForPlayer);
+        assertEquals(NUM_TOOL_CARDS_IN_MULTIPLAYER_GAME, game.numOfToolCards);
+        assertEquals(NUM_PUBLIC_OBJ_IN_MULTIPLAYER_GAME, game.numOfPublicObjectiveCards);
     }
 
     /**
@@ -93,25 +103,21 @@ public class MultiplayerGameTest {
         Boolean bool;
         assertEquals(0, game.numActualPlayers());
 
-  /*      //Aggiunta fino a 3 utenti
-        bool = game.addPlayer(username1);
+        //Aggiunta fino a 3 utenti
+        Assert.assertFalse(game.addPlayer(username1));
         assertEquals(1, game.numActualPlayers());
-        Assert.assertFalse(bool);
 
-        bool = game.addPlayer(username2);
+        Assert.assertFalse(game.addPlayer(username2));
         assertEquals(2, game.numActualPlayers());
-        Assert.assertFalse(bool);
 
-        bool = game.addPlayer(username3);
+        Assert.assertTrue(game.addPlayer(username3));
         assertEquals(3, game.numActualPlayers());
-        Assert.assertTrue(bool);
 
         //Rimozione e aggiunta dell'utente 2
         game.removePlayer(username2);
         assertEquals(2, game.numActualPlayers());
-        bool = game.addPlayer(username2);
+        Assert.assertTrue(game.addPlayer(username2));
         assertEquals(3, game.numActualPlayers());
-        Assert.assertTrue(bool);
 
         //Rimozione di tutti gli utenti
         game.removePlayer(username1);
@@ -119,8 +125,33 @@ public class MultiplayerGameTest {
         game.removePlayer(username2);
         assertEquals(1, game.numActualPlayers());
         game.removePlayer(username3);
-        assertEquals(0, game.numActualPlayers());*/
+        assertEquals(0, game.numActualPlayers());
     }
+
+    @Test(expected = MaxPlayersExceededException.class)
+    public void illegalAddingAndRemovingPlayersTest1() throws Exception {
+        game.addPlayer(username1);
+        game.addPlayer(username2);
+        game.addPlayer(username3);
+        game.addPlayer(username4);
+    }
+
+    @Test(expected = UserAlreadyInThisGameException.class)
+    public void illegalAddingAndRemovingPlayersTest2() throws Exception {
+        game.addPlayer(username1);
+        game.addPlayer(username1);
+    }
+
+    @Test(expected = CannotCreatePlayerException.class)
+    public void illegalAddingAndRemovingPlayersTes3() throws Exception {
+        game.addPlayer("utente");
+    }
+
+    /**
+     * @throws Exception because it is trying to remove a player which is not in the array
+     */
+    @Test(expected = UserNotInThisGameException.class)
+    public void removePlayerIllegalTest() throws Exception { game.removePlayer(username2); }
 
     /**
      * Tests if the is full methos works in a correct way
@@ -177,12 +208,14 @@ public class MultiplayerGameTest {
         assertEquals(0, game.playerIndex(username1));
         assertEquals(-1, game.playerIndex(username2));
         assertEquals(-1, game.playerIndex(username3));
+        assertEquals(-1, game.playerIndex(username4));
 
         game.players[1] = player2;
         when(player2.getUser()).thenReturn(username2);
         assertEquals(0, game.playerIndex(username1));
         assertEquals(1, game.playerIndex(username2));
         assertEquals(-1, game.playerIndex(username3));
+        assertEquals(-1, game.playerIndex(username4));
 
         game.players[2] = player3;
         when(player3.getUser()).thenReturn(username3);
@@ -213,7 +246,6 @@ public class MultiplayerGameTest {
         assertEquals(username1, game.players[0].getUser());
         assertEquals(username2, game.players[1].getUser());
         assertEquals(username3, game.players[2].getUser());
-        for(int i = 3; i < game.players.length; i++) Assert.assertNotNull(game.players[i]);
 
         /*
           If a player is removed by the game, the related player[] will be setted to null and will be available for a
@@ -245,48 +277,29 @@ public class MultiplayerGameTest {
         Assert.assertNull(game.players[2]);
 
         /*
-          Given an index out of bounds any element will be removed by the array
+          Given an index out of bounds doesn't modify the array
          */
         game.players[game.nextFree()] = player3;
         game.removeArrayIndex(game.players, 5);
-        for(int i = 0; i < game.players.length; i++ )
-            Assert.assertNotNull(game.players[i]);
+        assertEquals(username2, game.players[0].getUser());
+        assertEquals(username1, game.players[1].getUser());
+        assertEquals(username3, game.players[2].getUser());
     }
 
-    @Test(expected = MaxPlayersExceededException.class)
-    public void addPlayersIllegalTest1() throws Exception {
+    @Test
+    public void extractPrivateObjectivesTest() throws Exception {
         game.addPlayer(username1);
         game.addPlayer(username2);
         game.addPlayer(username3);
-        game.addPlayer(username4);
-    }
 
-    @Test(expected = UserAlreadyInThisGameException.class)
-    public void addPlayersIllegalTest2() throws Exception {
-        game.addPlayer(username1);
-        game.addPlayer(username1);
-    }
-
-    /**
-     * @throws Exception because it is trying to remove a player which is not in the array
-     */
-    @Test(expected = UserNotInThisGameException.class)
-    public void removePlayerIllegalTest() throws Exception { game.removePlayer(username2); }
-
-    @Test
-    public void extractPrivateObjectivesTest() {
-        game.players[game.nextFree()] = player1;
-        game.players[game.nextFree()] = player2;
-        game.players[game.nextFree()] = player3;
-//todo: problema dato dall'interazione tra classi
-       // game.extractPrivateObjectives();
+        game.extractPrivateObjectives();
 
         ArrayList<Color> colorsExtracted = new ArrayList<>();
         Color[] playerColors;
 
         for (PlayerInGame player : game.getPlayers()){
             playerColors = player.getPrivateObjs();
-            assertEquals(GameConstants.NUM_PRIVATE_OBJ_FOR_PLAYER_IN_MULTIPLAYER_GAME, playerColors.length);
+            assertEquals(NUM_PRIVATE_OBJ_FOR_PLAYER_IN_MULTIPLAYER_GAME, playerColors.length);
 
             for (Color color : playerColors){
                 Assert.assertFalse(colorsExtracted.contains(color));
@@ -326,7 +339,7 @@ public class MultiplayerGameTest {
     }*/
 
     @Test
-    public void choseWpTest() {
+    public void choseWpcTest() {
         ArrayList<String> wpcPlayer = new ArrayList<>();
         game.players[game.nextFree()] = player1;
         when(player1.getUser()).thenReturn(username1);

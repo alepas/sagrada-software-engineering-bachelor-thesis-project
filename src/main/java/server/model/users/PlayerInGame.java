@@ -36,15 +36,14 @@ public class PlayerInGame {
     private boolean allowPlaceDiceAfterCard;
     private ToolCard cardUsedBlockingTurn;
     private boolean disconnected = false;
-    private ClientEndTurnData endTurnData;
     private Integer turnToSkip;
 
-    public PlayerInGame(String user, Game game) throws CannotAddPlayerInDatabaseException {
+    public PlayerInGame(String user, Game game) {
         this.game = game;
         db = DatabaseUsers.getInstance();
         username = user;
         wpc = null;
-        if (game instanceof MultiplayerGame) {
+        if (!game.isSinglePlayerGame()) {
             privateObjs = new Color[GameConstants.NUM_PRIVATE_OBJ_FOR_PLAYER_IN_MULTIPLAYER_GAME];
         } else {
             privateObjs = new Color[GameConstants.NUM_PRIVATE_OBJ_FOR_PLAYER_IN_SINGLEPLAYER_GAME];
