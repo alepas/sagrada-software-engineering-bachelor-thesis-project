@@ -1,5 +1,7 @@
 package shared.exceptions.gameExceptions;
 
+import shared.constants.ExceptionConstants;
+
 public class InvalidSinglePlayerGamePlayersException extends Exception {
     private final int numPlayers;
 
@@ -9,7 +11,7 @@ public class InvalidSinglePlayerGamePlayersException extends Exception {
 
     @Override
     public String getMessage() {
-        return "Impossibile creare un single player game con questo numero di giocatori: " + numPlayers +
-                "\n Una partita singleplayer può essere giocata da 1 giocatore";
+        return ExceptionConstants.INVALID_SINGLEPLAYER_GAME_PLAYERS_P1 + numPlayers +
+                ExceptionConstants.INVALID_SINGLEPLAYER_GAME_PLAYERS_P2;
     }
 }

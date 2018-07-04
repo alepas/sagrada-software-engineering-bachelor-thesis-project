@@ -1,23 +1,20 @@
 package shared.exceptions.usersAndDatabaseExceptions;
 
+import static shared.constants.ExceptionConstants.CANNOT_UPDATE_STATS_P1;
+import static shared.constants.ExceptionConstants.CANNOT_UPDATE_STATS_P2;
+
 public class CannotUpdateStatsForUserException extends Exception{
     private int cause;
     private String user;
 
     public CannotUpdateStatsForUserException(String username, int cause) {
+        //TODO: cause non serve più
         this.cause=cause;
         user = username;
     }
     @Override
     public String getMessage() {
-        if (cause==0)
-            return "Can't update the user " + user+" statistics due to an internal problem.";
-
-        else if (cause==1)
-            return "Can't update the user " + user+" statistics due to a database internal problem.";
-
-
-        else return "Can't update the user " + user+" statistics due to an internal problem.";
+        return  CANNOT_UPDATE_STATS_P1 + user + CANNOT_UPDATE_STATS_P2;
     }
 
     public int getErrorId() {

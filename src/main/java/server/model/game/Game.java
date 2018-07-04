@@ -7,6 +7,8 @@ import server.model.cards.ToolCardDB;
 import server.model.dicebag.Color;
 import server.model.dicebag.Dice;
 import server.model.dicebag.DiceBag;
+import server.model.gamesdb.DatabaseGames;
+import server.model.users.DatabaseUsers;
 import server.model.users.PlayerInGame;
 import server.model.wpc.Wpc;
 import server.model.wpc.WpcDB;
@@ -376,6 +378,17 @@ public abstract class Game extends Observable implements Runnable {
     public DiceBag getDiceBag() { return diceBag; }
 
 
+    /**
+     * Removes all player in game from the database
+     */
+    public void endGame() {
+        DatabaseGames.getInstance().removeGame(this);
+        for (PlayerInGame player : players) {
+            DatabaseUsers.getInstance().removePlayerInGameFromDB(player);
+        }
+    }
+
+
     public boolean isTurnFinished() {
         return turnFinished;
     }
@@ -405,7 +418,6 @@ public abstract class Game extends Observable implements Runnable {
     //--------------------------------------- Abstract Methods --------------------------------------
 
     abstract void initializeGame();
-    abstract void endGame();
     abstract void nextRound();
     public abstract void endTurn(ClientEndTurnData endTurnData);
     abstract void calculateScore();

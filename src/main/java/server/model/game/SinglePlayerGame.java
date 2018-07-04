@@ -27,17 +27,20 @@ public class SinglePlayerGame extends Game {
     private HashMap<String, Integer> scoreList = new HashMap<>();
     private ClientEndTurnData endTurnData;
     private WaiterThread currentThread;
+    private int level;
 
     /**
      * Creates a singlePlayerGame
      * @param numPlayers is the number of players what will take part to the game
      * @throws InvalidSinglePlayerGamePlayersException  when the num of player isn't in the range
+     * //todo
      */
-    public SinglePlayerGame(int numPlayers) throws InvalidSinglePlayerGamePlayersException {
+    public SinglePlayerGame(int numPlayers, int level) throws InvalidGameParametersException {
         super(numPlayers);
-
+        if (level<1||level>5)
+            throw new InvalidGameParametersException(level,false);
         if (numPlayers !=1)
-            throw new InvalidSinglePlayerGamePlayersException(numPlayers);
+            throw new InvalidGameParametersException(numPlayers,true);
 
         numOfPrivateObjectivesForPlayer = GameConstants.NUM_PRIVATE_OBJ_FOR_PLAYER_IN_SINGLEPLAYER_GAME;
         //numOfToolCards = GameConstants.MAX_NUM_OF_TOOL_CARDS_IN_SINGLEPLAYER_GAME;
@@ -62,21 +65,16 @@ public class SinglePlayerGame extends Game {
      * @return true if, after adding the new player, the game is full, false if there's still space
      * @throws MaxPlayersExceededException the game is full and it is not possible to add a new player
      * @throws UserAlreadyInThisGameException the player was already inside the game
-     * @throws CannotCreatePlayerException if there were problems in creating the playerIn game related to the user
      */
     @Override
-    public synchronized boolean addPlayer(String user) throws MaxPlayersExceededException, UserAlreadyInThisGameException, CannotCreatePlayerException {
+    public synchronized boolean addPlayer(String user) throws MaxPlayersExceededException, UserAlreadyInThisGameException {
 
         if (this.isFull()) throw new MaxPlayersExceededException(user, this);
 
         if (playerIndex(user) >= 0) throw new UserAlreadyInThisGameException(user, this);
 
         PlayerInGame player;
-        try {
             player = new PlayerInGame(user, this);
-        } catch (CannotAddPlayerInDatabaseException e) {
-            throw new CannotCreatePlayerException(user);
-        }
         players[nextFree()] = player;
 
         changeAndNotifyObservers(new PlayersChangedNotification(user, true, numActualPlayers(), numPlayers));
@@ -374,21 +372,6 @@ public class SinglePlayerGame extends Game {
             }
         }
         endGame();
-    }
-
-    /**
-     * Removes all player in game from the database
-     */
-    @Override
-    public void endGame() {
-        DatabaseGames.getInstance().removeGame(this);
-        for (PlayerInGame player : players) {
-            try {
-                DatabaseUsers.getInstance().removePlayerInGameFromDB(player);
-            } catch (CannotFindPlayerInDatabaseException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
 

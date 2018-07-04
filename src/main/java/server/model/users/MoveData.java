@@ -49,6 +49,11 @@ public class MoveData {
         this.exception = exception;
     }
 
+    public void setNextAction(NextAction nextAction) {
+        this.nextAction = nextAction;
+    }
+
+
 
     public MoveData(NextAction nextAction, boolean moveFinished, ClientWpc wpc, ArrayList<ClientDice> extractedDices,
                     ClientRoundTrack roundTrack, ClientDice diceChosen, ClientDiceLocations diceChosenLocation){
@@ -215,10 +220,6 @@ public class MoveData {
         this.extractedDices=extractedDices;
     }
 
-
-    public void setNextAction(NextAction nextAction) {
-        this.nextAction = nextAction;
-    }
 
     public MoveData(NextAction nextAction, ClientDiceLocations wherePickNewDice, ClientDiceLocations wherePutNewDice,
                     ClientWpc wpc, ArrayList<ClientDice> extractedDices, ClientRoundTrack roundTrack, ClientDice diceChosen, ClientDiceLocations diceChosenLocation) {

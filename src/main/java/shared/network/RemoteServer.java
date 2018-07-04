@@ -3,7 +3,7 @@ package shared.network;
 import shared.clientInfo.Position;
 import shared.clientInfo.ToolCardInteruptValues;
 import shared.exceptions.gameExceptions.CannotCreatePlayerException;
-import shared.exceptions.gameExceptions.InvalidNumOfPlayersException;
+import shared.exceptions.gameExceptions.InvalidGameParametersException;
 import shared.exceptions.gameExceptions.NotYourWpcException;
 import shared.exceptions.gameExceptions.UserNotInThisGameException;
 import shared.exceptions.usersAndDatabaseExceptions.*;
@@ -17,7 +17,7 @@ public interface RemoteServer extends Remote {
 
     Response login(String username, String password, RemoteObserver observer) throws RemoteException, CannotLoginUserException;
 
-    Response findGame(String userToken, int numPlayers, int level) throws RemoteException, InvalidNumOfPlayersException, CannotFindUserInDBException, CannotCreatePlayerException;
+    Response findGame(String userToken, int numPlayers, int level) throws RemoteException, InvalidGameParametersException, CannotFindUserInDBException, CannotCreatePlayerException;
 
     Response pickWpc(String userToken, String wpcID) throws RemoteException, CannotFindPlayerInDatabaseException, NotYourWpcException;
 

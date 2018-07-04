@@ -1,5 +1,7 @@
 package shared.exceptions.usersAndDatabaseExceptions;
 
+import static shared.constants.ExceptionConstants.*;
+
 public class CannotRegisterUserException extends Exception{
     private int cause;
     private String user;
@@ -11,10 +13,10 @@ public class CannotRegisterUserException extends Exception{
     @Override
     public String getMessage() {
         if (cause==0)
-        return "Impossibile creare un nuovo utente \"" + user +"\" a causa di un problema interno.";
+        return CANNOT_REGISTER_USER_0_P1 + user + CANNOT_REGISTER_USER_0_P2;
         else if (cause==1)
-            return "L'username \""+user+"\" è stato già scelto.\r\nImpossibile registrare un nuovo utente con lo stesso username.";
-        else return "C'è stato un errore nel processo di registrazione.\r\nL'utente "+ user +" non può essere creato.";
+            return CANNOT_REGISTER_USER_1_P1 + user + CANNOT_REGISTER_USER_1_P2;
+        else return CANNOT_REGISTER_USER_2_P1 + user + CANNOT_REGISTER_USER_2_P2;
     }
     public int getErrorId() {
         return cause;

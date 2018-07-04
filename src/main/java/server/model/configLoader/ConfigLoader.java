@@ -30,6 +30,17 @@ public class ConfigLoader {
             JSONObject jsonSharedObject = (JSONObject) parser.parse(new FileReader("./serverconfig/sharedConfig.json"));
 
             JSONObject jsonSettings = (JSONObject) jsonServerObject.get("settings");
+            String language = (String) jsonSettings.get("language");
+
+            JSONObject jsonLanguage; JSONObject jsonSharedLanguage;
+            try {
+                jsonLanguage= (JSONObject) parser.parse(new FileReader("src/main/resources/server/model/configLoader/language/" + language + ".json"));
+                jsonSharedLanguage = (JSONObject) parser.parse(new FileReader("src/main/resources/shared/config/language/" + language + ".json"));
+            }catch (FileNotFoundException e){
+                System.out.println("Language not found. Revert back to Italian");
+                jsonLanguage=(JSONObject) parser.parse(new FileReader("src/main/resources/server/model/configLoader/language/ita.json"));
+                jsonSharedLanguage = (JSONObject) parser.parse(new FileReader("src/main/resources/shared/config/language/ita.json"));
+            }
 
             UserDBConstants.PATH_DB_FILE = (String) jsonSettings.get("userdb_path");
 
@@ -48,6 +59,8 @@ public class ConfigLoader {
             ToolcardLoader.loadConfig(jsonToolcard);
             WpcConfigLoader.loadConfig(jsonWpc);
             NetworkConfigLoader.loadConfig(jsonNetwork);
+            LanguageLoader.loadConfig(jsonLanguage);
+            shared.configLoader.LanguageLoader.loadConfig(jsonSharedLanguage);
 
         } catch (Exception e) {
             e.printStackTrace();

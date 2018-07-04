@@ -1,5 +1,7 @@
 package shared.exceptions.usersAndDatabaseExceptions;
 
+import shared.constants.ExceptionConstants;
+
 public class CannotFindPlayerInDatabaseException extends Exception{
 
 
@@ -10,7 +12,7 @@ public class CannotFindPlayerInDatabaseException extends Exception{
     public String getMessage() {
 
 
-        return "Impossibile trovare il giocatore nel database.";
+        return ExceptionConstants.CANNOT_FIND_PLAYER_IN_DB;
     }
 
 

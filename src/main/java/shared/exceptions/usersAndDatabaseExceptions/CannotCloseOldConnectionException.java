@@ -1,5 +1,7 @@
 package shared.exceptions.usersAndDatabaseExceptions;
 
+import shared.constants.ExceptionConstants;
+
 public class CannotCloseOldConnectionException extends Exception{
     private int cause;
     private String user;
@@ -11,12 +13,12 @@ public class CannotCloseOldConnectionException extends Exception{
     @Override
     public String getMessage() {
         if (cause==0)
-            return "C'è stato un problema nella chiusura della connessione precedente per l'utente "+user+".";
+            return ExceptionConstants.CANNOT_CLOSE_OLD_CONNECTION_0 + user + ".";
 
         else if (cause==1)
-            return "Impossibile trovare una connessione precedente attraverso Socket per l'utente "+user+".";
+            return ExceptionConstants.CANNOT_CLOSE_OLD_CONNECTION_1 + user + ".";
 
-        return "C'è stato un problema interno nel chiudere la precedente connessione per l'utente "+user+".";
+        return ExceptionConstants.CANNOT_CLOSE_OLD_CONNECTION_2 + user + ".";
     }
 
 

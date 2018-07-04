@@ -1,5 +1,7 @@
 package shared.exceptions.usersAndDatabaseExceptions;
 
+import shared.constants.ExceptionConstants;
+
 public class CannotCancelActionException extends Exception{
     private int mode;
     //0=action normale 1=azione dentro la toolcard 2=la toolcard stessa
@@ -23,14 +25,17 @@ public class CannotCancelActionException extends Exception{
         String temp;
         switch (mode) {
             case 0:
-                return "Impossibile cancellare l'azione per il giocatore corrente: " + user;
+                return ExceptionConstants.CANNOT_CANCEL_ACTION_0 + user;
             case 1:
-                return "Impossibile cancellare l'azione per il giocatore corrente (" + user + ").\r\n Le azioni richieste dalla toolcard " + cardID+" devono essere completate.";
+                return ExceptionConstants.CANNOT_CANCEL_ACTION_1_P1
+                        + user + ExceptionConstants.CANNOT_CANCEL_ACTION_1_P2 + cardID +
+                        ExceptionConstants.CANNOT_CANCEL_ACTION_1_P3;
             case 2:
-                return "Impossibile cancellare la toolcard " + cardID +" per il giocatore " + user;
+                return  ExceptionConstants.CANNOT_CANCEL_ACTION_2_P1 + cardID +
+                        ExceptionConstants.CANNOT_CANCEL_ACTION_2_P2 + user;
             case 3:
-                return "Impossibile cancellare l'azione per il giocatore " + user + " a causa di un problema interno nella toolcard: " + cardID;
-
+                return  ExceptionConstants.CANNOT_CANCEL_ACTION_3_P1 + user +
+                        ExceptionConstants.CANNOT_CANCEL_ACTION_3_P2 + cardID;
 
         }
         return null;

@@ -1,5 +1,7 @@
 package shared.exceptions.usersAndDatabaseExceptions;
 
+import shared.constants.ExceptionConstants;
+
 public class CannotInteruptToolCardException extends Exception{
     private String cardId;
     private String user;
@@ -10,7 +12,8 @@ public class CannotInteruptToolCardException extends Exception{
     }
     @Override
     public String getMessage() {
-        return "Impossibile rispondere al messaggio della ToolCard: "+cardId+" con il valore inviato dall'utente "+user+".";
+        return ExceptionConstants.CANNOT_INTERRUPT_TOOLCARD_P1 + cardId +
+                ExceptionConstants.CANNOT_INTERRUPT_TOOLCARD_P2 + user + ".";
 
     }
 
