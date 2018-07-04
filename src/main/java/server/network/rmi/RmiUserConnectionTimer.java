@@ -29,6 +29,8 @@ public class RmiUserConnectionTimer implements Runnable {
                 timeLeft -= NetworkConstants.RMI_POLLING_TIME;
             }
             if (timeLeft <= 0) client.disconnect();
-        } catch (InterruptedException e){ /*Do nothing*/}
+        } catch (InterruptedException e){
+            Thread.currentThread().interrupt();
+        }
     }
 }

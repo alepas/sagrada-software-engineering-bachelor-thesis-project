@@ -91,8 +91,7 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
                     lastResponse = null;
                     return response;
                 } catch (InterruptedException e) {
-                    //TODO: Persa connessione mentre ero in attesa di risposta
-                    e.printStackTrace();
+                    Thread.currentThread().interrupt();
                 }
             }
             return null;
@@ -112,7 +111,9 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
     public void createUser(String username, String password) throws CannotRegisterUserException {
         request(new CreateUserRequest(username, password));
 
-        Exception e = ((CreateUserResponse) waitResponse()).exception;
+        Response response = waitResponse();
+        if (response == null) return;
+        Exception e = ((CreateUserResponse) response).exception;
 
         if (e != null){
             if (e instanceof CannotRegisterUserException) throw (CannotRegisterUserException) e;
@@ -123,7 +124,9 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
     public void login(String username, String password) throws CannotLoginUserException {
         request(new LoginRequest(username, password));
 
-        Exception e = ((LoginResponse) waitResponse()).exception;
+        Response response = waitResponse();
+        if (response == null) return;
+        Exception e = ((LoginResponse) response).exception;
 
         if (e != null){
             if (e instanceof CannotLoginUserException) throw (CannotLoginUserException) e;
@@ -134,7 +137,9 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
     public void findGame(String token, int numPlayers, int level) throws CannotFindUserInDBException, InvalidGameParametersException, CannotCreatePlayerException {
         request(new FindGameRequest(token, numPlayers, level));
 
-        Exception e = ((FindGameResponse) waitResponse()).exception;
+        Response response = waitResponse();
+        if (response == null) return;
+        Exception e = ((FindGameResponse) response).exception;
 
         if (e != null){
             if (e instanceof CannotFindUserInDBException) throw (CannotFindUserInDBException) e;
@@ -147,7 +152,9 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
     public void pickWpc(String userToken, String wpcID) throws CannotFindPlayerInDatabaseException, NotYourWpcException {
         request(new PickWpcRequest(wpcID, userToken));
 
-        Exception e = ((PickWpcResponse) waitResponse()).exception;
+        Response response = waitResponse();
+        if (response == null) return;
+        Exception e = ((PickWpcResponse) response).exception;
 
         if (e != null){
             if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
@@ -159,7 +166,9 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
     public void passTurn(String userToken) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotPerformThisMoveException {
         request(new PassTurnRequest(userToken));
 
-        Exception e = ((PassTurnResponse) waitResponse()).exception;
+        Response response = waitResponse();
+        if (response == null) return;
+        Exception e = ((PassTurnResponse) response).exception;
 
         if (e != null){
             if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
@@ -172,7 +181,9 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
     public void getUserStat(String userToken) throws CannotFindUserInDBException {
         request(new GetUserStatRequest(userToken));
 
-        Exception e = ((GetUserStatResponse) waitResponse()).exception;
+        Response response = waitResponse();
+        if (response == null) return;
+        Exception e = ((GetUserStatResponse) response).exception;
 
         if (e != null){
             if (e instanceof CannotFindUserInDBException) throw (CannotFindUserInDBException) e;
@@ -183,6 +194,7 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
     @Override
     public NextAction useToolCard(String userToken, String cardId) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotUseToolCardException, CannotPerformThisMoveException {
         request(new ToolCardUseRequest(userToken, cardId));
+
 
         ToolCardResponse response = (ToolCardResponse) waitResponse();
         assert response != null;
@@ -286,7 +298,9 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
     public void getUpdatedExtractedDices(String userToken) throws CannotFindPlayerInDatabaseException {
         request(new UpdatedExtractedDicesRequest(userToken));
 
-        Exception e = ((UpdatedExtractedDicesResponse) waitResponse()).exception;
+        Response response = waitResponse();
+        if (response == null) return;
+        Exception e = ((UpdatedExtractedDicesResponse) response).exception;
 
         if (e != null){
             if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
@@ -298,7 +312,11 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
     @Override
     public void getUpdatedPOCs(String userToken) throws CannotFindPlayerInDatabaseException {
         request(new UpdatedPOCsRequest(userToken));
-        Exception e = ((UpdatedPOCsResponse) waitResponse()).exception;
+
+        Response response = waitResponse();
+        if (response == null) return;
+        Exception e = ((UpdatedPOCsResponse) response).exception;
+
         if (e != null) {
             if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
         }
@@ -307,7 +325,11 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
     @Override
     public void getUpdatedRoundTrack(String userToken) throws CannotFindPlayerInDatabaseException {
         request(new UpdatedRoundTrackRequest(userToken));
-        Exception e = ((UpdatedRoundTrackResponse) waitResponse()).exception;
+
+        Response response = waitResponse();
+        if (response == null) return;
+        Exception e = ((UpdatedRoundTrackResponse) response).exception;
+
         if (e != null) {
             if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
         }
@@ -316,7 +338,11 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
     @Override
     public void getUpdatedToolCards(String userToken) throws CannotFindPlayerInDatabaseException {
         request(new UpdatedToolCardsRequest(userToken));
-        Exception e = ((UpdatedToolCardsResponse) waitResponse()).exception;
+
+        Response response = waitResponse();
+        if (response == null) return;
+        Exception e = ((UpdatedToolCardsResponse) response).exception;
+
         if (e != null) {
             if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
         }
@@ -325,7 +351,11 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
     @Override
     public void getUpdatedWPC(String userToken, String username) throws CannotFindPlayerInDatabaseException, UserNotInThisGameException {
         request(new UpdatedWPCRequest(userToken, username));
-        Exception e = ((UpdatedWPCResponse) waitResponse()).exception;
+
+        Response response = waitResponse();
+        if (response == null) return;
+        Exception e = ((UpdatedWPCResponse) response).exception;
+
         if (e != null) {
             if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
             if (e instanceof UserNotInThisGameException) throw (UserNotInThisGameException) e;

@@ -72,6 +72,7 @@ public abstract class Game extends Observable implements Runnable {
      *
      * @return a client game
      */
+    //TODO: Da testare
     public ClientGame getClientGame(){
         HashMap<String,ArrayList<ClientWpc>> wpcProposed = getWpcProposed();
         ClientGame clientCopy = new ClientGame(this.id, this.numPlayers, wpcProposed);
@@ -104,7 +105,7 @@ public abstract class Game extends Observable implements Runnable {
         return clientCopy;
     }
 
-    private HashMap<String,ArrayList<ClientWpc>> getWpcProposed() {
+    HashMap<String,ArrayList<ClientWpc>> getWpcProposed() {
         HashMap<String, ArrayList<ClientWpc>> wpcsProposed = null;
 
         if (started && currentTurn == 0){
@@ -131,7 +132,7 @@ public abstract class Game extends Observable implements Runnable {
         try {
             Thread.sleep(3000);
         } catch (InterruptedException e) {
-            //TODO: La partita è stata sospesa forzatamente
+            Thread.currentThread().interrupt();
         }
     }
 

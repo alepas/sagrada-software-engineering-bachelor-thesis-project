@@ -16,7 +16,9 @@ public class WaitForEndTurnThread extends WaiterThread {
             try {
                 Thread.sleep( sensibility);
                 timeLeft -= sensibility;
-            } catch (InterruptedException e) {/*Do nothing*/}
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
     }
 }

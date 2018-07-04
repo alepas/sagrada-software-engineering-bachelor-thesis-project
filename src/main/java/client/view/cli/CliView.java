@@ -19,6 +19,7 @@ public class CliView implements Observer, NotificationHandler {
     private int strNum = CliConstants.COUNTER_START_NUMBER;
     private boolean isInterruptable = true;
     private Thread currentThread;
+    private boolean relaunch = false;
 
     private Timer timer;
     private Task task = null;
@@ -135,7 +136,9 @@ public class CliView implements Observer, NotificationHandler {
     public boolean launch(){
         controller.addModelObserver(this);
         changeState(Status.LOG_PHASE);
-        start();
+        do {
+            start();
+        } while (relaunch);
         controller.removeModelObserver(this);
         return state.equals(Status.QUIT_SAGRADA);
     }
@@ -223,12 +226,16 @@ public class CliView implements Observer, NotificationHandler {
                         placeDiceForToolcard();
                         break;
                 }
+                relaunch = Thread.currentThread().isInterrupted();
+                if (!quit) quit = Thread.currentThread().isInterrupted();
             }
         });
         currentThread.start();
         try {
             currentThread.join();
-        } catch (InterruptedException e) {/*Do nothing*/}
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 
 
@@ -413,7 +420,9 @@ public class CliView implements Observer, NotificationHandler {
         synchronized (waiter){
             try {
                 while (state.equals(Status.UNKNOWN))  waiter.wait();
-            } catch (InterruptedException e) { /*La partita è finita*/}
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
     }
 
@@ -423,9 +432,11 @@ public class CliView implements Observer, NotificationHandler {
                 if (!obj.isArrived(controller)) waiter.wait(800);
                 if (!obj.isArrived(controller)) displayText(message);
                 while (!obj.isArrived(controller))  waiter.wait();
-            } catch (InterruptedException | NullPointerException e) {
+            } catch (NullPointerException e) {
                 //TODO:
 //                e.printStackTrace();
+            } catch (InterruptedException e){
+                Thread.currentThread().interrupt();
             }
         }
     }
@@ -468,7 +479,7 @@ public class CliView implements Observer, NotificationHandler {
                 if (isInterruptable) requestWpcThread.interrupt();
                 deleteTask();
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Thread.currentThread().interrupt();
             }
         }
     }
@@ -566,7 +577,7 @@ public class CliView implements Observer, NotificationHandler {
                     if (playTurn.isAlive()) playTurn.interrupt();
                     playTurn.join();
                 } catch (InterruptedException e){
-                    //Do nothing
+                    Thread.currentThread().interrupt();
                 }
             }
         }

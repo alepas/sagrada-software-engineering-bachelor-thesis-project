@@ -17,8 +17,11 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class RmiClient extends NetworkClient {
+    private static final Logger LOGGER = Logger.getLogger( RmiClient.class.getName() );
     private final RemoteServer remoteServer;
     private String userToken;
     private boolean connected = false;
@@ -38,7 +41,9 @@ public class RmiClient extends NetworkClient {
             } catch (RemoteException e){
                 connected = false;
                 observer.update(null, new ForceDisconnectionNotification(true));
-            } catch (InterruptedException e){}
+            } catch (InterruptedException e){
+                Thread.currentThread().interrupt();
+            }
         }).start();
     }
 
@@ -55,7 +60,7 @@ public class RmiClient extends NetworkClient {
                 startPolling();
             }
         } catch (RemoteException e){
-
+            observer.update(null, new ForceDisconnectionNotification(true));
         }
     }
 
@@ -70,7 +75,7 @@ public class RmiClient extends NetworkClient {
                 startPolling();
             }
         } catch (RemoteException e){
-
+            observer.update(null, new ForceDisconnectionNotification(true));
         }
     }
 
@@ -79,7 +84,7 @@ public class RmiClient extends NetworkClient {
         try {
             (remoteServer.findGame(token, numPlayers, level)).handle(this);
         } catch (RemoteException e){
-
+            observer.update(null, new ForceDisconnectionNotification(true));
         }
     }
 
@@ -88,7 +93,7 @@ public class RmiClient extends NetworkClient {
         try {
             (remoteServer.pickWpc(userToken, wpcID)).handle(this);
         } catch (RemoteException e){
-
+            observer.update(null, new ForceDisconnectionNotification(true));
         }
     }
 
@@ -97,7 +102,7 @@ public class RmiClient extends NetworkClient {
         try {
             (remoteServer.passTurn(userToken)).handle(this);
         } catch (RemoteException e) {
-
+            observer.update(null, new ForceDisconnectionNotification(true));
         }
     }
 
@@ -106,7 +111,7 @@ public class RmiClient extends NetworkClient {
         try {
             (remoteServer.getUserStat(userToken)).handle(this);
         } catch (RemoteException e) {
-
+            observer.update(null, new ForceDisconnectionNotification(true));
         }
     }
 
@@ -117,6 +122,7 @@ public class RmiClient extends NetworkClient {
             response.handle(this);
             return response.nextAction;
         } catch (RemoteException e) {
+            observer.update(null, new ForceDisconnectionNotification(true));
             return null;
         }
     }
@@ -128,6 +134,7 @@ public class RmiClient extends NetworkClient {
             response.handle(this);
             return response.nextAction;
         } catch (RemoteException e) {
+            observer.update(null, new ForceDisconnectionNotification(true));
             return null;
         }
     }
@@ -139,6 +146,7 @@ public class RmiClient extends NetworkClient {
             response.handle(this);
             return response.nextAction;
         } catch (RemoteException e) {
+            observer.update(null, new ForceDisconnectionNotification(true));
             return null;
         }
     }
@@ -151,6 +159,7 @@ public class RmiClient extends NetworkClient {
             response.handle(this);
             return response.nextAction;
         } catch (RemoteException e) {
+            observer.update(null, new ForceDisconnectionNotification(true));
             return null;
         }
     }
@@ -161,7 +170,7 @@ public class RmiClient extends NetworkClient {
         try {
             (remoteServer.getUpdatedExtractedDices(userToken)).handle(this);
         } catch (RemoteException e) {
-
+            observer.update(null, new ForceDisconnectionNotification(true));
         }
     }
 
@@ -170,7 +179,7 @@ public class RmiClient extends NetworkClient {
         try {
             (remoteServer.getUpdatedPOCs(userToken)).handle(this);
         } catch (RemoteException e) {
-
+            observer.update(null, new ForceDisconnectionNotification(true));
         }
     }
 
@@ -179,7 +188,7 @@ public class RmiClient extends NetworkClient {
         try {
             (remoteServer.getUpdatedRoundTrack(userToken)).handle(this);
         } catch (RemoteException e) {
-
+            observer.update(null, new ForceDisconnectionNotification(true));
         }
     }
 
@@ -188,7 +197,7 @@ public class RmiClient extends NetworkClient {
         try {
             (remoteServer.getUpdatedToolCards(userToken)).handle(this);
         } catch (RemoteException e) {
-
+            observer.update(null, new ForceDisconnectionNotification(true));
         }
     }
 
@@ -197,7 +206,7 @@ public class RmiClient extends NetworkClient {
         try {
             (remoteServer.getUpdatedWPC(userToken, username)).handle(this);
         } catch (RemoteException e) {
-
+            observer.update(null, new ForceDisconnectionNotification(true));
         }
     }
 
@@ -208,6 +217,7 @@ public class RmiClient extends NetworkClient {
             response.handle(this);
             return response.nextAction;
         } catch (RemoteException e) {
+            observer.update(null, new ForceDisconnectionNotification(true));
             return null;
         }
     }
@@ -219,6 +229,7 @@ public class RmiClient extends NetworkClient {
             response.handle(this);
             return response.nextAction;
         } catch (RemoteException e) {
+            observer.update(null, new ForceDisconnectionNotification(true));
             return null;
         }
     }
@@ -230,6 +241,7 @@ public class RmiClient extends NetworkClient {
             response.handle(this);
             return response.nextAction;
         } catch (RemoteException e) {
+            observer.update(null, new ForceDisconnectionNotification(true));
             return null;
         }
     }
@@ -242,6 +254,7 @@ public class RmiClient extends NetworkClient {
             response.handle(this);
             return response.nextAction;
         } catch (RemoteException e) {
+            observer.update(null, new ForceDisconnectionNotification(true));
             return null;
         }
     }
@@ -253,6 +266,7 @@ public class RmiClient extends NetworkClient {
             response.handle(this);
             return response.nextAction;
         } catch (RemoteException e) {
+            observer.update(null, new ForceDisconnectionNotification(true));
             return null;
         }
     }

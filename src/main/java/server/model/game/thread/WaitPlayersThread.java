@@ -21,7 +21,9 @@ public class WaitPlayersThread extends WaiterThread {
                     timeLeft -= sensibility;
                     System.out.println(timeLeft);
                 }
-            } catch (InterruptedException e) {/*Do nothing*/}
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
     }
 

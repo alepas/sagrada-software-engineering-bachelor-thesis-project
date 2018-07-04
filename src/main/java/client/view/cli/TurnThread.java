@@ -1,5 +1,6 @@
 package client.view.cli;
 
+
 public class TurnThread implements Runnable {
     private final CliView view;
     private final Task task;
@@ -33,7 +34,7 @@ public class TurnThread implements Runnable {
                     waiter.wait();
                 }
             } catch (InterruptedException e){
-                e.printStackTrace();
+                Thread.currentThread().interrupt();
             }
         }
     }

@@ -21,6 +21,7 @@ import shared.exceptions.usersAndDatabaseExceptions.CannotAddPlayerInDatabaseExc
 import shared.exceptions.usersAndDatabaseExceptions.CannotFindPlayerInDatabaseException;
 import shared.exceptions.usersAndDatabaseExceptions.CannotUpdateStatsForUserException;
 import shared.network.commands.notifications.*;
+import static server.constants.GameConstants.*;
 
 import java.util.*;
 
@@ -29,7 +30,7 @@ import static server.constants.GameConstants.DEFAULT_SCORE_MULTIPLAYER_GAME_LEFT
 import static server.constants.GameConstants.NUM_OF_TURNS_FOR_PLAYER_IN_MULTIPLAYER_GAME;
 
 public class MultiplayerGame extends Game {
-    private int roundPlayer;
+    int roundPlayer;
     private int turnForRound;
     private HashMap<String, Integer> scoreList = new HashMap<>();
     private ClientEndTurnData endTurnData;
@@ -74,9 +75,7 @@ public class MultiplayerGame extends Game {
 
         if (playerIndex(user) >= 0) throw new UserAlreadyInThisGameException(user, this);
 
-        PlayerInGame player;
-
-            player = new PlayerInGame(user, this);
+        PlayerInGame player = new PlayerInGame(user, this);
 
         players[nextFree()] = player;
 
@@ -124,8 +123,7 @@ public class MultiplayerGame extends Game {
             waitPlayersThread.join();
             if (!started) forceStarGame();
         } catch (InterruptedException e) {
-            //TODO: game interrotto mentre aspettava i giocatori
-            e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
 
         waitPlayers();      //Aspetta 3 secondi che i giocatori si connettano tutti
@@ -218,7 +216,7 @@ public class MultiplayerGame extends Game {
         try {
             System.out.println("Sto aspettando che i giocatori scelgano le wpc");
             waitForWpcs.start();
-            waitForWpcs.join(GameConstants.CHOOSE_WPC_WAITING_TIME + GameConstants.TASK_DELAY);
+            waitForWpcs.join(CHOOSE_WPC_WAITING_TIME + TASK_DELAY);
             System.out.println("Ho smesso di aspettare che i giocatori scelgano le wpc");
             if (waitForWpcs.isAlive()) {
                 waitForWpcs.interrupt();
@@ -226,7 +224,7 @@ public class MultiplayerGame extends Game {
                 System.out.println("Ho estratto casualmente le wpc dei giocatori rimanenti");
             }
         } catch (InterruptedException e) {
-            /*Do nothing: game deleted*/
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -327,8 +325,7 @@ public class MultiplayerGame extends Game {
                 players[turnPlayer].forceEndTurn();
             }
         } catch (InterruptedException e) {
-            //TODO: partita interrotta?
-            e.printStackTrace();/*Do nothing*/
+            Thread.currentThread().interrupt();
         }
     }
 
