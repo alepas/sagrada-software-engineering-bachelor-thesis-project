@@ -14,6 +14,8 @@ public class WpcBDTest {
     @Before
     public void Before(){
         allWpc0 = WpcDB.getInstance();
+        allWpc0.loadData();
+        allWpc1 = WpcDB.getInstance();
     }
 
     /**
