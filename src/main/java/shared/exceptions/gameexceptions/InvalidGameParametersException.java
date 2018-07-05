@@ -23,7 +23,6 @@ public class InvalidGameParametersException extends Exception {
      */
     @Override
     public String getMessage() {
-        //todo: eliminare INVALID_NUM_OF_PLAYERS"
         if (playersOrLevel)
         return INVALID_NUM_PLAYERS + number;
         else

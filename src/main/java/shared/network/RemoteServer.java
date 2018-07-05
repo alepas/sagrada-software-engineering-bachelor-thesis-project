@@ -1,13 +1,11 @@
 package shared.network;
 
 import shared.clientInfo.Position;
-
 import shared.clientInfo.ToolCardInterruptValues;
 import shared.exceptions.gameexceptions.CannotCreatePlayerException;
 import shared.exceptions.gameexceptions.InvalidGameParametersException;
 import shared.exceptions.gameexceptions.NotYourWpcException;
 import shared.exceptions.gameexceptions.UserNotInThisGameException;
-
 import shared.exceptions.usersAndDatabaseExceptions.*;
 import shared.network.commands.responses.Response;
 

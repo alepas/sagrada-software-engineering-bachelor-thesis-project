@@ -8,7 +8,6 @@ public class CannotUpdateStatsForUserException extends Exception{
     private String user;
 
     public CannotUpdateStatsForUserException(String username, int cause) {
-        //TODO: cause non serve più
         this.cause=cause;
         user = username;
     }

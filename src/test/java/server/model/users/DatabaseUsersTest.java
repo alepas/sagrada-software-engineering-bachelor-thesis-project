@@ -90,7 +90,6 @@ class DatabaseUsersTest {
         void differentTokensSameUserMoreLogins() throws CannotLoginUserException {
             Assertions.assertNotEquals(db1.login("affo", "12345"), db1.login("affo", "12345"));
         }
-//TODO test da rimuovere forse
         /*
         @Test
         void getWonGamesFromWrongToken() {
@@ -160,7 +159,6 @@ class DatabaseUsersTest {
 
             neededDbToken() throws CannotRegisterUserException {
             }
-//TODO test da rimuovere forse
 
 /*
             @Test

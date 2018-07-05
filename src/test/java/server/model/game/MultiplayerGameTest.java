@@ -546,7 +546,7 @@ public class MultiplayerGameTest {
 //        assertEquals(2, game.nextPlayer());
     }
 
-    //TODO
+
    /* @Test
     public void nextTurnAndNextRoundTest() throws Exception {
         game.players[game.nextFree()] = player1;
@@ -588,7 +588,7 @@ public class MultiplayerGameTest {
         Assert.assertEquals(1, game.getTurnPlayer());
     }
 
-    //TODO
+
     @Test
     public void shouldSkippTurnTest(){
         game.players[game.nextFree()] = player1;

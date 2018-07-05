@@ -58,13 +58,12 @@ public class DatabaseGames {
                         try {
                             if (game.isFull()) startGame(game);
                         } catch (GameNotInAvailableListException exc) {
-                            //TODO: destroy game
+                            threadByGame.get(game).interrupt();
                         }
                         return game;
 
                     } catch (GameNotInAvailableListException e) {
-                        e.printStackTrace();
-                        //TODO: destroy game
+                        threadByGame.get(game).interrupt();
                     }
                 }
             }

@@ -61,10 +61,8 @@ public enum Status {
     }
 
     public Status getPrevious(){
-        //TODO: implementare back di LogPhase, MAIN_MENU_PHASE, altri mancanti
         switch (this){
             case LOG_PHASE: case LOGOUT:
-                //TODO
                 return LOG_PHASE;
             case LOGIN: case CREATE_ACCOUNT: case MAIN_MENU_PHASE:
                 return LOG_PHASE;

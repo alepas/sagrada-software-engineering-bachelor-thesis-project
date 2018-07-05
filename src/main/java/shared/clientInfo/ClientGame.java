@@ -149,4 +149,13 @@ public class ClientGame implements Serializable {
     public HashMap<String, ArrayList<ClientWpc>> getWpcsProposedByUsername() {
         return wpcsProposedByUsername;
     }
+
+    public String[] getUsernames() {
+        String[] users = new String[wpcByUsername.keySet().size()];
+        int i = 0;
+        for (String user : wpcByUsername.keySet() ) {
+            users[i++] = user;
+        }
+        return users;
+    }
 }

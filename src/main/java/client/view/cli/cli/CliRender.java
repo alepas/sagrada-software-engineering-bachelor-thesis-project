@@ -103,24 +103,28 @@ class CliRender {
         return diceRendered.toString();
     }
 
-    public String renderDices(ArrayList<ClientDice> dices){
+    public String renderDices(ClientDice[] dices){
         StringBuilder diceRendered = new StringBuilder();
-        String[][] stringDices = new String[dices.size()][CELL_HEIGHT +1];
+        int numNotNull = 0;
+        for(ClientDice dice : dices) if (dice != null) numNotNull++;
+        String[][] stringDices = new String[numNotNull][CELL_HEIGHT +1];
 
         String diceSpacing = calculateSpace(DICE_DISTANCE, null, DICE_LENGHT);
         String titleSpacing;
 
-        for(int i = 0; i < dices.size(); i++){
-            String[] temp = renderCell(dices.get(i).getDiceNumber(), getStringColor(dices.get(i).getDiceColor(), dices.get(i).getDiceNumber()));
-            for(int j = 0; j < temp.length; j++){
-                stringDices[i][j] = temp[j];
+        for(int i = 0; i < dices.length; i++){
+            if (dices[i] != null) {
+                String[] temp = renderCell(dices[i].getDiceNumber(), getStringColor(dices[i].getDiceColor(), dices[i].getDiceNumber()));
+                for (int j = 0; j < temp.length; j++) {
+                    stringDices[i][j] = temp[j];
+                }
+                stringDices[i][CELL_HEIGHT] = CliConstants.ID + dices[i].getDiceID();
             }
-            stringDices[i][CELL_HEIGHT] = CliConstants.ID + dices.get(i).getDiceID();
         }
 
 
         for(int diceRow = 0; diceRow < CELL_HEIGHT +1; diceRow++){
-            for(int dice = 0; dice < dices.size(); dice++){
+            for(int dice = 0; dice < numNotNull; dice++){
                 if (diceRow != CELL_HEIGHT) diceRendered.append(stringDices[dice][diceRow] + diceSpacing);
                 else {
                     diceRendered.append(stringDices[dice][diceRow] + calculateSpace(DICE_DISTANCE, stringDices[dice][diceRow], DICE_LENGHT));
@@ -149,11 +153,18 @@ class CliRender {
 
     //Restiusce la stringa che rappresenta la wpc su cli
     public String renderWpc(ClientWpc wpc, boolean withID){
+        return renderWpc(wpc, withID, null);
+    }
+
+    public String renderWpc(ClientWpc wpc, boolean withID, String user){
         getWpcDimension(wpc);
         StringBuilder wpcRendered = new StringBuilder();
         String[] stringWpc = convertWpcToString(wpc);
 
-        if (withID) wpcRendered.append(CliConstants.ID + wpc.getWpcID() + FAVOURS + wpc.getFavours() + "\n");
+        if (withID) {
+            if (user == null) wpcRendered.append(CliConstants.ID + wpc.getWpcID() + FAVOURS + wpc.getFavours() + "\n");
+            else wpcRendered.append(user + "    " + FAVOURS + wpc.getFavours() + "\n");
+        }
         for (String row : stringWpc){
             wpcRendered.append(row + "\n");
         }
@@ -163,6 +174,10 @@ class CliRender {
 
     //Restituisce la stringa che rappresenta le wpc passate su cli, distanziate di distance carattateri
     public String renderWpcs(ClientWpc[] wpcs, int distance){
+        return renderWpcs(wpcs, distance, null);
+    }
+
+    public String renderWpcs(ClientWpc[] wpcs, int distance, String[] users){
         getWpcDimension(wpcs[0]);
         StringBuilder wpcsRendered = new StringBuilder();
         String[][] stringWpcs = new String[wpcs.length][];
@@ -173,7 +188,9 @@ class CliRender {
 
         for(int i = 0; i < wpcs.length; i++){
             stringWpcs[i] = convertWpcToString(wpcs[i]);
-            title = CliConstants.ID + wpcs[i].getWpcID() + FAVOURS + wpcs[i].getFavours();
+            if (users == null) title = CliConstants.ID + wpcs[i].getWpcID() + FAVOURS + wpcs[i].getFavours();
+            else title = users[i] + "    " + FAVOURS + wpcs[i].getFavours();
+
             titleSpacing = calculateSpace(distance, title, wpcLenght+3);
             wpcsRendered.append(title + titleSpacing);
         }
@@ -188,6 +205,23 @@ class CliRender {
         }
 
         return wpcsRendered.append(RESET + "\n").toString();
+    }
+
+    public String renderWpcs(HashMap<String, ClientWpc> wpcByUsername, int distance, String[] users){
+        ClientWpc[] wpcs = new ClientWpc[2];
+        String[] usersToSend = new String[2];
+        StringBuilder str = new StringBuilder();
+        int num;
+
+        for(int i = 0; i < users.length; i++){
+            num = i%2;
+            usersToSend[num] = users[i];
+            wpcs[num] = wpcByUsername.get(users[i]);
+            if ( (i == users.length-1) && (num == 0) ) str.append(renderWpc(wpcs[num], true, usersToSend[num]));
+            if (num == 1) str.append(renderWpcs(wpcs, CliConstants.WPC_SPACING, usersToSend));;
+        }
+
+        return str.toString();
     }
 
     private String calculateSpace(int distance, String title, int width){

@@ -213,4 +213,6 @@ public abstract class NetworkClient implements ResponseHandler {
             clientInfo.setUser(response.user);
         }
     }
+
+    public abstract void logout();
 }

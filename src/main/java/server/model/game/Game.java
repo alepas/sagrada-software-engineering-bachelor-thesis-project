@@ -72,7 +72,6 @@ public abstract class Game extends Observable implements Runnable {
      *
      * @return a client game
      */
-    //TODO: Da testare
     public ClientGame getClientGame(){
         HashMap<String,ArrayList<ClientWpc>> wpcProposed = getWpcProposed();
         ClientGame clientCopy = new ClientGame(this.id, this.numPlayers, wpcProposed);
@@ -123,10 +122,8 @@ public abstract class Game extends Observable implements Runnable {
 
     //----------------------------------------------------------------------------------
 
-
-    //TODO: Rifare javadoc?
     /**
-     * Wait 3 seconds for player to connect
+     * Wait 3 seconds for players to connect
      */
     void waitPlayers() {
         try {
@@ -185,7 +182,7 @@ public abstract class Game extends Observable implements Runnable {
      * @return the index of the first available position in the players array or -1 if the array is full
      */
     int nextFree(){
-        if (isFull()) return -1; //todo: serve davvero? quando si esce dal ciclo for tecnicamente è perche è full
+        if (isFull()) return -1;
         for(int i = 0; i < players.length; i++){
             if (players[i] == null) return i;
         }

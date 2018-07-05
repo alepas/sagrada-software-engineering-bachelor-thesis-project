@@ -8,11 +8,12 @@ import shared.exceptions.gameexceptions.CannotCreatePlayerException;
 import shared.exceptions.gameexceptions.InvalidGameParametersException;
 import shared.exceptions.gameexceptions.NotYourWpcException;
 import shared.exceptions.usersAndDatabaseExceptions.*;
-import static client.constants.CliConstants.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observer;
+
+import static client.constants.CliConstants.*;
 
 public class CliController {
     // reference to networking layer
@@ -68,14 +69,8 @@ public class CliController {
         // 1  se ha trovato una partita e sono presenti tutti i giocatori
         try {
             client.findGame(clientInfo.getUserToken(), numPlayers,0);
-        } catch (InvalidGameParametersException e) {
+        } catch (InvalidGameParametersException | CannotFindUserInDBException | CannotCreatePlayerException e) {
             view.displayText(e.getMessage());
-        } catch (CannotFindUserInDBException e) {
-            //TODO
-            e.printStackTrace();
-        } catch (CannotCreatePlayerException e) {
-            view.displayText(e.getMessage());
-            //TODO
         }
 
         String gameID = clientInfo.getGameID();
@@ -94,11 +89,8 @@ public class CliController {
         try {
             client.pickWpc(clientInfo.getUserToken(), wpcID);
             return true;
-        } catch (NotYourWpcException e) {
+        } catch (NotYourWpcException|CannotFindPlayerInDatabaseException e) {
             view.displayText(e.getMessage());
-        } catch (CannotFindPlayerInDatabaseException e) {
-            e.printStackTrace();
-            //TODO
         }
         return false;
     }
@@ -108,13 +100,8 @@ public class CliController {
         try {
             client.passTurn(clientInfo.getUserToken());
             return true;
-        } catch (PlayerNotAuthorizedException e) {
+        } catch (PlayerNotAuthorizedException | CannotFindPlayerInDatabaseException | CannotPerformThisMoveException e) {
             view.displayText(e.getMessage());
-        } catch (CannotFindPlayerInDatabaseException e) {
-            e.printStackTrace();
-            //TODO
-        } catch (CannotPerformThisMoveException e) {
-           view.displayText(e.getMessage());
         }
         return false;
     }
@@ -213,6 +200,10 @@ public class CliController {
         }
     }
 
+    public void logout() {
+        client.logout();
+    }
+
 
     //---------------------------------- Request to cli model ----------------------------------
 
@@ -264,8 +255,13 @@ public class CliController {
         return clientInfo.getCurrentTurn();
     }
 
-    public ArrayList<ClientDice> getExtractedDices(){
-        return clientInfo.getExtractedDices();
+    public ClientDice[] getExtractedDices(){
+        ArrayList<ClientDice> dices = clientInfo.getExtractedDices();
+        ClientDice[] extracted = new ClientDice[dices.size()];
+        for(int i = 0; i < dices.size(); i++){
+            extracted[i] = dices.get(i);
+        }
+        return extracted;
     }
 
     public boolean isInGame(){
@@ -298,17 +294,8 @@ public class CliController {
         return clientInfo.getToolCardClientNextActionInfo();
     }
 
-    public ArrayList<ClientDice> getRoundtrackDices(){
-        ArrayList<ClientDice> dices = new ArrayList<>();
-        ClientDice[][] arrays = clientInfo.getRoundTrack().getAllDices();
-
-        for(ClientDice[] array : arrays) {
-            for (ClientDice dice :  array) {
-                if (dice != null) dices.add(dice);
-            }
-        }
-
-        return dices;
+    public ClientDice[][] getRoundtrackDices(){
+        return clientInfo.getRoundTrack().getAllDices();
     }
 
     public void exitGame(){
@@ -325,5 +312,13 @@ public class CliController {
 
     public HashMap<String, ArrayList<ClientWpc>> getWpcsProposedByUsername(){
         return clientInfo.getWpcsProposedByUsername();
+    }
+
+    public HashMap<String, ClientWpc> getWpcByUsername() {
+        return clientInfo.getWpcByUsername();
+    }
+
+    public String[] getGameUsers() {
+        return clientInfo.getGame().getUsernames();
     }
 }

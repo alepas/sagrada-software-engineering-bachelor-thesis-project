@@ -2,10 +2,11 @@ package client;
 
 import client.view.cli.LaunchCli;
 import client.view.gui.LaunchGui;
-import static client.constants.CliConstants.*;
 
 import java.io.IOException;
 import java.util.Scanner;
+
+import static client.constants.CliConstants.*;
 
 public class LaunchClient {
     private static Scanner scanner = new Scanner(System.in);

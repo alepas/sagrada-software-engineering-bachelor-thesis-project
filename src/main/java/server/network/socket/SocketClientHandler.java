@@ -42,8 +42,7 @@ public class SocketClientHandler extends ClientHandler implements Runnable, Obse
             out.flush();
             out.reset();
         } catch (IOException e) {
-            //TODO: Non riesco a contattare il client
-            printError("IO - " + e.getMessage());
+            disconnect();
         }
     }
 

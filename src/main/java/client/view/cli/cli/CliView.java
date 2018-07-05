@@ -151,7 +151,6 @@ public class CliView implements Observer, NotificationHandler {
                 switch (state) {
                     case QUIT_SAGRADA:
                         quit = true;
-                        //TODO
                         break;
                     case RECONNECT:
                         quit = true;
@@ -181,7 +180,8 @@ public class CliView implements Observer, NotificationHandler {
                         break;
 
                     case LOGOUT:
-                        //TODO
+                        controller.logout();
+                        changeState(Status.RECONNECT);
                         break;
 
                     case MAIN_MENU_PHASE:
@@ -217,7 +217,6 @@ public class CliView implements Observer, NotificationHandler {
                         break;
 
                     case SELECT_DICE_TO_ACTIVE_TOOLCARD:
-                        //TODO
                         System.out.println("SCEGLI UN DADO PER ATTIVARE LA TOOLCARD. DEVE AVERE IL COLORE CORRETTO");
                         pickDiceForToolCard();
                         break;
@@ -433,8 +432,7 @@ public class CliView implements Observer, NotificationHandler {
                 if (!obj.isArrived(controller)) displayText(message);
                 while (!obj.isArrived(controller))  waiter.wait();
             } catch (NullPointerException e) {
-                //TODO:
-//                e.printStackTrace();
+                /*Do nothing*/
             } catch (InterruptedException e){
                 Thread.currentThread().interrupt();
             }
@@ -525,19 +523,19 @@ public class CliView implements Observer, NotificationHandler {
         switch (state) {
             case MENU_ALL:
                 return new MenuAction[] {MenuAction.GET_PRIVATE_OBJ, MenuAction.GET_POCS,
-                        MenuAction.GET_TOOLS, MenuAction.SEE_ALL_WPCS, MenuAction.SEE_ROUND_TRACK,
+                        MenuAction.GET_TOOLS, MenuAction.SEE_ROUND_TRACK, MenuAction.SEE_ALL_WPCS,
                         MenuAction.PLACE_DICE, MenuAction.USE_TOOLCARD, MenuAction.END_TURN};
             case MENU_ONLY_PLACEDICE:
                 return new MenuAction[] {MenuAction.GET_PRIVATE_OBJ, MenuAction.GET_POCS,
-                        MenuAction.GET_TOOLS, MenuAction.SEE_ALL_WPCS, MenuAction.SEE_ROUND_TRACK,
+                        MenuAction.GET_TOOLS, MenuAction.SEE_ROUND_TRACK, MenuAction.SEE_ALL_WPCS,
                         MenuAction.PLACE_DICE, MenuAction.END_TURN};
             case MENU_ONLY_TOOLCARD:
                 return new MenuAction[] {MenuAction.GET_PRIVATE_OBJ, MenuAction.GET_POCS,
-                        MenuAction.GET_TOOLS, MenuAction.SEE_ALL_WPCS, MenuAction.SEE_ROUND_TRACK,
+                        MenuAction.GET_TOOLS, MenuAction.SEE_ROUND_TRACK, MenuAction.SEE_ALL_WPCS,
                         MenuAction.USE_TOOLCARD, MenuAction.END_TURN};
             case MENU_ONLY_ENDTURN:
                 return new MenuAction[] {MenuAction.GET_PRIVATE_OBJ, MenuAction.GET_POCS,
-                        MenuAction.GET_TOOLS, MenuAction.SEE_ALL_WPCS, MenuAction.SEE_ROUND_TRACK,
+                        MenuAction.GET_TOOLS, MenuAction.SEE_ROUND_TRACK, MenuAction.SEE_ALL_WPCS,
                         MenuAction.END_TURN};
             default:
                 return null;
@@ -619,13 +617,12 @@ public class CliView implements Observer, NotificationHandler {
                 return true;
 
             case SEE_ROUND_TRACK:
-                //TODO
-                displayText("Ancora da fare");
+                printRoundtrack();
                 return false;
 
             case SEE_ALL_WPCS:
-                //TODO
-                displayText("Ancora da fare");
+                printText(RETURN);
+                printText(cliRender.renderWpcs(controller.getWpcByUsername(), WPC_SPACING, controller.getGameUsers()));
                 return false;
 
             case PLACE_DICE:
@@ -646,6 +643,27 @@ public class CliView implements Observer, NotificationHandler {
                 displayText(NO_STANDARD_ACTION_PASSED);
                 return false;
         }
+    }
+
+    private void printRoundtrack() {
+        ClientDice[][] dicesByRound = controller.getRoundtrackDices();
+        printText(VOID_STRING);
+
+        ClientDice[][] diceInverted = new ClientDice[dicesByRound[0].length][dicesByRound.length];
+        for(int i = 0; i < 10; i++){
+            for(int j = 0; j < 10; j++){
+                diceInverted[i][j] = dicesByRound[j][i];
+            }
+        }
+
+
+        for(ClientDice[] dices : diceInverted)
+            if (!allElementsAreNull(dices)) printText(cliRender.renderDices(dices));
+    }
+
+    private boolean allElementsAreNull(Object[] array) {
+        for(Object obj : array) if (obj != null) return false;
+        return true;
     }
 
     private void showPrivateObjectives() {
@@ -698,7 +716,7 @@ public class CliView implements Observer, NotificationHandler {
             num = i%2;
             wpcs[num] = userWpcs.get(i);
             if ( (i == userWpcs.size()-1) && (num == 0) ) printText(cliRender.renderWpc(wpcs[num], true));
-            if (num == 1) printText(cliRender.renderWpcs(wpcs, CliConstants.WPC_SPACING));;
+            if (num == 1) printText(cliRender.renderWpcs(wpcs, WPC_SPACING));;
         }
     }
 
@@ -775,9 +793,9 @@ public class CliView implements Observer, NotificationHandler {
             case WPC:
                 return pickDiceFromWpc();
             case EXTRACTED:
-                return pickDiceFromDices(controller.getExtractedDices());
+                return pickDiceFromDices(controller.getExtractedDices(), false);
             case ROUNDTRACK:
-                return pickDiceFromDices(controller.getRoundtrackDices());
+                return pickDiceFromDices(null, true);
             default:
                 displayText(CANT_DO_PICK_FROM_THIS_POSITION);
                 displayText(location.toString());
@@ -834,12 +852,13 @@ public class CliView implements Observer, NotificationHandler {
         return -1;
     }
 
-    private int pickDiceFromDices(ArrayList<ClientDice> dices){
+    private int pickDiceFromDices(ClientDice[] dices, boolean roundTrack){
         int id = -1;
         String response;
         do {
             try {
-                printText(cliRender.renderDices(dices));
+                if (roundTrack) printRoundtrack();
+                else printText(cliRender.renderDices(dices));
 
                 displayText(INSERT_DICE_ID_TO_USE + PRESENT_RETURN_BACK);
                 if ((response = userInput()) == null) return -1;
@@ -1090,7 +1109,11 @@ public class CliView implements Observer, NotificationHandler {
                 IN_POSITION + (notification.position.getRow()+strNum) + ", " + (notification.position.getColumn()+strNum) + CLOSE_PARENTHESIS);
         if (notification.newExtractedDices != null) {
             displayText(EXTRACTED_DICES);
-            printText(cliRender.renderDices(notification.newExtractedDices));
+            ClientDice[] extracted = new ClientDice[notification.newExtractedDices.size()];
+            for(int i = 0; i < extracted.length; i++){
+                extracted[i] = notification.newExtractedDices.get(i);
+            }
+            printText(cliRender.renderDices(extracted));
         }
     }
 

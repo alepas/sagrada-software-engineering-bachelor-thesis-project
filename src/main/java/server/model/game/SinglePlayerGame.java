@@ -34,7 +34,7 @@ public class SinglePlayerGame extends Game {
      * Creates a singlePlayerGame
      * @param numPlayers is the number of players what will take part to the game
      * @throws InvalidSinglePlayerGamePlayersException  when the num of player isn't in the range
-     * //todo
+     *
      */
     public SinglePlayerGame(int numPlayers, int level) throws InvalidGameParametersException {
         super(numPlayers);
@@ -76,7 +76,7 @@ public class SinglePlayerGame extends Game {
 
     @Override
     public void disconnectPlayer(String user) throws UserNotInThisGameException {
-        //TODO:
+
     }
 
 
@@ -213,7 +213,7 @@ public class SinglePlayerGame extends Game {
     }
 
     /**
-     * @return the //todo
+     * @return the
      */
     private int nextPlayer(){
             players[turnPlayer].setTurnInRound(currentTurn+1);
@@ -258,7 +258,6 @@ public class SinglePlayerGame extends Game {
         int score = 0;
 
         for(Dice dice : dices){
-           //TODO scelta obj privato
                 if (dice.getDiceColor() == playerColors[0]) score += dice.getDiceNumber();
 
         }

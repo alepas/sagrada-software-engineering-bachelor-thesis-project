@@ -2,13 +2,11 @@ package client.network;
 
 import shared.clientInfo.NextAction;
 import shared.clientInfo.Position;
-
 import shared.clientInfo.ToolCardInterruptValues;
 import shared.exceptions.gameexceptions.CannotCreatePlayerException;
 import shared.exceptions.gameexceptions.InvalidGameParametersException;
 import shared.exceptions.gameexceptions.NotYourWpcException;
 import shared.exceptions.gameexceptions.UserNotInThisGameException;
-
 import shared.exceptions.usersAndDatabaseExceptions.*;
 import shared.network.commands.notifications.ForceDisconnectionNotification;
 import shared.network.commands.requests.*;
@@ -422,5 +420,12 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
     @Override
     public NextAction getNextMove(String userToken) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException {
         return null;
+    }
+
+    @Override
+    public void logout() {
+        try {
+            close();
+        } catch (IOException e) { /*Do nothing*/}
     }
 }

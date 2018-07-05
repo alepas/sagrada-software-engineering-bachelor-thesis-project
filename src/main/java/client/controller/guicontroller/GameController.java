@@ -1125,7 +1125,6 @@ public class GameController implements Observer, NotificationHandler {
                 |PlayerNotAuthorizedException | CannotPickDiceException e) {
             messageLabel.setText(e.getMessage());
         }
-        //todo check if works
         if (nextAction != null) {
             lastNextAction = nextAction;
             return nextAction;

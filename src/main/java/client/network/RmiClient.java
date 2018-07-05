@@ -269,4 +269,9 @@ public class RmiClient extends NetworkClient {
             return null;
         }
     }
+
+    @Override
+    public void logout() {
+        connected = false;
+    }
 }

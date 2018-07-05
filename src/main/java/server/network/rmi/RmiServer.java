@@ -2,13 +2,11 @@ package server.network.rmi;
 
 import server.controller.ServerController;
 import shared.clientInfo.Position;
-
+import shared.clientInfo.ToolCardInterruptValues;
 import shared.exceptions.gameexceptions.CannotCreatePlayerException;
 import shared.exceptions.gameexceptions.InvalidGameParametersException;
 import shared.exceptions.gameexceptions.NotYourWpcException;
 import shared.exceptions.gameexceptions.UserNotInThisGameException;
-
-import shared.clientInfo.ToolCardInterruptValues;
 import shared.exceptions.usersAndDatabaseExceptions.*;
 import shared.network.RemoteObserver;
 import shared.network.RemoteServer;

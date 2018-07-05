@@ -15,7 +15,7 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class LaunchServer {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         ConfigLoader.loadConfig();
 
         //Avvio di RMI

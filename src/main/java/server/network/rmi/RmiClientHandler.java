@@ -57,8 +57,7 @@ public class RmiClientHandler extends ClientHandler implements Observer {
         try {
             observer.update(null, arg);
         } catch (RemoteException e) {
-            //TODO: non riesce a contattare il client
-            e.printStackTrace();
+            disconnect();
         }
     }
 }
