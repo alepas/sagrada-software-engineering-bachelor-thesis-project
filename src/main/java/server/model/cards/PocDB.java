@@ -2,7 +2,7 @@ package server.model.cards;
 
 
 import server.constants.POCConstants;
-import server.model.cards.concretePublicObjectiveCards.*;
+import server.model.cards.concretepublicobjectivecards.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;

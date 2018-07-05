@@ -190,32 +190,32 @@ public class Wpc {
      *
      * @param dice             is the dice chosen by the player
      * @param pos              is the position where the player would like to add the dice
-     * @param ColorRestr       if it's true it means that the color restrictions must be considered, if it's false it is
+     * @param colorRestr       if it's true it means that the color restrictions must be considered, if it's false it is
      *                         possible to add a dice on a cell with a color that is different from his or close to a dice
      *                         with the same color.
-     * @param ValueRestr       if it's true it means that the number restrictions must be considered, if it's false it is
+     * @param valueRestr       if it's true it means that the number restrictions must be considered, if it's false it is
      *                         possible to add a dice on a cell with a number that is different from his or close to a dice
      *                         with the same number.
-     * @param PlacementRestr   if it's true it means the placement must fallow all the placement rules
+     * @param placementRestr   if it's true it means the placement must fallow all the placement rules
      * @param atLeastADiceNear if it's true it means that there must be at least a dice on of the cells close to the
      *                         chosen one
      * @param noDicesNear      if it's true it means that there must not be dices in the cells close to the chosen one
      * @return true iff it is possible to add the dice in the chosen position, false if it is not possible.
      */
-    public boolean addDicePersonalizedRestrictions(Dice dice, Position pos, boolean ColorRestr, boolean ValueRestr, boolean PlacementRestr, boolean atLeastADiceNear, boolean noDicesNear) {
+    public boolean addDicePersonalizedRestrictions(Dice dice, Position pos, boolean colorRestr, boolean valueRestr, boolean placementRestr, boolean atLeastADiceNear, boolean noDicesNear) {
         Cell cell = getCellFromPosition(pos);
 
         assert cell != null;
         if (!firstDicePutted && !checkFirstTurnRestriction(cell)) return false;
 
-        if (ColorRestr && !checkOnlyColorCellRestriction(cell, dice)) return false;
+        if (colorRestr && !checkOnlyColorCellRestriction(cell, dice)) return false;
 
-        if (ValueRestr && !checkOnlyNumberCellRestriction(cell, dice)) return false;
+        if (valueRestr && !checkOnlyNumberCellRestriction(cell, dice)) return false;
 
         ArrayList<Cell> orthoCells = getOrthogonallyAdjacentCells(pos);
         ArrayList<Cell> diagCells = getDiagonallyAdjacentCells(pos);
 
-        if (PlacementRestr && !checkAdjacentDiceRestriction(orthoCells, dice)) return false;
+        if (placementRestr && !checkAdjacentDiceRestriction(orthoCells, dice)) return false;
 
         if (atLeastADiceNear && firstDicePutted && !isThereAtLeastADiceNear(orthoCells, diagCells)) return false;
 
@@ -237,20 +237,17 @@ public class Wpc {
      * boolean related to the rules which wants the first dice been added in particular areas
      *
      * @param position is the position where is the dice the player wants to remove
-     * @return the removed dice
      */
-    public Dice removeDice(Position position) {
+    public void removeDice(Position position) {
         Cell cell = getCellFromPosition(position);
         assert cell != null;
         if (onlyFirstDice) {
             firstDicePutted = false;
             onlyFirstDice = false;
         }
-        return cell.removeDice();
+        cell.removeDice();
     }
 
-
-    // public Dice getDiceFromPosition(Position pos){ return Objects.requireNonNull(getCellFromPosition(pos)).getDice(); }
 
     /**
      * Creates a new object dice and position with the dice related to the id and his position.
@@ -261,21 +258,11 @@ public class Wpc {
     public DiceAndPosition getDiceAndPosition(int diceId) {
         Dice dice;
         for (Cell cell : schema) {
-            if ((dice = cell.getDice()) != null)
-                if (dice.getId() == diceId)
-                    return new DiceAndPosition(cell.getDice(), cell.getCellPosition());
+            if ((dice = cell.getDice()) != null && dice.getId() == diceId)
+                return new DiceAndPosition(cell.getDice(), cell.getCellPosition());
         }
         return null;
     }
-
-   /* public Position getPositionFromDice(int diceID){
-        for(Cell cell : schema) {
-            if (cell.getDice().getId() == diceID)
-                return cell.getCellPosition();
-        }
-        return null;
-    }*/
-
 
     /**
      * @param pos is the position selected
@@ -288,16 +275,6 @@ public class Wpc {
             return null;
         return schema.get(pos.getRow() * WpcConstants.COLS_NUMBER + pos.getColumn());
     }
-
-
-    /*private void checkCellExistence(Cell cell) throws NotExistingCellException {
-        //controllo se la cella esiste
-        for (Cell schemaCell : schema){
-            if (schemaCell.equals(cell)) return;
-        }
-
-        throw new NotExistingCellException(cell);
-    }*/
 
 
     /**

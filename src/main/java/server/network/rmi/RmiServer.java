@@ -35,7 +35,7 @@ public class RmiServer implements RemoteServer {
         if (client != null) client.poll();
     }
 
-    //TODO: Non serve più
+
     public void removeRemoteObserver(String username) {
 //        observerByUser.remove(username);
     }

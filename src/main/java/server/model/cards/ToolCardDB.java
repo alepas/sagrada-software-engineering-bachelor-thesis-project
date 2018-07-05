@@ -1,7 +1,7 @@
 package server.model.cards;
 
 import server.constants.ToolCardConstants;
-import server.model.cards.concreteToolCards.*;
+import server.model.cards.concretetoolcards.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;

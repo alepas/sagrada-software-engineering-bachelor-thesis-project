@@ -125,4 +125,7 @@ public class ExceptionConstants {
     public static final String INVALID_WPC_ID = (String) jsonLanguage.get("INVALID_WPC_ID");
     public static final String NOT_EXISTING_CELL = (String) jsonLanguage.get("NOT_EXISTING_CELL");
 
+    public static String INVALID_NUM_PLAYERS;
+    public static String INVALID_TOOLCARD_LEVEL;
+
 }

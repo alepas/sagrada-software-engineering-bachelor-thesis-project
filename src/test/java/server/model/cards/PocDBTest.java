@@ -2,7 +2,7 @@ package server.model.cards;
 
 import org.junit.Before;
 import org.junit.Test;
-import server.model.cards.concretePublicObjectiveCards.PublicObjectiveCard3;
+import server.model.cards.concretepublicobjectivecards.PublicObjectiveCard3;
 import server.model.configLoader.ConfigLoader;
 
 import static org.junit.Assert.*;

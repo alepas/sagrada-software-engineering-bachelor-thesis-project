@@ -14,6 +14,15 @@ public class CannotPickDiceException extends Exception{
     private ClientDiceLocations where;
     private int cause;
 
+    /**
+     * Constructor of this
+     *
+     * @param user is the player username
+     * @param num is the dice number
+     * @param color is the dice color
+     * @param where tells where to place the dice
+     * @param cause is the exception id
+     */
     public CannotPickDiceException(String user, int num, ClientColor color, ClientDiceLocations where, int cause) {
         this.diceNum=num;
         this.diceColor=color;
@@ -22,6 +31,14 @@ public class CannotPickDiceException extends Exception{
         this.cause = cause;
     }
 
+    /**
+     * Constructor of this
+     *
+     * @param user is the player username
+     * @param diceId is the dice number
+     * @param where tells where to place the dice
+     * @param cause is the exception id
+     */
     public CannotPickDiceException(String user, int diceId, ClientDiceLocations where, int cause) {
         this.diceId=diceId;
         this.user = user;
@@ -29,6 +46,9 @@ public class CannotPickDiceException extends Exception{
         this.cause = cause;
     }
 
+    /**
+     * @return the message related to the exception
+     */
     @Override
     public String getMessage() {
         if (cause==0)
