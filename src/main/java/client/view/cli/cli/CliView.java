@@ -34,12 +34,19 @@ public class CliView implements Observer, NotificationHandler {
     // ----- The view is composed with the controller (strategy)
     private final CliController controller;
 
+    /**
+     * create a new CliView controlled by the controller passed
+     * @param controller is the controller of the cli
+     */
     public CliView(CliController controller) {
         this.controller = controller;
         this.fromKeyBoard = new BufferedReader(new InputStreamReader(System.in));
         this.cliRender = new CliRender();
     }
 
+    /**
+     * reset the status of the view
+     */
     private void clean(){
         isInterruptable = true;
         currentThread = null;
@@ -49,6 +56,10 @@ public class CliView implements Observer, NotificationHandler {
         changeState(Status.RECONNECT);
     }
 
+    /**
+     * Wait for user to insert text from std.in
+     * @return text written by the user
+     */
     //Restituisce null se c'è stata un'eccezione
     private String userInput() {
         try {
@@ -62,10 +73,22 @@ public class CliView implements Observer, NotificationHandler {
         }
     }
 
+    /**
+     * Write the message passed on the console with ">>>" before
+     * @param text is the message to write
+     */
     public void displayText(String text) { System.out.println(">>> " + text); }
 
+    /**
+     * Write the message passed on the console with ">>>" before
+     * @param text is the message to write
+     */
     public void printText(String text) { System.out.println(text); }
 
+    /**
+     * Start a new timer with the time passed, waiters are notified every second
+     * @param taskTime is the initial time of the timer
+     */
     //Avvia un nuovo timer della durata di taskTime, notificando ogni volta che è trascorso un secondo
     private void startNewTask(int taskTime){
         preventTaskDeletion = (task != null);       /*Quando un thread viene cancellato si chiama la deleteTask
@@ -77,6 +100,11 @@ public class CliView implements Observer, NotificationHandler {
         timer.schedule(task, 0, task.getSensibility());
     }
 
+    /**
+     * Start a new timer with the time passed, waiters are notified every 'sensibility' milliseconds
+     * @param taskTime is the initial time of the timer
+     * @param sensibility waiters are notified every 'sensibility' milliseconds
+     */
     //Avvia un nuovo timer della durata di taskTime, notificando quando passano 'sensibility' ms
     private void startNewTask(int taskTime, int sensibility){
         task = new Task(taskTime, sensibility, timerWaiter);
