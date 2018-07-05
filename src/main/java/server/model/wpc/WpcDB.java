@@ -24,10 +24,8 @@ public class WpcDB {
 
     }
 
-    //TODO: Rifare javadoc
     /**
      * Reads the XML file and for each node saves the attributes. At the end it creates wpc objects
-     * @param pathFile is the path where is the XML file
      */
     private WpcDB(){}
 
