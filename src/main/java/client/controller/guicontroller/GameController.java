@@ -30,7 +30,7 @@ import java.util.*;
 import static client.constants.GuiConstants.*;
 import static java.lang.Thread.sleep;
 import static shared.clientInfo.ClientDiceLocations.*;
-import static shared.clientInfo.ToolCardInteruptValues.*;
+import static shared.clientInfo.ToolCardInterruptValues.*;
 
 public class GameController implements Observer, NotificationHandler {
 
@@ -1339,7 +1339,7 @@ public class GameController implements Observer, NotificationHandler {
      *
      * @param value is a value coming from the ToolCArdInterrupVAlues enum, in can be OK, YES, NO
      */
-    private void interruptToolCard(ToolCardInteruptValues value) {
+    private void interruptToolCard(ToolCardInterruptValues value) {
         NextAction nextAction = lastNextAction;
         try {
             nextAction = networkClient.interuptToolCard(clientInfo.getUserToken(), value);

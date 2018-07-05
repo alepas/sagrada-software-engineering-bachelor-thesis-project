@@ -21,6 +21,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * This class represents the player in a game. It keeps stored every game detail related to the player and the information
+ * about the current round and turn. It contains all the methods that take care of all the possible actions for the player
+ * in the turn.
+ * The controller on server will call the playerInGame correseponding to the user and this object will provide the
+ */
 public class PlayerInGame {
     private String username;
     private DatabaseUsers db;
@@ -39,6 +45,14 @@ public class PlayerInGame {
     private boolean disconnected = false;
     private Integer turnToSkip;
 
+
+    /**
+     * PlayerInGame constructor: creates a new PlayerInGame object setting the parameters to the default values.
+     * Then it calls a method to store the created object in the users database.
+     *
+     * @param user is the username of the user who will become the player
+     * @param game is the game object of the match that the player will be taking part
+     */
     public PlayerInGame(String user, Game game) {
         this.game = game;
         db = DatabaseUsers.getInstance();
@@ -61,75 +75,54 @@ public class PlayerInGame {
         cardUsedBlockingTurn=null;
     }
 
-    public String getUser() {
-        return username;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-
-    public void setToolCardInUse(ToolCard toolCardInUse) {
-        this.toolCardInUse = toolCardInUse;
-    }
-
-    public int getTurnForRound() {
-        return turnForRound;
-    }
-
-
-    public void addPointsToRanking(int pointsToAdd) throws CannotUpdateStatsForUserException {
-        db.addPointsRankingFromUsername(username, pointsToAdd);
-
-    }
-
-    public void addWonGame() throws CannotUpdateStatsForUserException {
-        db.addWonGamesFromUsername(username);
-
-    }
-
-    public void addLostGame() throws CannotUpdateStatsForUserException {
-        db.addLostGamesFromUsername(username);
-
-
-    }
-
-    public void addAbandonedGame() throws CannotUpdateStatsForUserException {
-        db.addAbandonedGamesFromUsername(username);
-
-    }
-
-    void reConnect() {
-        this.disconnected = false;
-    }
-
-    public Wpc getWPC() {
-        return wpc;
-    }
+    //------------------------Set-Up methods and update playerInGame attributes methods--------------
 
     public void setWPC(String id) {
-            WpcDB dbWpc = WpcDB.getInstance();
-            wpc = dbWpc.getWpcByID(id).copyWpc();
-            favours = wpc.getFavours();
+        WpcDB dbWpc = WpcDB.getInstance();
+        wpc = dbWpc.getWpcByID(id).copyWpc();
+        favours = wpc.getFavours();
     }
 
     public void updateWpc(Wpc tempWpc) {
         wpc=tempWpc;
     }
 
-    public int getFavours() {
-
-        return favours;
-    }
-
-
-    public Color[] getPrivateObjs() {
-        return privateObjs;
-    }
-
     public void setPrivateObjs(Color color, int index) {
         privateObjs[index] = color;
+    }
+
+
+    public void setAllowPlaceDiceAfterCard(boolean allowPlaceDiceAfterCard) {
+        this.allowPlaceDiceAfterCard = allowPlaceDiceAfterCard;
+    }
+
+
+    public void setCardUsedBlockingTurn(ToolCard cardUsedBlockingTurn) {
+        this.cardUsedBlockingTurn = cardUsedBlockingTurn;
+    }
+
+    public void setToolCardInUse(ToolCard toolCardInUse) {
+        this.toolCardInUse = toolCardInUse;
+    }
+
+
+    //--------connection methods
+
+    void reConnect() {
+        this.disconnected = false;
+    }
+
+
+
+
+    //--------------turn methods
+
+    public synchronized void setActive() {
+        this.active = true;
+    }
+
+    public void setNotActive() {
+        this.active = false;
     }
 
 
@@ -155,8 +148,8 @@ public class PlayerInGame {
             } catch (CannotCancelActionException e) {
                 e.printStackTrace();
             }
-           if (temp==null)
-                    return;
+            if (temp==null)
+                return;
             if (temp.canceledToolCard) {
                 oldClientToolCard = null;
                 toolCardInUse=null;
@@ -165,6 +158,113 @@ public class PlayerInGame {
             game.endTurn(endTurnData);
         }
     }
+
+
+
+    //-----------------------Getters---------------------------
+
+    public String getUser() {
+        return username;
+    }
+
+    public int getTurnForRound() { return turnForRound; }
+
+
+    public boolean isActive() {
+        return active;
+    }
+
+
+
+    public int getFavours() {
+
+        return favours;
+    }
+
+    public Wpc getWPC() {
+        return wpc;
+    }
+
+
+
+    public boolean isPlacedDiceInTurn() {
+        return placedDiceInTurn;
+    }
+
+    public boolean isAllowPlaceDiceAfterCard() {
+        return allowPlaceDiceAfterCard;
+    }
+
+
+
+    public List<Dice> getUpdatedExtractedDices() {
+        return game.getExtractedDices();
+    }
+
+    public RoundTrack getUpdatedRoundTrack() {
+        return game.getRoundTrack();
+    }
+
+    public List<ToolCard> getUpdatedToolCards() {
+        return game.getToolCards();
+    }
+
+    public List<PublicObjectiveCard> getUpdatedPOCs() {
+        return game.getPublicObjectiveCards();
+    }
+
+    public Game getGame() {
+        return game;
+    }
+
+    public ToolCard getCardUsedBlockingTurn() {
+        return cardUsedBlockingTurn;
+    }
+
+    public Color[] getPrivateObjs() {
+        return privateObjs;
+    }
+
+
+
+    //------------update user statistics on user database
+
+
+
+    public void addPointsToRanking(int pointsToAdd) throws CannotUpdateStatsForUserException {
+        db.addPointsRankingFromUsername(username, pointsToAdd);
+
+    }
+
+    public void addWonGame() throws CannotUpdateStatsForUserException {
+        db.addWonGamesFromUsername(username);
+
+    }
+
+    public void addLostGame() throws CannotUpdateStatsForUserException {
+        db.addLostGamesFromUsername(username);
+
+
+    }
+
+    public void addAbandonedGame() throws CannotUpdateStatsForUserException {
+        db.addAbandonedGamesFromUsername(username);
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+//-------game actions
 
     public synchronized MoveData getNextMove() {
         if (!active)
@@ -212,37 +312,7 @@ public class PlayerInGame {
     }
 
 
-    public synchronized MoveData cancelAction() throws CannotCancelActionException, PlayerNotAuthorizedException {
-        MoveData temp;
-        if (!active)
-            throw new PlayerNotAuthorizedException(username);
-        if (toolCardInUse != null) {
-            temp = toolCardInUse.cancelAction(false);
-            if (temp==null)
-                throw new CannotCancelActionException(username, null, 3);
-            if (temp.canceledToolCard) {
-                toolCardInUse=null;
-                favours += lastFavoursRemoved;
-                allowPlaceDiceAfterCard = true;
-                cardUsedBlockingTurn = null;
-                if (!placedDiceInTurn)
-                    temp.setNextAction(NextAction.MENU_ALL);
-                else temp.setNextAction(NextAction.MENU_ONLY_TOOLCARD);
-            }
-            return temp;
-        } else throw new CannotCancelActionException(username, null, 0);
 
-    }
-
-    public synchronized MoveData interuptToolCard(ToolCardInteruptValues value) throws PlayerNotAuthorizedException, NoToolCardInUseException, CannotInterruptToolCardException {
-        if (!active)
-            throw new PlayerNotAuthorizedException(username);
-        if (toolCardInUse == null)
-            throw new NoToolCardInUseException();
-        MoveData tempResponse = toolCardInUse.interruptToolCard(value);
-        updateNextMoveAfterToolCard(tempResponse);
-        return tempResponse;
-    }
 
 
     public synchronized MoveData setToolCard(String cardID) throws CannotUseToolCardException, PlayerNotAuthorizedException, CannotPerformThisMoveException {
@@ -329,6 +399,42 @@ public class PlayerInGame {
         return tempResponse;
     }
 
+    public synchronized MoveData cancelAction() throws CannotCancelActionException, PlayerNotAuthorizedException {
+        MoveData temp;
+        if (!active)
+            throw new PlayerNotAuthorizedException(username);
+        if (toolCardInUse != null) {
+            temp = toolCardInUse.cancelAction(false);
+            if (temp==null)
+                throw new CannotCancelActionException(username, null, 3);
+            if (temp.canceledToolCard) {
+                toolCardInUse=null;
+                favours += lastFavoursRemoved;
+                allowPlaceDiceAfterCard = true;
+                cardUsedBlockingTurn = null;
+                if (!placedDiceInTurn)
+                    temp.setNextAction(NextAction.MENU_ALL);
+                else temp.setNextAction(NextAction.MENU_ONLY_TOOLCARD);
+            }
+            return temp;
+        } else throw new CannotCancelActionException(username, null, 0);
+
+    }
+
+    public synchronized MoveData interruptToolCard(ToolCardInterruptValues value) throws PlayerNotAuthorizedException, NoToolCardInUseException, CannotInterruptToolCardException {
+        if (!active)
+            throw new PlayerNotAuthorizedException(username);
+        if (toolCardInUse == null)
+            throw new NoToolCardInUseException();
+        MoveData tempResponse = toolCardInUse.interruptToolCard(value);
+        updateNextMoveAfterToolCard(tempResponse);
+        return tempResponse;
+    }
+
+
+
+
+
     public Wpc getUpdatedWpc(String username) throws UserNotInThisGameException {
         if (this.username.equals(username))
             return wpc;
@@ -339,53 +445,6 @@ public class PlayerInGame {
         throw new UserNotInThisGameException(username, this.game);
     }
 
-    public List<Dice> getUpdatedExtractedDices() {
-        return game.getExtractedDices();
-    }
-
-    public RoundTrack getUpdatedRoundTrack() {
-        return game.getRoundTrack();
-    }
-
-    public List<ToolCard> getUpdatedToolCards() {
-        return game.getToolCards();
-    }
-
-    public List<PublicObjectiveCard> getUpdatedPOCs() {
-        return game.getPublicObjectiveCards();
-    }
-
-    public Game getGame() {
-        return game;
-    }
-
-    public synchronized void setActive() {
-        this.active = true;
-    }
-
-    public boolean isPlacedDiceInTurn() {
-        return placedDiceInTurn;
-    }
-
-    public boolean isAllowPlaceDiceAfterCard() {
-        return allowPlaceDiceAfterCard;
-    }
-
-    public void setAllowPlaceDiceAfterCard(boolean allowPlaceDiceAfterCard) {
-        this.allowPlaceDiceAfterCard = allowPlaceDiceAfterCard;
-    }
-
-    public ToolCard getCardUsedBlockingTurn() {
-        return cardUsedBlockingTurn;
-    }
-
-    public void setCardUsedBlockingTurn(ToolCard cardUsedBlockingTurn) {
-        this.cardUsedBlockingTurn = cardUsedBlockingTurn;
-    }
-
-    public void setNotActive() {
-        this.active = false;
-    }
 
 
     private ArrayList<ClientDice> getClientExtractedDices() {
@@ -407,11 +466,11 @@ public class PlayerInGame {
                 return NextAction.MENU_ONLY_ENDTURN;
             } else return NextAction.MENU_ONLY_TOOLCARD;
         } else {
-                if (allowPlaceDiceAfterCard)
-                    return NextAction.MENU_ONLY_PLACE_DICE;
-                else {
-                    return NextAction.MENU_ONLY_ENDTURN;
-                }
+            if (allowPlaceDiceAfterCard)
+                return NextAction.MENU_ONLY_PLACE_DICE;
+            else {
+                return NextAction.MENU_ONLY_ENDTURN;
+            }
         }
     }
 
@@ -473,14 +532,14 @@ public class PlayerInGame {
     }
 
     public void setTurnInRound(int i) {
-       turnForRound=i;
-       if (turnForRound==1)
-           clearPlayerRound();
-       if (turnForRound==2)
-           clearPlayerTurn();
+        turnForRound=i;
+        if (turnForRound==1)
+            clearPlayerRound();
+        if (turnForRound==2)
+            clearPlayerTurn();
     }
 
-    public void disconnect() {
+    void disconnect() {
         try {
             disconnected = true;
             game.disconnectPlayer(username);

@@ -132,7 +132,7 @@ public abstract class ToolCard implements Cloneable {
      * @throws CannotInterruptToolCardException if the status isn't correct and for that reason it is not possible to
      * interrupt the tool card
      */
-    public abstract MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInterruptToolCardException;
+    public abstract MoveData interruptToolCard(ToolCardInterruptValues value) throws CannotInterruptToolCardException;
 
     /**
      * @param all boolean

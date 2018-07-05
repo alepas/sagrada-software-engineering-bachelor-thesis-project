@@ -212,7 +212,7 @@ public class ToolCard5 extends ToolCard {
      * @throws CannotInterruptToolCardException every time that it is called
      */
     @Override
-    public MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInterruptToolCardException {
+    public MoveData interruptToolCard(ToolCardInterruptValues value) throws CannotInterruptToolCardException {
         throw new CannotInterruptToolCardException(username, id);
     }
 

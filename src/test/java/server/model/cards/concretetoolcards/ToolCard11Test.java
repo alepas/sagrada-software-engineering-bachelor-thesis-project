@@ -286,7 +286,7 @@ public class ToolCard11Test {
         assertTrue(moveData.bothYesAndNo);
         assertFalse(moveData.showBackButton);
 
-        moveData = toolCard11.interruptToolCard(ToolCardInteruptValues.YES);
+        moveData = toolCard11.interruptToolCard(ToolCardInterruptValues.YES);
 
         when(wpc.isDicePlaceable(chosenDice1Number)).thenReturn(true);
         moveData = toolCard11.pickNumber(3);
@@ -327,7 +327,7 @@ public class ToolCard11Test {
         assertTrue(moveData.bothYesAndNo);
         assertFalse(moveData.showBackButton);
 
-        moveData = toolCard11.interruptToolCard(ToolCardInteruptValues.YES);
+        moveData = toolCard11.interruptToolCard(ToolCardInterruptValues.YES);
 
         when(wpc.isDicePlaceable(chosenDice1Number)).thenReturn(true);
         moveData = toolCard11.pickNumber(3);
@@ -363,7 +363,7 @@ public class ToolCard11Test {
         assertTrue(moveData.bothYesAndNo);
         assertFalse(moveData.showBackButton);
 
-        moveData = toolCard11.interruptToolCard(ToolCardInteruptValues.YES);
+        moveData = toolCard11.interruptToolCard(ToolCardInterruptValues.YES);
 
         when(wpc.isDicePlaceable(chosenDice1Number)).thenReturn(false);
         moveData = toolCard11.pickNumber(3);
@@ -404,7 +404,7 @@ public class ToolCard11Test {
      */
     @Test(expected = CannotInterruptToolCardException.class)
     public void interruptToolCardTest() throws CannotInterruptToolCardException {
-        toolCard11.interruptToolCard(ToolCardInteruptValues.OK);
+        toolCard11.interruptToolCard(ToolCardInterruptValues.OK);
     }
 
 
@@ -571,7 +571,7 @@ public class ToolCard11Test {
     @Test (expected = CannotInterruptToolCardException.class)
     public void interruptToolCardValueNotOkTest() throws CannotInterruptToolCardException {
         toolCard11.setCurrentToolStatus(30);
-        moveData = toolCard11.interruptToolCard(ToolCardInteruptValues.NO);
+        moveData = toolCard11.interruptToolCard(ToolCardInterruptValues.NO);
     }
 
     /**
@@ -580,7 +580,7 @@ public class ToolCard11Test {
     @Test (expected = CannotInterruptToolCardException.class)
     public void interruptToolCardValueNotNoTest() throws CannotInterruptToolCardException {
         toolCard11.setCurrentToolStatus(20);
-        moveData = toolCard11.interruptToolCard(ToolCardInteruptValues.OK);
+        moveData = toolCard11.interruptToolCard(ToolCardInterruptValues.OK);
     }
 
     @Test
@@ -591,7 +591,7 @@ public class ToolCard11Test {
         toolCard11.setCurrentToolStatus(1);
         moveData = toolCard11.placeDice(chosenDice1Number.getId(), null);
 
-        moveData = toolCard11.interruptToolCard(ToolCardInteruptValues.NO);
+        moveData = toolCard11.interruptToolCard(ToolCardInterruptValues.NO);
         assertTrue(moveData.moveFinished);
     }
 

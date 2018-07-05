@@ -2,7 +2,6 @@ package server.model.cards.concretetoolcards;
 
 import org.junit.Before;
 import org.junit.Test;
-import server.constants.ToolCardConstants;
 import server.model.cards.ToolCard;
 import server.model.configLoader.ConfigLoader;
 import server.model.dicebag.Color;
@@ -330,7 +329,7 @@ public class ToolCard5Test {
      */
     @Test(expected = CannotInterruptToolCardException.class)
     public void interruptToolCardTest() throws CannotInterruptToolCardException {
-        toolCard5.interruptToolCard(ToolCardInteruptValues.YES);
+        toolCard5.interruptToolCard(ToolCardInterruptValues.YES);
     }
 
     //---------------------------------------------- Not Test Methods --------------------------------------------------

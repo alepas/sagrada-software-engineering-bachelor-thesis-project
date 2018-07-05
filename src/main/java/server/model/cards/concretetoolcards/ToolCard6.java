@@ -226,10 +226,10 @@ public class ToolCard6 extends ToolCard {
      * @throws CannotInterruptToolCardException everytime that it is called
      */
     @Override
-    public MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInterruptToolCardException {
+    public MoveData interruptToolCard(ToolCardInterruptValues value) throws CannotInterruptToolCardException {
         if (currentStatus != 30)
             throw new CannotInterruptToolCardException(username, id);
-        if (value != ToolCardInteruptValues.OK)
+        if (value != ToolCardInterruptValues.OK)
             throw new CannotInterruptToolCardException(username, id);
         updateClientExtractedDices();
         ArrayList<ClientDice> tempExtracted = tempClientExtractedDices;

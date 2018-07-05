@@ -2,7 +2,7 @@ package server.network.rmi;
 
 import server.controller.ServerController;
 import shared.clientInfo.Position;
-import shared.clientInfo.ToolCardInteruptValues;
+import shared.clientInfo.ToolCardInterruptValues;
 import shared.exceptions.gameExceptions.CannotCreatePlayerException;
 import shared.exceptions.gameExceptions.InvalidGameParametersException;
 import shared.exceptions.gameExceptions.NotYourWpcException;
@@ -148,7 +148,7 @@ public class RmiServer implements RemoteServer {
     }
 
     @Override
-    public Response interuptToolCard(String userToken, ToolCardInteruptValues value) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotInterruptToolCardException, NoToolCardInUseException {
+    public Response interuptToolCard(String userToken, ToolCardInterruptValues value) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotInterruptToolCardException, NoToolCardInUseException {
         return controller.interruptToolCard(userToken, value);
     }
 

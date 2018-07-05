@@ -3,7 +3,6 @@ package server.model.cards.concretetoolcards;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import server.constants.ToolCardConstants;
 import server.model.cards.ToolCard;
 import server.model.configLoader.ConfigLoader;
 import server.model.dicebag.Color;
@@ -228,7 +227,7 @@ public class ToolCard8Test {
 
         toolCard8.setCurrentToolStatus(30);
 
-        MoveData moveData = toolCard8.interruptToolCard(ToolCardInteruptValues.OK);
+        MoveData moveData = toolCard8.interruptToolCard(ToolCardInterruptValues.OK);
         assertTrue(moveData.canceledToolCard);
         assertFalse(moveData.bothYesAndNo);
         assertFalse(moveData.showBackButton);
@@ -489,7 +488,7 @@ public class ToolCard8Test {
     public void interruptToolCardValueNoTest() throws CannotInterruptToolCardException {
         setSchema();
         toolCard8.setCurrentToolStatus(30);
-        MoveData moveData = toolCard8.interruptToolCard(ToolCardInteruptValues.NO);
+        MoveData moveData = toolCard8.interruptToolCard(ToolCardInterruptValues.NO);
 
         Assert.assertTrue( moveData.moveFinished);
 
@@ -505,7 +504,7 @@ public class ToolCard8Test {
     public void interruptToolCardIllegalStatusTest() throws CannotInterruptToolCardException {
         setSchema();
         toolCard8.setCurrentToolStatus(10);
-        MoveData moveData = toolCard8.interruptToolCard(ToolCardInteruptValues.OK);
+        MoveData moveData = toolCard8.interruptToolCard(ToolCardInterruptValues.OK);
 
         Assert.assertTrue( moveData.moveFinished);
 
