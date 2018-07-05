@@ -1,5 +1,4 @@
-
-package server.model.cards.concretetoolcards;
+package server.model.cards.concreteToolCards;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +16,7 @@ import server.model.wpc.Cell;
 import server.model.wpc.DiceAndPosition;
 import server.model.wpc.Wpc;
 import shared.clientInfo.*;
+import shared.constants.ToolcardConstants;
 import shared.exceptions.usersAndDatabaseExceptions.*;
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class ToolCard11Test {
-    private ToolCard11 toolCard11;
+    private server.model.cards.concretetoolcards.ToolCard11 toolCard11;
     private Dice chosenDiceMiddleNumber;
     private Dice chosenDice1Number;
     private Dice chosenDice6Number;
@@ -42,7 +42,7 @@ public class ToolCard11Test {
     public void Before() throws CannotPickDiceException {
 
         ConfigLoader.loadConfig();
-        toolCard11 = new ToolCard11();
+        toolCard11 = new server.model.cards.concretetoolcards.ToolCard11();
 
         game = mock(Game.class);
 
@@ -126,8 +126,8 @@ public class ToolCard11Test {
     @Test
     public void toolCard1Test(){
         assertEquals("11", toolCard11.getID());
-        assertEquals(ToolCardConstants.TOOL11_NAME, toolCard11.getName());
-        assertEquals(ToolCardConstants.TOOL11_DESCRIPTION, toolCard11.getDescription());
+        assertEquals(ToolcardConstants.TOOL11_NAME, toolCard11.getName());
+        assertEquals(ToolcardConstants.TOOL11_DESCRIPTION, toolCard11.getDescription());
         assertEquals(0, toolCard11.getCurrentStatus());
         assertEquals(6, toolCard11.getNumberSize());
     }
