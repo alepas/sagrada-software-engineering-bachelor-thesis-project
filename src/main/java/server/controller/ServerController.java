@@ -352,12 +352,30 @@ public class ServerController {
         return new UpdatedPOCsResponse(clientPocs);
     }
 
+    /**
+     * Creates a new ArrayList composed by the public objective cards, adds them to an other arrayList composed with the
+     * client cards and returns a new Updated response.
+     *
+     * @param userToken is the player's token
+     * @return a new response
+     *
+     * @throws CannotFindPlayerInDatabaseException if the player hasn't been found in the db
+     */
     public Response getUpdatedRoundTrack(String userToken) throws CannotFindPlayerInDatabaseException {
         PlayerInGame player = databaseUsers.getPlayerInGameFromToken(userToken);
         RoundTrack roundTrack = player.getUpdatedRoundTrack();
         return new UpdatedRoundTrackResponse(roundTrack.getClientRoundTrack());
     }
 
+    /**
+     * Creates a new ArrayList composed by the toolcards, adds them to an other arrayList composed with the
+     * client cards and returns a new Updated response.
+     *
+     * @param userToken is the player's token
+     * @return a new response
+     *
+     * @throws CannotFindPlayerInDatabaseException  if the player hasn't been found in the db
+     */
     public Response getUpdatedToolCards(String userToken) throws CannotFindPlayerInDatabaseException {
         PlayerInGame player = databaseUsers.getPlayerInGameFromToken(userToken);
         ArrayList<ToolCard> toolCards = new ArrayList<>(player.getUpdatedToolCards());
@@ -368,12 +386,30 @@ public class ServerController {
         return new UpdatedToolCardsResponse(clientToolCards);
     }
 
+    /**
+     * @param userToken is the player's token
+     * @param username is the player's username
+     *
+     * @return a new response
+     *
+     * @throws CannotFindPlayerInDatabaseException  if the player hasn't been found in the db
+     * @throws UserNotInThisGameException if the game isn't related to the player
+     */
     public Response getUpdatedWPC(String userToken, String username) throws CannotFindPlayerInDatabaseException, UserNotInThisGameException {
         PlayerInGame player = databaseUsers.getPlayerInGameFromToken(userToken);
         Wpc wpc = player.getUpdatedWpc(username);
         return new UpdatedWPCResponse(username, wpc.getClientWpc());
     }
 
+    /**
+     * Gives all game parameters
+     *
+     * @param userToken is the player's token
+     * @param observer is the observer
+     * @return a new response
+     *
+     * @throws CannotFindPlayerInDatabaseException if the player hasn't been found in the db
+     */
     public Response getUpdatedGame(String userToken, Observer observer) throws CannotFindPlayerInDatabaseException {
         PlayerInGame player = databaseUsers.findOldPlayer(userToken);
         Game game = player.getGame();
@@ -384,9 +420,8 @@ public class ServerController {
 
         Color[] playerPrivateObjs = player.getPrivateObjs();
         ClientColor[] clientPrivateObjs = new ClientColor[playerPrivateObjs.length];
-        for (int i = 0; i < playerPrivateObjs.length; i++) {
+        for (int i = 0; i < playerPrivateObjs.length; i++)
             clientPrivateObjs[i] = Color.getClientColor(playerPrivateObjs[i]);
-        }
 
         MoveData nextActionMove = player.getNextMove();
         ToolCardClientNextActionInfo toolCardClientNextActionInfo = new ToolCardClientNextActionInfo(nextActionMove.wherePickNewDice, nextActionMove.wherePutNewDice,
@@ -396,11 +431,20 @@ public class ServerController {
     }
 
 
+    /**
+     * @param userToken is the player's token
+     * @return a new response
+     * @throws CannotFindPlayerInDatabaseException if the player hasn't been found in the db
+     */
     public Response getNextMove(String userToken) throws CannotFindPlayerInDatabaseException {
         PlayerInGame currentPlayer = databaseUsers.getPlayerInGameFromToken(userToken);
         return convertMoveDataToNextMoveResponse(currentPlayer.getNextMove());
     }
 
+    /**
+     * removes the token from the db
+     * @param userToken is the player's token
+     */
     public void removeSessionFromDatabase(String userToken) {
         databaseUsers.removeSession(userToken);
     }

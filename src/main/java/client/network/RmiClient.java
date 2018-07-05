@@ -222,7 +222,7 @@ public class RmiClient extends NetworkClient {
     }
 
     @Override
-    public NextAction interuptToolCard(String userToken, ToolCardInteruptValues value) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotInterruptToolCardException, NoToolCardInUseException {
+    public NextAction interruptToolCard(String userToken, ToolCardInteruptValues value) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotInterruptToolCardException, NoToolCardInUseException {
         try {
             ToolCardResponse response = (ToolCardResponse) remoteServer.interuptToolCard(userToken, value);
             response.handle(this);
