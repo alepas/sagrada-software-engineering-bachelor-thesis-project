@@ -2,9 +2,6 @@ package shared.network.commands.notifications;
 
 import java.io.Serializable;
 
-/**
- * This interface //todo
- */
 public interface Notification extends Serializable {
 
     /**

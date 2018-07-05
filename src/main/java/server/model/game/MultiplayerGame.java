@@ -322,7 +322,7 @@ public class MultiplayerGame extends Game {
     }
 
     /**
-     * @return the //todo
+     * @return the player turn
      */
     int nextPlayer() {
         if (currentTurn == 0) {
