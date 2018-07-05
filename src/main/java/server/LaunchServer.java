@@ -15,7 +15,7 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class LaunchServer {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         ConfigLoader.loadConfig();
 
         //Avvio di RMI
@@ -48,9 +48,11 @@ public class LaunchServer {
             }
         } while (restart);
 
-
-
-        /* NOTA: Se il thread dovesse terminare non vi sarebbe più alcun oggetto che punti all'RmiServer,
-           pertanto il garbage collector provvederà a rimuoverlo e i client non potrebbero più invocarlo */
+        final Object object = new Object();
+        synchronized (object){
+            while (true) {
+                object.wait();
+            }
+        }
     }
 }
