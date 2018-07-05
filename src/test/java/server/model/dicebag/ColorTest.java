@@ -6,7 +6,6 @@ import org.junit.Test;
 import shared.clientInfo.ClientColor;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static server.model.dicebag.Color.getClientColor;
 import static server.model.dicebag.Color.getColorFromClientColor;

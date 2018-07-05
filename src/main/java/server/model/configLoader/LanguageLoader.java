@@ -1,8 +1,9 @@
 package server.model.configLoader;
 
 import org.json.simple.JSONObject;
-import static server.constants.ToolCardConstants.*;
+
 import static server.constants.POCConstants.*;
+import static server.constants.ToolCardConstants.*;
 
 public class LanguageLoader {
 

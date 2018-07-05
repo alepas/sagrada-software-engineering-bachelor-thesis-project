@@ -1,29 +1,35 @@
 package client.constants;
 
-public class CliRenderConstants {
-    public static int cellHeight = 3;
-    public static int diceDistance = 5;
-    public static int diceLenght = 7;
+import client.configLoader.ClientConfigLoader;
+import org.json.simple.JSONObject;
 
-    public static String FAVOURS;
+public class CliRenderConstants {
+    private static final JSONObject jsonClientObject = ClientConfigLoader.jsonClientObject;
+    private static final JSONObject jsonLanguage = ClientConfigLoader.jsonClientLanguage;
+
+    public static final int CELL_HEIGHT = ((Long) jsonClientObject.get("CELL_HEIGHT")).intValue();
+    public static final int DICE_DISTANCE = ((Long) jsonClientObject.get("DICE_DISTANCE")).intValue();
+    public static final int DICE_LENGHT = ((Long) jsonClientObject.get("DICE_LENGHT")).intValue();
+
+    public static final String FAVOURS = (String) jsonLanguage.get("FAVOURS");
 
     //Colors
     // Reset
-    public static String RESET;
+    public static final String RESET = "\033" + jsonLanguage.get("RESET");
 
     // Regular Colors
-    public static String BLACK;
-    public static String BLACK_BRIGHT;
-    public static String RED;
-    public static String GREEN;
-    public static String YELLOW;
-    public static String BLUE;
-    public static String PURPLE;
+    public static final String BLACK = "\033" + jsonLanguage.get("BLACK");
+    public static final String BLACK_BRIGHT = "\033" + jsonLanguage.get("BLACK_BRIGHT");
+    public static final String RED = "\033" + jsonLanguage.get("RED");
+    public static final String GREEN = "\033" + jsonLanguage.get("GREEN");
+    public static final String YELLOW = "\033" + jsonLanguage.get("YELLOW");
+    public static final String BLUE = "\033" + jsonLanguage.get("BLUE");
+    public static final String PURPLE = "\033" + jsonLanguage.get("PURPLE");
 
     // Background
-    public static String RED_BACKGROUND;
-    public static String GREEN_BACKGROUND;
-    public static String YELLOW_BACKGROUND;
-    public static String BLUE_BACKGROUND;
-    public static String PURPLE_BACKGROUND;
+    public static final String RED_BACKGROUND = "\033" + jsonLanguage.get("RED_BACKGROUND");
+    public static final String GREEN_BACKGROUND = "\033" + jsonLanguage.get("GREEN_BACKGROUND");
+    public static final String YELLOW_BACKGROUND = "\033" + jsonLanguage.get("YELLOW_BACKGROUND");
+    public static final String BLUE_BACKGROUND = "\033" + jsonLanguage.get("BLUE_BACKGROUND");
+    public static final String PURPLE_BACKGROUND = "\033" + jsonLanguage.get("PURPLE_BACKGROUND");
 }

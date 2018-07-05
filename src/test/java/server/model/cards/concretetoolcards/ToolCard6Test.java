@@ -377,16 +377,6 @@ public class ToolCard6Test {
     /**
      * @throws CannotCancelActionException because it is not possible to delete actions while using this tool card
      */
-    @Test(expected = CannotCancelActionException.class)
-    public void cancelLAstOperationStatusTwoTest() throws CannotCancelActionException {
-        setSchema();
-        toolCard6.setCurrentToolStatus(2);
-        toolCard6.cancelAction(false);
-    }
-
-    /**
-     * @throws CannotCancelActionException because it is not possible to delete actions while using this tool card
-     */
     @Test
     public void cancelLAstOperationStatusTwoAddDiceTest() throws CannotCancelActionException {
         setSchema();

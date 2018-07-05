@@ -11,6 +11,7 @@ import java.util.concurrent.Executors;
 public class SocketServer {
     private final ServerSocket serverSocket;
     private final ExecutorService pool;
+    private boolean run = true;
 
     public SocketServer(int port) throws IOException {
         serverSocket = new ServerSocket(port);
@@ -19,7 +20,7 @@ public class SocketServer {
     }
 
     public void run() throws IOException {
-        while (true) {
+        while (run) {
             Socket clientSocket = serverSocket.accept();
             System.out.println(">>> New connection " + clientSocket.getRemoteSocketAddress());
             pool.submit(new SocketClientHandler(clientSocket));
@@ -27,6 +28,7 @@ public class SocketServer {
     }
 
     public void close() throws IOException {
+        run = false;
         serverSocket.close();
         pool.shutdown();
     }

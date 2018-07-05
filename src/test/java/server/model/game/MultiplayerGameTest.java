@@ -3,21 +3,21 @@ package server.model.game;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import server.constants.GameConstants;
 import server.model.cards.PublicObjectiveCard;
 import server.model.cards.ToolCard;
 import server.model.configLoader.ConfigLoader;
 import server.model.dicebag.Color;
 import server.model.users.DatabaseUsers;
 import server.model.users.PlayerInGame;
-import server.constants.GameConstants;
-import server.model.wpc.Wpc;
 import server.model.wpc.WpcDB;
 import shared.clientInfo.ClientWpc;
-import shared.exceptions.gameExceptions.*;
+import shared.exceptions.gameExceptions.InvalidMultiplayerGamePlayersException;
+import shared.exceptions.gameExceptions.MaxPlayersExceededException;
+import shared.exceptions.gameExceptions.UserAlreadyInThisGameException;
+import shared.exceptions.gameExceptions.UserNotInThisGameException;
 import shared.exceptions.usersAndDatabaseExceptions.CannotLoginUserException;
 import shared.exceptions.usersAndDatabaseExceptions.CannotRegisterUserException;
-
-import static server.constants.GameConstants.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,6 +26,7 @@ import java.util.HashMap;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static server.constants.GameConstants.*;
 
 public class MultiplayerGameTest {
 

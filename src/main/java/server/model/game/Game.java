@@ -1,5 +1,6 @@
 package server.model.game;
 
+import server.constants.GameConstants;
 import server.model.cards.PocDB;
 import server.model.cards.PublicObjectiveCard;
 import server.model.cards.ToolCard;
@@ -13,7 +14,6 @@ import server.model.users.PlayerInGame;
 import server.model.wpc.Wpc;
 import server.model.wpc.WpcDB;
 import shared.clientInfo.*;
-import server.constants.GameConstants;
 import shared.exceptions.gameExceptions.*;
 import shared.network.commands.notifications.*;
 

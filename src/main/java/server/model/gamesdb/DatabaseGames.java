@@ -1,9 +1,9 @@
 package server.model.gamesdb;
 
+import server.constants.GameConstants;
 import server.model.game.Game;
 import server.model.game.MultiplayerGame;
 import server.model.game.SinglePlayerGame;
-import server.constants.GameConstants;
 import shared.exceptions.databaseGameExceptions.GameNotInAvailableListException;
 import shared.exceptions.gameExceptions.*;
 

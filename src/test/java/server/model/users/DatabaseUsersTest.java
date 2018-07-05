@@ -2,10 +2,8 @@ package server.model.users;
 
 
 import org.junit.jupiter.api.*;
-import shared.exceptions.usersAndDatabaseExceptions.CannotFindUserInDBException;
 import shared.exceptions.usersAndDatabaseExceptions.CannotLoginUserException;
 import shared.exceptions.usersAndDatabaseExceptions.CannotRegisterUserException;
-import shared.exceptions.usersAndDatabaseExceptions.CannotUpdateStatsForUserException;
 
 import java.io.File;
 
