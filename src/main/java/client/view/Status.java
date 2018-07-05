@@ -1,6 +1,6 @@
 package client.view;
 
-import shared.clientInfo.NextAction;
+import shared.clientinfo.NextAction;
 
 public enum Status {
     //BEFORE-GAME

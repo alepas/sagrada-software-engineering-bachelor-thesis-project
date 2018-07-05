@@ -14,13 +14,13 @@ import server.model.wpc.Cell;
 import server.model.wpc.DiceAndPosition;
 
 import server.model.wpc.Wpc;
-import shared.clientInfo.*;
+import shared.clientinfo.*;
 import shared.exceptions.usersAndDatabaseExceptions.*;
 
-import shared.clientInfo.ClientDice;
-import shared.clientInfo.ClientDiceLocations;
-import shared.clientInfo.Position;
-import shared.clientInfo.ToolCardInterruptValues;
+import shared.clientinfo.ClientDice;
+import shared.clientinfo.ClientDiceLocations;
+import shared.clientinfo.Position;
+import shared.clientinfo.ToolCardInterruptValues;
 import shared.constants.ToolcardConstants;
 import shared.exceptions.usersAndDatabaseExceptions.CannotCancelActionException;
 import shared.exceptions.usersAndDatabaseExceptions.CannotInterruptToolCardException;

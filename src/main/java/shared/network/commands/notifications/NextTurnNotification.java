@@ -1,6 +1,6 @@
 package shared.network.commands.notifications;
 
-import shared.clientInfo.ClientEndTurnData;
+import shared.clientinfo.ClientEndTurnData;
 
 public class NextTurnNotification implements Notification {
     public final int turnNumber;

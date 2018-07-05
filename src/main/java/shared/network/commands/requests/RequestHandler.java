@@ -2,6 +2,9 @@ package shared.network.commands.requests;
 
 import shared.network.commands.responses.Response;
 
+/**
+ * contains all types of handler
+ */
 public interface RequestHandler {
 
     Response handle(CreateUserRequest request);

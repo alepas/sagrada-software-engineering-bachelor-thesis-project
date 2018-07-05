@@ -1,9 +1,12 @@
-package shared.clientInfo;
+package shared.clientinfo;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * It's a copy of the game object in the server model, it doesn't contains any logic
+ */
 public class ClientGame implements Serializable {
     private final String id;
     private int gameActualPlayers;
@@ -18,6 +21,11 @@ public class ClientGame implements Serializable {
     private ClientRoundTrack roundTrack;
     private boolean started;
 
+    /**
+     * @param id is the game id
+     * @param gameNumPlayers is the number of players inside the game
+     * @param wpcsProposedByUsername is the HashMap which contains all possible wpc for all players in this game
+     */
     public ClientGame(String id, int gameNumPlayers, HashMap<String, ArrayList<ClientWpc>> wpcsProposedByUsername) {
         this.id = id;
         this.gameNumPlayers = gameNumPlayers;

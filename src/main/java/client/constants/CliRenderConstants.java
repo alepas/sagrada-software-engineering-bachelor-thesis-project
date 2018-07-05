@@ -3,6 +3,9 @@ package client.constants;
 import client.configLoader.ClientConfigLoader;
 import org.json.simple.JSONObject;
 
+/**
+ * COntains all constants related to the cliRender class
+ */
 public class CliRenderConstants {
     private static final JSONObject jsonClientObject = ClientConfigLoader.jsonClientObject;
     private static final JSONObject jsonLanguage = ClientConfigLoader.jsonClientLanguage;

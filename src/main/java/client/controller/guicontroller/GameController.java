@@ -20,7 +20,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import shared.clientInfo.*;
+import shared.clientinfo.*;
 import shared.exceptions.usersAndDatabaseExceptions.*;
 import shared.network.commands.notifications.*;
 
@@ -29,8 +29,8 @@ import java.util.*;
 
 import static client.constants.GuiConstants.*;
 import static java.lang.Thread.sleep;
-import static shared.clientInfo.ClientDiceLocations.*;
-import static shared.clientInfo.ToolCardInterruptValues.*;
+import static shared.clientinfo.ClientDiceLocations.*;
+import static shared.clientinfo.ToolCardInterruptValues.*;
 
 public class GameController implements Observer, NotificationHandler {
 
@@ -231,7 +231,7 @@ public class GameController implements Observer, NotificationHandler {
         clientInfo = ClientInfo.getInstance();
         clientInfo.addObserver(this);
 /*
-        if(clientInfo.ge){
+        if(clientinfo.ge){
             scoreBoard.setVisible(true);
             boardGame.setVisible(false);
         }

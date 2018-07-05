@@ -3,9 +3,9 @@ package server.model.game;
 import server.constants.GameConstants;
 import server.model.dicebag.Dice;
 import server.model.wpc.DiceAndPosition;
-import shared.clientInfo.ClientDice;
-import shared.clientInfo.ClientRoundTrack;
-import shared.clientInfo.Position;
+import shared.clientinfo.ClientDice;
+import shared.clientinfo.ClientRoundTrack;
+import shared.clientinfo.Position;
 
 import java.io.Serializable;
 import java.util.ArrayList;

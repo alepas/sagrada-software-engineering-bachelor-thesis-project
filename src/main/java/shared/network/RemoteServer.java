@@ -1,8 +1,8 @@
 package shared.network;
 
-import shared.clientInfo.Position;
+import shared.clientinfo.Position;
 
-import shared.clientInfo.ToolCardInterruptValues;
+import shared.clientinfo.ToolCardInterruptValues;
 import shared.exceptions.gameexceptions.CannotCreatePlayerException;
 import shared.exceptions.gameexceptions.InvalidGameParametersException;
 import shared.exceptions.gameexceptions.NotYourWpcException;
@@ -14,6 +14,9 @@ import shared.network.commands.responses.Response;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+/**
+ * Contains all possible methods.
+ */
 public interface RemoteServer extends Remote {
     Response createUser(String username, String password, RemoteObserver observer) throws RemoteException, CannotRegisterUserException;
 

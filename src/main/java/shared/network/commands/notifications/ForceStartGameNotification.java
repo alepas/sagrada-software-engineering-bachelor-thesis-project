@@ -1,6 +1,6 @@
 package shared.network.commands.notifications;
 
-import shared.clientInfo.ClientGame;
+import shared.clientinfo.ClientGame;
 
 /**
  * When a multi-player game should start but the number of players is equals to one the game will be forced to start and

@@ -1,7 +1,7 @@
 package shared.network.commands.notifications;
 
-import shared.clientInfo.ClientDice;
-import shared.clientInfo.Position;
+import shared.clientinfo.ClientDice;
+import shared.clientinfo.Position;
 
 public class ToolCardDicePlacedNotification implements Notification {
     public final String username;

@@ -12,7 +12,7 @@ import server.model.users.MoveData;
 import server.model.users.PlayerInGame;
 import server.model.wpc.Wpc;
 import server.network.ClientHandler;
-import shared.clientInfo.*;
+import shared.clientinfo.*;
 import shared.exceptions.gameexceptions.CannotCreatePlayerException;
 import shared.exceptions.gameexceptions.InvalidGameParametersException;
 import shared.exceptions.gameexceptions.NotYourWpcException;

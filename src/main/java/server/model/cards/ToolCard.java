@@ -7,7 +7,7 @@ import server.model.game.RoundTrack;
 import server.model.users.MoveData;
 import server.model.users.PlayerInGame;
 import server.model.wpc.Wpc;
-import shared.clientInfo.*;
+import shared.clientinfo.*;
 import shared.exceptions.usersAndDatabaseExceptions.*;
 import shared.network.commands.notifications.Notification;
 

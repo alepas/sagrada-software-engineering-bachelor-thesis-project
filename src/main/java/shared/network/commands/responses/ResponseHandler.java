@@ -1,5 +1,8 @@
 package shared.network.commands.responses;
 
+/**
+ * Contains all possible response handler methods
+ */
 public interface ResponseHandler{
 
     void handle(CreateUserResponse response);

@@ -1,6 +1,6 @@
 package shared.network.commands.responses;
 
-import shared.clientInfo.ClientRoundTrack;
+import shared.clientinfo.ClientRoundTrack;
 
 public class UpdatedRoundTrackResponse implements Response {
     public final ClientRoundTrack roundTrack;

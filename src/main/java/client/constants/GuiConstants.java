@@ -3,6 +3,9 @@ package client.constants;
 import client.configLoader.ClientConfigLoader;
 import org.json.simple.JSONObject;
 
+/**
+ * Contains all constants related to the gui class
+ */
 public class GuiConstants {
     private static final JSONObject jsonLanguage = ClientConfigLoader.jsonClientLanguage;
 

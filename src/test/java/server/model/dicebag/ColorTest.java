@@ -3,7 +3,7 @@ package server.model.dicebag;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import shared.clientInfo.ClientColor;
+import shared.clientinfo.ClientColor;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;

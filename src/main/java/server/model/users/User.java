@@ -1,7 +1,7 @@
 package server.model.users;
 
 
-import shared.clientInfo.ClientUser;
+import shared.clientinfo.ClientUser;
 
 import java.io.Serializable;
 

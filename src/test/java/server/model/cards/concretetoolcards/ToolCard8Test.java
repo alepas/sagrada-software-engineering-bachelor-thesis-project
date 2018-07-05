@@ -14,7 +14,7 @@ import server.model.users.PlayerInGame;
 import server.model.wpc.Cell;
 import server.model.wpc.DiceAndPosition;
 import server.model.wpc.Wpc;
-import shared.clientInfo.*;
+import shared.clientinfo.*;
 import shared.constants.ToolcardConstants;
 import shared.exceptions.usersAndDatabaseExceptions.*;
 

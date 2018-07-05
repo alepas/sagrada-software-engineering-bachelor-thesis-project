@@ -3,6 +3,9 @@ package shared.constants;
 import org.json.simple.JSONObject;
 import shared.configLoader.SharedConfigLoader;
 
+/**
+ * The class constants all constants related to all exceptions
+ */
 public class ExceptionConstants {
     private static final JSONObject jsonLanguage = SharedConfigLoader.jsonSharedLanguage;
 

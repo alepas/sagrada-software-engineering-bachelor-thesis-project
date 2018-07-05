@@ -1,8 +1,8 @@
 package client.network;
 
-import shared.clientInfo.NextAction;
-import shared.clientInfo.Position;
-import shared.clientInfo.ToolCardInterruptValues;
+import shared.clientinfo.NextAction;
+import shared.clientinfo.Position;
+import shared.clientinfo.ToolCardInterruptValues;
 import shared.constants.NetworkConstants;
 import shared.exceptions.gameexceptions.CannotCreatePlayerException;
 import shared.exceptions.gameexceptions.InvalidGameParametersException;

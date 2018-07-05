@@ -1,6 +1,6 @@
 package server.model.users;
 
-import shared.clientInfo.*;
+import shared.clientinfo.*;
 
 import java.util.ArrayList;
 

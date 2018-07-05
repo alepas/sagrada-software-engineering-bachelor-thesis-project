@@ -1,6 +1,6 @@
 package client.network;
 
-import shared.clientInfo.*;
+import shared.clientinfo.*;
 import shared.network.commands.notifications.*;
 
 import java.util.ArrayList;

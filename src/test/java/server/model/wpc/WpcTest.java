@@ -4,9 +4,9 @@ import org.junit.Before;
 import org.junit.Test;
 import server.model.dicebag.Color;
 import server.model.dicebag.Dice;
-import shared.clientInfo.ClientCell;
-import shared.clientInfo.ClientWpc;
-import shared.clientInfo.Position;
+import shared.clientinfo.ClientCell;
+import shared.clientinfo.ClientWpc;
+import shared.clientinfo.Position;
 
 import java.util.ArrayList;
 
