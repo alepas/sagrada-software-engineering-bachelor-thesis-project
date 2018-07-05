@@ -71,13 +71,15 @@ public class ClientInfo implements Observer, NotificationHandler {
 
     /**
      * the observer is removed by the observer arraylis
-     * 
+     *
      * @param observer is the observer
      */
     public void removeObserver(Observer observer) {
         observers.remove(observer);
     }
 
+
+    //getter and setter of all possible information that the client need
     public String getUsername() {
         return (user != null) ? user.getUsername() : null;
     }

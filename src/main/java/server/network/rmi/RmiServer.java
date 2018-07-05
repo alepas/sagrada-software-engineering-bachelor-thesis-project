@@ -86,10 +86,10 @@ public class RmiServer implements RemoteServer {
 
     /**
      * @param username is the player's username
-     * @param password is the accont password
-     * @param observer
-     * @return
-     * @throws CannotLoginUserException
+     * @param password is the account's  password
+     * @param observer  is the observer
+     * @return tìa new response for the login
+     * @throws CannotLoginUserException if it is not possible to login
      */
     @Override
     public Response login(String username, String password, RemoteObserver observer) throws CannotLoginUserException {
@@ -101,6 +101,8 @@ public class RmiServer implements RemoteServer {
         clientByToken.put(response.userToken, client);
         return response;
     }
+
+    //those methods all return the response after calling the corresponding method in the controller
 
     @Override
     public Response findGame(String userToken, int numPlayers, int level) throws CannotFindUserInDBException, InvalidGameParametersException, CannotCreatePlayerException {

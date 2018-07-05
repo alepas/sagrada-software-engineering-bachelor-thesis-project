@@ -77,6 +77,11 @@ public class PlayerInGame {
 
     //------------------------Set-Up methods and update playerInGame attributes methods--------------
 
+    /**
+     * gets an instance of the wpc and copy it.
+     *
+     * @param id is the id of the wpc
+     */
     public void setWPC(String id) {
         WpcDB dbWpc = WpcDB.getInstance();
         wpc = dbWpc.getWpcByID(id).copyWpc();
