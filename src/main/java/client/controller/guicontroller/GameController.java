@@ -1464,8 +1464,8 @@ public class GameController implements Observer, NotificationHandler {
                 }
 
             }
-        }
-        setDices(clientInfo.getExtractedDices());
+        }else setDices(clientInfo.getExtractedDices());
+
     }
 
     /**
