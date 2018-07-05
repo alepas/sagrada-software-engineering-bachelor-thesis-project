@@ -194,6 +194,10 @@ public class CliConstants {
     public static final String GAME_ENDED = (String) jsonLanguage.get("GAME_ENDED");
     public static final String FINAL_TABLE = (String) jsonLanguage.get("FINAL_TABLE");
 
+    public static final String TURN_TIME_ENDED = (String) jsonLanguage.get("TURN_TIME_ENDED");
+    public static final String TURN_TIME_LEFT_P1 = (String) jsonLanguage.get("TURN_TIME_LEFT_P1");
+    public static final String TURN_TIME_LEFT_P2 = (String) jsonLanguage.get("TURN_TIME_LEFT_P2");
+
     private static ArrayList<String> getArrayElements(JSONArray array) {
         ArrayList<String> elements = new ArrayList<>();
         for(Object str : array) elements.add((String) str);

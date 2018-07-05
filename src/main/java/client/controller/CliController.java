@@ -2,7 +2,7 @@ package client.controller;
 
 import client.network.ClientInfo;
 import client.network.NetworkClient;
-import client.view.cli.CliView;
+import client.view.cli.cli.CliView;
 import shared.clientInfo.*;
 import shared.exceptions.gameexceptions.CannotCreatePlayerException;
 import shared.exceptions.gameexceptions.InvalidGameParametersException;

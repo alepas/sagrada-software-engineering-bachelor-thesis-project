@@ -142,6 +142,9 @@
   "PLAYER_SKIPPED_TURN_DUE_TO_TOOLCARD": " ha saltato il turno a causa dell'utilizzo della toolcard ",
   "GAME_ENDED": "Partita terminata",
   "FINAL_TABLE": "Classifica finale:",
+  "TURN_TIME_ENDED": "Tempo per il turno scaduto",
+  "TURN_TIME_LEFT_P1": "Rimangono ",
+  "TURN_TIME_LEFT_P2": " secondi per terminare il turno",
 
   "FAVOURS": "    Favours: ",
   "RESET": "[0m",

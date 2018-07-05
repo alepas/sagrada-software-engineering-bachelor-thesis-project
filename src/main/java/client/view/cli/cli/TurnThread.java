@@ -1,5 +1,7 @@
-package client.view.cli;
+package client.view.cli.cli;
 
+
+import static client.constants.CliConstants.*;
 
 public class TurnThread implements Runnable {
     private final CliView view;
@@ -21,13 +23,12 @@ public class TurnThread implements Runnable {
         synchronized (waiter) {
             try {
                 int lastTimeLeft = task.timeLeft();
-                int[] steps = {0, 5, 15, 30, 60};
                 Integer timeLeft = null;
 
                 while (run && (timeLeft == null || timeLeft != 0)) {
-                    if ((timeLeft = hasPassedStep(steps, lastTimeLeft)) != null) {
-                        if (timeLeft == 0) view.displayText("Tempo per il turno scaduto");
-                        else view.displayText("Rimangono " + timeLeft + " secondi per terminare il turno");
+                    if ((timeLeft = hasPassedStep(lastTimeLeft)) != null) {
+                        if (timeLeft == 0) view.displayText(TURN_TIME_ENDED);
+                        else view.displayText(TURN_TIME_LEFT_P1 + timeLeft + TURN_TIME_LEFT_P2);
 
                         lastTimeLeft = timeLeft;
                     }
@@ -41,8 +42,8 @@ public class TurnThread implements Runnable {
 
     //Se è stato superato uno degli step, restituisce lo step passato
     //Altrimenti null
-    private Integer hasPassedStep(int[] steps, int lastTimeLeft){
-        for(int step : steps){
+    private Integer hasPassedStep(int lastTimeLeft){
+        for(int step : WPC_WAITING_STEPS){
             if (task.timeLeft() <= step && lastTimeLeft > step) return step;
         }
         return null;
