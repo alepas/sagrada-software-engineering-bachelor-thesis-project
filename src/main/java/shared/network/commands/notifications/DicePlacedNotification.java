@@ -15,6 +15,14 @@ public class DicePlacedNotification implements Notification {
     public final ArrayList<ClientDice> newExtractedDices;
     public final ClientRoundTrack newRoundTrack;
 
+    /**
+     * @param username is the player's name
+     * @param dice is the chosen dice
+     * @param position is the chosen position where the player would like to add the dice
+     * @param wpc is the player's schema
+     * @param newExtractedDices is the arrayList with all the extracted dices
+     * @param newRoundTrack is the matrix with all the dices not used by the players
+     */
     public DicePlacedNotification(String username, ClientDice dice, Position position, ClientWpc wpc, ArrayList<ClientDice> newExtractedDices, ClientRoundTrack newRoundTrack) {
         this.username = username;
         this.dice = dice;
@@ -24,6 +32,11 @@ public class DicePlacedNotification implements Notification {
         this.newRoundTrack = newRoundTrack;
     }
 
+    /**
+     * throws the handler of this.
+     *
+     * @param handler is the handler related to this response
+     */
     @Override
     public void handle(NotificationHandler handler) {
         handler.handle(this);

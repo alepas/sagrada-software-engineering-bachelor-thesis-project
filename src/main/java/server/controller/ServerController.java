@@ -13,10 +13,10 @@ import server.model.users.PlayerInGame;
 import server.model.wpc.Wpc;
 import server.network.ClientHandler;
 import shared.clientInfo.*;
-import shared.exceptions.gameExceptions.CannotCreatePlayerException;
-import shared.exceptions.gameExceptions.InvalidGameParametersException;
-import shared.exceptions.gameExceptions.NotYourWpcException;
-import shared.exceptions.gameExceptions.UserNotInThisGameException;
+import shared.exceptions.gameexceptions.CannotCreatePlayerException;
+import shared.exceptions.gameexceptions.InvalidGameParametersException;
+import shared.exceptions.gameexceptions.NotYourWpcException;
+import shared.exceptions.gameexceptions.UserNotInThisGameException;
 import shared.exceptions.usersAndDatabaseExceptions.*;
 import shared.network.commands.responses.*;
 
@@ -442,19 +442,32 @@ public class ServerController {
     }
 
     /**
-     * removes the token from the db
+     * removes the token from the db.
      * @param userToken is the player's token
      */
     public void removeSessionFromDatabase(String userToken) {
         databaseUsers.removeSession(userToken);
     }
 
+    /**
+     * removes the user in the HashMap.
+     *
+     * @param username is the player's username
+     * @param handler is the client handler
+     */
     public void removeClient(String username, ClientHandler handler) {
         ClientHandler temp = clientByUser.get(username);
         if (temp.getToken().equals(handler.getToken()))
             clientByUser.remove(username);
     }
 
+    /**
+     * removes the observer.
+     *
+     * @param user is the player's username
+     * @param observer is the observer
+     * @throws CannotFindPlayerInDatabaseException  if the player hasn't been found in the db
+     */
     public void deleteObserverFromGame(String user, Observer observer) throws CannotFindPlayerInDatabaseException {
         databaseUsers.getPlayerInGameFromUsername(user).getGame().deleteObserver(observer);
     }

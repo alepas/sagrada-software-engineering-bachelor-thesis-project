@@ -12,7 +12,7 @@ import server.model.wpc.Wpc;
 import shared.clientInfo.ClientDice;
 import shared.clientInfo.ClientEndTurnData;
 import shared.clientInfo.ClientWpc;
-import shared.exceptions.gameExceptions.*;
+import shared.exceptions.gameexceptions.*;
 import shared.exceptions.usersAndDatabaseExceptions.CannotUpdateStatsForUserException;
 import shared.network.commands.notifications.*;
 

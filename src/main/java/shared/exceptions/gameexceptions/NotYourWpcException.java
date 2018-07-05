@@ -1,4 +1,4 @@
-package shared.exceptions.gameExceptions;
+package shared.exceptions.gameexceptions;
 
 import shared.constants.ExceptionConstants;
 

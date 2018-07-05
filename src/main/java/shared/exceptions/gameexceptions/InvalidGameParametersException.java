@@ -1,4 +1,4 @@
-package shared.exceptions.gameExceptions;
+package shared.exceptions.gameexceptions;
 
 import static shared.constants.ExceptionConstants.INVALID_NUM_PLAYERS;
 import static shared.constants.ExceptionConstants.INVALID_TOOLCARD_LEVEL;
@@ -12,8 +12,8 @@ public class InvalidGameParametersException extends Exception {
      * @param playersOrLevel boolean which tells if the number is related to players or toolcard
      */
     public InvalidGameParametersException(int number, boolean playersOrLevel){
-        this.number=number;
-        this.playersOrLevel=playersOrLevel;
+        this.number = number;
+        this.playersOrLevel = playersOrLevel;
     }
 
     /**
@@ -23,6 +23,7 @@ public class InvalidGameParametersException extends Exception {
      */
     @Override
     public String getMessage() {
+        //todo: eliminare INVALID_NUM_OF_PLAYERS"
         if (playersOrLevel)
         return INVALID_NUM_PLAYERS + number;
         else

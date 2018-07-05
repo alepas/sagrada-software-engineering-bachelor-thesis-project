@@ -15,10 +15,10 @@ import server.model.wpc.Wpc;
 import shared.clientInfo.ClientDice;
 import shared.clientInfo.ClientEndTurnData;
 import shared.clientInfo.ClientWpc;
-import shared.exceptions.gameExceptions.InvalidMultiplayerGamePlayersException;
-import shared.exceptions.gameExceptions.MaxPlayersExceededException;
-import shared.exceptions.gameExceptions.UserAlreadyInThisGameException;
-import shared.exceptions.gameExceptions.UserNotInThisGameException;
+import shared.exceptions.gameexceptions.InvalidMultiPlayerGamePlayersException;
+import shared.exceptions.gameexceptions.MaxPlayersExceededException;
+import shared.exceptions.gameexceptions.UserAlreadyInThisGameException;
+import shared.exceptions.gameexceptions.UserNotInThisGameException;
 import shared.exceptions.usersAndDatabaseExceptions.CannotUpdateStatsForUserException;
 import shared.network.commands.notifications.*;
 
@@ -39,13 +39,13 @@ public class MultiplayerGame extends Game {
      * Creates a multiplayerGame
      *
      * @param numPlayers is the number of players what will take part to the game
-     * @throws InvalidMultiplayerGamePlayersException when the num of player isn't in the range
+     * @throws InvalidMultiPlayerGamePlayersException when the num of player isn't in the range
      */
-    public MultiplayerGame(int numPlayers) throws InvalidMultiplayerGamePlayersException {
+    public MultiplayerGame(int numPlayers) throws InvalidMultiPlayerGamePlayersException {
         super(numPlayers);
 
         if (numPlayers < GameConstants.MULTIPLAYER_MIN_NUM_PLAYERS || numPlayers > GameConstants.MAX_NUM_PLAYERS)
-            throw new InvalidMultiplayerGamePlayersException(numPlayers, GameConstants.MULTIPLAYER_MIN_NUM_PLAYERS, GameConstants.MAX_NUM_PLAYERS);
+            throw new InvalidMultiPlayerGamePlayersException(numPlayers, GameConstants.MULTIPLAYER_MIN_NUM_PLAYERS, GameConstants.MAX_NUM_PLAYERS);
 
         numOfPrivateObjectivesForPlayer = GameConstants.NUM_PRIVATE_OBJ_FOR_PLAYER_IN_MULTIPLAYER_GAME;
         numOfToolCards = GameConstants.NUM_TOOL_CARDS_IN_MULTIPLAYER_GAME;
@@ -245,7 +245,8 @@ public class MultiplayerGame extends Game {
         extractedDices = diceBag.extractDices(numPlayers);
         ArrayList<ClientDice> extractedClientDices = new ArrayList<>();
         for (Dice dice : extractedDices) extractedClientDices.add(dice.getClientDice());
-        changeAndNotifyObservers(new NewRoundNotification(roundTrack.getCurrentRound(), extractedClientDices, roundTrack.getClientRoundTrack(), oldClientWpc, oldUser));
+        changeAndNotifyObservers(new NewRoundNotification(roundTrack.getCurrentRound(), extractedClientDices,
+                roundTrack.getClientRoundTrack(), oldClientWpc, oldUser));
 
         currentTurn = 0;
         if (roundPlayer < players.length - 1) roundPlayer++;
@@ -362,14 +363,10 @@ public class MultiplayerGame extends Game {
                 int score;
                 if (!player.isDisconnected()) {
                     Wpc wpc = player.getWPC();
-                    System.out.println("favor: " + wpc.getFavours());
-                    System.out.println("freeCell" + wpc.getNumFreeCells());
                     score = privateObjScore(player) - wpc.getNumFreeCells() + wpc.getFavours();
 
-                    for (PublicObjectiveCard poc : publicObjectiveCards) {
-                        System.out.println(poc.getID() + " score: " + poc.calculateScore(wpc));
+                    for (PublicObjectiveCard poc : publicObjectiveCards)
                         score = score + poc.calculateScore(wpc);
-                    }
                 } else score = GameConstants.DEFAULT_SCORE_MULTIPLAYER_GAME_LEFT;
                 scoreList.put(player.getUser(), score);
             }

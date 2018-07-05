@@ -1,9 +1,9 @@
-package shared.exceptions.dicebagExceptions;
+package shared.exceptions.dicebagexceptions;
 
 import shared.constants.ExceptionConstants;
 
 public class IncorrectNumberException extends Exception {
-    //TODO: 0 e 6 sono costanti del server
+    //TODO:io la toglierei
     public final int number;
 
     public IncorrectNumberException(int number) {

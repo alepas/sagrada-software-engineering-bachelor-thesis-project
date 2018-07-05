@@ -5,8 +5,8 @@ import server.constants.UserDBConstants;
 import server.model.game.Game;
 import server.model.gamesdb.DatabaseGames;
 import shared.clientInfo.ClientUser;
-import shared.exceptions.gameExceptions.CannotCreatePlayerException;
-import shared.exceptions.gameExceptions.InvalidGameParametersException;
+import shared.exceptions.gameexceptions.CannotCreatePlayerException;
+import shared.exceptions.gameexceptions.InvalidGameParametersException;
 import shared.exceptions.usersAndDatabaseExceptions.*;
 
 import java.io.File;

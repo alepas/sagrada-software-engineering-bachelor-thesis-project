@@ -1,4 +1,4 @@
-package shared.exceptions.gameExceptions;
+package shared.exceptions.gameexceptions;
 
 import server.model.game.Game;
 import static shared.constants.ExceptionConstants.USER_NOT_IN_GAME;

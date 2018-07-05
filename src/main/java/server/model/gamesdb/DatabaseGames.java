@@ -4,8 +4,8 @@ import server.constants.GameConstants;
 import server.model.game.Game;
 import server.model.game.MultiplayerGame;
 import server.model.game.SinglePlayerGame;
-import shared.exceptions.databaseGameExceptions.GameNotInAvailableListException;
-import shared.exceptions.gameExceptions.*;
+import shared.exceptions.databasegameexceptions.GameNotInAvailableListException;
+import shared.exceptions.gameexceptions.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -109,7 +109,7 @@ public class DatabaseGames {
                 game.addPlayer(username);
                 availableGames.add((MultiplayerGame) game);
 
-            } catch (InvalidMultiplayerGamePlayersException e) {
+            } catch (InvalidMultiPlayerGamePlayersException e) {
                 throw new InvalidGameParametersException(numPlayers, true);
 
             } catch (MaxPlayersExceededException e) {

@@ -5,7 +5,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import shared.clientInfo.ClientDice;
-import shared.exceptions.dicebagExceptions.IncorrectNumberException;
+import shared.exceptions.dicebagexceptions.IncorrectNumberException;
 
 import static org.junit.Assert.assertEquals;
 

@@ -14,7 +14,7 @@ import server.model.users.PlayerInGame;
 import server.model.wpc.Wpc;
 import server.model.wpc.WpcDB;
 import shared.clientInfo.*;
-import shared.exceptions.gameExceptions.*;
+import shared.exceptions.gameexceptions.*;
 import shared.network.commands.notifications.*;
 
 import java.util.*;

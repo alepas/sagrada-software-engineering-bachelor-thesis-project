@@ -12,7 +12,7 @@ import server.model.wpc.DiceAndPosition;
 import server.model.wpc.Wpc;
 import server.model.wpc.WpcDB;
 import shared.clientInfo.*;
-import shared.exceptions.gameExceptions.UserNotInThisGameException;
+import shared.exceptions.gameexceptions.UserNotInThisGameException;
 import shared.exceptions.usersAndDatabaseExceptions.*;
 import shared.network.commands.notifications.DicePlacedNotification;
 import shared.network.commands.notifications.PlayerDisconnectedNotification;

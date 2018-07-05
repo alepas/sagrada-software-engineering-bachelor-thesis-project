@@ -12,10 +12,10 @@ import server.model.users.DatabaseUsers;
 import server.model.users.PlayerInGame;
 import server.model.wpc.WpcDB;
 import shared.clientInfo.ClientWpc;
-import shared.exceptions.gameExceptions.InvalidMultiplayerGamePlayersException;
-import shared.exceptions.gameExceptions.MaxPlayersExceededException;
-import shared.exceptions.gameExceptions.UserAlreadyInThisGameException;
-import shared.exceptions.gameExceptions.UserNotInThisGameException;
+import shared.exceptions.gameexceptions.InvalidMultiPlayerGamePlayersException;
+import shared.exceptions.gameexceptions.MaxPlayersExceededException;
+import shared.exceptions.gameexceptions.UserAlreadyInThisGameException;
+import shared.exceptions.gameexceptions.UserNotInThisGameException;
 import shared.exceptions.usersAndDatabaseExceptions.CannotLoginUserException;
 import shared.exceptions.usersAndDatabaseExceptions.CannotRegisterUserException;
 
@@ -89,7 +89,7 @@ public class MultiplayerGameTest {
     /**
      * @throws Exception if the given numPlayers is not valid, in this case it is higher than the nux number accepted
      */
-    @Test(expected = InvalidMultiplayerGamePlayersException.class)
+    @Test(expected = InvalidMultiPlayerGamePlayersException.class)
     public void checkMultiPlayerGameConstructor2() throws Exception{
         Game game2 = new MultiplayerGame(GameConstants.MAX_NUM_PLAYERS+1);
     }
@@ -97,7 +97,7 @@ public class MultiplayerGameTest {
     /**
      * @throws Exception if the given numPlayers is not valid, in this case it is smaller than the min number accepted
      */
-    @Test(expected = InvalidMultiplayerGamePlayersException.class)
+    @Test(expected = InvalidMultiPlayerGamePlayersException.class)
     public void checkMultiPlayerGameConstructor3() throws Exception{
         Game game2 = new MultiplayerGame(GameConstants.MULTIPLAYER_MIN_NUM_PLAYERS-1);
     }

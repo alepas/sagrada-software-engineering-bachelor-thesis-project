@@ -4,9 +4,9 @@ import client.network.ClientInfo;
 import client.network.NetworkClient;
 import client.view.cli.CliView;
 import shared.clientInfo.*;
-import shared.exceptions.gameExceptions.CannotCreatePlayerException;
-import shared.exceptions.gameExceptions.InvalidGameParametersException;
-import shared.exceptions.gameExceptions.NotYourWpcException;
+import shared.exceptions.gameexceptions.CannotCreatePlayerException;
+import shared.exceptions.gameexceptions.InvalidGameParametersException;
+import shared.exceptions.gameexceptions.NotYourWpcException;
 import shared.exceptions.usersAndDatabaseExceptions.*;
 
 import java.util.ArrayList;

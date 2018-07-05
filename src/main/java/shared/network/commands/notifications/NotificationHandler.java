@@ -1,6 +1,10 @@
 package shared.network.commands.notifications;
 
+/**
+ * Contains all possible types of notifications handler
+ */
 public interface NotificationHandler {
+
     void handle(GameStartedNotification notification);
 
     void handle(PlayersChangedNotification notification);

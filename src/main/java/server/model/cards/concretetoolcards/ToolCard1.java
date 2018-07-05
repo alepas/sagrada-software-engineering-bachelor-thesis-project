@@ -8,7 +8,7 @@ import server.model.users.MoveData;
 import server.model.users.PlayerInGame;
 import shared.clientInfo.*;
 import shared.constants.ToolcardConstants;
-import shared.exceptions.dicebagExceptions.IncorrectNumberException;
+import shared.exceptions.dicebagexceptions.IncorrectNumberException;
 import shared.exceptions.usersAndDatabaseExceptions.*;
 import shared.network.commands.notifications.ToolCardDiceChangedNotification;
 import shared.network.commands.notifications.ToolCardDicePlacedNotification;
