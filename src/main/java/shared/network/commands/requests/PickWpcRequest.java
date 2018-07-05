@@ -9,7 +9,7 @@ public class PickWpcRequest implements Request {
 
     /**
      * Constructor of this
-     * 
+     *
      * @param wpcID is the id of the schema
      * @param userToken is the player's token
      */

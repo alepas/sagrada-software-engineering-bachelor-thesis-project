@@ -3,6 +3,9 @@ package shared.constants;
 import org.json.simple.JSONObject;
 import shared.configLoader.SharedConfigLoader;
 
+/**
+ * This class contains all constants related to the public obiective cards
+ */
 public class PocConstants {
     private static final JSONObject jsonLanguage = SharedConfigLoader.jsonSharedLanguage;
 

@@ -6,7 +6,7 @@ import server.model.dicebag.Color;
 import server.model.dicebag.Dice;
 import server.model.users.MoveData;
 import server.model.users.PlayerInGame;
-import shared.clientInfo.*;
+import shared.clientinfo.*;
 import shared.constants.ToolcardConstants;
 import shared.exceptions.usersAndDatabaseExceptions.*;
 import shared.network.commands.notifications.ToolCardDiceChangedNotification;

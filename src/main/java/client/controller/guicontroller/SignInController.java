@@ -61,7 +61,7 @@ public class SignInController {
 
 
     /**
-     * Calls the login method in the network. If the clientInfo username is null the player must re-introduce
+     * Calls the login method in the network. If the clientinfo username is null the player must re-introduce
      * both username and password because he/she could have done a mistake; if it is different from null it calls the
      * next scene.
      *

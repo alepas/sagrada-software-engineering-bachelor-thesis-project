@@ -1,6 +1,6 @@
 package server.model.dicebag;
 
-import shared.clientInfo.ClientDice;
+import shared.clientinfo.ClientDice;
 import shared.exceptions.dicebagexceptions.IncorrectNumberException;
 
 import java.io.Serializable;

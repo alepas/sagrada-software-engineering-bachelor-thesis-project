@@ -1,7 +1,7 @@
 package client.view.cli.cli;
 
 import client.constants.CliConstants;
-import shared.clientInfo.*;
+import shared.clientinfo.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;

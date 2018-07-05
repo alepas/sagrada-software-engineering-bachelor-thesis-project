@@ -1,6 +1,6 @@
 package shared.network.commands.responses;
 
-import shared.clientInfo.ClientDice;
+import shared.clientinfo.ClientDice;
 
 import java.util.ArrayList;
 

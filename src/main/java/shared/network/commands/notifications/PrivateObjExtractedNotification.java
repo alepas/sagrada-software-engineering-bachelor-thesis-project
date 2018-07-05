@@ -1,6 +1,6 @@
 package shared.network.commands.notifications;
 
-import shared.clientInfo.ClientColor;
+import shared.clientinfo.ClientColor;
 
 import java.util.HashMap;
 

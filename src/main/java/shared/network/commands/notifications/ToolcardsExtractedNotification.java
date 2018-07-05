@@ -1,6 +1,6 @@
 package shared.network.commands.notifications;
 
-import shared.clientInfo.ClientToolCard;
+import shared.clientinfo.ClientToolCard;
 
 import java.util.ArrayList;
 

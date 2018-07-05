@@ -2,10 +2,14 @@ package server.network;
 
 import java.util.Observer;
 
+
 public abstract class ClientHandler implements Observer {
     protected String userToken;
     protected String username;
 
+    /**
+     * @param userToken is the player's token
+     */
     public ClientHandler(String userToken) {
         this.userToken = userToken;
         this.username=null;
@@ -23,7 +27,15 @@ public abstract class ClientHandler implements Observer {
         return userToken;
     }
 
-    public abstract void disconnect();          //Ho perso la connessione con il client
-    public abstract void removeConnection();    //Forza il client a disconettersi: serve ad esempio quando un utente già connesso
-                                                //logga su una nuova macchina, la vecchia connessione deve essere buttata giù
+    /**
+     * the connection has been lost
+     */
+    public abstract void disconnect();
+
+
+    /**
+     * force the client to disconnect, it is necessary when a player log on an other machine.
+     * the old one must be canceled
+     */
+    public abstract void removeConnection();
 }

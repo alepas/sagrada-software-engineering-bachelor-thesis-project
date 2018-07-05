@@ -1,9 +1,9 @@
 package shared.network.commands.notifications;
 
-import shared.clientInfo.ClientDice;
-import shared.clientInfo.ClientRoundTrack;
-import shared.clientInfo.ClientWpc;
-import shared.clientInfo.Position;
+import shared.clientinfo.ClientDice;
+import shared.clientinfo.ClientRoundTrack;
+import shared.clientinfo.ClientWpc;
+import shared.clientinfo.Position;
 
 import java.util.ArrayList;
 

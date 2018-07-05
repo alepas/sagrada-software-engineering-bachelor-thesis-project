@@ -4,7 +4,7 @@ package server.model.users;
 import server.constants.UserDBConstants;
 import server.model.game.Game;
 import server.model.gamesdb.DatabaseGames;
-import shared.clientInfo.ClientUser;
+import shared.clientinfo.ClientUser;
 import shared.exceptions.gameexceptions.CannotCreatePlayerException;
 import shared.exceptions.gameexceptions.InvalidGameParametersException;
 import shared.exceptions.usersAndDatabaseExceptions.*;

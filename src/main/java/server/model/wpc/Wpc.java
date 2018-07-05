@@ -3,10 +3,10 @@ package server.model.wpc;
 import server.constants.WpcConstants;
 import server.model.dicebag.Color;
 import server.model.dicebag.Dice;
-import shared.clientInfo.ClientCell;
-import shared.clientInfo.ClientDice;
-import shared.clientInfo.ClientWpc;
-import shared.clientInfo.Position;
+import shared.clientinfo.ClientCell;
+import shared.clientinfo.ClientDice;
+import shared.clientinfo.ClientWpc;
+import shared.clientinfo.Position;
 
 import java.util.ArrayList;
 

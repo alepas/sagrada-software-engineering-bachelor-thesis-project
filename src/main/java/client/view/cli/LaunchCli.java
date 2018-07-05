@@ -17,6 +17,11 @@ public class LaunchCli {
 
     private enum Tecnology { SOCKET, RMI }
 
+    /**
+     * asks to the player how he/she wants to connect and, depending on the answer calls different methods.
+     *
+     * @throws IOException if there are problems in create the new connection
+     */
     public static void main() throws IOException {
         String answer;
         Tecnology tecnology = null;
@@ -58,6 +63,11 @@ public class LaunchCli {
         } while (!quit);
     }
 
+    /**
+     * @return true is the socket connection started in a correct way
+     *
+     * @throws IOException if it not possible to add start a new socket connection
+     */
     private static boolean startSocketClient() throws IOException {
         SocketClient client = NetworkClient.getNewSocketInstance(
                 NetworkConstants.SERVER_ADDRESS, NetworkConstants.SOCKET_SERVER_PORT);
@@ -71,6 +81,11 @@ public class LaunchCli {
     }
 
 
+    /**
+     * @return true if the connection started in a correct way
+     *
+     * @throws Exception is it not possible to add an rmi connection
+     */
     private static boolean startRmiClient() throws Exception {
         RmiClient client = NetworkClient.getNewRmiInstance();
         CliController controller = new CliController(client);

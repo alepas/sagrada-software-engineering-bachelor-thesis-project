@@ -1,7 +1,7 @@
 package server.model.wpc;
 
 import server.model.dicebag.Dice;
-import shared.clientInfo.Position;
+import shared.clientinfo.Position;
 
 public class DiceAndPosition {
     private Dice dice;

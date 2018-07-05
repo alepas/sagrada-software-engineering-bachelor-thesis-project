@@ -1,5 +1,5 @@
 package server.model.dicebag;
-import shared.clientInfo.ClientColor;
+import shared.clientinfo.ClientColor;
 
 import java.io.Serializable;
 import java.util.Random;

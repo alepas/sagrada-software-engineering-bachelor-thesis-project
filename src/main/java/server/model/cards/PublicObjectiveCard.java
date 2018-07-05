@@ -1,7 +1,7 @@
 package server.model.cards;
 
 import server.model.wpc.Wpc;
-import shared.clientInfo.ClientPoc;
+import shared.clientinfo.ClientPoc;
 
 
 public abstract class PublicObjectiveCard {

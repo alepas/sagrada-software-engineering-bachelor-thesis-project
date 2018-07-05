@@ -1,7 +1,7 @@
 package shared.exceptions.usersAndDatabaseExceptions;
 
-import shared.clientInfo.ClientColor;
-import shared.clientInfo.ClientDiceLocations;
+import shared.clientinfo.ClientColor;
+import shared.clientinfo.ClientDiceLocations;
 import shared.constants.ExceptionConstants;
 
 import static shared.constants.ExceptionConstants.*;

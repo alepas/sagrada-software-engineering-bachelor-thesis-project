@@ -2,7 +2,7 @@ package server.model.users;
 
 import org.junit.Before;
 import org.junit.Test;
-import shared.clientInfo.*;
+import shared.clientinfo.*;
 
 import java.util.ArrayList;
 

@@ -1,6 +1,6 @@
 package shared.network.commands.requests;
 
-import shared.clientInfo.Position;
+import shared.clientinfo.Position;
 import shared.network.commands.responses.Response;
 
 public class PlaceDiceRequest implements Request {

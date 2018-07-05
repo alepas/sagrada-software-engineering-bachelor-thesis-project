@@ -1,4 +1,4 @@
-package shared.clientInfo;
+package shared.clientinfo;
 
 import java.io.Serializable;
 import java.util.ArrayList;

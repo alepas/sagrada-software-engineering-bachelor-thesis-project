@@ -1,6 +1,6 @@
 package client.network;
 
-import shared.clientInfo.*;
+import shared.clientinfo.*;
 import shared.exceptions.gameexceptions.CannotCreatePlayerException;
 import shared.exceptions.gameexceptions.InvalidGameParametersException;
 import shared.exceptions.gameexceptions.NotYourWpcException;

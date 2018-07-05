@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import server.model.dicebag.Color;
 import server.model.dicebag.Dice;
-import shared.clientInfo.Position;
+import shared.clientinfo.Position;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;

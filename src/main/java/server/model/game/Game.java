@@ -13,7 +13,7 @@ import server.model.users.DatabaseUsers;
 import server.model.users.PlayerInGame;
 import server.model.wpc.Wpc;
 import server.model.wpc.WpcDB;
-import shared.clientInfo.*;
+import shared.clientinfo.*;
 import shared.exceptions.gameexceptions.*;
 import shared.network.commands.notifications.*;
 

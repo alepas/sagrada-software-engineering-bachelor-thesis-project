@@ -5,8 +5,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import server.model.dicebag.Color;
-import shared.clientInfo.ClientWpc;
-import shared.clientInfo.Position;
+import shared.clientinfo.ClientWpc;
+import shared.clientinfo.Position;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;

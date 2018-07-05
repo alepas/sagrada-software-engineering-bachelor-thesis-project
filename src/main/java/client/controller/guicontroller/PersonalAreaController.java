@@ -11,7 +11,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import shared.clientInfo.ClientUser;
+
+import shared.clientinfo.ClientUser;
 import shared.exceptions.usersAndDatabaseExceptions.CannotFindUserInDBException;
 
 import java.io.IOException;

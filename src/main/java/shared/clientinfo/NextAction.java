@@ -1,7 +1,10 @@
-package shared.clientInfo;
+package shared.clientinfo;
 
 import java.io.Serializable;
 
+/**
+ * enum of all possible next actions
+ */
 public enum NextAction implements Serializable {
     PLACE_DICE_TOOLCARD,
     INTERRUPT_TOOLCARD,

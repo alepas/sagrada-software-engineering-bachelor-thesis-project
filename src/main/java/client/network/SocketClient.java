@@ -1,12 +1,13 @@
 package client.network;
 
-import shared.clientInfo.NextAction;
-import shared.clientInfo.Position;
-import shared.clientInfo.ToolCardInterruptValues;
+import shared.clientinfo.NextAction;
+import shared.clientinfo.Position;
+import shared.clientinfo.ToolCardInterruptValues;
 import shared.exceptions.gameexceptions.CannotCreatePlayerException;
 import shared.exceptions.gameexceptions.InvalidGameParametersException;
 import shared.exceptions.gameexceptions.NotYourWpcException;
 import shared.exceptions.gameexceptions.UserNotInThisGameException;
+
 import shared.exceptions.usersAndDatabaseExceptions.*;
 import shared.network.commands.notifications.ForceDisconnectionNotification;
 import shared.network.commands.requests.*;

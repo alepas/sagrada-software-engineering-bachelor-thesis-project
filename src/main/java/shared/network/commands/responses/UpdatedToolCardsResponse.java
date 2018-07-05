@@ -1,6 +1,6 @@
 package shared.network.commands.responses;
 
-import shared.clientInfo.ClientToolCard;
+import shared.clientinfo.ClientToolCard;
 
 import java.util.ArrayList;
 

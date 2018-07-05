@@ -2,7 +2,7 @@ package server.model.wpc;
 
 import server.model.dicebag.Color;
 import server.model.dicebag.Dice;
-import shared.clientInfo.Position;
+import shared.clientinfo.Position;
 
 public class Cell {
     private Dice dice;

@@ -1,6 +1,6 @@
 package shared.network.commands.notifications;
 
-import shared.clientInfo.ClientPoc;
+import shared.clientinfo.ClientPoc;
 
 import java.util.ArrayList;
 

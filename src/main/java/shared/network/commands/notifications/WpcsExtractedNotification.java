@@ -1,6 +1,6 @@
 package shared.network.commands.notifications;
 
-import shared.clientInfo.ClientWpc;
+import shared.clientinfo.ClientWpc;
 
 import java.util.ArrayList;
 import java.util.HashMap;

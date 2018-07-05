@@ -1,6 +1,6 @@
 package shared.network.commands.responses;
 
-import shared.clientInfo.ClientUser;
+import shared.clientinfo.ClientUser;
 
 public class GetUserStatResponse implements Response {
     public final ClientUser user;

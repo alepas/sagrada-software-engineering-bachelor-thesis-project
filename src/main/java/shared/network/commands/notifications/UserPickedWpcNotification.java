@@ -1,6 +1,6 @@
 package shared.network.commands.notifications;
 
-import shared.clientInfo.ClientWpc;
+import shared.clientinfo.ClientWpc;
 
 public class UserPickedWpcNotification implements Notification {
     public final String username;

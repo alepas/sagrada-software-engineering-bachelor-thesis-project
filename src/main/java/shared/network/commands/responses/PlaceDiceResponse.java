@@ -1,9 +1,9 @@
 package shared.network.commands.responses;
 
-import shared.clientInfo.ClientDice;
-import shared.clientInfo.ClientRoundTrack;
-import shared.clientInfo.ClientWpc;
-import shared.clientInfo.NextAction;
+import shared.clientinfo.ClientDice;
+import shared.clientinfo.ClientRoundTrack;
+import shared.clientinfo.ClientWpc;
+import shared.clientinfo.NextAction;
 
 import java.util.ArrayList;
 

@@ -3,7 +3,7 @@ package client.view.cli.cli;
 import client.constants.CliConstants;
 import client.controller.CliController;
 import client.view.Status;
-import shared.clientInfo.*;
+import shared.clientinfo.*;
 import shared.network.commands.notifications.*;
 
 import java.io.BufferedReader;

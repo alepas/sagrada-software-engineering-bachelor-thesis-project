@@ -3,7 +3,7 @@ package server.model.wpc;
 
 import org.junit.Before;
 import org.junit.Test;
-import shared.clientInfo.ClientWpc;
+import shared.clientinfo.ClientWpc;
 
 import static org.junit.Assert.*;
 

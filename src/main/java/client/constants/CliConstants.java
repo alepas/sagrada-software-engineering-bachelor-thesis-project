@@ -7,6 +7,9 @@ import org.json.simple.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Contains all constants related to the the cli
+ */
 public class CliConstants {
     private static final JSONObject jsonClientObject = ClientConfigLoader.jsonClientObject;
     private static final JSONObject jsonLanguage = ClientConfigLoader.jsonClientLanguage;

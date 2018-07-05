@@ -11,7 +11,7 @@ import server.model.dicebag.Color;
 import server.model.users.DatabaseUsers;
 import server.model.users.PlayerInGame;
 import server.model.wpc.WpcDB;
-import shared.clientInfo.ClientWpc;
+import shared.clientinfo.ClientWpc;
 import shared.exceptions.gameexceptions.InvalidMultiPlayerGamePlayersException;
 import shared.exceptions.gameexceptions.MaxPlayersExceededException;
 import shared.exceptions.gameexceptions.UserAlreadyInThisGameException;

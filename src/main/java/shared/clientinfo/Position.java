@@ -1,7 +1,10 @@
-package shared.clientInfo;
+package shared.clientinfo;
 
 import java.io.Serializable;
 
+/**
+ * Class that contains the postion of cells
+ */
 public class Position implements Serializable {
     private int row;
     private int column;
