@@ -98,6 +98,7 @@ public class GameController implements Observer, NotificationHandler {
     @FXML
     private ImageView plusOneIcon;
 
+
     private NetworkClient networkClient;
     private ClientInfo clientInfo;
     private String username;
@@ -229,7 +230,12 @@ public class GameController implements Observer, NotificationHandler {
         networkClient = NetworkClient.getInstance();
         clientInfo = ClientInfo.getInstance();
         clientInfo.addObserver(this);
-
+/*
+        if(clientInfo.ge){
+            scoreBoard.setVisible(true);
+            boardGame.setVisible(false);
+        }
+*/
         //game parameters
         username = clientInfo.getUsername();
         toolCardsIDs = clientInfo.getGameToolCards();

@@ -66,10 +66,6 @@ public class SetNewGameController implements Observer, NotificationHandler {
     private Label lab2 = new Label();
     private Label lab3 = new Label();
 
-
-    @FXML
-    private AnchorPane clockArea;
-
     @FXML
     private AnchorPane privateObjArea;
 
@@ -77,16 +73,16 @@ public class SetNewGameController implements Observer, NotificationHandler {
     private AnchorPane selectionArea;
 
     @FXML
-    private Button createGameButton;
+    public AnchorPane wpcSelection;
 
     @FXML
-    private Button disconnectionButton;
+    private Button createGameButton;
 
     @FXML
     private Button personalAreaButton;
 
-     @FXML
-     private Button reconnectionButton;
+    @FXML
+    private Button reconnectionButton;
 
     @FXML
     private Circle fourthWpcCircle4;
@@ -242,9 +238,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
 
         fourthWPC.setOnMouseClicked(event -> pickWpc(event, wpc3ID));
 
-        reconnectionButton.setOnAction(this::waitPlayGameAfterDisconnection);
-
-        disconnectionButton.setOnAction(event -> changeSceneHandle(event, "/client/view/gui/fxml/StartingScene.fxml"));
+        reconnectionButton.setOnAction(event -> changeSceneHandle(event, "/client/view/gui/fxml/StartingScene.fxml"));
     }
 
 
@@ -464,30 +458,25 @@ public class SetNewGameController implements Observer, NotificationHandler {
      */
     private void setVisibleWpcSelection(){
         Platform.runLater(()->{
-            clockArea.setVisible(true);
-            firstWPC.setVisible(true);
-            secondWPC.setVisible(true);
-            thirdWPC.setVisible(true);
-            fourthWPC.setVisible(true);
+            wpcSelection.setVisible(true);
             for (ClientColor color : colors) {
                 String style = PRIVATE_OBJ_IDENTIFIER_CSS.concat(String.valueOf(color).toLowerCase());
                 privateObjArea.setId(style);
-                privateObjArea.getStyleClass().add("card-style");
+                privateObjArea.getStyleClass().add(CARD_STYLE);
 
             }
         });
-        startClockAnimation();
+        if (reconnected) {
+            int time = clientInfo.getTimeLeftToCompleteTask() / 1000;
+            startClockAnimation(time);
+        }
     }
 
     /**
      * Animates the clock label to show time passing.
      */
-    private void startClockAnimation(){
+    private void startClockAnimation(int time){
         Timer timer = new Timer();
-        int time;
-
-        if (!reconnected)time = 60;
-        else time = clientInfo.getTimeLeftToCompleteTask()/1000;
 
         timer.scheduleAtFixedRate(new TimerTask() {
             int clock = time;
@@ -693,6 +682,7 @@ public class SetNewGameController implements Observer, NotificationHandler {
 
     @Override
     public void handle(WpcsExtractedNotification notification) {
+        startClockAnimation(notification.timeToCompleteTask/ 1000);
         userWpcs = notification.wpcsByUser.get(clientInfo.getUsername());
         areWpcExtracted = true;
         synchronized (wpcWaiter){ wpcWaiter.notifyAll();}
@@ -794,12 +784,12 @@ public class SetNewGameController implements Observer, NotificationHandler {
 
     @Override
     public void handle(ForceDisconnectionNotification notification) {
-        Platform.runLater(disconnectionButton::fire);
+        Platform.runLater(reconnectionButton::fire);
     }
 
     @Override
     public void handle(ForceStartGameNotification notification) {
-        Platform.runLater(disconnectionButton::fire);
+        Platform.runLater(reconnectionButton::fire);
     }
 
 }

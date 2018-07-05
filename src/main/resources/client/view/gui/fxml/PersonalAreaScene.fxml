@@ -35,18 +35,18 @@
             <Label contentDisplay="CENTER" prefHeight="20.0" prefWidth="147.0" styleClass="Label"
                    text="Area Personale" underline="true" GridPane.columnSpan="2"/>
             <Label styleClass="Label" text="-Username:" GridPane.rowIndex="1"/>
-            <Label styleClass="Label" text="-Token:" GridPane.rowIndex="2"/>
+            <Label styleClass="Label" text="-Punteggio:" GridPane.rowIndex="2"/>
             <Label fx:id="personalAreaUsername" styleClass="Label" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
             <Label fx:id="personalAreaRanking" styleClass="Label" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 
             <Label styleClass="Label" text="Statistics" underline="true" GridPane.columnSpan="2"
                GridPane.rowIndex="4"/>
-            <Label styleClass="Label" text="-Won game:" GridPane.rowIndex="5"/>
-            <Label styleClass="Label" text="-Lost Game:" GridPane.rowIndex="6"/>
-            <Label styleClass="Label" text="-Score:" GridPane.rowIndex="7"/>
+            <Label styleClass="Label" text="-Giochi vinti:" GridPane.rowIndex="5"/>
+            <Label styleClass="Label" text="-Giochi persi:" GridPane.rowIndex="6"/>
+            <Label styleClass="Label" text="-Giochi abbandonati:" GridPane.rowIndex="7"/>
             <Label fx:id="personalAreaWon" styleClass="Label" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
             <Label fx:id="personalAreaLost" styleClass="Label" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
-            <Label fx:id="personalAreaScore" styleClass="Label" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+            <Label fx:id="personalAreaAbandoned" styleClass="Label" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
         </GridPane>
 
         <Button fx:id="newGameButton" layoutX="203.0" layoutY="462.0" styleClass="Button" text="New game"/>

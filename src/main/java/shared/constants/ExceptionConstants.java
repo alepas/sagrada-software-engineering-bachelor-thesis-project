@@ -121,4 +121,7 @@ public class ExceptionConstants {
     public static String INVALID_WPC_ID;
     public static String NOT_EXISTING_CELL;
 
+    public static String INVALID_NUM_PLAYERS;
+    public static String INVALID_TOOLCARD_LEVEL;
+
 }

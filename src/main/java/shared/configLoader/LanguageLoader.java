@@ -100,5 +100,8 @@ public class LanguageLoader {
         PLAYER_NOT_AUTHORIZED_P2 = (String) jsonLanguage.get("PLAYER_NOT_AUTHORIZED_P2");
         INVALID_WPC_ID = (String) jsonLanguage.get("INVALID_WPC_ID");
         NOT_EXISTING_CELL = (String) jsonLanguage.get("NOT_EXISTING_CELL");
+
+        INVALID_NUM_PLAYERS = (String) jsonLanguage.get("INVALID_NUM_PLAYERS");
+        INVALID_TOOLCARD_LEVEL = (String) jsonLanguage.get("INVALID_TOOLCARD_LEVEL");
     }
 }

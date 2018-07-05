@@ -337,6 +337,7 @@ public class ClientInfo implements Observer, NotificationHandler {
 
     @Override
     public void handle(ToolCardDiceChangedNotification notification) {
+        //not used in this class
     }
 
     @Override
@@ -360,31 +361,32 @@ public class ClientInfo implements Observer, NotificationHandler {
 
     @Override
     public void handle(PlayerSkipTurnNotification notification) {
-
+        //not used in this class
     }
 
     @Override
     public void handle(ScoreNotification notification) {
-
+        //not used in this class
     }
 
     @Override
     public void handle(ToolCardDicePlacedNotification notification) {
-
+        //not used in this class
     }
 
     @Override
     public void handle(ToolCardExtractedDicesModifiedNotification notification) {
+        //not used in this class
     }
 
     @Override
     public void handle(PlayerDisconnectedNotification playerDisconnectedNotification) {
-
+        //not used in this class
     }
 
     @Override
     public void handle(PlayerReconnectedNotification playerReconnectedNotification) {
-
+        //not used in this class
     }
 
     @Override

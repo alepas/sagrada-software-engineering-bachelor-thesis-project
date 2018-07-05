@@ -33,7 +33,7 @@ public class PersonalAreaController {
     private Label personalAreaLost;
 
     @FXML
-    private Label personalAreaScore;
+    private Label personalAreaAbandoned;
 
     @FXML
     private Button newGameButton;
@@ -55,7 +55,7 @@ public class PersonalAreaController {
             personalAreaRanking.setText(String.valueOf(clientUser.getRanking()));
             personalAreaWon.setText(String.valueOf(clientUser.getWonGames()));
             personalAreaLost.setText(String.valueOf(clientUser.getLostGames()));
-            personalAreaScore.setText(String.valueOf(clientUser.getAbandonedGames()));
+            personalAreaAbandoned.setText(String.valueOf(clientUser.getRanking()));
         }
         catch (CannotFindUserInDBException e) {
             personalAreaErrorLabel.setText(e.getMessage());
