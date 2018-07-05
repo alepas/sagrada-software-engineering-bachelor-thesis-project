@@ -1,5 +1,8 @@
 package server.constants;
 
+import org.json.simple.JSONObject;
+import server.model.configLoader.ConfigLoader;
+
 /**
  * This class contains all constants related to the toolcards;
  * for each card there are four constants:
@@ -8,64 +11,42 @@ package server.constants;
  * - the description which is used to explain to the player what can be done by activating it
  */
 public class ToolCardConstants {
+    private static final JSONObject jsonServerObject = ConfigLoader.jsonServerObject;
+    private static final JSONObject jsonToolcard = (JSONObject) jsonServerObject.get("toolcard");
 
     //ToolCard1
-    public static String TOOLCARD1_ID;
-    public static String TOOL1_NAME;
-    public static String TOOL1_DESCRIPTION;
+    public static final String TOOLCARD1_ID = (String) jsonToolcard.get("TOOLCARD1_ID");
 
     //ToolCard2
-    public static String TOOLCARD2_ID;
-    public static String TOOL2_NAME;
-    public static String TOOL2_DESCRIPTION;
+    public static final String TOOLCARD2_ID = (String) jsonToolcard.get("TOOLCARD2_ID");
 
     //ToolCard3
-    public static String TOOLCARD3_ID;
-    public static String TOOL3_NAME;
-    public static String TOOL3_DESCRIPTION;
+    public static final String TOOLCARD3_ID = (String) jsonToolcard.get("TOOLCARD3_ID");
 
     //ToolCard4
-    public static String TOOLCARD4_ID;
-    public static String TOOL4_NAME;
-    public static String TOOL4_DESCRIPTION;
+    public static final String TOOLCARD4_ID = (String) jsonToolcard.get("TOOLCARD4_ID");
 
     //ToolCard5
-    public static String TOOLCARD5_ID;
-    public static String TOOL5_NAME;
-    public static String TOOL5_DESCRIPTION;
+    public static final String TOOLCARD5_ID = (String) jsonToolcard.get("TOOLCARD5_ID");
 
     //ToolCard6
-    public static String TOOLCARD6_ID;
-    public static String TOOL6_NAME;
-    public static String TOOL6_DESCRIPTION;
+    public static final String TOOLCARD6_ID = (String) jsonToolcard.get("TOOLCARD6_ID");
 
     //ToolCard7
-    public static String TOOLCARD7_ID;
-    public static String TOOL7_NAME;
-    public static String TOOL7_DESCRIPTION;
+    public static final String TOOLCARD7_ID = (String) jsonToolcard.get("TOOLCARD7_ID");
 
     //ToolCard8
-    public static String TOOLCARD8_ID;
-    public static String TOOL8_NAME;
-    public static String TOOL8_DESCRIPTION;
+    public static final String TOOLCARD8_ID = (String) jsonToolcard.get("TOOLCARD8_ID");
 
     //ToolCard9
-    public static String TOOLCARD9_ID;
-    public static String TOOL9_NAME;
-    public static String TOOL9_DESCRIPTION;
+    public static final String TOOLCARD9_ID = (String) jsonToolcard.get("TOOLCARD9_ID");
 
     //ToolCard10
-    public static String TOOLCARD10_ID;
-    public static String TOOL10_NAME;
-    public static String TOOL10_DESCRIPTION;
+    public static final String TOOLCARD10_ID = (String) jsonToolcard.get("TOOLCARD10_ID");
 
     //ToolCard11
-    public static String TOOLCARD11_ID;
-    public static String TOOL11_NAME;
-    public static String TOOL11_DESCRIPTION;
+    public static final String TOOLCARD11_ID = (String) jsonToolcard.get("TOOLCARD11_ID");
 
     //ToolCard12
-    public static String TOOLCARD12_ID;
-    public static String TOOL12_NAME;
-    public static String TOOL12_DESCRIPTION;
+    public static final String TOOLCARD12_ID = (String) jsonToolcard.get("TOOLCARD12_ID");
 }

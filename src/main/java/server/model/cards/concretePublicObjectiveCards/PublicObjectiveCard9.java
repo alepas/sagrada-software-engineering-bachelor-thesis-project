@@ -6,6 +6,7 @@ import server.model.cards.PublicObjectiveCard;
 import server.model.dicebag.Color;
 import server.model.dicebag.Dice;
 import server.model.wpc.Wpc;
+import shared.constants.PocConstants;
 
 import java.util.ArrayList;
 
@@ -16,8 +17,8 @@ public class PublicObjectiveCard9  extends PublicObjectiveCard {
      */
     public PublicObjectiveCard9(){
         this.id = POCConstants.POC9_ID;
-        this.name = POCConstants.POC9_NAME;
-        this.description = POCConstants.POC9_DESCRIPTION;
+        this.name = PocConstants.POC9_NAME;
+        this.description = PocConstants.POC9_DESCRIPTION;
     }
 
     /**

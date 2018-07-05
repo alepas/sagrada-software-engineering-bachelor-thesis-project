@@ -4,6 +4,7 @@ import server.constants.POCConstants;
 import server.constants.WpcConstants;
 import server.model.cards.PublicObjectiveCard;
 import server.model.wpc.Wpc;
+import shared.constants.PocConstants;
 
 public class PublicObjectiveCard8  extends PublicObjectiveCard {
 
@@ -12,8 +13,8 @@ public class PublicObjectiveCard8  extends PublicObjectiveCard {
      */
     public PublicObjectiveCard8(){
         this.id = POCConstants.POC8_ID;
-        this.name = POCConstants.POC8_NAME;
-        this.description = POCConstants.POC8_DESCRIPTION;
+        this.name = PocConstants.POC8_NAME;
+        this.description = PocConstants.POC8_DESCRIPTION;
     }
 
     /**

@@ -8,6 +8,7 @@ import server.model.users.MoveData;
 import server.model.users.PlayerInGame;
 import server.model.wpc.DiceAndPosition;
 import shared.clientInfo.*;
+import shared.constants.ToolcardConstants;
 import shared.exceptions.usersAndDatabaseExceptions.*;
 import shared.network.commands.notifications.DicePlacedNotification;
 import shared.network.commands.notifications.ToolCardDicePlacedNotification;
@@ -23,8 +24,8 @@ public class ToolCard8 extends ToolCard {
      */
     public ToolCard8() {
         this.id = ToolCardConstants.TOOLCARD8_ID;
-        this.name = ToolCardConstants.TOOL8_NAME;
-        this.description = ToolCardConstants.TOOL8_DESCRIPTION;
+        this.name = ToolcardConstants.TOOL8_NAME;
+        this.description = ToolcardConstants.TOOL8_DESCRIPTION;
         this.colorForDiceSingleUser = Color.RED;
         this.allowPlaceDiceAfterCard = false;
         this.cardBlocksNextTurn = true;

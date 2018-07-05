@@ -4,6 +4,7 @@ import client.configLoader.ClientConfigLoader;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import java.util.ArrayList;
+import java.util.List;
 
 public class CliConstants {
     private static final JSONObject jsonClientObject = ClientConfigLoader.jsonClientObject;
@@ -14,16 +15,16 @@ public class CliConstants {
     public static final int WPC_SPACING = ((Long) jsonClientObject.get("WPC_SPACING")).intValue();
     public static final int[] WPC_WAITING_STEPS = getSteps((JSONArray) jsonClientObject.get("WPC_WAITING_STEPS"));
 
-    public static final String YES_RESPONSE = (String) jsonLanguage.get("YES_RESPONSE");;
-    public static final String NO_RESPONSE = (String) jsonLanguage.get("NO_RESPONSE");;
+    public static final String YES_RESPONSE = (String) jsonLanguage.get("YES_RESPONSE");
+    public static final String NO_RESPONSE = (String) jsonLanguage.get("NO_RESPONSE");
     public static final String ESCAPE_RESPONSE = (String) jsonLanguage.get("ESCAPE_RESPONSE");
     public static final String QUIT_RESPONSE = (String) jsonLanguage.get("QUIT_RESPONSE");
 
     public static final String SOCKET_OR_RMI = (String) jsonLanguage.get("SOCKET_OR_RMI");
-    public static final ArrayList<String> SOCKET_RESPONSES = getArrayElements((JSONArray) jsonLanguage.get("SOCKET_RESPONSES"));
+    public static final List<String> SOCKET_RESPONSES = getArrayElements((JSONArray) jsonLanguage.get("SOCKET_RESPONSES"));
 
-    public static final ArrayList<String> RMI_RESPONSES = getArrayElements((JSONArray) jsonLanguage.get("RMI_RESPONSES"));
-    public static final ArrayList<String> QUIT_RESPONSES = getQuitResponses((JSONArray) jsonLanguage.get("QUIT_RESPONSES"));
+    public static final List<String> RMI_RESPONSES = getArrayElements((JSONArray) jsonLanguage.get("RMI_RESPONSES"));
+    public static final List<String> QUIT_RESPONSES = getQuitResponses((JSONArray) jsonLanguage.get("QUIT_RESPONSES"));
 
     public static final String INSTRUCTION_NOT_RECOGNIZED = jsonLanguage.get("INSTRUCTION_NOT_RECOGNIZED_P1")
             + SOCKET_RESPONSES.get(0) + jsonLanguage.get("INSTRUCTION_NOT_RECOGNIZED_P2") +

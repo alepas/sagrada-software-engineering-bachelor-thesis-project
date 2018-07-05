@@ -15,7 +15,6 @@ public class LaunchClient {
     }
 
     public static void main(String[] args) {
-        ClientConfigLoader.loadConfig();
 //        printLogo();
 
         String answer;

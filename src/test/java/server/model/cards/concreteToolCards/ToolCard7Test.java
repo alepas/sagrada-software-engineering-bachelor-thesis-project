@@ -15,6 +15,7 @@ import shared.clientInfo.ClientDice;
 import shared.clientInfo.ClientDiceLocations;
 import shared.clientInfo.Position;
 import shared.clientInfo.ToolCardInteruptValues;
+import shared.constants.ToolcardConstants;
 import shared.exceptions.usersAndDatabaseExceptions.CannotCancelActionException;
 import shared.exceptions.usersAndDatabaseExceptions.CannotInteruptToolCardException;
 import shared.exceptions.usersAndDatabaseExceptions.CannotPerformThisMoveException;
@@ -70,8 +71,8 @@ public class ToolCard7Test {
     @Test
     public void toolCardTest(){
         assertEquals("7", toolCard7.getID());
-        assertEquals(ToolCardConstants.TOOL7_NAME, toolCard7.getName());
-        assertEquals(ToolCardConstants.TOOL7_DESCRIPTION, toolCard7.getDescription());
+        assertEquals(ToolcardConstants.TOOL7_NAME, toolCard7.getName());
+        assertEquals(ToolcardConstants.TOOL7_DESCRIPTION, toolCard7.getDescription());
         assertEquals(0, toolCard7.getCurrentStatus());
     }
 

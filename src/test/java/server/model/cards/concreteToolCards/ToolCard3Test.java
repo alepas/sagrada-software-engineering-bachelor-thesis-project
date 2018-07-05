@@ -15,6 +15,7 @@ import server.model.wpc.Cell;
 import server.model.wpc.DiceAndPosition;
 import server.model.wpc.Wpc;
 import shared.clientInfo.*;
+import shared.constants.ToolcardConstants;
 import shared.exceptions.usersAndDatabaseExceptions.*;
 
 import java.util.ArrayList;
@@ -78,8 +79,8 @@ public class ToolCard3Test {
     @Test
     public void toolCardTest(){
         assertEquals("3", toolCard3.getID());
-        assertEquals(ToolCardConstants.TOOL3_NAME, toolCard3.getName());
-        assertEquals(ToolCardConstants.TOOL3_DESCRIPTION, toolCard3.getDescription());
+        assertEquals(ToolcardConstants.TOOL3_NAME, toolCard3.getName());
+        assertEquals(ToolcardConstants.TOOL3_DESCRIPTION, toolCard3.getDescription());
         assertEquals(0, toolCard3.getCurrentStatus());
     }
 
