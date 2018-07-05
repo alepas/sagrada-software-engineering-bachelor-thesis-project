@@ -23,6 +23,9 @@ public class CliConstants {
     public static final String ESCAPE_RESPONSE = (String) jsonLanguage.get("ESCAPE_RESPONSE");
     public static final String QUIT_RESPONSE = (String) jsonLanguage.get("QUIT_RESPONSE");
 
+    public static final List<String> CLI_RESPONSES = getArrayElements((JSONArray) jsonLanguage.get("CLI_RESPONSES"));
+    public static final List<String> GUI_RESPONSES = getArrayElements((JSONArray) jsonLanguage.get("GUI_RESPONSES"));
+
     public static final String SOCKET_OR_RMI = (String) jsonLanguage.get("SOCKET_OR_RMI");
     public static final List<String> SOCKET_RESPONSES = getArrayElements((JSONArray) jsonLanguage.get("SOCKET_RESPONSES"));
 
@@ -45,6 +48,11 @@ public class CliConstants {
     public static final String PRESENT_QUIT = ENTER + QUIT_RESPONSE + jsonLanguage.get("PRESENT_QUIT");
     public static final String INSERT_YES_OR_NO = jsonLanguage.get("INSERT_YES_OR_NO_P1") + YES_RESPONSE +
             jsonLanguage.get("INSERT_YES_OR_NO_P2") + NO_RESPONSE + jsonLanguage.get("INSERT_YES_OR_NO_P3");
+
+    public static final String CLI_OR_GUI = (String) jsonLanguage.get("CLI_OR_GUI") + PRESENT_QUIT;
+
+    public static final String ENTER_GAME = (String) jsonLanguage.get("ENTER_GAME");
+    public static final String PLAYER_CONNECTED = (String) jsonLanguage.get("PLAYER_CONNECTED");
 
     public static final String CHOOSE_LOG_TYPE = jsonLanguage.get("CHOOSE_LOG_TYPE_P1") + YES_RESPONSE +
             jsonLanguage.get("CHOOSE_LOG_TYPE_P2") + NO_RESPONSE + PRESENT_QUIT;
@@ -188,6 +196,10 @@ public class CliConstants {
 
     public static final String GAME_ENDED = (String) jsonLanguage.get("GAME_ENDED");
     public static final String FINAL_TABLE = (String) jsonLanguage.get("FINAL_TABLE");
+
+    public static final String TURN_TIME_ENDED = (String) jsonLanguage.get("TURN_TIME_ENDED");
+    public static final String TURN_TIME_LEFT_P1 = (String) jsonLanguage.get("TURN_TIME_LEFT_P1");
+    public static final String TURN_TIME_LEFT_P2 = (String) jsonLanguage.get("TURN_TIME_LEFT_P2");
 
     private static ArrayList<String> getArrayElements(JSONArray array) {
         ArrayList<String> elements = new ArrayList<>();

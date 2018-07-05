@@ -2,12 +2,14 @@ package client.controller;
 
 import client.network.ClientInfo;
 import client.network.NetworkClient;
-import client.view.cli.CliView;
 import shared.clientinfo.*;
+
+import client.view.cli.cli.CliView;
 import shared.exceptions.gameexceptions.CannotCreatePlayerException;
 import shared.exceptions.gameexceptions.InvalidGameParametersException;
 import shared.exceptions.gameexceptions.NotYourWpcException;
 import shared.exceptions.usersAndDatabaseExceptions.*;
+import static client.constants.CliConstants.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -79,9 +81,9 @@ public class CliController {
 
         String gameID = clientInfo.getGameID();
         if (gameID != null) {
-            view.displayText("Entrato nella partita: " + gameID);
-            view.displayText("Giocatori presenti: " + clientInfo.getGameActualPlayers() +
-                    " di " + clientInfo.getGameNumPlayers() + " necessari.");
+            view.displayText(ENTER_GAME + gameID);
+            view.displayText(PLAYER_CONNECTED + clientInfo.getGameActualPlayers() +
+                    OF + clientInfo.getGameNumPlayers() + NEEDED);
             if (clientInfo.getGameActualPlayers() == clientInfo.getGameNumPlayers()) return 1;
             return 0;
         } else {
@@ -108,7 +110,7 @@ public class CliController {
             client.passTurn(clientInfo.getUserToken());
             return true;
         } catch (PlayerNotAuthorizedException e) {
-            view.displayText("Non puoi eseguire questo comando poichè non è il turno");
+            view.displayText(e.getMessage());
         } catch (CannotFindPlayerInDatabaseException e) {
             e.printStackTrace();
             //TODO
@@ -123,9 +125,7 @@ public class CliController {
             return client.placeDice(clientInfo.getUserToken(), id, position);
         } catch (CannotFindPlayerInDatabaseException e) {
             e.printStackTrace();
-        } catch (CannotPickPositionException e) {
-            view.displayText("Impossibile posizionare il dado: posizione non valida");
-        } catch (CannotPickDiceException |PlayerNotAuthorizedException|CannotPerformThisMoveException e) {
+        } catch (CannotPickPositionException | CannotPickDiceException | PlayerNotAuthorizedException | CannotPerformThisMoveException e) {
             view.displayText(e.getMessage());
         }
         return null;

@@ -1,4 +1,4 @@
-package client.view.cli;
+package client.view.cli.cli;
 
 import client.controller.CliController;
 

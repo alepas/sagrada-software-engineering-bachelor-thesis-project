@@ -25,8 +25,8 @@ public class ClientConfigLoader {
     }
 
     private static JSONObject getClientLanguageObject() {
-        FileReader reader = null;
         try {
+            FileReader reader;
             try {
                 FileLoader.createDir("config/languages/client");
                 FileLoader.setFile("./config/languages/client","/client/configLoader/language/" + language + ".json");

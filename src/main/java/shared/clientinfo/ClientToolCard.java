@@ -7,8 +7,8 @@ import java.io.Serializable;
  */
 public class ClientToolCard implements Serializable {
     private final String id;
-    private final String name;
-    private final String description;
+    private String name;
+    private String description;
     private final Boolean used;
     private final ClientColor color;
 
@@ -46,4 +46,12 @@ public class ClientToolCard implements Serializable {
     }
 
     public ClientColor getColor(){ return color;}
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

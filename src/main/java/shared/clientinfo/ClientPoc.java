@@ -7,8 +7,8 @@ import java.io.Serializable;
  */
 public class ClientPoc implements Serializable {
     private final String id;
-    private final String name;
-    private final String description;
+    private String name;
+    private String description;
 
     /**
      * @param id is th epublic object id
@@ -31,5 +31,13 @@ public class ClientPoc implements Serializable {
 
     public String getDescription() {
         return description;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

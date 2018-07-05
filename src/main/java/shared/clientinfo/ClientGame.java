@@ -1,5 +1,8 @@
 package shared.clientinfo;
 
+import shared.constants.PocConstants;
+import shared.constants.ToolcardConstants;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -108,6 +111,10 @@ public class ClientGame implements Serializable {
     }
 
     public void setToolCards(ArrayList<ClientToolCard> toolCards) {
+        for(ClientToolCard card : toolCards){
+            card.setName(ToolcardConstants.TOOL_NAMES[Integer.parseInt(card.getId()) - 1]);
+            card.setDescription(ToolcardConstants.TOOL_DESCRIPTIONS[Integer.parseInt(card.getId()) - 1]);
+        }
         this.toolCards = toolCards;
     }
 
@@ -116,6 +123,10 @@ public class ClientGame implements Serializable {
     }
 
     public void setPublicObjectiveCards(ArrayList<ClientPoc> publicObjectiveCards) {
+        for(ClientPoc card : publicObjectiveCards){
+            card.setName(PocConstants.POC_NAMES[Integer.parseInt(card.getId()) - 1]);
+            card.setDescription(PocConstants.POC_DESCRIPTIONS[Integer.parseInt(card.getId()) - 1]);
+        }
         this.publicObjectiveCards = publicObjectiveCards;
     }
 

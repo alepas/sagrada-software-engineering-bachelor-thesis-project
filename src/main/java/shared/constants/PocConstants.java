@@ -38,4 +38,10 @@ public class PocConstants {
 
     public static final String POC10_NAME = (String) jsonLanguage.get("POC10_NAME");
     public static final String POC10_DESCRIPTION = (String) jsonLanguage.get("POC10_DESCRIPTION");
+
+    public static final String[] POC_NAMES = {POC1_NAME, POC2_NAME, POC3_NAME, POC4_NAME, POC5_NAME, POC6_NAME,
+            POC7_NAME, POC8_NAME, POC1_NAME, POC9_NAME, POC10_NAME };
+    public static final String[] POC_DESCRIPTIONS = {POC1_DESCRIPTION, POC2_DESCRIPTION, POC3_DESCRIPTION, POC4_DESCRIPTION, POC5_DESCRIPTION, POC6_DESCRIPTION,
+            POC7_DESCRIPTION, POC8_DESCRIPTION, POC1_DESCRIPTION, POC9_DESCRIPTION, POC10_DESCRIPTION };
+
 }
