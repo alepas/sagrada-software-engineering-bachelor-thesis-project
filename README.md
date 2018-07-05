@@ -8,7 +8,7 @@
 ##Test Coverage: 31.8%
 
 ##Uml image
-![GitHub Logo](uml pasini piovani zorzenon.png)
+![Uml image](uml-pasini-piovani-zorzenon.png "Uml diviso per Client, Shared e Server")
 
 ##Functions
 * Complete rules
