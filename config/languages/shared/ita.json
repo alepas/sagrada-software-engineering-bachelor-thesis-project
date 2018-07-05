@@ -92,7 +92,9 @@
   "PLAYER_NOT_AUTHORIZED_P1": "Il giocatore ",
   "PLAYER_NOT_AUTHORIZED_P2": " non può eseguire azioni in questo momento.\r\nÈ il turno di un altro giocatore.",
   "INVALID_WPC_ID": "Non esiste una Wpc con questo id: ",
-  "NOT_EXISTING_CELL": "Questa cella non esiste: ("
+  "NOT_EXISTING_CELL": "Questa cella non esiste: (",
+  "INVALID_NUM_PLAYERS": "Non è possibile trovere una artita con questo numero di giocatori",
+  "INVALID_TOOLCARD_LEVEL": "Cannot find a game with this level: ",
 
   "TOOL1_NAME": "Pinza Sgrossatrice",
   "TOOL1_DESCRIPTION": "Dopo aver scelto un dado, aumenta o diminuisci il valore del dado scelto di 1.\nNon puoi cambiare un 6 in 1 o un 1 in 6.",

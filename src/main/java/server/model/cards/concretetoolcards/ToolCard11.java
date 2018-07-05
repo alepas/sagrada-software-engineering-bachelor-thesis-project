@@ -297,7 +297,7 @@ public class ToolCard11 extends ToolCard {
     //----------------------------------- Used in testing -------------------------------------------------------
 
 
-    int getNumberSize() {
+    public int getNumberSize() {
         return numbers.size();
     }
 
