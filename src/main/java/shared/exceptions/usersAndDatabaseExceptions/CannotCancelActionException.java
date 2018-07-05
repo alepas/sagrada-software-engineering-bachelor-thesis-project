@@ -9,20 +9,39 @@ public class CannotCancelActionException extends Exception{
     private String cardID;
 
 
+    /**
+     * Constructor of this which has only the user variable and sets the cirdID to null and mode to 0
+     * @param user is the player username
+     */
     public CannotCancelActionException(String user){
         this.user=user;
         this.cardID=null;
         this.mode=0;
     }
+
+    /**
+     * Constructor of this.
+     *
+     * @param user is the player username
+     * @param card is the toolcard id
+     * @param mode is the exception id
+     */
     public CannotCancelActionException(String user, String card, int mode) {
         this.user=user;
         this.cardID = card;
         this.mode=mode;
     }
 
+    /**
+     * @return a string containing the message related to the exception:
+     * - if the mode's id is 0 the string will tell that it is not possible to cancel the action
+     * - if the mode's id is 1 the string will tell that the toolcard request must be end
+     * - if the mode's id is 2 the string will tell that it is not possible to cancel the toolcard for the player
+     * - if the mode's id is 3 the string will tell that it is not possible to cancel the action because of an
+     *      internal problem
+     */
     @Override
     public String getMessage() {
-        String temp;
         switch (mode) {
             case 0:
                 return ExceptionConstants.CANNOT_CANCEL_ACTION_0 + user;
@@ -36,7 +55,8 @@ public class CannotCancelActionException extends Exception{
             case 3:
                 return  ExceptionConstants.CANNOT_CANCEL_ACTION_3_P1 + user +
                         ExceptionConstants.CANNOT_CANCEL_ACTION_3_P2 + cardID;
-
+            default:
+                break;
         }
         return null;
     }

@@ -129,10 +129,10 @@ public abstract class ToolCard implements Cloneable {
     /**
      * @param value can be YES, OK, NO
      * @return the next action with all parameters related to the next status
-     * @throws CannotInteruptToolCardException if the status isn't correct and for that reason it is not possible to
+     * @throws CannotInterruptToolCardException if the status isn't correct and for that reason it is not possible to
      * interrupt the tool card
      */
-    public abstract MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException;
+    public abstract MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInterruptToolCardException;
 
     /**
      * @param all boolean
@@ -224,7 +224,7 @@ public abstract class ToolCard implements Cloneable {
     protected MoveData pickDiceInitializeSingleUserToolCard(int diceId, NextAction nextAction, ClientDiceLocations initial, ClientDiceLocations finish) throws CannotPickDiceException {
         Dice tempDice = currentPlayer.dicePresentInLocation(diceId, ClientDiceLocations.EXTRACTED).getDice();
         if (tempDice.getDiceColor() != colorForDiceSingleUser)
-            throw new CannotPickDiceException(username, tempDice.getDiceNumber(), Color.getClientColor(tempDice.getDiceColor()), ClientDiceLocations.EXTRACTED, 1);
+            throw new CannotPickDiceException(tempDice.getDiceNumber(), Color.getClientColor(tempDice.getDiceColor()), ClientDiceLocations.EXTRACTED, 1);
         this.currentStatus = 1;
         this.diceForSingleUser = tempDice;
         cardExtractedDices.remove(this.diceForSingleUser);

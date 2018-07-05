@@ -3,14 +3,17 @@ package shared.exceptions.usersAndDatabaseExceptions;
 import shared.constants.ExceptionConstants;
 
 public class CannotPickNumberException extends Exception{
-    private int number;
-    private String user;
+    private final int number;
 
-    public CannotPickNumberException(String user, int number) {
-        //TODO: eliminare user
-        this.number=number;
-        this.user = user;
-    }
+    /**
+     * @param number is the number chosen by the player
+     */
+    public CannotPickNumberException(int number) { this.number=number; }
+
+
+    /**
+     * @return a string that tells that the chosen number is incorrect
+     */
     @Override
     public String getMessage() {
         return ExceptionConstants.CANNOT_PICK_NUMBER + number + ".";

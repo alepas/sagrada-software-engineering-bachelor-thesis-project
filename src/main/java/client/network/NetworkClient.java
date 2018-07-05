@@ -69,7 +69,7 @@ public abstract class NetworkClient implements ResponseHandler {
 
     public abstract NextAction pickNumberForToolCard(String userToken, int number) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPickNumberException, CannotPerformThisMoveException;
 
-    public abstract NextAction interuptToolCard(String userToken, ToolCardInteruptValues value) throws  CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotInteruptToolCardException, NoToolCardInUseException;
+    public abstract NextAction interuptToolCard(String userToken, ToolCardInteruptValues value) throws  CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotInterruptToolCardException, NoToolCardInUseException;
 
 
 

@@ -127,12 +127,12 @@ public class ToolCard12 extends ToolCard {
             if (pos == null)
                 throw new CannotPerformThisMoveException(username, 2, false);
             if (!checkColorInRoundTrack(tempDice))
-                throw new CannotPickDiceException(username, tempDice.getDiceNumber(), Color.getClientColor(tempDice.getDiceColor()), ClientDiceLocations.WPC, 2);
+                throw new CannotPickDiceException(tempDice.getDiceNumber(), Color.getClientColor(tempDice.getDiceColor()), ClientDiceLocations.WPC, 2);
             chosenColor = tempDice.getDiceColor();
             cardWpc.removeDice(firstDiceInitial.getPosition());
             if (!cardWpc.addDiceWithAllRestrictions(tempDice, pos)) {
                 cardWpc.addDicePersonalizedRestrictions(tempDice, firstDiceInitial.getPosition(), false, false, false, false, false);
-                throw new CannotPickPositionException(username, pos);
+                throw new CannotPickPositionException();
             }
             this.currentStatus = 20;
             updateAndCopyToGameData(true, true, false);
@@ -147,11 +147,11 @@ public class ToolCard12 extends ToolCard {
             if (pos == null)
                 throw new CannotPerformThisMoveException(username, 2, false);
             if (tempDice.getDiceColor() != chosenColor)
-                throw new CannotPickDiceException(username, tempDice.getDiceNumber(), Color.getClientColor(tempDice.getDiceColor()), ClientDiceLocations.WPC, 2);
+                throw new CannotPickDiceException(tempDice.getDiceNumber(), Color.getClientColor(tempDice.getDiceColor()), ClientDiceLocations.WPC, 2);
             cardWpc.removeDice(secondDiceInitial.getPosition());
             if (!cardWpc.addDiceWithAllRestrictions(tempDice, pos)) {
                 cardWpc.addDicePersonalizedRestrictions(tempDice, secondDiceInitial.getPosition(), false, false, false, false, false);
-                throw new CannotPickPositionException(username, pos);
+                throw new CannotPickPositionException();
             }
             this.used = true;
             updateAndCopyToGameData(true, true, false);
@@ -192,14 +192,14 @@ public class ToolCard12 extends ToolCard {
                 currentStatus = 20;
                 try {
                     return interruptToolCard(ToolCardInteruptValues.NO);
-                } catch (CannotInteruptToolCardException e) {
+                } catch (CannotInterruptToolCardException e) {
                     //impossible
                 }
                 break;
             case 20:
                 try {
                     return interruptToolCard(ToolCardInteruptValues.NO);
-                } catch (CannotInteruptToolCardException e) {
+                } catch (CannotInterruptToolCardException e) {
                     //impossible
                 }
             default: //do nothing
@@ -249,17 +249,17 @@ public class ToolCard12 extends ToolCard {
      * @param value can be YES; NO; OK
      * @return all the information related to the next action that the player will have to do and all new parameters
      * created by the call of this method
-     * @throws CannotInteruptToolCardException if the current status is different from 20
+     * @throws CannotInterruptToolCardException if the current status is different from 20
      */
     @Override
-    public MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException {
+    public MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInterruptToolCardException {
         if (currentStatus != 20)
-            throw new CannotInteruptToolCardException(username, id);
+            throw new CannotInterruptToolCardException(username, id);
         currentStatus = 2;
         if (value == ToolCardInteruptValues.YES)
             return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.WPC, ClientDiceLocations.WPC, tempClientWpc, null, null, null, null);
         if (value != ToolCardInteruptValues.NO)
-            throw new CannotInteruptToolCardException(username, id);
+            throw new CannotInterruptToolCardException(username, id);
         updateClientWPC();
         updateClientExtractedDices();
         currentGame.changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, tempClientExtractedDices, null, currentPlayer.getFavours()));

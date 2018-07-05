@@ -111,16 +111,16 @@ public class ToolCard1 extends ToolCard {
         if (currentStatus != 2)
             throw new CannotPerformThisMoveException(username, 2, false);
         if (!((number == -1) || (number == 1)))
-            throw new CannotPickNumberException(username, number);
+            throw new CannotPickNumberException(number);
 
         int tempNum = this.dice.getDiceNumber();
         if (((tempNum == 6) && (number == 1)) || ((tempNum == 1) && (number == -1)))
-            throw new CannotPickNumberException(username, number);
+            throw new CannotPickNumberException(number);
         oldDice = this.dice.copyDice();
         try {
             dice.setNumber(tempNum + number);
         } catch (IncorrectNumberException e) {
-            throw new CannotPickNumberException(username, number);
+            throw new CannotPickNumberException(number);
         }
         currentStatus = 3;
         updateClientExtractedDices();
@@ -133,11 +133,11 @@ public class ToolCard1 extends ToolCard {
     /**
      * @param value can be YES; NO; OK
      * @return always the exception
-     * @throws CannotInteruptToolCardException every time that it is called
+     * @throws CannotInterruptToolCardException every time that it is called
      */
     @Override
-    public MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException {
-        throw new CannotInteruptToolCardException(username, id);
+    public MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInterruptToolCardException {
+        throw new CannotInterruptToolCardException(username, id);
     }
 
     /**
@@ -159,9 +159,9 @@ public class ToolCard1 extends ToolCard {
         if (pos == null)
             throw new CannotPerformThisMoveException(username, 2, false);
         if (diceId != this.dice.getId())
-            throw new CannotPickDiceException(username, diceId, ClientDiceLocations.EXTRACTED, 3);
+            throw new CannotPickDiceException(diceId, ClientDiceLocations.EXTRACTED, 3);
         if (!cardWpc.addDiceWithAllRestrictions(this.dice, pos))
-            throw new CannotPickPositionException(username, pos);
+            throw new CannotPickPositionException();
         cardExtractedDices.remove(this.dice);
         currentStatus = 4;
         this.used = true;

@@ -23,7 +23,7 @@ import shared.clientInfo.ClientDiceLocations;
 import shared.clientInfo.Position;
 import shared.clientInfo.ToolCardInteruptValues;
 import shared.exceptions.usersAndDatabaseExceptions.CannotCancelActionException;
-import shared.exceptions.usersAndDatabaseExceptions.CannotInteruptToolCardException;
+import shared.exceptions.usersAndDatabaseExceptions.CannotInterruptToolCardException;
 import shared.exceptions.usersAndDatabaseExceptions.CannotPerformThisMoveException;
 import shared.exceptions.usersAndDatabaseExceptions.CannotPickDiceException;
 
@@ -223,10 +223,10 @@ public class ToolCard7Test {
 
 
     /**
-     * @throws CannotInteruptToolCardException every time that is called
+     * @throws CannotInterruptToolCardException every time that is called
      */
-    @Test(expected = CannotInteruptToolCardException.class)
-    public void interruptToolCardTest() throws CannotInteruptToolCardException {
+    @Test(expected = CannotInterruptToolCardException.class)
+    public void interruptToolCardTest() throws CannotInterruptToolCardException {
         toolCard7.interruptToolCard(ToolCardInteruptValues.YES);
     }
 

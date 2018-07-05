@@ -87,7 +87,7 @@ public class ToolCard8 extends ToolCard {
                 throw new CannotPerformThisMoveException(username, 2, false);
 
             if (!cardWpc.addDiceWithAllRestrictions(tempDice, pos))
-                throw new CannotPickPositionException(username, pos);
+                throw new CannotPickPositionException();
 
             diceAndPosition = new DiceAndPosition(tempDice, pos);
             cardExtractedDices.remove(tempDice);
@@ -110,7 +110,7 @@ public class ToolCard8 extends ToolCard {
                 throw new CannotPerformThisMoveException(username, 2, false);
 
             if (!cardWpc.addDiceWithAllRestrictions(tempDice, pos))
-                throw new CannotPickPositionException(username, pos);
+                throw new CannotPickPositionException();
             cardExtractedDices.remove(tempDice);
             this.used = true;
             currentPlayer.setTurnToSkip(currentPlayer.getTurnForRound() + 1);
@@ -141,7 +141,7 @@ public class ToolCard8 extends ToolCard {
         if ((currentStatus == 0) && (singlePlayerGame)) {
             Dice tempDice = currentPlayer.dicePresentInLocation(diceId, ClientDiceLocations.EXTRACTED).getDice();
             if (tempDice.getDiceColor() != colorForDiceSingleUser)
-                throw new CannotPickDiceException(username, tempDice.getDiceNumber(), Color.getClientColor(tempDice.getDiceColor()), ClientDiceLocations.EXTRACTED, 1);
+                throw new CannotPickDiceException(tempDice.getDiceNumber(), Color.getClientColor(tempDice.getDiceColor()), ClientDiceLocations.EXTRACTED, 1);
             this.diceForSingleUser = tempDice;
             cardExtractedDices.remove(this.diceForSingleUser);
             updateClientExtractedDices();
@@ -195,14 +195,14 @@ public class ToolCard8 extends ToolCard {
                 currentStatus = 30;
                 try {
                     return interruptToolCard(ToolCardInteruptValues.OK);
-                } catch (CannotInteruptToolCardException e) {
+                } catch (CannotInterruptToolCardException e) {
                     //impossible
                     throw new CannotCancelActionException(username, id, 0);
                 }
             case 30:
                 try {
                     return interruptToolCard(ToolCardInteruptValues.OK);
-                } catch (CannotInteruptToolCardException e) {
+                } catch (CannotInterruptToolCardException e) {
                     //impossible
                     throw new CannotCancelActionException(username, id, 0);
                 }
@@ -263,14 +263,14 @@ public class ToolCard8 extends ToolCard {
      *
      * @param value can be YES; NO; OK
      * @return the new moveData
-     * @throws CannotInteruptToolCardException everytime that it is called
+     * @throws CannotInterruptToolCardException everytime that it is called
      */
     @Override
-    public MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException {
+    public MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInterruptToolCardException {
         if (currentStatus != 30)
-            throw new CannotInteruptToolCardException(username, id);
+            throw new CannotInterruptToolCardException(username, id);
         if (value != ToolCardInteruptValues.OK)
-            throw new CannotInteruptToolCardException(username, id);
+            throw new CannotInterruptToolCardException(username, id);
         if (singlePlayerGame)
             cardExtractedDices.add(diceForSingleUser);
         updateAndCopyToGameData(true, true, false);

@@ -18,9 +18,7 @@ import server.model.wpc.Wpc;
 import shared.clientInfo.*;
 import shared.exceptions.usersAndDatabaseExceptions.*;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -206,7 +204,7 @@ public class ToolCard8Test {
      */
     @Test
     public void placeDiceFromStatusOneToThirtyTest () throws CannotPerformThisMoveException,
-            CannotPickPositionException, CannotPickDiceException, CannotInteruptToolCardException {
+            CannotPickPositionException, CannotPickDiceException, CannotInterruptToolCardException {
         setSchema();
         toolCard8.setCurrentToolStatus(1);
 
@@ -484,10 +482,10 @@ public class ToolCard8Test {
 
 
     /**
-     * @throws CannotInteruptToolCardException because the value isn't equivalent to OK
+     * @throws CannotInterruptToolCardException because the value isn't equivalent to OK
      */
-    @Test (expected = CannotInteruptToolCardException.class)
-    public void interruptToolCardValueNoTest() throws CannotInteruptToolCardException {
+    @Test (expected = CannotInterruptToolCardException.class)
+    public void interruptToolCardValueNoTest() throws CannotInterruptToolCardException {
         setSchema();
         toolCard8.setCurrentToolStatus(30);
         MoveData moveData = toolCard8.interruptToolCard(ToolCardInteruptValues.NO);
@@ -500,10 +498,10 @@ public class ToolCard8Test {
     }
 
     /**
-     * @throws CannotInteruptToolCardException because the status is different from 30.
+     * @throws CannotInterruptToolCardException because the status is different from 30.
      */
-    @Test (expected = CannotInteruptToolCardException.class)
-    public void interruptToolCardIllegalStatusTest() throws CannotInteruptToolCardException {
+    @Test (expected = CannotInterruptToolCardException.class)
+    public void interruptToolCardIllegalStatusTest() throws CannotInterruptToolCardException {
         setSchema();
         toolCard8.setCurrentToolStatus(10);
         MoveData moveData = toolCard8.interruptToolCard(ToolCardInteruptValues.OK);

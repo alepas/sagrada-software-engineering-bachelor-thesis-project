@@ -436,18 +436,18 @@ public class ToolCard12Test {
     }
 
     /**
-     * @throws CannotInteruptToolCardException every time that is called
+     * @throws CannotInterruptToolCardException every time that is called
      */
-    @Test(expected = CannotInteruptToolCardException.class)
-    public void interruptToolCardIllegalStatusTest() throws CannotInteruptToolCardException {
+    @Test(expected = CannotInterruptToolCardException.class)
+    public void interruptToolCardIllegalStatusTest() throws CannotInterruptToolCardException {
         toolCard12.interruptToolCard(ToolCardInteruptValues.YES);
     }
 
     /**
-     * @throws CannotInteruptToolCardException every time that is called
+     * @throws CannotInterruptToolCardException every time that is called
      */
-    @Test(expected = CannotInteruptToolCardException.class)
-    public void interruptToolCardIllegalValueTest() throws CannotInteruptToolCardException {
+    @Test(expected = CannotInterruptToolCardException.class)
+    public void interruptToolCardIllegalValueTest() throws CannotInterruptToolCardException {
         toolCard12.setCurrentToolStatus(20);
         toolCard12.interruptToolCard(ToolCardInteruptValues.OK);
     }
@@ -455,10 +455,10 @@ public class ToolCard12Test {
     /**
      * checks if the interrupt method returns a correct moveData in case the value is equal to NO.
      *
-     * @throws CannotInteruptToolCardException not in this method
+     * @throws CannotInterruptToolCardException not in this method
      */
     @Test
-    public void interruptToolCardValueNoTest() throws CannotInteruptToolCardException {
+    public void interruptToolCardValueNoTest() throws CannotInterruptToolCardException {
         setSchema();
         toolCard12.setCurrentToolStatus(20);
         MoveData moveData = toolCard12.interruptToolCard(ToolCardInteruptValues.NO);
@@ -473,10 +473,10 @@ public class ToolCard12Test {
     /**
      * checks if the interrupt method returns a correct moveData in case the value is equal to YES.
      *
-     * @throws CannotInteruptToolCardException not in this method
+     * @throws CannotInterruptToolCardException not in this method
      */
     @Test
-    public void interruptToolCardValueYesTest() throws CannotInteruptToolCardException {
+    public void interruptToolCardValueYesTest() throws CannotInterruptToolCardException {
         toolCard12.setCurrentToolStatus(20);
         MoveData moveData = toolCard12.interruptToolCard(ToolCardInteruptValues.YES);
 

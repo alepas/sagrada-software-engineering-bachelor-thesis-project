@@ -198,9 +198,9 @@ public class PlayerInGame {
             }
         }
         if (dice == null)
-            throw new CannotPickDiceException(username, diceId, ClientDiceLocations.EXTRACTED, 0);
+            throw new CannotPickDiceException(diceId, ClientDiceLocations.EXTRACTED, 0);
         if (!wpc.addDiceWithAllRestrictions(dice, pos))
-            throw new CannotPickPositionException(username, pos);
+            throw new CannotPickPositionException();
         game.getExtractedDices().remove(dice);
         ArrayList<ClientDice> tempExtractedDices = getClientExtractedDices();
         ClientWpc clientWpc = wpc.getClientWpc();
@@ -234,11 +234,11 @@ public class PlayerInGame {
 
     }
 
-    public synchronized MoveData interuptToolCard(ToolCardInteruptValues value) throws PlayerNotAuthorizedException, NoToolCardInUseException, CannotInteruptToolCardException {
+    public synchronized MoveData interuptToolCard(ToolCardInteruptValues value) throws PlayerNotAuthorizedException, NoToolCardInUseException, CannotInterruptToolCardException {
         if (!active)
             throw new PlayerNotAuthorizedException(username);
         if (toolCardInUse == null)
-            throw new NoToolCardInUseException(username);
+            throw new NoToolCardInUseException();
         MoveData tempResponse = toolCardInUse.interruptToolCard(value);
         updateNextMoveAfterToolCard(tempResponse);
         return tempResponse;
@@ -299,7 +299,7 @@ public class PlayerInGame {
             throw new PlayerNotAuthorizedException(username);
 
         if (toolCardInUse == null)
-            throw new NoToolCardInUseException(username);
+            throw new NoToolCardInUseException();
         MoveData tempResponse;
 
         tempResponse = toolCardInUse.pickDice(diceId);
@@ -311,7 +311,7 @@ public class PlayerInGame {
         if (!active)
             throw new PlayerNotAuthorizedException(username);
         if (toolCardInUse == null)
-            throw new NoToolCardInUseException(username);
+            throw new NoToolCardInUseException();
         MoveData tempResponse;
         tempResponse = toolCardInUse.placeDice(diceId, pos);
         updateNextMoveAfterToolCard(tempResponse);
@@ -323,7 +323,7 @@ public class PlayerInGame {
         if (!active)
             throw new PlayerNotAuthorizedException(username);
         if (toolCardInUse == null)
-            throw new NoToolCardInUseException(username);
+            throw new NoToolCardInUseException();
         MoveData tempResponse = toolCardInUse.pickNumber(num);
         updateNextMoveAfterToolCard(tempResponse);
         return tempResponse;
@@ -439,20 +439,20 @@ public class PlayerInGame {
                     return new DiceAndPosition(tempDice, null);
                 }
             }
-            throw new CannotPickDiceException(username, diceId, ClientDiceLocations.EXTRACTED, 0);
+            throw new CannotPickDiceException(diceId, ClientDiceLocations.EXTRACTED, 0);
         } else if (location == ClientDiceLocations.WPC) {
             tempResponse = wpc.getDiceAndPosition(diceId);
             if (tempResponse == null)
-                throw new CannotPickDiceException(username, diceId, ClientDiceLocations.WPC, 0);
+                throw new CannotPickDiceException(diceId, ClientDiceLocations.WPC, 0);
             else return tempResponse;
 
         } else if (location == ClientDiceLocations.ROUNDTRACK) {
             tempResponse = game.getRoundTrack().getDiceAndPosition(diceId);
             if (tempResponse == null)
-                throw new CannotPickDiceException(username, diceId, ClientDiceLocations.ROUNDTRACK, 0);
+                throw new CannotPickDiceException(diceId, ClientDiceLocations.ROUNDTRACK, 0);
             else return tempResponse;
         }
-        throw new CannotPickDiceException(username, diceId, null, 0);
+        throw new CannotPickDiceException(diceId, null, 0);
     }
 
 

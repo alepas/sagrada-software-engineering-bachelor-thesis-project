@@ -275,7 +275,7 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
     }
 
     @Override
-    public NextAction interuptToolCard(String userToken, ToolCardInteruptValues value) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotInteruptToolCardException, NoToolCardInUseException {
+    public NextAction interuptToolCard(String userToken, ToolCardInteruptValues value) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotInterruptToolCardException, NoToolCardInUseException {
         request(new ToolCardInteruptRequest(userToken, value));
 
         ToolCardResponse response = (ToolCardResponse) waitResponse();
@@ -285,7 +285,7 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
         if (e != null){
             if (e instanceof CannotFindPlayerInDatabaseException) throw (CannotFindPlayerInDatabaseException) e;
             if (e instanceof PlayerNotAuthorizedException) throw (PlayerNotAuthorizedException) e;
-            if (e instanceof CannotInteruptToolCardException) throw  (CannotInteruptToolCardException) e;
+            if (e instanceof CannotInterruptToolCardException) throw  (CannotInterruptToolCardException) e;
             if (e instanceof NoToolCardInUseException ) throw  (NoToolCardInUseException) e;
             return null;
         } else {

@@ -148,8 +148,8 @@ public class RmiServer implements RemoteServer {
     }
 
     @Override
-    public Response interuptToolCard(String userToken, ToolCardInteruptValues value) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotInteruptToolCardException, NoToolCardInUseException {
-        return controller.interuptToolCard(userToken, value);
+    public Response interuptToolCard(String userToken, ToolCardInteruptValues value) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotInterruptToolCardException, NoToolCardInUseException {
+        return controller.interruptToolCard(userToken, value);
     }
 
     @Override

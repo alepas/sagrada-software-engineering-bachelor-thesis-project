@@ -411,10 +411,10 @@ public class ToolCard4Test {
 
 
     /**
-     * @throws CannotInteruptToolCardException every time that is called
+     * @throws CannotInterruptToolCardException every time that is called
      */
-    @Test(expected = CannotInteruptToolCardException.class)
-    public void interruptToolCardTest() throws CannotInteruptToolCardException {
+    @Test(expected = CannotInterruptToolCardException.class)
+    public void interruptToolCardTest() throws CannotInterruptToolCardException {
         toolCard4.interruptToolCard(ToolCardInteruptValues.YES);
     }
 

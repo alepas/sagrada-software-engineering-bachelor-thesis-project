@@ -272,7 +272,7 @@ public class ToolCard11Test {
      */
     @Test
     public void placeDiceTest() throws CannotPickDiceException, CannotPerformThisMoveException,
-            CannotPickNumberException, CannotPickPositionException, CannotInteruptToolCardException {
+            CannotPickNumberException, CannotPickPositionException, CannotInterruptToolCardException {
         setSchema();
         toolCard11.setCardExtractedDices(extractedDices);
         toolCard11.setCurrentToolStatus(1);
@@ -313,7 +313,7 @@ public class ToolCard11Test {
      */
     @Test
     public void cancelLastActionStatusThreeTest() throws CannotPickDiceException, CannotPerformThisMoveException,
-            CannotPickNumberException, CannotPickPositionException, CannotInteruptToolCardException, CannotCancelActionException {
+            CannotPickNumberException, CannotPickPositionException, CannotInterruptToolCardException, CannotCancelActionException {
         setSchema();
         toolCard11.setCardExtractedDices(extractedDices);
         toolCard11.setCurrentToolStatus(1);
@@ -349,7 +349,7 @@ public class ToolCard11Test {
      */
     @Test
     public void placeDiceIllegalPlacementTest() throws CannotPickDiceException, CannotPerformThisMoveException,
-            CannotPickNumberException, CannotPickPositionException, CannotInteruptToolCardException {
+            CannotPickNumberException, CannotPickPositionException, CannotInterruptToolCardException {
         setSchema();
         toolCard11.setCardExtractedDices(extractedDices);
         toolCard11.setCurrentToolStatus(1);
@@ -401,10 +401,10 @@ public class ToolCard11Test {
 
 
     /**
-     * @throws CannotInteruptToolCardException every time that is called
+     * @throws CannotInterruptToolCardException every time that is called
      */
-    @Test(expected = CannotInteruptToolCardException.class)
-    public void interruptToolCardTest() throws CannotInteruptToolCardException {
+    @Test(expected = CannotInterruptToolCardException.class)
+    public void interruptToolCardTest() throws CannotInterruptToolCardException {
         toolCard11.interruptToolCard(ToolCardInteruptValues.OK);
     }
 
@@ -567,26 +567,26 @@ public class ToolCard11Test {
 
 
     /**
-     * @throws CannotInteruptToolCardException because the value should be ok when the status is 30
+     * @throws CannotInterruptToolCardException because the value should be ok when the status is 30
      */
-    @Test (expected = CannotInteruptToolCardException.class)
-    public void interruptToolCardValueNotOkTest() throws CannotInteruptToolCardException {
+    @Test (expected = CannotInterruptToolCardException.class)
+    public void interruptToolCardValueNotOkTest() throws CannotInterruptToolCardException {
         toolCard11.setCurrentToolStatus(30);
         moveData = toolCard11.interruptToolCard(ToolCardInteruptValues.NO);
     }
 
     /**
-     * @throws CannotInteruptToolCardException because the value should be no when the status is 20
+     * @throws CannotInterruptToolCardException because the value should be no when the status is 20
      */
-    @Test (expected = CannotInteruptToolCardException.class)
-    public void interruptToolCardValueNotNoTest() throws CannotInteruptToolCardException {
+    @Test (expected = CannotInterruptToolCardException.class)
+    public void interruptToolCardValueNotNoTest() throws CannotInterruptToolCardException {
         toolCard11.setCurrentToolStatus(20);
         moveData = toolCard11.interruptToolCard(ToolCardInteruptValues.OK);
     }
 
     @Test
     public void interruptToolCardStatusTwentyTest() throws CannotPickDiceException, CannotPerformThisMoveException,
-            CannotPickPositionException, CannotInteruptToolCardException {
+            CannotPickPositionException, CannotInterruptToolCardException {
         setSchema();
         toolCard11.setCardExtractedDices(extractedDices);
         toolCard11.setCurrentToolStatus(1);

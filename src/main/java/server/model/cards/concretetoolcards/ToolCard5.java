@@ -121,9 +121,9 @@ public class ToolCard5 extends ToolCard {
         if (pos == null)
             throw new CannotPerformThisMoveException(username, 2, false);
         if (diceId != this.fromRoundTrack.getDice().getId())
-            throw new CannotPickDiceException(username, diceId, ClientDiceLocations.EXTRACTED, 3);
+            throw new CannotPickDiceException(diceId, ClientDiceLocations.EXTRACTED, 3);
         if (!cardWpc.addDiceWithAllRestrictions(this.fromRoundTrack.getDice(), pos))
-            throw new CannotPickPositionException(username, pos);
+            throw new CannotPickPositionException();
         cardExtractedDices.remove(this.fromRoundTrack.getDice());
         currentStatus = 4;
         this.used = true;
@@ -208,11 +208,11 @@ public class ToolCard5 extends ToolCard {
     /**
      * @param value can be YES; NO; OK
      * @return always the exception
-     * @throws CannotInteruptToolCardException every time that it is called
+     * @throws CannotInterruptToolCardException every time that it is called
      */
     @Override
-    public MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException {
-        throw new CannotInteruptToolCardException(username, id);
+    public MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInterruptToolCardException {
+        throw new CannotInterruptToolCardException(username, id);
     }
 
 }

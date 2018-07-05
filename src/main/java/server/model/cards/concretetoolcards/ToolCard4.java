@@ -110,7 +110,7 @@ public class ToolCard4 extends ToolCard {
             cardWpc.removeDice(firstDiceInitial.getPosition());
             if (!cardWpc.addDiceWithAllRestrictions(tempDice, pos)) {
                 cardWpc.addDicePersonalizedRestrictions(tempDice, firstDiceInitial.getPosition(), false, false, false, false, false);
-                throw new CannotPickPositionException(username, pos);
+                throw new CannotPickPositionException();
             }
             firstDiceFinalPos = pos;
             this.currentStatus = 2;
@@ -127,11 +127,11 @@ public class ToolCard4 extends ToolCard {
                 throw new CannotPerformThisMoveException(username, 2, false);
             }
             if (secondDiceInitial.getDice().getId() == (firstDiceInitial.getDice().getId()))
-                throw new CannotPickDiceException(username, secondDiceInitial.getDice().getDiceNumber(), Color.getClientColor(secondDiceInitial.getDice().getDiceColor()), ClientDiceLocations.WPC, 5);
+                throw new CannotPickDiceException(secondDiceInitial.getDice().getDiceNumber(), Color.getClientColor(secondDiceInitial.getDice().getDiceColor()), ClientDiceLocations.WPC, 5);
             cardWpc.removeDice(secondDiceInitial.getPosition());
             if (!cardWpc.addDiceWithAllRestrictions(tempDice, pos)) {
                 cardWpc.addDicePersonalizedRestrictions(tempDice, secondDiceInitial.getPosition(), false, false, false, false, false);
-                throw new CannotPickPositionException(username, pos);
+                throw new CannotPickPositionException();
             }
             this.used = true;
             updateAndCopyToGameData(true, true, false);
@@ -214,11 +214,11 @@ public class ToolCard4 extends ToolCard {
     /**
      * @param value can be YES; NO; OK
      * @return always the exception
-     * @throws CannotInteruptToolCardException everytime that it is called
+     * @throws CannotInterruptToolCardException everytime that it is called
      */
     @Override
-    public MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException {
-        throw new CannotInteruptToolCardException(username, id);
+    public MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInterruptToolCardException {
+        throw new CannotInterruptToolCardException(username, id);
     }
 
     //-----------tests methods

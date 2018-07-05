@@ -99,13 +99,13 @@ public class ToolCard11 extends ToolCard {
         if (currentStatus != 2)
             throw new CannotPerformThisMoveException(username, 2, false);
         if ((number < 1) || (number > 6))
-            throw new CannotPickNumberException(username, number);
+            throw new CannotPickNumberException(number);
 
         oldChosenDice = this.chosenDice.copyDice();
         try {
             chosenDice.setNumber(number);
         } catch (IncorrectNumberException e) {
-            throw new CannotPickNumberException(username, number);
+            throw new CannotPickNumberException(number);
         }
         currentStatus = 3;
 
@@ -138,9 +138,9 @@ public class ToolCard11 extends ToolCard {
             if (pos == null)
                 throw new CannotPerformThisMoveException(username, 2, false);
             if (diceId != this.chosenDice.getId())
-                throw new CannotPickDiceException(username, diceId, ClientDiceLocations.EXTRACTED, 3);
+                throw new CannotPickDiceException(diceId, ClientDiceLocations.EXTRACTED, 3);
             if (!cardWpc.addDiceWithAllRestrictions(this.chosenDice, pos))
-                throw new CannotPickPositionException(username, pos);
+                throw new CannotPickPositionException();
             cardExtractedDices.remove(this.chosenDice);
             currentStatus = 4;
             this.used = true;
@@ -191,14 +191,14 @@ public class ToolCard11 extends ToolCard {
                 currentStatus = 30;
                 try {
                     return interruptToolCard(ToolCardInteruptValues.OK);
-                } catch (CannotInteruptToolCardException e) {
+                } catch (CannotInterruptToolCardException e) {
                     e.printStackTrace();
                 }
                 break;
             case 30:
                 try {
                     return interruptToolCard(ToolCardInteruptValues.OK);
-                } catch (CannotInteruptToolCardException e) {
+                } catch (CannotInterruptToolCardException e) {
                     //impossible
                     throw new CannotCancelActionException(username, id, 1);
                 }
@@ -206,14 +206,14 @@ public class ToolCard11 extends ToolCard {
                 currentStatus = 20;
                 try {
                     return interruptToolCard(ToolCardInteruptValues.NO);
-                } catch (CannotInteruptToolCardException e) {
+                } catch (CannotInterruptToolCardException e) {
                     //impossible
                     throw new CannotCancelActionException(username, id, 1);
                 }
             case 20:
                 try {
                     return interruptToolCard(ToolCardInteruptValues.NO);
-                } catch (CannotInteruptToolCardException e) {
+                } catch (CannotInterruptToolCardException e) {
                     //impossible
                     throw new CannotCancelActionException(username, id, 1);
                 }
@@ -263,14 +263,14 @@ public class ToolCard11 extends ToolCard {
     }
 
     @Override
-    public MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException {
+    public MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInterruptToolCardException {
         if (currentStatus == 20) {
             currentStatus = 2;
             updateClientExtractedDices();
             if (value == ToolCardInteruptValues.YES)
                 return new MoveData(NextAction.SELECT_NUMBER_TOOLCARD, null, tempClientExtractedDices, null, chosenDice.getClientDice(), ClientDiceLocations.EXTRACTED, numbers, false);
             if (value != ToolCardInteruptValues.NO)
-                throw new CannotInteruptToolCardException(username, id);
+                throw new CannotInterruptToolCardException(username, id);
             updateAndCopyToGameData(true, false, false);
             ArrayList<ClientDice> tempExtracted = tempClientExtractedDices;
             movesNotifications.add(new ToolCardDiceChangedNotification(username, oldDiceExtracted.getClientDice(), chosenDice.getClientDice(), ClientDiceLocations.EXTRACTED, ClientDiceLocations.DICEBAG));
@@ -281,9 +281,9 @@ public class ToolCard11 extends ToolCard {
         }
 
         if (currentStatus != 30)
-            throw new CannotInteruptToolCardException(username, id);
+            throw new CannotInterruptToolCardException(username, id);
         if (value != ToolCardInteruptValues.OK)
-            throw new CannotInteruptToolCardException(username, id);
+            throw new CannotInterruptToolCardException(username, id);
         updateAndCopyToGameData(true, false, false);
         ArrayList<ClientDice> tempExtracted = tempClientExtractedDices;
         currentGame.changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, null, tempClientExtractedDices, null, currentPlayer.getFavours()));

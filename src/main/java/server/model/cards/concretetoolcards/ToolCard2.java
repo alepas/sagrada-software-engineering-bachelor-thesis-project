@@ -106,7 +106,7 @@ public class ToolCard2 extends ToolCard {
         cardWpc.removeDice(diceAndPosition.getPosition());
         if (!cardWpc.addDicePersonalizedRestrictions(tempDice, pos, false, true, true, true, false)) {
             cardWpc.addDicePersonalizedRestrictions(tempDice, diceAndPosition.getPosition(), false, false, false, false, false);
-            throw new CannotPickPositionException(username, pos);
+            throw new CannotPickPositionException();
         }
         this.used = true;
         updateAndCopyToGameData(true, true, false);
@@ -172,11 +172,11 @@ public class ToolCard2 extends ToolCard {
     /**
      * @param value can be YES; NO; OK
      * @return always the exception
-     * @throws CannotInteruptToolCardException every time that it is called
+     * @throws CannotInterruptToolCardException every time that it is called
      */
     @Override
-    public MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException {
-        throw new CannotInteruptToolCardException(username, id);
+    public MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInterruptToolCardException {
+        throw new CannotInterruptToolCardException(username, id);
     }
 
 }

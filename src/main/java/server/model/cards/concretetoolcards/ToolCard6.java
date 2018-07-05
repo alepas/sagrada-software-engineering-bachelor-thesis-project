@@ -123,9 +123,9 @@ public class ToolCard6 extends ToolCard {
         if (pos == null)
             throw new CannotPerformThisMoveException(username, 2, false);
         if (diceId != this.dice.getId())
-            throw new CannotPickDiceException(username, diceId, ClientDiceLocations.EXTRACTED, 3);
+            throw new CannotPickDiceException(diceId, ClientDiceLocations.EXTRACTED, 3);
         if (!cardWpc.addDiceWithAllRestrictions(this.dice, pos))
-            throw new CannotPickPositionException(username, pos);
+            throw new CannotPickPositionException();
         cardExtractedDices.remove(this.dice);
         currentStatus = 3;
         this.used = true;
@@ -222,14 +222,14 @@ public class ToolCard6 extends ToolCard {
      *
      * @param value can be YES; NO; OK
      * @return the new moveData
-     * @throws CannotInteruptToolCardException everytime that it is called
+     * @throws CannotInterruptToolCardException everytime that it is called
      */
     @Override
-    public MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInteruptToolCardException {
+    public MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInterruptToolCardException {
         if (currentStatus != 30)
-            throw new CannotInteruptToolCardException(username, id);
+            throw new CannotInterruptToolCardException(username, id);
         if (value != ToolCardInteruptValues.OK)
-            throw new CannotInteruptToolCardException(username, id);
+            throw new CannotInterruptToolCardException(username, id);
         updateClientExtractedDices();
         ArrayList<ClientDice> tempExtracted = tempClientExtractedDices;
         currentGame.changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, tempClientExtractedDices, null, currentPlayer.getFavours()));

@@ -403,18 +403,18 @@ public class ToolCard10Test {
 
 
     /**
-     * @throws CannotInteruptToolCardException bacause the status is different from 30
+     * @throws CannotInterruptToolCardException bacause the status is different from 30
      */
-    @Test(expected = CannotInteruptToolCardException.class)
-    public void interruptToolCardIllegalStatusTest() throws CannotInteruptToolCardException {
+    @Test(expected = CannotInterruptToolCardException.class)
+    public void interruptToolCardIllegalStatusTest() throws CannotInterruptToolCardException {
         toolCard10.interruptToolCard(ToolCardInteruptValues.YES);
     }
 
     /**
-     * @throws CannotInteruptToolCardException bacause the value is different from OK
+     * @throws CannotInterruptToolCardException bacause the value is different from OK
      */
-    @Test(expected = CannotInteruptToolCardException.class)
-    public void interruptToolCardIllegalValue() throws CannotInteruptToolCardException {
+    @Test(expected = CannotInterruptToolCardException.class)
+    public void interruptToolCardIllegalValue() throws CannotInterruptToolCardException {
         toolCard10.setCurrentToolStatus(30);
         toolCard10.interruptToolCard(ToolCardInteruptValues.YES);
     }

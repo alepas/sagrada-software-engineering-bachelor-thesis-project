@@ -53,7 +53,7 @@ public class ServerController {
     /**
      * @param text is the text what will be display by calling this massage
      */
-    public void displayText(String text) {
+    private void displayText(String text) {
         System.out.println(">>> " + text);
     }
 
@@ -131,7 +131,9 @@ public class ServerController {
      *
      * @param userToken is the player token
      * @param wpcID is the id of the chosen schema
+     *
      * @return the response related to the pickWpc method
+     *
      * @throws CannotFindPlayerInDatabaseException if the player hasn't been found in the db
      * @throws NotYourWpcException if the id is not one of the assigned id
      */
@@ -144,10 +146,12 @@ public class ServerController {
     }
 
     /**
-     * Gets the player in game and return a passturn response
+     * Gets the player in game and return a passTurn response
      *
      * @param userToken is the player token
+     *
      * @return the response related to the pass turn action
+     *
      * @throws CannotFindPlayerInDatabaseException if the player hasn't been fund in the db
      * @throws PlayerNotAuthorizedException if the player tries to do soething that can't do because isn't the active one
      * @throws CannotPerformThisMoveException if the player tries to do an action that can't be done for a few
@@ -159,13 +163,17 @@ public class ServerController {
     }
 
     /**
+     * gets the player from his/her token and returns a place dice response.
+     *
      * @param userToken is the player token
      * @param id is the id of the chosen dice
      * @param position is the position where the player would like to add the dice
+     *
      * @return the response related to the dice place
+     *
      * @throws CannotFindPlayerInDatabaseException if the player hasn't been fund in the db
-     * @throws CannotPickPositionException
-     * @throws CannotPickDiceException if the d
+     * @throws CannotPickPositionException if the position isn't correct
+     * @throws CannotPickDiceException if the chosen dice is incorrect for some reason
      * @throws PlayerNotAuthorizedException if the player tries to do soething that can't do because isn't the active one
      * @throws CannotPerformThisMoveException  if the player tries to do an action that can't be done for a few
      * different reasons
@@ -177,11 +185,30 @@ public class ServerController {
     }
 
 
+    /**
+     * gets the player by his/her token returns the response after converting the player's MoveData
+     * @param userToken is the token related to the player
+     *
+     * @return the response related to the dice toolcard
+     *
+     * @throws CannotCancelActionException if it not possible to cancel the toolcard action
+     * @throws PlayerNotAuthorizedException if the player tries to do soething that can't do because isn't the active one
+     * @throws CannotFindPlayerInDatabaseException  if the player hasn't been found in the db
+     */
     public Response cancelAction(String userToken) throws CannotCancelActionException, PlayerNotAuthorizedException, CannotFindPlayerInDatabaseException {
         PlayerInGame currentPlayer = databaseUsers.getPlayerInGameFromToken(userToken);
         return convertMoveDataToToolCardResponse(currentPlayer.cancelAction());
     }
 
+    /**
+     * Gets the user by the players token and returns a new response
+     *
+     * @param userToken is the player's token
+     *
+     * @return the getUserStatResponse
+     *
+     * @throws CannotFindUserInDBException if the player hasn't been found in the db
+     */
     public Response getUserStat(String userToken) throws CannotFindUserInDBException {
         ClientUser user = databaseUsers.getClientUserByToken(userToken);
         return new GetUserStatResponse(user, null);
@@ -191,16 +218,57 @@ public class ServerController {
     //----------------------------------------------- Toolcards --------------------------------------------------
 
 
+    /**
+     * @param userToken is the player's token
+     * @param cardId is the toolcard's id
+     *
+     * @return a new response
+     *
+     * @throws CannotFindPlayerInDatabaseException if the player hasn't been found in the db
+     * @throws PlayerNotAuthorizedException if the player tries to do soething that can't do because isn't the active one
+     * @throws CannotUseToolCardException if there's a problem related to the use of a toolcard
+     * @throws CannotPerformThisMoveException if the player tries to do an action that can't be done for a few
+     * different reasons
+     */
     public Response setToolCard(String userToken, String cardId) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotUseToolCardException, CannotPerformThisMoveException {
         PlayerInGame player = databaseUsers.getPlayerInGameFromToken(userToken);
         return convertMoveDataToToolCardResponse(player.setToolCard(cardId));
     }
 
+    /**
+     * @param userToken is the player's token
+     * @param diceId is the id of the chosen dice
+     *
+     * @return a new response
+     *
+     * @throws CannotFindPlayerInDatabaseException if the player hasn't been found in the db
+     * @throws CannotPickDiceException if the chosen dice is incorrect for some reason
+     * @throws PlayerNotAuthorizedException if the player tries to do something that can't do because isn't the active one
+     * @throws NoToolCardInUseException if the player is not using the toolcard
+     * @throws CannotPerformThisMoveException if the player tries to do an action that can't be done for a few
+     *         different reasons
+     */
     public Response pickDiceForToolCard(String userToken, int diceId) throws CannotFindPlayerInDatabaseException, CannotPickDiceException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException {
         PlayerInGame player = databaseUsers.getPlayerInGameFromToken(userToken);
         return convertMoveDataToToolCardResponse(player.pickDiceforToolCard(diceId));
     }
 
+    /**
+     * if the chosen position is different from null returns a placeDiceForToolCard response
+     *
+     * @param userToken is the player's token
+     * @param diceId is the chosen dice id
+     * @param position is the position where the player would like to add the chosen dice
+     * @return a new response
+     *
+     * @throws CannotFindPlayerInDatabaseException if the player hasn't been found in the db
+     * @throws CannotPickPositionException if the position isn't correct
+     * @throws PlayerNotAuthorizedException if the player tries to do something that can't do because isn't the active one
+     * @throws NoToolCardInUseException if the player is not using the toolcard
+     * @throws CannotPerformThisMoveException if the player tries to do an action that can't be done for a few
+     *  different reasons
+     * @throws CannotPickDiceException if the chosen dice is incorrect for some reason
+     */
     public Response placeDiceForToolCard(String userToken, int diceId, Position position) throws CannotFindPlayerInDatabaseException, CannotPickPositionException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPerformThisMoveException, CannotPickDiceException {
         Position pos = null;
         PlayerInGame player = databaseUsers.getPlayerInGameFromToken(userToken);
@@ -208,12 +276,36 @@ public class ServerController {
         return convertMoveDataToToolCardResponse(player.placeDiceForToolCard(diceId, pos));
     }
 
+    /**
+     * @param userToken is the player token
+     * @param number is the number chosen by the player
+     *
+     * @return a new response
+     *
+     * @throws CannotFindPlayerInDatabaseException if the player hasn't been found in the db
+     * @throws PlayerNotAuthorizedException if the player tries to do something that can't do because isn't the active one
+     * @throws NoToolCardInUseException if the player is not using the toolcard
+     * @throws CannotPickNumberException if the chosen number is out of bound
+     * @throws CannotPerformThisMoveException if the player tries to do an action that can't be done for a few
+     * different reasons
+     */
     public Response pickNumberForToolCard(String userToken, int number) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, NoToolCardInUseException, CannotPickNumberException, CannotPerformThisMoveException {
         PlayerInGame player = databaseUsers.getPlayerInGameFromToken(userToken);
         return convertMoveDataToToolCardResponse(player.pickNumberForToolCard(number));
     }
 
-    public Response interuptToolCard(String userToken, ToolCardInteruptValues value) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotInteruptToolCardException, NoToolCardInUseException {
+    /**
+     * @param userToken is the player's token
+     * @param value it can be OK, YES, NO
+     *
+     * @return a new response
+     *
+     * @throws CannotFindPlayerInDatabaseException if the player hasn't been found in the db
+     * @throws PlayerNotAuthorizedException if the player tries to do something that can't do because isn't the active one
+     * @throws CannotInterruptToolCardException if the value isn't correct
+     * @throws NoToolCardInUseException if the player is not using the toolcard
+     */
+    public Response interruptToolCard(String userToken, ToolCardInteruptValues value) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotInterruptToolCardException, NoToolCardInUseException {
         PlayerInGame currentPlayer = databaseUsers.getPlayerInGameFromToken(userToken);
         return convertMoveDataToToolCardResponse(currentPlayer.interuptToolCard(value));
     }
@@ -221,16 +313,35 @@ public class ServerController {
 
     //---------------------------update client model------------------------
 
+    /**
+     * Creates a new ArrayList composed by the extracted dices, adds the clientDices to an other arrayList and returns
+     * a new Updated response.
+     *
+     * @param userToken is the player's token
+     * @return a new response
+     *
+     * @throws CannotFindPlayerInDatabaseException if the player hasn't been found in the db
+     */
     public Response getUpdatedExtractedDices(String userToken) throws CannotFindPlayerInDatabaseException {
         PlayerInGame player = databaseUsers.getPlayerInGameFromToken(userToken);
         ArrayList<Dice> dices = new ArrayList<>(player.getUpdatedExtractedDices());
         ArrayList<ClientDice> clientDices = new ArrayList<>();
-        for (Dice dice : dices) {
+
+        for (Dice dice : dices)
             clientDices.add(dice.getClientDice());
-        }
+
         return new UpdatedExtractedDicesResponse(clientDices);
     }
 
+    /**
+     * Creates a new ArrayList composed by the public objective cards, adds them to an other arrayList composed with the
+     * client cards and returns a new Updated response.
+     *
+     * @param userToken is the player's token
+     * @return a new response
+     *
+     * @throws CannotFindPlayerInDatabaseException if the player hasn't been found in the db
+     */
     public Response getUpdatedPOCs(String userToken) throws CannotFindPlayerInDatabaseException {
         PlayerInGame player = databaseUsers.getPlayerInGameFromToken(userToken);
         ArrayList<PublicObjectiveCard> pocs = new ArrayList<>(player.getUpdatedPOCs());
@@ -307,6 +418,10 @@ public class ServerController {
 
     //--------private
 
+    /**
+     * @param moveData is the object containing all the information of the action done by the player
+     * @return the ToolDiceResponse
+     */
     private ToolCardResponse convertMoveDataToToolCardResponse(MoveData moveData) {
         return new ToolCardResponse(moveData.nextAction, moveData.wherePickNewDice, moveData.wherePutNewDice, moveData.numbersToChoose, moveData.wpc,
                 moveData.extractedDices, moveData.roundTrack, moveData.diceChosen, moveData.diceChosenLocation, moveData.exception, moveData.messageForStop, moveData.bothYesAndNo, moveData.showBackButton);
@@ -318,6 +433,10 @@ public class ServerController {
                 moveData.extractedDices, moveData.roundTrack, moveData.diceChosen, moveData.exception);
     }
 
+    /**
+     * @param moveData is the object containing all the information of the action done by the player
+     * @return the placeDiceResponse
+     */
     private PlaceDiceResponse convertMoveDataToPlaceDiceResponse(MoveData moveData) {
         return new PlaceDiceResponse(moveData.nextAction, moveData.wpc, moveData.extractedDices, moveData.roundTrack, moveData.exception);
     }

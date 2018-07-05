@@ -271,8 +271,8 @@ public class SocketClientHandler extends ClientHandler implements Runnable, Obse
     @Override
     public Response handle(ToolCardInteruptRequest request) {
         try {
-            return controller.interuptToolCard(request.userToken,request.value );
-        } catch (CannotFindPlayerInDatabaseException | PlayerNotAuthorizedException | CannotInteruptToolCardException | NoToolCardInUseException e) {
+            return controller.interruptToolCard(request.userToken,request.value );
+        } catch (CannotFindPlayerInDatabaseException | PlayerNotAuthorizedException | CannotInterruptToolCardException | NoToolCardInUseException e) {
             return new ToolCardResponse(e);
         }
     }

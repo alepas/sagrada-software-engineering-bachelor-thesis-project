@@ -402,28 +402,28 @@ public class ToolCard6Test {
 
 
     /**
-     * @throws CannotInteruptToolCardException bacause the status is different from 30
+     * @throws CannotInterruptToolCardException bacause the status is different from 30
      */
-    @Test(expected = CannotInteruptToolCardException.class)
-    public void interruptToolCardIllegalStatusTest() throws CannotInteruptToolCardException {
+    @Test(expected = CannotInterruptToolCardException.class)
+    public void interruptToolCardIllegalStatusTest() throws CannotInterruptToolCardException {
         toolCard6.interruptToolCard(ToolCardInteruptValues.YES);
     }
 
     /**
-     * @throws CannotInteruptToolCardException bacause the value is different from OK
+     * @throws CannotInterruptToolCardException bacause the value is different from OK
      */
-    @Test(expected = CannotInteruptToolCardException.class)
-    public void interruptToolCardIllegalValue() throws CannotInteruptToolCardException {
+    @Test(expected = CannotInterruptToolCardException.class)
+    public void interruptToolCardIllegalValue() throws CannotInterruptToolCardException {
         toolCard6.setCurrentToolStatus(30);
         toolCard6.interruptToolCard(ToolCardInteruptValues.YES);
     }
 
     /**
      * Checks if the interruptToolCArd method works in a correct way when the status is 30 and the answer is OK
-     * @throws CannotInteruptToolCardException not in this test
+     * @throws CannotInterruptToolCardException not in this test
      */
     @Test
-    public void interruptToolCardValue() throws CannotInteruptToolCardException {
+    public void interruptToolCardValue() throws CannotInterruptToolCardException {
         toolCard6.setCurrentToolStatus(30);
         MoveData moveData = toolCard6.interruptToolCard(ToolCardInteruptValues.OK);
         assertTrue(moveData.moveFinished);
