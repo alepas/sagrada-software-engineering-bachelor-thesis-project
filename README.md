@@ -5,7 +5,7 @@
 * Piovani Davidde (Matricola: 846034, Codice persona: 10528265) 
 * Zorzenon Luca (Matricola: 845560, Codice persona: 10525863)
 
-##Test Coverage: 30%
+##Test Coverage: 31.8%
 
 ##Uml image
 
