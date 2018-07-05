@@ -83,6 +83,14 @@ public class RmiServer implements RemoteServer {
         return response;
     }
 
+
+    /**
+     * @param username is the player's username
+     * @param password is the accont password
+     * @param observer
+     * @return
+     * @throws CannotLoginUserException
+     */
     @Override
     public Response login(String username, String password, RemoteObserver observer) throws CannotLoginUserException {
         LoginResponse response = (LoginResponse) controller.login(username, password, null);

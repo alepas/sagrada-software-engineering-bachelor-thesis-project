@@ -27,6 +27,10 @@ public class SocketClientHandler extends ClientHandler implements Runnable, Obse
     private boolean stop;
 
 
+    /**
+     * @param socket is the socket connection
+     * @throws IOException if there are problems in it
+     */
     public SocketClientHandler(Socket socket) throws IOException {
         super(null);
         this.socket = socket;

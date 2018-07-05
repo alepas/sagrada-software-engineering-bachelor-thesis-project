@@ -40,6 +40,9 @@ public class ClientInfo implements Observer, NotificationHandler {
         return instance;
     }
 
+    /**
+     * called when the player goes out from the game all parameters are setted to null
+     */
     public void exitGame() {
         this.game = null;
         this.myPrivateObjectives = null;
@@ -49,16 +52,28 @@ public class ClientInfo implements Observer, NotificationHandler {
         this.timeLeftToCompleteTask = 0;
     }
 
+    /**
+     * cleans the attributes
+     */
     private void clean() {
         this.userToken = null;
         this.user = null;
         exitGame();
     }
 
+    /**
+     * if the observer isn't in the observers arraylist it is added to it
+     * @param observer is the observer
+     */
     public void addObserver(Observer observer) {
         if (!observers.contains(observer)) observers.add(observer);
     }
 
+    /**
+     * the observer is removed by the observer arraylis
+     * 
+     * @param observer is the observer
+     */
     public void removeObserver(Observer observer) {
         observers.remove(observer);
     }
