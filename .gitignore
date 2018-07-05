@@ -158,3 +158,12 @@ serverconfig/
 serverdata/
 manifests/
 src/test/resources/databasetest/database.db
+
+
+!JAR/
+!JAR/**/*.jar
+JAR/server/serverdata/*
+
+
+
+src/main/
