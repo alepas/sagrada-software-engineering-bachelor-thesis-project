@@ -7,6 +7,7 @@ import server.model.dicebag.Dice;
 import server.model.users.MoveData;
 import server.model.users.PlayerInGame;
 import shared.clientInfo.*;
+import shared.constants.ToolcardConstants;
 import shared.exceptions.usersAndDatabaseExceptions.*;
 import shared.network.commands.notifications.ToolCardDiceChangedNotification;
 import shared.network.commands.notifications.ToolCardDicePlacedNotification;
@@ -23,8 +24,8 @@ public class ToolCard10 extends ToolCard {
      */
     public ToolCard10() {
         this.id = ToolCardConstants.TOOLCARD10_ID;
-        this.name = ToolCardConstants.TOOL10_NAME;
-        this.description = ToolCardConstants.TOOL10_DESCRIPTION;
+        this.name = ToolcardConstants.TOOL10_NAME;
+        this.description = ToolcardConstants.TOOL10_DESCRIPTION;
         this.colorForDiceSingleUser = Color.GREEN;
         this.allowPlaceDiceAfterCard = false;
         this.cardBlocksNextTurn = false;

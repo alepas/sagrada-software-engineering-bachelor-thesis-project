@@ -3,6 +3,7 @@ package server.model.cards.concretepublicobjectivecards;
 import server.constants.POCConstants;
 import server.model.cards.PublicObjectiveCard;
 import server.model.wpc.Wpc;
+import shared.constants.PocConstants;
 
 public class PublicObjectiveCard7  extends PublicObjectiveCard {
 
@@ -11,8 +12,8 @@ public class PublicObjectiveCard7  extends PublicObjectiveCard {
      */
     public PublicObjectiveCard7(){
         this.id = POCConstants.POC7_ID;
-        this.name = POCConstants.POC7_NAME;
-        this.description = POCConstants.POC7_DESCRIPTION;
+        this.name = PocConstants.POC7_NAME;
+        this.description = PocConstants.POC7_DESCRIPTION;
     }
 
     /**

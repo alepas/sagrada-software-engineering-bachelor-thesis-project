@@ -111,9 +111,6 @@ public class MultiplayerGame extends Game {
         }
     }
 
-
-    //------------------------------- Metodi validi solo lato server ------------------------------
-
     @Override
     public void run() {
         try {
@@ -130,7 +127,6 @@ public class MultiplayerGame extends Game {
                                in ascolto di eventuali cambiamenti. Ecco il perchè di questa attesa*/
         changeAndNotifyObservers(new GameStartedNotification());
 
-        System.out.println("La partità è iniziata");
         initializeGame();
         allWpcsChosen = true;
 
@@ -144,8 +140,6 @@ public class MultiplayerGame extends Game {
     }
 
     private void forceStarGame() {
-        System.out.println("Forzo l'inizio del game");
-
         for (PlayerInGame player : players) {
             if (player != null && player.isDisconnected()) {
                 try {
