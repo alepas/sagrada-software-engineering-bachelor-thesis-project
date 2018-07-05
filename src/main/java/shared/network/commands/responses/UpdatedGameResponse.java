@@ -14,6 +14,15 @@ public class UpdatedGameResponse implements Response {
     public final ToolCardClientNextActionInfo nextActionInfo;
     public final Exception exception;
 
+    /**
+     * @param game
+     * @param active
+     * @param timeLeftToCompleteTask
+     * @param privateObjectives
+     * @param nextAction
+     * @param nextActionInfo is the next action hat the player has to do
+     * @param exception is the exception that could be thrown
+     */
     private UpdatedGameResponse(ClientGame game, boolean active, Integer timeLeftToCompleteTask, ClientColor[] privateObjectives, NextAction nextAction, ToolCardClientNextActionInfo nextActionInfo, Exception exception) {
         this.game = game;
         this.active = active;

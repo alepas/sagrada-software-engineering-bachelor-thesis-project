@@ -198,7 +198,7 @@ public class CliController {
 
     public NextAction interruptToolcard(ToolCardInterruptValues value){
         try {
-            return client.interuptToolCard(clientInfo.getUserToken(), value);
+            return client.interruptToolCard(clientInfo.getUserToken(), value);
         } catch (PlayerNotAuthorizedException | CannotInterruptToolCardException | CannotFindPlayerInDatabaseException | NoToolCardInUseException e){
             view.displayText(e.getMessage());
             return null;

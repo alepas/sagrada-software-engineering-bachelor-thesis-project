@@ -157,3 +157,4 @@ clientconfig/
 serverconfig/
 serverdata/
 manifests/
+src/test/resources/databasetest/database.db

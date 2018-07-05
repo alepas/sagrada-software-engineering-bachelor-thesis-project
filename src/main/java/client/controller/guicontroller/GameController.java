@@ -1342,7 +1342,7 @@ public class GameController implements Observer, NotificationHandler {
     private void interruptToolCard(ToolCardInterruptValues value) {
         NextAction nextAction = lastNextAction;
         try {
-            nextAction = networkClient.interuptToolCard(clientInfo.getUserToken(), value);
+            nextAction = networkClient.interruptToolCard(clientInfo.getUserToken(), value);
 
         } catch (CannotFindPlayerInDatabaseException | PlayerNotAuthorizedException |
                 CannotInterruptToolCardException |NoToolCardInUseException e) {

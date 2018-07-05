@@ -216,7 +216,7 @@ public class ToolCard5Test {
     public void placeDiceStatusThreeTest () throws CannotPerformThisMoveException,
             CannotPickPositionException, CannotPickDiceException {
         toolCard5.setCurrentToolStatus(3);
-        toolCard5.placeDice(chosenDice.getId(), position);
+//        toolCard5.placeDice(chosenDice.getId(), position);
 
     }
 
