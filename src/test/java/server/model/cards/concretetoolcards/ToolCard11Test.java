@@ -1,8 +1,7 @@
-package server.model.cards.concreteToolCards;
+package server.model.cards.concretetoolcards;
 
 import org.junit.Before;
 import org.junit.Test;
-import server.constants.ToolCardConstants;
 import server.model.cards.ToolCard;
 import server.model.configLoader.ConfigLoader;
 import server.model.dicebag.Color;
@@ -27,7 +26,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class ToolCard11Test {
-    private server.model.cards.concretetoolcards.ToolCard11 toolCard11;
+    private ToolCard11 toolCard11;
     private Dice chosenDiceMiddleNumber;
     private Dice chosenDice1Number;
     private Dice chosenDice6Number;
@@ -42,7 +41,7 @@ public class ToolCard11Test {
     public void Before() throws CannotPickDiceException {
 
         ConfigLoader.loadConfig();
-        toolCard11 = new server.model.cards.concretetoolcards.ToolCard11();
+        toolCard11 = new ToolCard11();
 
         game = mock(Game.class);
 
