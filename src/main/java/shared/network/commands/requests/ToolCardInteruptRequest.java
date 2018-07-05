@@ -1,13 +1,13 @@
 package shared.network.commands.requests;
 
-import shared.clientInfo.ToolCardInteruptValues;
+import shared.clientInfo.ToolCardInterruptValues;
 import shared.network.commands.responses.Response;
 
 public class ToolCardInteruptRequest implements Request {
     public final String userToken;
-    public final ToolCardInteruptValues value;
+    public final ToolCardInterruptValues value;
 
-    public ToolCardInteruptRequest(String userToken, ToolCardInteruptValues value) {
+    public ToolCardInteruptRequest(String userToken, ToolCardInterruptValues value) {
         this.userToken = userToken;
         this.value = value;
     }

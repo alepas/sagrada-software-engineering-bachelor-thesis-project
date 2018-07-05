@@ -978,9 +978,9 @@ public class CliView implements Observer, NotificationHandler {
             String response = userInput();
 
             if (response == null) return;
-            if (response.equals(CliConstants.YES_RESPONSE)) nextAction = controller.interruptToolcard(ToolCardInteruptValues.YES);
-            if (response.equals(CliConstants.NO_RESPONSE)) nextAction = controller.interruptToolcard(ToolCardInteruptValues.NO);
-            if (response.equals(VOID_STRING)) nextAction = controller.interruptToolcard(ToolCardInteruptValues.OK);
+            if (response.equals(CliConstants.YES_RESPONSE)) nextAction = controller.interruptToolcard(ToolCardInterruptValues.YES);
+            if (response.equals(CliConstants.NO_RESPONSE)) nextAction = controller.interruptToolcard(ToolCardInterruptValues.NO);
+            if (response.equals(VOID_STRING)) nextAction = controller.interruptToolcard(ToolCardInterruptValues.OK);
             if (response.equals(CliConstants.ESCAPE_RESPONSE)) nextAction = controller.cancelToolcardAction();
 
         } while (nextAction == null);

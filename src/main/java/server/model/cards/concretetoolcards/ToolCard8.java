@@ -195,14 +195,14 @@ public class ToolCard8 extends ToolCard {
             case 2:
                 currentStatus = 30;
                 try {
-                    return interruptToolCard(ToolCardInteruptValues.OK);
+                    return interruptToolCard(ToolCardInterruptValues.OK);
                 } catch (CannotInterruptToolCardException e) {
                     //impossible
                     throw new CannotCancelActionException(username, id, 0);
                 }
             case 30:
                 try {
-                    return interruptToolCard(ToolCardInteruptValues.OK);
+                    return interruptToolCard(ToolCardInterruptValues.OK);
                 } catch (CannotInterruptToolCardException e) {
                     //impossible
                     throw new CannotCancelActionException(username, id, 0);
@@ -267,10 +267,10 @@ public class ToolCard8 extends ToolCard {
      * @throws CannotInterruptToolCardException everytime that it is called
      */
     @Override
-    public MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInterruptToolCardException {
+    public MoveData interruptToolCard(ToolCardInterruptValues value) throws CannotInterruptToolCardException {
         if (currentStatus != 30)
             throw new CannotInterruptToolCardException(username, id);
-        if (value != ToolCardInteruptValues.OK)
+        if (value != ToolCardInterruptValues.OK)
             throw new CannotInterruptToolCardException(username, id);
         if (singlePlayerGame)
             cardExtractedDices.add(diceForSingleUser);

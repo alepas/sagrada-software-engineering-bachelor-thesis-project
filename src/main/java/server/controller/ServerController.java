@@ -305,9 +305,9 @@ public class ServerController {
      * @throws CannotInterruptToolCardException if the value isn't correct
      * @throws NoToolCardInUseException if the player is not using the toolcard
      */
-    public Response interruptToolCard(String userToken, ToolCardInteruptValues value) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotInterruptToolCardException, NoToolCardInUseException {
+    public Response interruptToolCard(String userToken, ToolCardInterruptValues value) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotInterruptToolCardException, NoToolCardInUseException {
         PlayerInGame currentPlayer = databaseUsers.getPlayerInGameFromToken(userToken);
-        return convertMoveDataToToolCardResponse(currentPlayer.interuptToolCard(value));
+        return convertMoveDataToToolCardResponse(currentPlayer.interruptToolCard(value));
     }
 
 

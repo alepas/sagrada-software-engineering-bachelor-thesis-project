@@ -192,14 +192,14 @@ public class ToolCard12 extends ToolCard {
             case 2:
                 currentStatus = 20;
                 try {
-                    return interruptToolCard(ToolCardInteruptValues.NO);
+                    return interruptToolCard(ToolCardInterruptValues.NO);
                 } catch (CannotInterruptToolCardException e) {
                     //impossible
                 }
                 break;
             case 20:
                 try {
-                    return interruptToolCard(ToolCardInteruptValues.NO);
+                    return interruptToolCard(ToolCardInterruptValues.NO);
                 } catch (CannotInterruptToolCardException e) {
                     //impossible
                 }
@@ -253,13 +253,13 @@ public class ToolCard12 extends ToolCard {
      * @throws CannotInterruptToolCardException if the current status is different from 20
      */
     @Override
-    public MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInterruptToolCardException {
+    public MoveData interruptToolCard(ToolCardInterruptValues value) throws CannotInterruptToolCardException {
         if (currentStatus != 20)
             throw new CannotInterruptToolCardException(username, id);
         currentStatus = 2;
-        if (value == ToolCardInteruptValues.YES)
+        if (value == ToolCardInterruptValues.YES)
             return new MoveData(NextAction.PLACE_DICE_TOOLCARD, ClientDiceLocations.WPC, ClientDiceLocations.WPC, tempClientWpc, null, null, null, null);
-        if (value != ToolCardInteruptValues.NO)
+        if (value != ToolCardInterruptValues.NO)
             throw new CannotInterruptToolCardException(username, id);
         updateClientWPC();
         updateClientExtractedDices();

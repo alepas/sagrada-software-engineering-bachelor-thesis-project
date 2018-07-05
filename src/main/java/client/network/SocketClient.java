@@ -2,11 +2,13 @@ package client.network;
 
 import shared.clientInfo.NextAction;
 import shared.clientInfo.Position;
-import shared.clientInfo.ToolCardInteruptValues;
+
+import shared.clientInfo.ToolCardInterruptValues;
 import shared.exceptions.gameexceptions.CannotCreatePlayerException;
 import shared.exceptions.gameexceptions.InvalidGameParametersException;
 import shared.exceptions.gameexceptions.NotYourWpcException;
 import shared.exceptions.gameexceptions.UserNotInThisGameException;
+
 import shared.exceptions.usersAndDatabaseExceptions.*;
 import shared.network.commands.notifications.ForceDisconnectionNotification;
 import shared.network.commands.requests.*;
@@ -275,7 +277,7 @@ public class SocketClient extends NetworkClient implements ResponseHandler {
     }
 
     @Override
-    public NextAction interruptToolCard(String userToken, ToolCardInteruptValues value) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotInterruptToolCardException, NoToolCardInUseException {
+    public NextAction interruptToolCard(String userToken, ToolCardInterruptValues value) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotInterruptToolCardException, NoToolCardInUseException {
         request(new ToolCardInteruptRequest(userToken, value));
 
         ToolCardResponse response = (ToolCardResponse) waitResponse();

@@ -191,14 +191,14 @@ public class ToolCard11 extends ToolCard {
             case 3:
                 currentStatus = 30;
                 try {
-                    return interruptToolCard(ToolCardInteruptValues.OK);
+                    return interruptToolCard(ToolCardInterruptValues.OK);
                 } catch (CannotInterruptToolCardException e) {
                     e.printStackTrace();
                 }
                 break;
             case 30:
                 try {
-                    return interruptToolCard(ToolCardInteruptValues.OK);
+                    return interruptToolCard(ToolCardInterruptValues.OK);
                 } catch (CannotInterruptToolCardException e) {
                     //impossible
                     throw new CannotCancelActionException(username, id, 1);
@@ -206,14 +206,14 @@ public class ToolCard11 extends ToolCard {
             case 2:
                 currentStatus = 20;
                 try {
-                    return interruptToolCard(ToolCardInteruptValues.NO);
+                    return interruptToolCard(ToolCardInterruptValues.NO);
                 } catch (CannotInterruptToolCardException e) {
                     //impossible
                     throw new CannotCancelActionException(username, id, 1);
                 }
             case 20:
                 try {
-                    return interruptToolCard(ToolCardInteruptValues.NO);
+                    return interruptToolCard(ToolCardInterruptValues.NO);
                 } catch (CannotInterruptToolCardException e) {
                     //impossible
                     throw new CannotCancelActionException(username, id, 1);
@@ -264,13 +264,13 @@ public class ToolCard11 extends ToolCard {
     }
 
     @Override
-    public MoveData interruptToolCard(ToolCardInteruptValues value) throws CannotInterruptToolCardException {
+    public MoveData interruptToolCard(ToolCardInterruptValues value) throws CannotInterruptToolCardException {
         if (currentStatus == 20) {
             currentStatus = 2;
             updateClientExtractedDices();
-            if (value == ToolCardInteruptValues.YES)
+            if (value == ToolCardInterruptValues.YES)
                 return new MoveData(NextAction.SELECT_NUMBER_TOOLCARD, null, tempClientExtractedDices, null, chosenDice.getClientDice(), ClientDiceLocations.EXTRACTED, numbers, false);
-            if (value != ToolCardInteruptValues.NO)
+            if (value != ToolCardInterruptValues.NO)
                 throw new CannotInterruptToolCardException(username, id);
             updateAndCopyToGameData(true, false, false);
             ArrayList<ClientDice> tempExtracted = tempClientExtractedDices;
@@ -283,7 +283,7 @@ public class ToolCard11 extends ToolCard {
 
         if (currentStatus != 30)
             throw new CannotInterruptToolCardException(username, id);
-        if (value != ToolCardInteruptValues.OK)
+        if (value != ToolCardInterruptValues.OK)
             throw new CannotInterruptToolCardException(username, id);
         updateAndCopyToGameData(true, false, false);
         ArrayList<ClientDice> tempExtracted = tempClientExtractedDices;

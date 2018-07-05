@@ -2,7 +2,7 @@ package client.network;
 
 import shared.clientInfo.NextAction;
 import shared.clientInfo.Position;
-import shared.clientInfo.ToolCardInteruptValues;
+import shared.clientInfo.ToolCardInterruptValues;
 import shared.constants.NetworkConstants;
 import shared.exceptions.gameexceptions.CannotCreatePlayerException;
 import shared.exceptions.gameexceptions.InvalidGameParametersException;
@@ -222,7 +222,7 @@ public class RmiClient extends NetworkClient {
     }
 
     @Override
-    public NextAction interruptToolCard(String userToken, ToolCardInteruptValues value) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotInterruptToolCardException, NoToolCardInUseException {
+    public NextAction interruptToolCard(String userToken, ToolCardInterruptValues value) throws CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotInterruptToolCardException, NoToolCardInUseException {
         try {
             ToolCardResponse response = (ToolCardResponse) remoteServer.interuptToolCard(userToken, value);
             response.handle(this);

@@ -2,7 +2,6 @@ package server.model.cards.concretetoolcards;
 
 import org.junit.Before;
 import org.junit.Test;
-import server.constants.ToolCardConstants;
 import server.model.cards.ToolCard;
 import server.model.configLoader.ConfigLoader;
 import server.model.dicebag.Color;
@@ -408,7 +407,7 @@ public class ToolCard10Test {
      */
     @Test(expected = CannotInterruptToolCardException.class)
     public void interruptToolCardIllegalStatusTest() throws CannotInterruptToolCardException {
-        toolCard10.interruptToolCard(ToolCardInteruptValues.YES);
+        toolCard10.interruptToolCard(ToolCardInterruptValues.YES);
     }
 
     /**
@@ -417,7 +416,7 @@ public class ToolCard10Test {
     @Test(expected = CannotInterruptToolCardException.class)
     public void interruptToolCardIllegalValue() throws CannotInterruptToolCardException {
         toolCard10.setCurrentToolStatus(30);
-        toolCard10.interruptToolCard(ToolCardInteruptValues.YES);
+        toolCard10.interruptToolCard(ToolCardInterruptValues.YES);
     }
 
 

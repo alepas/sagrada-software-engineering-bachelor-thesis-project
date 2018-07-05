@@ -2,7 +2,6 @@ package server.model.cards.concretetoolcards;
 
 import org.junit.Before;
 import org.junit.Test;
-import server.constants.ToolCardConstants;
 import server.model.cards.ToolCard;
 import server.model.configLoader.ConfigLoader;
 import server.model.dicebag.Color;
@@ -21,7 +20,7 @@ import shared.exceptions.usersAndDatabaseExceptions.*;
 import shared.clientInfo.ClientDice;
 import shared.clientInfo.ClientDiceLocations;
 import shared.clientInfo.Position;
-import shared.clientInfo.ToolCardInteruptValues;
+import shared.clientInfo.ToolCardInterruptValues;
 import shared.constants.ToolcardConstants;
 import shared.exceptions.usersAndDatabaseExceptions.CannotCancelActionException;
 import shared.exceptions.usersAndDatabaseExceptions.CannotInterruptToolCardException;
@@ -228,7 +227,7 @@ public class ToolCard7Test {
      */
     @Test(expected = CannotInterruptToolCardException.class)
     public void interruptToolCardTest() throws CannotInterruptToolCardException {
-        toolCard7.interruptToolCard(ToolCardInteruptValues.YES);
+        toolCard7.interruptToolCard(ToolCardInterruptValues.YES);
     }
 
 

@@ -1,11 +1,13 @@
 package shared.network;
 
 import shared.clientInfo.Position;
-import shared.clientInfo.ToolCardInteruptValues;
+
+import shared.clientInfo.ToolCardInterruptValues;
 import shared.exceptions.gameexceptions.CannotCreatePlayerException;
 import shared.exceptions.gameexceptions.InvalidGameParametersException;
 import shared.exceptions.gameexceptions.NotYourWpcException;
 import shared.exceptions.gameexceptions.UserNotInThisGameException;
+
 import shared.exceptions.usersAndDatabaseExceptions.*;
 import shared.network.commands.responses.Response;
 
@@ -43,7 +45,7 @@ public interface RemoteServer extends Remote {
 
     Response getUpdatedGame(String userToken) throws RemoteException, CannotFindPlayerInDatabaseException;
 
-    Response interuptToolCard(String userToken, ToolCardInteruptValues value) throws RemoteException, CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotInterruptToolCardException, NoToolCardInUseException;
+    Response interuptToolCard(String userToken, ToolCardInterruptValues value) throws RemoteException, CannotFindPlayerInDatabaseException, PlayerNotAuthorizedException, CannotInterruptToolCardException, NoToolCardInUseException;
 
     Response cancelAction (String userToken) throws RemoteException, CannotCancelActionException, PlayerNotAuthorizedException, CannotFindPlayerInDatabaseException;
 

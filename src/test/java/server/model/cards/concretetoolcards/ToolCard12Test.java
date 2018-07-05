@@ -2,7 +2,6 @@ package server.model.cards.concretetoolcards;
 
 import org.junit.Before;
 import org.junit.Test;
-import server.constants.ToolCardConstants;
 import server.model.cards.ToolCard;
 import server.model.configLoader.ConfigLoader;
 import server.model.dicebag.Color;
@@ -441,7 +440,7 @@ public class ToolCard12Test {
      */
     @Test(expected = CannotInterruptToolCardException.class)
     public void interruptToolCardIllegalStatusTest() throws CannotInterruptToolCardException {
-        toolCard12.interruptToolCard(ToolCardInteruptValues.YES);
+        toolCard12.interruptToolCard(ToolCardInterruptValues.YES);
     }
 
     /**
@@ -450,7 +449,7 @@ public class ToolCard12Test {
     @Test(expected = CannotInterruptToolCardException.class)
     public void interruptToolCardIllegalValueTest() throws CannotInterruptToolCardException {
         toolCard12.setCurrentToolStatus(20);
-        toolCard12.interruptToolCard(ToolCardInteruptValues.OK);
+        toolCard12.interruptToolCard(ToolCardInterruptValues.OK);
     }
 
     /**
@@ -462,7 +461,7 @@ public class ToolCard12Test {
     public void interruptToolCardValueNoTest() throws CannotInterruptToolCardException {
         setSchema();
         toolCard12.setCurrentToolStatus(20);
-        MoveData moveData = toolCard12.interruptToolCard(ToolCardInteruptValues.NO);
+        MoveData moveData = toolCard12.interruptToolCard(ToolCardInterruptValues.NO);
 
         assertTrue( moveData.moveFinished);
 
@@ -479,7 +478,7 @@ public class ToolCard12Test {
     @Test
     public void interruptToolCardValueYesTest() throws CannotInterruptToolCardException {
         toolCard12.setCurrentToolStatus(20);
-        MoveData moveData = toolCard12.interruptToolCard(ToolCardInteruptValues.YES);
+        MoveData moveData = toolCard12.interruptToolCard(ToolCardInterruptValues.YES);
 
         assertEquals(NextAction.PLACE_DICE_TOOLCARD, moveData.nextAction);
         assertEquals(ClientDiceLocations.WPC, moveData.wherePickNewDice);
