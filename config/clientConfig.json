@@ -1,0 +1,9 @@
+{
+  "language": "ita",
+  "COUNTER_START_NUMBER": 0,
+  "WPC_SPACING": 10,
+  "WPC_WAITING_STEPS": [0, 5, 15, 30, 50],
+  "CELL_HEIGHT": 3,
+  "DICE_DISTANCE": 5,
+  "DICE_LENGHT": 7
+}

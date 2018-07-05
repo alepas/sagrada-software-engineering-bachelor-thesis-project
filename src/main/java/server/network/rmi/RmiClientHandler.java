@@ -13,6 +13,10 @@ public class RmiClientHandler extends ClientHandler implements Observer {
     private final RmiUserConnectionTimer timer;
     private final RmiServer rmiServer;
 
+    /**
+     * @param userToken is the player's token
+     * @param rmiServer is the connection to the rmi server
+     */
     RmiClientHandler(String userToken, RmiServer rmiServer) {
         super(userToken);
         observer = null;
@@ -30,17 +34,21 @@ public class RmiClientHandler extends ClientHandler implements Observer {
         this.observer = null;
     }
 
+    /**
+     * if the connection to the client has been lost it removes the client from the rmiServer
+     */
     @Override
     public void disconnect() {
-        //Ho perso la connessione con il client
         System.out.println("Rmi client disconnesso");
         rmiServer.removeClient(this);
         observer = null;
     }
 
+    /**
+     * force the player to disconnect
+     */
     @Override
     public void removeConnection() {
-        //Forza il client a disconettersi
         System.out.println("Rmi client buttato fuori");
         timer.stop();
         rmiServer.removeClient(this);
@@ -48,10 +56,17 @@ public class RmiClientHandler extends ClientHandler implements Observer {
         observer = null;
     }
 
+    /**
+     * reset the polling timer
+     */
     void poll(){
         timer.reset();
     }
 
+    /**
+     * @param o is an observer
+     * @param arg is the update argument
+     */
     @Override
     public void update(Observable o, Object arg) {
         try {

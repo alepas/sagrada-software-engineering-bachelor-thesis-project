@@ -16,14 +16,19 @@ import shared.network.commands.responses.CreateUserResponse;
 import shared.network.commands.responses.LoginResponse;
 import shared.network.commands.responses.Response;
 
-import java.rmi.RemoteException;
+
 import java.util.HashMap;
 
 public class RmiServer implements RemoteServer {
-    private transient final ServerController controller;
-    private transient HashMap<String, RmiClientHandler> clientByToken;
+    private final ServerController controller;
+    private HashMap<String, RmiClientHandler> clientByToken;
 
-    public RmiServer(ServerController controller) throws RemoteException {
+    /**
+     * Sets the controller and creates a new HashMap
+     *
+     * @param controller is the controller of the server
+     */
+    public RmiServer(ServerController controller) {
         this.controller = controller;
         clientByToken = new HashMap<>();
     }
@@ -31,25 +36,21 @@ public class RmiServer implements RemoteServer {
 
     //--------------------------------- CONNECTION HANDLER ------------------------------------
 
+    /**
+     * checks if the client associated to the token is different from null and in case calls the client poll
+     * @param userToken is the player's token
+     */
     @Override
-    public void poll(String userToken) throws RemoteException {
+    public void poll(String userToken) {
         RmiClientHandler client = clientByToken.get(userToken);
         if (client != null) client.poll();
     }
 
-
-    public void removeRemoteObserver(String username) {
-//        observerByUser.remove(username);
-    }
-
-    //TODO: Non serve più
-    public void rmiDisconnectionTimerStop(String oldToken) {
-//        RmiUserConnectionTimer timer = timerByToken.remove(oldToken);
-//        if (timer != null){
-//            timer.stop();
-//        }
-    }
-
+    /**
+     * deletes the observer from the game and removes the client from all Hashmaps
+     *
+     * @param handler is the rmi client server
+     */
     void removeClient(RmiClientHandler handler){
         try {
             controller.deleteObserverFromGame(handler.getUsername(),handler);
@@ -62,6 +63,15 @@ public class RmiServer implements RemoteServer {
 
     //------------------------------------- RMI SERVER ----------------------------------------
 
+    /**
+     * calls the create user response, adds the client connection to the controller and all client parameters
+     * @param username is the player's username
+     * @param password is the player's password
+     * @param observer is the observer related to the player
+     *
+     * @return  the response of the create user
+     * @throws CannotRegisterUserException if it not possible to register the user
+     */
     @Override
     public Response createUser(String username, String password, RemoteObserver observer) throws CannotRegisterUserException {
         CreateUserResponse response = (CreateUserResponse) controller.createUser(username, password, null);
