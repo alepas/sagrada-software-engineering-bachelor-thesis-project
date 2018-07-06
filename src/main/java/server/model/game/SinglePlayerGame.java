@@ -38,6 +38,7 @@ public class SinglePlayerGame extends Game {
      */
     public SinglePlayerGame(int numPlayers, int level) throws InvalidGameParametersException {
         super(numPlayers);
+        level=GameConstants.NUM_TOOL_CARDS_IN_MULTIPLAYER_GAME;
         if (level<1||level>5)
             throw new InvalidGameParametersException(level,false);
         if (numPlayers !=1)

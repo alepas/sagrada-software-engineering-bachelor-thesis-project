@@ -333,11 +333,6 @@ public abstract class Game extends Observable implements Runnable {
     void extractToolCards() {
         ArrayList<String> ids = new ArrayList<>(toolcardDB.getCardsIDs());
         Collections.shuffle(ids);
-        ids.clear();
-        ids.add("1");
-        ids.add("2");
-        ids.add("3");
-
 
         ArrayList<String> toolCardsExtracted = new ArrayList<>(ids.subList(0, numOfToolCards));
 
