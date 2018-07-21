@@ -1,0 +1,12 @@
+{
+  "language": "ita",
+  "network": {
+    "SERVER_ADDRESS": "172.20.10.2",
+    "SOCKET_SERVER_PORT": 8073,
+    "RMI_SERVER_PORT": 4321,
+    "RMI_CONTROLLER_NAME": "controller",
+    "RMI_INITIAL_POLLING_TIME": 3000,
+    "RMI_POLLING_TIME": 1000,
+    "RMI_MAX_POLLS_MISSED": 10
+  }
+}

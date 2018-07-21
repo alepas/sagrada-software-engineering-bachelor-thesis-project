@@ -7,7 +7,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.Observable;
 import java.util.Observer;
 
-public class RmiRemoteObserver extends UnicastRemoteObject implements RemoteObserver {
+public class RmiRemoteObserver implements RemoteObserver {
 
     private final transient Observer observer = ClientInfo.getInstance();
 

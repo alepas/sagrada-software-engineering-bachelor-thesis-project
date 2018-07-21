@@ -6,6 +6,7 @@ import server.model.dicebag.Color;
 import server.model.dicebag.Dice;
 import server.model.users.MoveData;
 import server.model.users.PlayerInGame;
+import server.model.wpc.DiceAndPosition;
 import shared.clientinfo.*;
 import shared.constants.ToolcardConstants;
 import shared.exceptions.usersAndDatabaseExceptions.*;
@@ -150,39 +151,44 @@ public class ToolCard6 extends ToolCard {
     @Override
     public MoveData cancelAction(boolean all) throws CannotCancelActionException {
         boolean canceledCard = true;
-
-        switch (currentStatus) {
-            case 2:
-                if (!all) break;
-                if (cardWpc.autoAddDice(this.dice))
-                    cardExtractedDices.remove(this.dice);
-                currentStatus = 1;
-                canceledCard = false;
-                break;
-            case 30:
-                if (!all) break;
-                currentStatus = 1;
-                canceledCard = false;
-                break;
-            case 1:
-                if (!all) return cancelStatusOne();
-                break;
-            case 0:
-                if (!all)
-                    return cancelStatusZero();
-                break;
-            default:
-                throw new CannotCancelActionException(username, id, 1);
+        if(!all) {
+            switch (currentStatus){
+                case 1: return cancelStatusOne();
+                case 0: return cancelStatusZero();
+                default: throw new CannotCancelActionException(username, id, 1);
+            }
         }
-        if (currentStatus == 1 && singlePlayerGame)
-            cardExtractedDices.add(diceForSingleUser);
-        updateAndCopyToGameData(true, true, true);
-        ClientWpc tempWpc = tempClientWpc;
-        ArrayList<ClientDice> tempExtracted = tempClientExtractedDices;
-        ClientRoundTrack tempRound = tempClientRoundTrack;
-        cleanCard();
-        return new MoveData(true, canceledCard, tempWpc, tempExtracted, tempRound, null, null, null);
-
+        else {
+            switch (currentStatus) {
+                case 2:
+                    if (cardWpc.autoAddDice(this.dice))
+                        cardExtractedDices.remove(this.dice);
+                    updateAndCopyToGameData(true, true, true);
+                    DiceAndPosition diceAndPosition=cardWpc.getDiceAndPosition(this.dice.getId());
+                    movesNotifications.add(new ToolCardDicePlacedNotification(username, this.dice.getClientDice(), diceAndPosition.getPosition()));
+                    canceledCard = false;
+                    break;
+                case 30:
+                    canceledCard = false;
+                    break;
+                case 1:
+                    break;
+                case 0:
+                    break;
+                default:
+                    throw new CannotCancelActionException(username, id, 1);
+            }
+            if (currentStatus == 1 && singlePlayerGame)
+                cardExtractedDices.add(diceForSingleUser);
+            if (!canceledCard)
+                currentGame.changeAndNotifyObservers(new ToolCardUsedNotification(username, this.getClientToolcard(), movesNotifications, tempClientWpc, tempClientExtractedDices, null, currentPlayer.getFavours()));
+            updateAndCopyToGameData(true, true, true);
+            ClientWpc tempWpc = tempClientWpc;
+            ArrayList<ClientDice> tempExtracted = tempClientExtractedDices;
+            ClientRoundTrack tempRound = tempClientRoundTrack;
+            cleanCard();
+            return new MoveData(true, canceledCard, tempWpc, tempExtracted, tempRound, null, null, null);
+        }
     }
 
 
@@ -247,5 +253,9 @@ public class ToolCard6 extends ToolCard {
 
     Dice getToolDice() {
         return dice;
+    }
+
+    public void setDice(Dice dice) {
+        this.dice = dice;
     }
 }

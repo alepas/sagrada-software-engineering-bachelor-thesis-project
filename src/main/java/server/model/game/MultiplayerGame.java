@@ -105,9 +105,11 @@ public class MultiplayerGame extends Game {
             removePlayer(username);
             if (numActualPlayers() == 1) ((WaitPlayersThread) currentThread).setPause(true);
         } else {
-            int numConnected = 0;
-            for (PlayerInGame player : players) if (!player.isDisconnected()) numConnected++;
-            if (numConnected == 1) forceEndGame();
+            if (currentTurn != 0) {
+                int numConnected = 0;
+                for (PlayerInGame player : players) if (!player.isDisconnected()) numConnected++;
+                if (numConnected == 1) forceEndGame();
+            }
         }
     }
 
@@ -175,15 +177,15 @@ public class MultiplayerGame extends Game {
      */
     @Override
     public void initializeGame() {
+        turnPlayer = 0;
+        roundPlayer = players.length - 1;
+        currentTurn = 0;
+
         extractPrivateObjectives();
         extractWPCs();
         extractToolCards();
         extractPublicObjectives();
         shufflePlayers();
-
-        turnPlayer = 0;
-        roundPlayer = players.length - 1;
-        currentTurn = 1;
     }
 
     /**

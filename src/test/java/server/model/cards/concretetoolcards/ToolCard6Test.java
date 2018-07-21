@@ -380,7 +380,10 @@ public class ToolCard6Test {
     @Test
     public void cancelLAstOperationStatusTwoAddDiceTest() throws CannotCancelActionException {
         setSchema();
+        toolCard6.setDice(chosenDice);
         when(wpc.autoAddDice(chosenDice)).thenReturn(true);
+        DiceAndPosition diceAndPosition = new DiceAndPosition(chosenDice,new Position(0,2));
+        when(wpc.getDiceAndPosition(chosenDice.getId())).thenReturn(diceAndPosition);
         toolCard6.setCurrentToolStatus(2);
         toolCard6.cancelAction(true);
         assertEquals(0, toolCard6.getCurrentStatus());

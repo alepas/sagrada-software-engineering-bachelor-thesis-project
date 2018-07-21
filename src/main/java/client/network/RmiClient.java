@@ -17,6 +17,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.logging.Logger;
 
 public class RmiClient extends NetworkClient {
@@ -26,6 +27,10 @@ public class RmiClient extends NetworkClient {
     private boolean connected = false;
 
     public RmiClient() throws NotBoundException, RemoteException{
+        System.setProperty("java.rmi.server.hostname", NetworkConstants.SERVER_ADDRESS);
+        System.setProperty("java.security.policy", "policy.policy");
+        System.setSecurityManager(new SecurityManager());
+
         Registry registry = LocateRegistry.getRegistry(NetworkConstants.SERVER_ADDRESS, NetworkConstants.RMI_SERVER_PORT);
         remoteServer = (RemoteServer) registry.lookup(NetworkConstants.RMI_CONTROLLER_NAME);
     }
@@ -51,7 +56,9 @@ public class RmiClient extends NetworkClient {
     @Override
     public void createUser(String username, String password) throws CannotRegisterUserException {
         try {
-            CreateUserResponse response = (CreateUserResponse) remoteServer.createUser(username, password, new RmiRemoteObserver());
+            RmiRemoteObserver observer = new RmiRemoteObserver();
+            UnicastRemoteObject.exportObject(observer, 0);
+            CreateUserResponse response = (CreateUserResponse) remoteServer.createUser(username, password, observer);
             response.handle(this);
             if (response.exception == null){
                 connected = true;
@@ -66,7 +73,9 @@ public class RmiClient extends NetworkClient {
     @Override
     public void login(String username, String password) throws CannotLoginUserException {
         try {
-            LoginResponse response = (LoginResponse) remoteServer.login(username, password, new RmiRemoteObserver());
+            RmiRemoteObserver observer = new RmiRemoteObserver();
+            UnicastRemoteObject.exportObject(observer, 0);
+            LoginResponse response = (LoginResponse) remoteServer.login(username, password, observer);
             response.handle(this);
             if (response.exception == null){
                 connected = true;

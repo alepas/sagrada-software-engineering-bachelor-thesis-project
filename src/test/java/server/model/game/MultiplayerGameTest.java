@@ -441,7 +441,7 @@ public class MultiplayerGameTest {
 
         assertEquals(0, game.turnPlayer);
         assertEquals(game.players.length-1, game.roundPlayer);
-        assertEquals(1, game.currentTurn);
+        assertEquals(0, game.currentTurn);
 
         TASK_DELAY = val1;
         CHOOSE_WPC_WAITING_TIME = val2;

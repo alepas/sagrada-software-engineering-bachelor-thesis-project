@@ -8,6 +8,8 @@ import shared.constants.NetworkConstants;
 import shared.network.RemoteServer;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -18,11 +20,16 @@ public class LaunchServer {
     public static void main(String[] args) throws InterruptedException {
         ConfigLoader.loadConfig();
 
+         //= LaunchServer.class.getResource("policy.policy");
         //Avvio di RMI
         try {
+            System.setProperty("java.security.policy", "./policy.policy");
+            System.setSecurityManager(new SecurityManager());
+
             RmiServer remoteServer = new RmiServer(ServerController.getInstance());
             RemoteServer stub = (RemoteServer) UnicastRemoteObject.exportObject(remoteServer, NetworkConstants.RMI_SERVER_PORT);
 
+            System.setProperty("java.rmi.server.hostname", NetworkConstants.SERVER_ADDRESS);
             Registry registry = LocateRegistry.createRegistry(NetworkConstants.RMI_SERVER_PORT);
             registry.rebind(NetworkConstants.RMI_CONTROLLER_NAME, stub);
             System.out.println(">>> RMI Server is running\t\tAddress: " + NetworkConstants.SERVER_ADDRESS + "\tPort: " + NetworkConstants.RMI_SERVER_PORT);

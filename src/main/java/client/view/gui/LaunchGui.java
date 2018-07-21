@@ -27,7 +27,7 @@ public class LaunchGui extends Application {
      * @throws IOException necessary exception
      */
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) throws IOException, InterruptedException {
 
         Parent root = FXMLLoader.load(getClass().getResource("fxml/StartingScene.fxml"));
         stage.setTitle("Sagrada");
@@ -44,6 +44,7 @@ public class LaunchGui extends Application {
         stage.setOnCloseRequest(event -> {
             Platform.exit();
             System.exit(0);
+            mediaPlayer.stop();
         });
 
     }
